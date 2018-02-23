@@ -1,0 +1,79 @@
+#+TITLE: Pairwise interaction neural network
+
+PiNN is a atomic neural network potential algorithm. This package is currently being developed primarily by Yunqi Shao at East China University of Science and Technology (ECUST), and is published under the GNU General Public Licence. The pinn package is designed to work with ASE and tensorflow.
+
+* The idea
+*This is only a brief introduction, a more detailed paper discribing the ideas and performance of PiNN is under progress.*
+
+The algorithm is inspired by convolutional neural networks (CNNs). A convolution operation take small patches of images to extract simple features of images. Using concatenated convolution steps, more complex features can be constructed from those simple features.
+#+BEGIN_HTML
+<img src="./doc/image/cnn.png" height="200"/>
+#+END_HTML
+
+
+Likewise, we think the property of atomic systems can be described by extracting simple interactions from of atoms, and consecutively generate more complex interations based on simple interactions. We consider the simplest interaction between atoms to be bonds, with can be  pairwise interaction of the "element property" of atoms.
+#+BEGIN_HTML
+<img src="./doc/image/pinn-pi.png" height="200"/>
+#+END_HTML
+
+To generate more complex interactions, we must encode the interactions to the properties of the atoms, and calculate the interactions of the interactions. We call the encoding step "interaction pooling" as it resembles the pooling step in CNN.
+#+BEGIN_HTML
+<img src="./doc/image/pinn-ip.png" height="200"/>
+#+END_HTML
+
+Besides the "pairwise interaction" and the "interaction pooling" steps, we also uses fully connected interaction or property update layers so that more complex function forms can be fitted and to compress the number of channels.
+#+BEGIN_HTML
+<img src="./doc/image/pinn-example.png" height="400"/>
+#+END_HTML
+
+Finally, properties about the atoms (like the atomic potential energy) can be derived from the property matrixes of the atoms.
+
+* License
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
+
+* Installation
+#+BEGIN_SRC bash
+  git clone https://github.com/yqshao/pinn.git
+  cd pinn
+  pip install -e .
+#+END_SRC
+
+* Basic Usage
+** Training
+#+BEGIN_SRC python
+  from pinn import PINN
+  calc = PINN()
+  data = [] # A list of atoms
+  calc.train(data, max_steps=1000, log_interval=10)
+#+END_SRC
+
+** Calculation
+You should be able to use PINN like other ase calculators
+#+BEGIN_SRC python
+  calc.get_potential_energy(atoms)
+#+END_SRC
+
+** Defining the model
+In PiNN, the model is mainly defined by a list of layers.
+Each layer is a operation to update the properties and the interactions.
+#+BEGIN_SRC python
+  import pinn
+  calc.model = pinn.core.pinn_model()
+  calc.model.dtype = tf.float64
+  calc.model.layers = layers.default_layers(i_nodes=4, p_nodes=8, depth=5)
+  calc.model.layers = [layer.pi_layer('pi-1'),
+                       layer.ii_layer('ii-1'),
+                       layer.ip_layer('ip-1'),
+                       layer.pp_layer('pp-1', collect_prop=True),]
+#+END_SRC
+
+** Controlling the training process
+PiNN uses tensorflow optimizers to train the model, you can define the optimizer as you wish.
+#+BEGIN_SRC python
+  optimizer = tf.optimizer(learning_rate=1e-4)
+  calc.train(data, optimizer=optimizer)
+#+END_SRC
