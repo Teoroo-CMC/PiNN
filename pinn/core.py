@@ -176,10 +176,9 @@ class pinn_model():
         i_nodes = [tf.constant(
             np.zeros(i_in.shape[0:3].concatenate(0)), dtype=self.dtype)]
         p_nodes = [p_in]
-        p_output = [p_in]
         for layer in self.layers:
             energy = layer.process(i_nodes, p_nodes, i_mask, p_mask,
-                                   i_in, p_output, self.dtype)
+                                   i_in, self.dtype)
         return energy
 
     def load(self, fname):

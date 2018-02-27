@@ -5,8 +5,8 @@ import numpy as np
 def get_variables(variables, dtype, shapes):
     tensors = []
     with tf.variable_scope('layers'):
-        for i,var in enumerate(variables):
-            trainable =  not ('fix' in var.keys() and var['fix'])
+        for i, var in enumerate(variables):
+            trainable = not ('fix' in var.keys() and var['fix'])
             if var['val'] is None:
                 tensor = tf.get_variable(
                     dtype=dtype,
@@ -28,19 +28,18 @@ def get_variables(variables, dtype, shapes):
 class pinn_layer_base:
     ''' Template for layers of PiNN
     '''
+
     def __init__(self,
                  name,
                  n_nodes=10,
                  variables=None,
                  trainable=True,
-                 activation='tanh',
-                 collect_prop=False):
+                 activation='tanh'):
         self.name = name
         self.n_nodes = n_nodes
         self.variables = variables
         self.trainable = trainable
         self.activation = activation
-        self.collect_prop = collect_prop
 
     def __repr__(self):
         return '{0}({1})'.format(self.name, self.n_nodes)
@@ -61,22 +60,20 @@ class ip_layer(pinn_layer_base):
                  n_nodes=8,
                  trainable=True,
                  activation='tanh',
-                 collect_prop=False,
                  pool_type='max',
                  variables=None):
         pinn_layer_base.__init__(self, name, n_nodes, variables, trainable,
-                                 activation, collect_prop)
+                                 activation)
         self.pool_type = pool_type
         if variables is None:
-            variables = [{'name': '%s-w' % self.name, 'val':None},
-                         {'name': '%s-b' % self.name, 'val':None}]
+            variables = [{'name': '%s-w' % self.name, 'val': None},
+                         {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, p_output, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
         shapes = [[i_nodes[-1].shape[-1], self.n_nodes],
                   [1, 1, self.n_nodes]]
-        w, b = get_variables(self.variables, dtype ,shapes)
+        w, b = get_variables(self.variables, dtype, shapes)
         act = tf.nn.__getattribute__(self.activation)
         output = act(tf.tensordot(i_nodes[-1], w, [[3], [0]]) + b)
         output = {
@@ -88,9 +85,6 @@ class ip_layer(pinn_layer_base):
                           output, tf.zeros_like(output))
         p_nodes[-1] = tf.concat([p_nodes[-1], output], axis=-1)
 
-        if self.collect_prop:
-            p_output.append(output)
-
 
 class pi_layer(pinn_layer_base):
     '''Interaction pooling layer
@@ -101,17 +95,16 @@ class pi_layer(pinn_layer_base):
                  n_nodes=8,
                  trainable=True,
                  activation='tanh',
-                 collect_prop=False,
                  variables=None):
         pinn_layer_base.__init__(self, name, n_nodes, variables, trainable,
-                                 activation, collect_prop)
+                                 activation)
         if variables is None:
-            variables = [{'name': '%s-w1' % self.name, 'val':None},
-                         {'name': '%s-w2' % self.name, 'val':None},
-                         {'name': '%s-b' % self.name, 'val':None}]
+            variables = [{'name': '%s-w1' % self.name, 'val': None},
+                         {'name': '%s-w2' % self.name, 'val': None},
+                         {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, p_output, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
 
         shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
                   [p_nodes[-1].shape[-1], self.n_nodes],
@@ -127,9 +120,6 @@ class pi_layer(pinn_layer_base):
                           output, tf.zeros_like(output))
         i_nodes[-1] = tf.concat([i_nodes[-1], output], axis=-1)
 
-        if self.collect_prop:
-            p_output.append(output)
-
 
 class pp_layer(pinn_layer_base):
     '''Interaction pooling layer
@@ -140,16 +130,15 @@ class pp_layer(pinn_layer_base):
                  n_nodes=8,
                  trainable=True,
                  activation='tanh',
-                 collect_prop=False,
                  variables=None):
         pinn_layer_base.__init__(self, name, n_nodes, variables, trainable,
-                                 activation, collect_prop)
+                                 activation)
         if variables is None:
-            variables = [{'name': '%s-w' % self.name, 'val':None},
-                         {'name': '%s-b' % self.name, 'val':None}]
+            variables = [{'name': '%s-w' % self.name, 'val': None},
+                         {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, p_output, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
         shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
                   [1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
@@ -158,8 +147,6 @@ class pp_layer(pinn_layer_base):
         output = tf.where(tf.tile(p_mask, [1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
         p_nodes.append(output)
-        if self.collect_prop:
-            p_output.append(output)
 
 
 class ii_layer(pinn_layer_base):
@@ -171,16 +158,15 @@ class ii_layer(pinn_layer_base):
                  n_nodes=8,
                  trainable=True,
                  activation='tanh',
-                 collect_prop=False,
                  variables=None):
         pinn_layer_base.__init__(self, name, n_nodes, variables, trainable,
-                                 activation, collect_prop)
+                                 activation)
         if variables is None:
-            variables = [{'name': '%s-w' % self.name, 'val':None},
-                         {'name': '%s-b' % self.name, 'val':None}]
+            variables = [{'name': '%s-w' % self.name, 'val': None},
+                         {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, p_output, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
         shapes = [[i_nodes[-1].shape[-1], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
@@ -189,34 +175,31 @@ class ii_layer(pinn_layer_base):
         output = tf.where(tf.tile(i_mask, [1, 1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
         i_nodes.append(output)
-        if self.collect_prop:
-            p_output.append(output)
 
 
-class e_layer(pinn_layer_base):
+class en_layer(pinn_layer_base):
     '''Interaction pooling layer
     '''
 
     def __init__(self,
-                 name='energy',
-                 n_nodes=[16, 16],
+                 name,
+                 n_nodes=[32],
                  trainable=True,
                  activation='tanh',
                  variables=None):
         pinn_layer_base.__init__(self, name, n_nodes, variables, trainable,
                                  activation)
-        self.__delattr__('collect_prop')
         if variables is None:
             variables = []
-            for i,n_node in enumerate(n_nodes):
-                variables += [{'name': '%s-w%i' % (self.name, i), 'val':None},
-                              {'name': '%s-b%i' % (self.name, i), 'val':None}]
-            variables.append({'name':'%s-final' % self.name, 'val':None})
+            for i, n_node in enumerate(n_nodes):
+                variables += [{'name': '%s-w%i' % (self.name, i), 'val': None},
+                              {'name': '%s-b%i' % (self.name, i), 'val': None}]
+            variables.append({'name': '%s-final' % self.name, 'val': None})
         self.variables = variables
 
     def process(self, i_nodes, p_nodes, i_mask, p_mask,
-                i_in, p_output, dtype):
-        output = tf.concat(p_output, axis=-1)
+                i_in, dtype):
+        output = p_nodes[-1]
         shapes = []
         input_size = output.shape[-1]
         for i, n_node in enumerate(self.n_nodes):
@@ -239,18 +222,26 @@ class e_layer(pinn_layer_base):
         return energy
 
 
-def default_layers(i_nodes=16, p_nodes=32, depth=1, activation='tanh'):
+def default_layers(i_nodes=24, p_nodes=36, depth=1, act='tanh'):
     layers = [
-        pi_layer('pi-0', n_nodes=i_nodes),
-        ip_layer('ip-0', n_nodes=p_nodes, collect_prop=True),
+        pi_layer('pi1-0', n_nodes=i_nodes, activation=act),
+        ii_layer('ii1-0', n_nodes=i_nodes, activation=act),
+        ip_layer('ip1-0', n_nodes=p_nodes//3, activation=act,
+                 pool_type='sum'),
+        ip_layer('ip1-1', n_nodes=p_nodes//3, activation=act,
+                 pool_type='max'),
+        en_layer('en1-0', n_nodes=[p_nodes, p_nodes])
     ]
-    for i in range(depth):
+    for i in range(2, depth+1):
         layers += [
-            ii_layer('ii-%i' % (i+1), n_nodes=i_nodes//2),
-            pi_layer('pi-%i' % (i+1), n_nodes=i_nodes//2),
-            pp_layer('pp-%i' % (i+1), n_nodes=p_nodes//2),
-            ip_layer('ip-%i-0' % (i+1), n_nodes=p_nodes//4, pool_type='max'),
-            ip_layer('ip-%i-1' % (i+1), n_nodes=p_nodes//4, pool_type='sum',
-                     collect_prop=True)]
-    layers.append(e_layer(n_nodes=[p_nodes]))
+            ii_layer('ii%i-0' % i, n_nodes=i_nodes//2, activation=act),
+            pi_layer('pi%i-0' % i, n_nodes=i_nodes//2, activation=act),
+            ii_layer('ii%i-1' % i, n_nodes=i_nodes, activation=act),
+            pp_layer('pp%i-0' % i, n_nodes=p_nodes//3, activation=act),
+            ip_layer('ip%i-0' % i, n_nodes=p_nodes//3, activation=act,
+                     pool_type='sum'),
+            ip_layer('ip%i-1' % i, n_nodes=p_nodes//3, activation=act,
+                     pool_type='max'),
+            en_layer('en%i-0' % i, n_nodes=[p_nodes, p_nodes])
+        ]
     return layers
