@@ -45,10 +45,11 @@ class pinn_layer_base:
     def __repr__(self):
         return '{0}({1})'.format(self.name, self.n_nodes)
 
-    def retrive_variables(self, sess):
+    def retrive_variables(self, sess, dtype):
         with tf.variable_scope('layers', reuse=True):
             for var in self.variables:
-                var['val'] = sess.run(tf.get_variable(var['name'])).tolist()
+                var['val'] = sess.run(tf.get_variable(var['name'],
+                                                      dtype=dtype)).tolist()
 
 
 class ip_layer(pinn_layer_base):
@@ -248,8 +249,8 @@ def default_layers(i_nodes=16, p_nodes=32, depth=1, activation='tanh'):
             ii_layer('ii-%i' % (i+1), n_nodes=i_nodes//2),
             pi_layer('pi-%i' % (i+1), n_nodes=i_nodes//2),
             pp_layer('pp-%i' % (i+1), n_nodes=p_nodes//2),
-            ip_layer('ip-%i' % (i+1), n_nodes=p_nodes//4, pool_type='max'),
-            ip_layer('ip-%i' % (i+1), n_nodes=p_nodes//4, pool_type='sum',
+            ip_layer('ip-%i-0' % (i+1), n_nodes=p_nodes//4, pool_type='max'),
+            ip_layer('ip-%i-1' % (i+1), n_nodes=p_nodes//4, pool_type='sum',
                      collect_prop=True)]
     layers.append(e_layer(n_nodes=[p_nodes]))
     return layers

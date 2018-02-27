@@ -43,7 +43,7 @@ class PINN(Calculator):
         return freqs, modes
 
     def train(self, traj, optimizer=tf.train.AdamOptimizer(3e-4),
-              batch_size=100, max_steps=100, log_interval=10):
+              batch_size=100, max_steps=100, log_interval=10, chkfile=None):
         tf.reset_default_graph()
         print('Processing input data')
         dataset = self.model.parse_training_traj(traj)
@@ -61,7 +61,7 @@ class PINN(Calculator):
         feed_dict = {}
         history = []
 
-        with tf.Session() as sess:
+        with tf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=0.9))) as sess:
             sess.run(tf.global_variables_initializer())
             for step in range(max_steps):
                 perm = np.random.permutation(i_data.shape[0])
@@ -71,9 +71,11 @@ class PINN(Calculator):
                     feed_dict[p_in] = p_data[indices]
                     feed_dict[e_in] = e_data[indices]
                     _, cost_now = sess.run([opt, cost], feed_dict=feed_dict)
-                    history.append(cost_now)
+                    history.append(np.sqrt(cost_now*2./batch_size))
                 if step % log_interval == 0:
-                    [layer.retrive_variables(sess)
+                    if chkfile is not None:
+                        self.model.save(chkfile)
+                    [layer.retrive_variables(sess, self.model.dtype)
                      for layer in self.model.layers]
                     print('Epoch %10i: cost=%10.4f' %
                           (step, np.sqrt(cost_now*2./batch_size)))
