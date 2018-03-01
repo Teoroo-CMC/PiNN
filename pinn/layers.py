@@ -101,23 +101,21 @@ class pi_layer(pinn_layer_base):
         if variables is None:
             variables = [{'name': '%s-w1' % self.name, 'val': None},
                          {'name': '%s-w2' % self.name, 'val': None},
-                         {'name': '%s-w3' % self.name, 'val': None},
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
     def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
 
-        shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
-                  [p_nodes[-1].shape[-1], self.n_nodes],
-                  [i_kernel.shape[-1], self.n_nodes],
+        shapes = [[p_nodes[-1].shape[-1], i_kernel.shape[-1], self.n_nodes],
+                  [p_nodes[-1].shape[-1], i_kernel.shape[-1], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
-        w1, w2, w3, b = get_variables(self.variables, dtype, shapes)
+        w1, w2,  b = get_variables(self.variables, dtype, shapes)
 
         act = tf.nn.__getattribute__(self.activation)
         output = act(
             tf.expand_dims(tf.tensordot(p_nodes[-1], w1, [[2], [0]]), 1) +
             tf.expand_dims(tf.tensordot(p_nodes[-1], w2, [[2], [0]]), 2) + b)
-        output = output * tf.tensordot(i_kernel, w3, [[3],[0]])
+        output = tf.reduce_sum(output * i_kernel, axis=3)
         output = tf.where(tf.tile(i_mask, [1, 1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
         i_nodes[-1] = tf.concat([i_nodes[-1], output], axis=-1)
