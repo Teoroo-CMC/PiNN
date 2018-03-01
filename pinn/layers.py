@@ -87,7 +87,44 @@ class ip_layer(pinn_layer_base):
 
 
 class pi_layer(pinn_layer_base):
-    '''Interaction pooling layer
+    '''Pairwise interaction layer
+    '''
+
+    def __init__(self,
+                 name,
+                 n_nodes=8,
+                 trainable=True,
+                 activation='tanh',
+                 variables=None):
+        pinn_layer_base.__init__(self, name, n_nodes, variables, trainable,
+                                 activation)
+        if variables is None:
+            variables = [{'name': '%s-w1' % self.name, 'val': None},
+                         {'name': '%s-w2' % self.name, 'val': None},
+                         {'name': '%s-w3' % self.name, 'val': None},
+                         {'name': '%s-b' % self.name, 'val': None}]
+        self.variables = variables
+
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
+
+        shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
+                  [p_nodes[-1].shape[-1], self.n_nodes],
+                  [i_kernel.shape[-1], self.n_nodes],
+                  [1, 1, 1, self.n_nodes]]
+        w1, w2, w3, b = get_variables(self.variables, dtype, shapes)
+
+        act = tf.nn.__getattribute__(self.activation)
+        output = act(
+            tf.expand_dims(tf.tensordot(p_nodes[-1], w1, [[2], [0]]), 1) +
+            tf.expand_dims(tf.tensordot(p_nodes[-1], w2, [[2], [0]]), 2) + b)
+        output = output * tf.tensordot(i_kernel, w3, [[3],[0]])
+        output = tf.where(tf.tile(i_mask, [1, 1, 1, self.n_nodes]),
+                          output, tf.zeros_like(output))
+        i_nodes[-1] = tf.concat([i_nodes[-1], output], axis=-1)
+
+
+class kernel_pi(pinn_layer_base):
+    '''Pairwise interaction layer that acts on the kernel
     '''
 
     def __init__(self,
