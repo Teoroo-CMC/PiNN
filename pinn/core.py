@@ -47,27 +47,27 @@ class PINN(Calculator):
         tf.reset_default_graph()
         print('Processing input data')
         dataset = self.model.parse_training_traj(traj)
-        i_data = dataset['i_mat']
+        d_data = dataset['d_mat']
         p_data = dataset['p_mat']
         e_data = dataset['e_mat']*self.model.scale
 
         # Preparing the training model
-        i_in, p_in, e_out = self.model.construct_training(
-            batch_size, i_data.shape[1])
+        d_in, p_in, e_out = self.model.construct_training(
+            batch_size, d_data.shape[1])
         e_in = tf.placeholder(self.model.dtype, shape=e_out.shape)
         cost = tf.nn.l2_loss(e_in - e_out)
         opt = optimizer.minimize(cost)
-        n_batch = i_data.shape[0]//batch_size
+        n_batch = d_data.shape[0]//batch_size
         feed_dict = {}
         history = []
 
-        with tf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=0.9))) as sess:
+        with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             for step in range(max_steps):
-                perm = np.random.permutation(i_data.shape[0])
+                perm = np.random.permutation(d_data.shape[0])
                 for n in range(n_batch):
                     indices = perm[batch_size*n: batch_size*(n+1)]
-                    feed_dict[i_in] = i_data[indices]
+                    feed_dict[d_in] = d_data[indices]
                     feed_dict[p_in] = p_data[indices]
                     feed_dict[e_in] = e_data[indices]
                     _, cost_now = sess.run([opt, cost], feed_dict=feed_dict)
@@ -84,7 +84,7 @@ class PINN(Calculator):
             e_predict = []
             for n in range(n_batch):
                 indices=range(batch_size*n, batch_size*(n+1))
-                e_predict.append(sess.run(e_out, feed_dict={i_in:i_data[indices],
+                e_predict.append(sess.run(e_out, feed_dict={d_in:d_data[indices],
                                                        p_in:p_data[indices]}))
         results = {
             'energy_data': e_data,
@@ -115,18 +115,18 @@ class pinn_model():
         dataset = {}
         n_max = max([len(atoms) for atoms in traj])
 
-        i_mat_data = []
+        d_mat_data = []
         p_mat_data = []
         for atoms in traj:
             pad = n_max - len(atoms)
-            i_mat = self.i_filter.parse(atoms)
+            d_mat = atoms.get_all_distances()
             p_mat = self.p_filter.parse(atoms)
-            i_mat_data.append(np.pad(i_mat, [[0, pad], [0, pad]], 'constant'))
+            d_mat_data.append(np.pad(d_mat, [[0, pad], [0, pad]], 'constant'))
             p_mat_data.append(np.pad(p_mat, [[0, pad], [0, 0]], 'constant'))
 
         e_mat_data = [atoms.get_potential_energy() for atoms in traj]
 
-        dataset['i_mat'] = np.expand_dims(np.array(i_mat_data), 3)
+        dataset['d_mat'] = np.expand_dims(np.array(d_mat_data), 3)
         dataset['p_mat'] = np.array(p_mat_data)
         dataset['e_mat'] = np.array(e_mat_data)
 
@@ -144,10 +144,11 @@ class pinn_model():
             p_sum, e_mat, rcond=None)[0].tolist()
 
     def construct_training(self, batch_size, n_max):
-        i_in, i_mask = self.i_filter.get_tensors(self.dtype, batch_size, n_max)
+        d_in = tf.placeholder(self.dtype, shape=(batch_size, n_max, n_max, 1))
+        i_kernel, i_mask = self.i_filter.get_tensors(d_in)
         p_in, p_mask = self.p_filter.get_tensors(self.dtype, batch_size, n_max)
-        energy = self.construct_model(i_in, p_in, i_mask, p_mask)
-        return i_in, p_in, energy
+        e_out = self.construct_model(i_kernel, p_in, i_mask, p_mask)
+        return d_in, p_in, e_out
 
     def construct_running(self, atoms):
         if atoms.pbc.any():
@@ -172,14 +173,17 @@ class pinn_model():
         energy = tf.squeeze(energy)
         return c_in, p_in, energy, c_flat
 
-    def construct_model(self, i_in, p_in, i_mask, p_mask):
+    def construct_model(self, i_kernel, p_in, i_mask, p_mask):
         i_nodes = [tf.constant(
-            np.zeros(i_in.shape[0:3].concatenate(0)), dtype=self.dtype)]
+            np.zeros(i_kernel.shape[0:3].concatenate(0)), dtype=self.dtype)]
         p_nodes = [p_in]
+        e_out = 0
         for layer in self.layers:
-            energy = layer.process(i_nodes, p_nodes, i_mask, p_mask,
-                                   i_in, self.dtype)
-        return energy
+            en = layer.process(i_nodes, p_nodes, i_mask, p_mask,
+                               i_kernel, self.dtype)
+            if en is not None:
+                e_out = e_out + en
+        return e_out
 
     def load(self, fname):
         with open(fname, 'r') as f:

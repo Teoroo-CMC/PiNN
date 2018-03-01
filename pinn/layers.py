@@ -70,7 +70,7 @@ class ip_layer(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
         shapes = [[i_nodes[-1].shape[-1], self.n_nodes],
                   [1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
@@ -101,21 +101,23 @@ class pi_layer(pinn_layer_base):
         if variables is None:
             variables = [{'name': '%s-w1' % self.name, 'val': None},
                          {'name': '%s-w2' % self.name, 'val': None},
+                         {'name': '%s-w3' % self.name, 'val': None},
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
 
         shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
                   [p_nodes[-1].shape[-1], self.n_nodes],
+                  [i_kernel.shape[-1], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
-        w1, w2, b = get_variables(self.variables, dtype, shapes)
+        w1, w2, w3, b = get_variables(self.variables, dtype, shapes)
 
         act = tf.nn.__getattribute__(self.activation)
         output = act(
             tf.expand_dims(tf.tensordot(p_nodes[-1], w1, [[2], [0]]), 1) +
             tf.expand_dims(tf.tensordot(p_nodes[-1], w2, [[2], [0]]), 2) + b)
-        output = output * tf.tile(i_in, [1, 1, 1, self.n_nodes])
+        output = output * tf.tensordot(i_kernel, w3, [[3],[0]])
         output = tf.where(tf.tile(i_mask, [1, 1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
         i_nodes[-1] = tf.concat([i_nodes[-1], output], axis=-1)
@@ -138,7 +140,7 @@ class pp_layer(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
         shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
                   [1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
@@ -166,7 +168,7 @@ class ii_layer(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_in, dtype):
+    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
         shapes = [[i_nodes[-1].shape[-1], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
@@ -198,7 +200,7 @@ class en_layer(pinn_layer_base):
         self.variables = variables
 
     def process(self, i_nodes, p_nodes, i_mask, p_mask,
-                i_in, dtype):
+                i_kernel, dtype):
         output = p_nodes[-1]
         shapes = []
         input_size = output.shape[-1]
@@ -225,23 +227,21 @@ class en_layer(pinn_layer_base):
 def default_layers(i_nodes=24, p_nodes=36, depth=1, act='tanh'):
     layers = [
         pi_layer('pi1-0', n_nodes=i_nodes, activation=act),
-        ii_layer('ii1-0', n_nodes=i_nodes, activation=act),
         ip_layer('ip1-0', n_nodes=p_nodes//3, activation=act,
                  pool_type='sum'),
         ip_layer('ip1-1', n_nodes=p_nodes//3, activation=act,
                  pool_type='max'),
-        en_layer('en1-0', n_nodes=[p_nodes, p_nodes])
+        en_layer('en1-0', n_nodes=[p_nodes])
     ]
     for i in range(2, depth+1):
         layers += [
             ii_layer('ii%i-0' % i, n_nodes=i_nodes//2, activation=act),
             pi_layer('pi%i-0' % i, n_nodes=i_nodes//2, activation=act),
-            ii_layer('ii%i-1' % i, n_nodes=i_nodes, activation=act),
             pp_layer('pp%i-0' % i, n_nodes=p_nodes//3, activation=act),
             ip_layer('ip%i-0' % i, n_nodes=p_nodes//3, activation=act,
                      pool_type='sum'),
             ip_layer('ip%i-1' % i, n_nodes=p_nodes//3, activation=act,
                      pool_type='max'),
-            en_layer('en%i-0' % i, n_nodes=[p_nodes, p_nodes])
+            en_layer('en%i-0' % i, n_nodes=[p_nodes])
         ]
     return layers

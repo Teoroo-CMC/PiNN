@@ -19,58 +19,34 @@ class element_filter():
 
 
 class f1_symm_func_filter():
-    def __init__(self, rc=6.0):
+    def __init__(self, rc=6.0, order=5):
         self.rc = rc
+        self.order = order
 
-    def parse(self, atoms):
-        dist_mat = atoms.get_all_distances()
-        i_mask = (dist_mat > 0) & (dist_mat < self.rc)
-        i_mat = np.where(
-            i_mask,
-            0.5*(np.cos(np.pi*dist_mat/self.rc)+1),
-            np.zeros_like(dist_mat))
-        return i_mat
-
-    def get_running_tensors(self, d_mat):
+    def get_tensors(self, d_mat):
         i_mask = (d_mat > 0) & (d_mat < self.rc)
         i_mat = tf.where(i_mask,
                          0.5*(tf.cos(np.pi*d_mat/self.rc)+1),
                          tf.zeros_like(d_mat))
-        return i_mat, i_mask
-
-    def get_tensors(self, dtype, batch_size, n_max):
-        i_in = tf.placeholder(
-            dtype, shape=(batch_size, n_max, n_max, 1))
-        i_mask = i_in > 0
-        return i_in, i_mask
+        i_kernel = [i_mat ** (i+1) for i in range(self.order)]
+        i_kernel = tf.concat(i_kernel, axis=-1)
+        return i_kernel, i_mask
 
 
 class f2_symm_func_filter():
     def __init__(self, rc=6.0):
         self.rc = rc
+        self.order = 5
 
-    def parse(self, atoms):
-        dist_mat = atoms.get_all_distances()
-        i_mask = (dist_mat > 0) & (dist_mat < self.rc)
-        i_mat = np.where(
-            i_mask,
-            np.tanh(1-dist_mat/self.rc) ** 3,
-            np.zeros_like(dist_mat))
-        return i_mat
-
-    def get_running_tensors(self, d_mat):
+    def get_tensors(self, d_mat):
         i_mask = (d_mat > 0) & (d_mat < self.rc)
         i_mat = tf.where(i_mask,
                          tf.tanh(1-d_mat/self.rc) ** 3,
                          tf.zeros_like(d_mat))
-        return i_mat, i_mask
 
-    def get_tensors(self, dtype, batch_size, n_max):
-        i_in = tf.placeholder(
-            dtype, shape=(batch_size, n_max, n_max, 1))
-        i_mask = i_in > 0
-        return i_in, i_mask
-
+        i_kernel = [i_mat ** (i+1) for i in range(self.order)]
+        i_kernel = tf.concat(i_kernel, axis=-1)
+        return i_kernel, i_mask
 
 default_p_filter = element_filter()
-default_i_filter = f2_symm_func_filter()
+default_i_filter = f1_symm_func_filter()
