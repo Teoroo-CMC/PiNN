@@ -70,12 +70,15 @@ class ip_layer(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
-        shapes = [[i_nodes[-1].shape[-1], self.n_nodes],
+    def process(self, tensors, dtype):
+        i_nodes = tensors['i_nodes']
+        p_nodes = tensors['p_nodes']
+        p_mask = tensors['p_mask']
+        shapes = [[i_nodes.shape[-1], self.n_nodes],
                   [1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
         act = tf.nn.__getattribute__(self.activation)
-        output = act(tf.tensordot(i_nodes[-1], w, [[3], [0]]) + b)
+        output = act(tf.tensordot(i_nodes, w, [[3], [0]]) + b)
         output = {
             'max': lambda x: tf.reduce_max(x, axis=-2),
             'sum': lambda x: tf.reduce_sum(x, axis=-2)
@@ -83,7 +86,7 @@ class ip_layer(pinn_layer_base):
 
         output = tf.where(tf.tile(p_mask, [1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
-        p_nodes[-1] = tf.concat([p_nodes[-1], output], axis=-1)
+        tensors['p_nodes'] = tf.concat([p_nodes, output], axis=-1)
 
 
 class pi_layer(pinn_layer_base):
@@ -105,22 +108,26 @@ class pi_layer(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
+    def process(self, tensors, dtype):
+        i_kernel = tensors['i_kernel']
+        p_nodes = tensors['p_nodes']
+        i_nodes = tensors['i_nodes']
+        i_mask = tensors['i_mask']
 
-        shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
-                  [p_nodes[-1].shape[-1], self.n_nodes],
+        shapes = [[p_nodes.shape[-1], self.n_nodes],
+                  [p_nodes.shape[-1], self.n_nodes],
                   [i_kernel.shape[-1], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
         w1, w2, w3, b = get_variables(self.variables, dtype, shapes)
 
         act = tf.nn.__getattribute__(self.activation)
         output = act(
-            tf.expand_dims(tf.tensordot(p_nodes[-1], w1, [[2], [0]]), 1) +
-            tf.expand_dims(tf.tensordot(p_nodes[-1], w2, [[2], [0]]), 2) + b)
+            tf.expand_dims(tf.tensordot(p_nodes, w1, [[2], [0]]), 1) +
+            tf.expand_dims(tf.tensordot(p_nodes, w2, [[2], [0]]), 2) + b)
         output = output * tf.tensordot(i_kernel, w3, [[3],[0]])
         output = tf.where(tf.tile(i_mask, [1, 1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
-        i_nodes[-1] = tf.concat([i_nodes[-1], output], axis=-1)
+        tensors['i_nodes'] = tf.concat([i_nodes, output], axis=-1)
 
 
 class kernel_pi(pinn_layer_base):
@@ -141,21 +148,26 @@ class kernel_pi(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
+    def process(self, tensors, dtype):
+        i_kernel = tensors['i_kernel']
+        p_nodes = tensors['p_nodes']
+        i_nodes = tensors['i_nodes']
+        i_mask = tensors['i_mask']
+
         i_kernel = tf.expand_dims(i_kernel, axis=4)
-        shapes = [[p_nodes[-1].shape[-1], i_kernel.shape[-2], self.n_nodes],
-                  [p_nodes[-1].shape[-1], i_kernel.shape[-2], self.n_nodes],
+        shapes = [[p_nodes.shape[-1], i_kernel.shape[-2], self.n_nodes],
+                  [p_nodes.shape[-1], i_kernel.shape[-2], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
         w1, w2,  b = get_variables(self.variables, dtype, shapes)
 
         act = tf.nn.__getattribute__(self.activation)
         output = act(
-            tf.expand_dims(tf.tensordot(p_nodes[-1], w1, [[2], [0]]), 1) +
-            tf.expand_dims(tf.tensordot(p_nodes[-1], w2, [[2], [0]]), 2) + b)
+            tf.expand_dims(tf.tensordot(p_nodes, w1, [[2], [0]]), 1) +
+            tf.expand_dims(tf.tensordot(p_nodes, w2, [[2], [0]]), 2) + b)
         output = tf.reduce_sum(output * i_kernel, axis=3)
         output = tf.where(tf.tile(i_mask, [1, 1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
-        i_nodes[-1] = tf.concat([i_nodes[-1], output], axis=-1)
+        tensors['i_nodes'] = tf.concat([i_nodes, output], axis=-1)
 
 
 class pp_layer(pinn_layer_base):
@@ -175,15 +187,19 @@ class pp_layer(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
+    def process(self, tensors, dtype):
+        p_nodes = tensors['p_nodes']
+        p_mask = tensors['p_mask']
+
         shapes = [[p_nodes[-1].shape[-1], self.n_nodes],
                   [1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
         act = tf.nn.__getattribute__(self.activation)
-        output = act(tf.tensordot(p_nodes[-1], w, [[2], [0]]) + b)
+
+        output = act(tf.tensordot(p_nodes, w, [[2], [0]]) + b)
         output = tf.where(tf.tile(p_mask, [1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
-        p_nodes.append(output)
+        tensors['p_nodes'] = output
 
 
 class ii_layer(pinn_layer_base):
@@ -203,19 +219,23 @@ class ii_layer(pinn_layer_base):
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
-        shapes = [[i_nodes[-1].shape[-1], self.n_nodes],
+    def process(self, tensors, dtype):
+        i_nodes = tensors['i_nodes']
+        i_mask = tensors['i_mask']
+
+        shapes = [[i_nodes.shape[-1], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
         w, b = get_variables(self.variables, dtype, shapes)
         act = tf.nn.__getattribute__(self.activation)
-        output = act(tf.tensordot(i_nodes[-1], w, [[3], [0]]) + b)
+
+        output = act(tf.tensordot(i_nodes, w, [[3], [0]]) + b)
         output = tf.where(tf.tile(i_mask, [1, 1, 1, self.n_nodes]),
                           output, tf.zeros_like(output))
-        i_nodes.append(output)
+        tensors['i_nodes'] = output
 
 
 class en_layer(pinn_layer_base):
-    '''Interaction pooling layer
+    '''Energy generation layers
     '''
 
     def __init__(self,
@@ -234,9 +254,11 @@ class en_layer(pinn_layer_base):
             variables.append({'name': '%s-final' % self.name, 'val': None})
         self.variables = variables
 
-    def process(self, i_nodes, p_nodes, i_mask, p_mask,
-                i_kernel, dtype):
-        output = p_nodes[-1]
+    def process(self, tensors, dtype):
+        p_nodes = tensors['p_nodes']
+        p_mask = tensors['p_mask']
+
+        output = p_nodes
         shapes = []
         input_size = output.shape[-1]
         for i, n_node in enumerate(self.n_nodes):

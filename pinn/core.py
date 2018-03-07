@@ -42,6 +42,16 @@ class PINN(Calculator):
         freqs, modes = np.linalg.eig(hess)
         return freqs, modes
 
+    def visualize(self, atoms):
+        d_mat = np.expand_dims([atoms.get_all_distances()],3)
+        p_mat = np.expand_dims(self.model.p_filter.parse(atoms),0)
+
+        d_in, p_in, = self.model.construct_visualize(atoms)
+        feed_dict = {d_in: d_mat, p_in: p_mat}
+        with tf.Session() as sess:
+            blocks = sess.run(blocks, feed_dict=feed_dict)
+        return blocks
+
     def train(self, traj, optimizer=tf.train.AdamOptimizer(3e-4),
               batch_size=100, max_steps=100, log_interval=10, chkfile=None):
         tf.reset_default_graph()
@@ -143,6 +153,71 @@ class pinn_model():
         self.atomic_dress = np.linalg.lstsq(
             p_sum, e_mat, rcond=None)[0].tolist()
 
+    def construct_visualize(self, atoms):
+        d_in = tf.placeholder(self.dtype, shape=(1, len(atoms), len(atoms), 1))
+        i_kernel, i_mask = self.i_filter.get_tensors(d_in)
+        p_in, p_mask = self.p_filter.get_tensors(self.dtype, 1, len(atoms))
+        i_nodes = tf.constant(
+            np.zeros(i_kernel.shape[0:3].concatenate(0)), dtype=self.dtype)
+        p_nodes = p_in
+        tensors = {
+            'i_kernel': i_kernel,
+            'i_nodes': i_nodes,
+            'p_nodes': p_nodes,
+            'i_mask': i_mask,
+            'p_mask': p_mask,
+        }
+        p_blocks = [{'depth':0,
+                     'nodes':[
+                         {'val':p_in[0,:,i], 'con':[]}
+                         for i in range(p_in.shape[-1])
+                     ]}]
+        i_blocks = []
+        e_blocks = []
+        for layer in self.layers:
+            layer.process(tensors, self.dtype)
+            if layer.__class__ is layers.pi_layer:
+                new_nodes = [
+                    {'val': i_nodes[0,:,:,len(i_blocks[-1]['nodes'])+i],
+                     'con':
+                     [[0.3, layer.variables[0]['val'][i,j], p_blocks[-1]]
+                             for j in range(p_nodes.shape[-1])] +
+                     [[0.6, layer.variables[0]['val'][i,j], p_blocks[-1]]
+                       for j in range(p_nodes.shape[-1])]}
+                    for i in range(layer.n_nodes)]
+                i_blocks[-1]['nodes'] += new_nodes
+            elif layer.__class__ is layers.ip_layer:
+                new_nodes = [
+                    {'val': p_nodes[0,:,len(p_blocks[-1]['nodes'])+i],
+                     'con':
+                     [[0.5, layer.variables[0]['val'][i,j], i_blocks[-1]]
+                             for j in range(i_nodes.shape[-1])]}
+                    for i in range(layer.n_nodes)]
+                p_blocks[-1]['nodes'] += new_nodes
+            elif layer.__class__ is layers.ii_layer:
+                new_nodes = [
+                    {'val': p_nodes[0,:,len(p_blocks[-1]['nodes'])+i],
+                     'con':
+                     [[0.5, layer.variables[0]['val'][i,j], i_blocks[-1]]
+                             for j in range(i_nodes.shape[-1])]}
+                    for i in range(layer.n_nodes)]
+                new_block = {
+                    'depth': i_blocks[-1]['depth'] + 1,
+                    'nodes': new_nodes}
+                i_blocks.append(new_block)
+            elif layer.__class__ is layers.pp_layer:
+                new_nodes = [
+                    {'val': p_nodes[0,:,len(p_blocks[-1]['nodes'])+i],
+                     'con':
+                     [[0.5, layer.variables[0]['val'][i,j], i_blocks[-1]]
+                             for j in range(i_nodes.shape[-1])]}
+                    for i in range(layer.n_nodes)]
+                new_block = {
+                    'depth': i_blocks[-1]['depth'] + 1,
+                    'nodes': new_nodes}
+                p_blocks.append(new_block)
+        return p_blocks, i_blocks, e_blocks
+
     def construct_training(self, batch_size, n_max):
         d_in = tf.placeholder(self.dtype, shape=(batch_size, n_max, n_max, 1))
         i_kernel, i_mask = self.i_filter.get_tensors(d_in)
@@ -174,13 +249,19 @@ class pinn_model():
         return c_in, p_in, energy, c_flat
 
     def construct_model(self, i_kernel, p_in, i_mask, p_mask):
-        i_nodes = [tf.constant(
-            np.zeros(i_kernel.shape[0:3].concatenate(0)), dtype=self.dtype)]
-        p_nodes = [p_in]
+        i_nodes = tf.constant(
+            np.zeros(i_kernel.shape[0:3].concatenate(0)), dtype=self.dtype)
+        p_nodes = p_in
+        tensors = {
+            'i_kernel': i_kernel,
+            'i_nodes': i_nodes,
+            'p_nodes': p_nodes,
+            'i_mask': i_mask,
+            'p_mask': p_mask,
+        }
         e_out = 0
         for layer in self.layers:
-            en = layer.process(i_nodes, p_nodes, i_mask, p_mask,
-                               i_kernel, self.dtype)
+            en = layer.process(tensors, self.dtype)
             if en is not None:
                 e_out = e_out + en
         return e_out
