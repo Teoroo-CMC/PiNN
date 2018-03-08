@@ -145,6 +145,7 @@ class kernel_pi(pinn_layer_base):
         if variables is None:
             variables = [{'name': '%s-w1' % self.name, 'val': None},
                          {'name': '%s-w2' % self.name, 'val': None},
+                         {'name': '%s-w3' % self.name, 'val': None},
                          {'name': '%s-b' % self.name, 'val': None}]
         self.variables = variables
 
@@ -153,8 +154,8 @@ class kernel_pi(pinn_layer_base):
         p_nodes = tensors['p_nodes']
         i_nodes = tensors['i_nodes']
         i_mask = tensors['i_mask']
-
         i_kernel = tf.expand_dims(i_kernel, axis=4)
+
         shapes = [[p_nodes.shape[-1], i_kernel.shape[-2], self.n_nodes],
                   [p_nodes.shape[-1], i_kernel.shape[-2], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
@@ -171,7 +172,7 @@ class kernel_pi(pinn_layer_base):
 
 
 class pp_layer(pinn_layer_base):
-    '''Interaction pooling layer
+    '''Fully connected property layer
     '''
 
     def __init__(self,
@@ -203,7 +204,7 @@ class pp_layer(pinn_layer_base):
 
 
 class ii_layer(pinn_layer_base):
-    '''Interaction pooling layer
+    '''Fully connected interaction layer
     '''
 
     def __init__(self,
@@ -235,7 +236,7 @@ class ii_layer(pinn_layer_base):
 
 
 class en_layer(pinn_layer_base):
-    '''Energy generation layers
+    '''Energy generation layer
     '''
 
     def __init__(self,

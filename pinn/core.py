@@ -20,7 +20,7 @@ class PINN(Calculator):
 
     def calculate(self, atoms=None, properties=['energy'], system_chages=None, sess=None):
         c_in, p_in, energy, c_flat = self.model.construct_running(atoms)
-        # Properties to calcute
+        # Properties to calculate
         results = {}
         if 'energy' in properties:
             results['energy'] = energy
@@ -36,10 +36,16 @@ class PINN(Calculator):
             self.results = sess.run(
                 results, feed_dict={c_in: c_mat, p_in: p_mat})
 
-    def get_vibrational_modes(self, atoms):
+    def get_vibrational_modes(self, atoms=None):
+        if atoms is None:
+            atoms = self.atoms
         self.calculate(atoms, properties=['hessian'])
         hessian = self.results['hessian']
-        freqs, modes = np.linalg.eig(hess)
+        freqs, modes = np.linalg.eig(hessian)
+        modes = [
+            modes[:,i].reshape(len(atoms),3)
+            for i in range(len(freqs))
+        ]
         return freqs, modes
 
     def visualize(self, atoms):
@@ -55,7 +61,7 @@ class PINN(Calculator):
     def train(self, traj, optimizer=tf.train.AdamOptimizer(3e-4),
               batch_size=100, max_steps=100, log_interval=10, chkfile=None):
         tf.reset_default_graph()
-        print('Processing input data')
+        print('Processing input data', flush=True)
         dataset = self.model.parse_training_traj(traj)
         d_data = dataset['d_mat']
         p_data = dataset['p_mat']
@@ -88,7 +94,7 @@ class PINN(Calculator):
                     [layer.retrive_variables(sess, self.model.dtype)
                      for layer in self.model.layers]
                     print('Epoch %10i: cost=%10.4f' %
-                          (step, np.sqrt(cost_now*2./batch_size)))
+                          (step, np.sqrt(cost_now*2./batch_size)), flush=True)
 
             # Run a last epoch to get the predictions
             e_predict = []
@@ -151,7 +157,7 @@ class pinn_model():
         print('Generating a new atomic dress')
         p_sum = np.sum(p_mat, axis=1)
         self.atomic_dress = np.linalg.lstsq(
-            p_sum, e_mat, rcond=None)[0].tolist()
+            p_sum, e_mat)[0].tolist()
 
     def construct_visualize(self, atoms):
         d_in = tf.placeholder(self.dtype, shape=(1, len(atoms), len(atoms), 1))
@@ -239,7 +245,7 @@ class pinn_model():
         d_mat = tf.where(d_mat > 0, d_mat, tf.zeros_like(d_mat)+1e-20)
         d_mat = tf.where(d_mat > 1e-19, tf.sqrt(d_mat), tf.zeros_like(d_mat))
 
-        i_in, i_mask = self.i_filter.get_running_tensors(d_mat)
+        i_in, i_mask = self.i_filter.get_tensors(d_mat)
         p_in, p_mask = self.p_filter.get_tensors(self.dtype, 1, n_atoms)
         energy = self.construct_model(i_in, p_in, i_mask, p_mask)/self.scale
         if self.dress_atoms:

@@ -48,5 +48,6 @@ class f2_symm_func_filter():
         i_kernel = tf.concat(i_kernel, axis=-1)
         return i_kernel, i_mask
 
+
 default_p_filter = element_filter()
 default_i_filter = f1_symm_func_filter()
