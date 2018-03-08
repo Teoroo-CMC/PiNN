@@ -30,7 +30,6 @@ class f1_symm_func_filter():
                          tf.zeros_like(d_mat))
         i_kernel = [i_mat ** (i+1) for i in range(self.order)]
         i_kernel = tf.concat(i_kernel, axis=-1)
-        i_kernel = tf.expand_dims(i_kernel, axis=4)
         return i_kernel, i_mask
 
 
@@ -47,8 +46,8 @@ class f2_symm_func_filter():
 
         i_kernel = [i_mat ** (i+1) for i in range(self.order)]
         i_kernel = tf.concat(i_kernel, axis=-1)
-        i_kernel = tf.expand_dims(i_kernel, axis=4)
         return i_kernel, i_mask
+
 
 default_p_filter = element_filter()
 default_i_filter = f1_symm_func_filter()

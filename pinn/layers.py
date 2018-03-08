@@ -142,9 +142,9 @@ class kernel_pi(pinn_layer_base):
         self.variables = variables
 
     def process(self, i_nodes, p_nodes, i_mask, p_mask, i_kernel, dtype):
-
-        shapes = [[p_nodes[-1].shape[-1], i_kernel.shape[-1], self.n_nodes],
-                  [p_nodes[-1].shape[-1], i_kernel.shape[-1], self.n_nodes],
+        i_kernel = tf.expand_dims(i_kernel, axis=4)
+        shapes = [[p_nodes[-1].shape[-1], i_kernel.shape[-2], self.n_nodes],
+                  [p_nodes[-1].shape[-1], i_kernel.shape[-2], self.n_nodes],
                   [1, 1, 1, self.n_nodes]]
         w1, w2,  b = get_variables(self.variables, dtype, shapes)
 
@@ -159,7 +159,7 @@ class kernel_pi(pinn_layer_base):
 
 
 class pp_layer(pinn_layer_base):
-    '''Interaction pooling layer
+    '''Fully connected property layer
     '''
 
     def __init__(self,
@@ -187,7 +187,7 @@ class pp_layer(pinn_layer_base):
 
 
 class ii_layer(pinn_layer_base):
-    '''Interaction pooling layer
+    '''Fully connected interaction layer
     '''
 
     def __init__(self,
@@ -215,7 +215,7 @@ class ii_layer(pinn_layer_base):
 
 
 class en_layer(pinn_layer_base):
-    '''Interaction pooling layer
+    ''' Energy generator
     '''
 
     def __init__(self,
@@ -272,6 +272,28 @@ def default_layers(i_nodes=24, p_nodes=36, depth=1, act='tanh'):
         layers += [
             ii_layer('ii%i-0' % i, n_nodes=i_nodes//2, activation=act),
             pi_layer('pi%i-0' % i, n_nodes=i_nodes//2, activation=act),
+            pp_layer('pp%i-0' % i, n_nodes=p_nodes//3, activation=act),
+            ip_layer('ip%i-0' % i, n_nodes=p_nodes//3, activation=act,
+                     pool_type='sum'),
+            ip_layer('ip%i-1' % i, n_nodes=p_nodes//3, activation=act,
+                     pool_type='max'),
+            en_layer('en%i-0' % i, n_nodes=[p_nodes])
+        ]
+    return layers
+
+def default_layers_k(i_nodes=24, p_nodes=36, depth=1, act='tanh'):
+    layers = [
+        kernel_pi('pi1-0', n_nodes=i_nodes, activation=act),
+        ip_layer('ip1-0', n_nodes=p_nodes//3, activation=act,
+                 pool_type='sum'),
+        ip_layer('ip1-1', n_nodes=p_nodes//3, activation=act,
+                 pool_type='max'),
+        en_layer('en1-0', n_nodes=[p_nodes])
+    ]
+    for i in range(2, depth+1):
+        layers += [
+            ii_layer('ii%i-0' % i, n_nodes=i_nodes//2, activation=act),
+            kernel_pi('pi%i-0' % i, n_nodes=i_nodes//2, activation=act),
             pp_layer('pp%i-0' % i, n_nodes=p_nodes//3, activation=act),
             ip_layer('ip%i-0' % i, n_nodes=p_nodes//3, activation=act,
                      pool_type='sum'),
