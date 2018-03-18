@@ -10,8 +10,7 @@ The algorithm is inspired by convolutional neural networks (CNNs). A convolution
 <img src="./doc/image/cnn.png" height="200"/>
 #+END_HTML
 
-
-Likewise, we think the property of atomic systems can be described by extracting simple interactions from of atoms, and consecutively generate more complex interations based on simple interactions. We consider the simplest interaction between atoms to be bonds, with can be  pairwise interaction of the "element property" of atoms.
+Likewise, we think the property of atomic systems can be described by extracting simple interactions from of atoms, and consecutively generate more complex interations based on simple interactions. We consider the simplest interaction between atoms to be bonds, which can be defined as the pairwise interaction of the "element" of atoms.
 #+BEGIN_HTML
 <img src="./doc/image/pinn-pi.png" height="200"/>
 #+END_HTML
