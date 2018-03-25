@@ -34,9 +34,9 @@ class f1_symm_func_filter():
 
 
 class f2_symm_func_filter():
-    def __init__(self, rc=6.0):
+    def __init__(self, rc=6.0, order=5):
         self.rc = rc
-        self.order = 5
+        self.order = order
 
     def get_tensors(self, d_mat):
         i_mask = (d_mat > 0) & (d_mat < self.rc)
@@ -50,4 +50,4 @@ class f2_symm_func_filter():
 
 
 default_p_filter = element_filter()
-default_i_filter = f1_symm_func_filter()
+default_i_filter = f2_symm_func_filter()
