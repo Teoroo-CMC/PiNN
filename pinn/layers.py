@@ -76,13 +76,12 @@ class ip_layer(pinn_layer_base):
         w, b = get_variables(self.variables, dtype, shapes)
         act = tf.nn.__getattribute__(self.activation)
         output = act(tf.tensordot(i_nodes[-1], w, [[3], [0]]) + b)
+        output = tf.where(tf.tile(p_mask, [1, 1, self.n_nodes]),
+                          output, tf.zeros_like(output))
         output = {
             'max': lambda x: tf.reduce_max(x, axis=-2),
             'sum': lambda x: tf.reduce_sum(x, axis=-2)
         }[self.pool_type](output)
-
-        output = tf.where(tf.tile(p_mask, [1, 1, self.n_nodes]),
-                          output, tf.zeros_like(output))
         p_nodes[-1] = tf.concat([p_nodes[-1], output], axis=-1)
 
 
