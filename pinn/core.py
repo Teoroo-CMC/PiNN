@@ -88,13 +88,23 @@ class PINN(Calculator):
                     feed_dict[e_in] = e_data[indices]
                     _, cost_now = sess.run([opt, cost], feed_dict=feed_dict)
                     history.append(np.sqrt(cost_now*2./batch_size))
-                if step % log_interval == 0:
+                if (step + 1) % log_interval == 0:
                     if chkfile is not None:
                         self.model.save(chkfile)
                     [layer.retrive_variables(sess, self.model.dtype)
                      for layer in self.model.layers]
-                    print('Epoch %10i: cost=%10.4f' %
-                          (step, np.sqrt(cost_now*2./batch_size)), flush=True)
+
+                    epoch_now = np.array(history[-n_batch:])
+                    if step>0:
+                        epoch_prev = history[-n_batch*2:-n_batch]
+                        dcost = np.mean(epoch_now) - np.mean(epoch_prev)
+                    else:
+                        dcost = np.nan
+
+                    epoch_rms = np.sqrt(np.mean(np.square(
+                        epoch_now-np.mean(epoch_now))))
+                    print('Epoch %8i: Cost_avg=%10.4f, dCost=%10.4f RMS=%10.4f' %
+                          (step+1, np.mean(epoch_now), dcost, epoch_rms), flush=True)
 
             # Run a last epoch to get the predictions
             e_predict = []
@@ -159,70 +169,6 @@ class pinn_model():
         self.atomic_dress = np.linalg.lstsq(
             p_sum, e_mat)[0].tolist()
 
-    def construct_visualize(self, atoms):
-        d_in = tf.placeholder(self.dtype, shape=(1, len(atoms), len(atoms), 1))
-        i_kernel, i_mask = self.i_filter.get_tensors(d_in)
-        p_in, p_mask = self.p_filter.get_tensors(self.dtype, 1, len(atoms))
-        i_nodes = tf.constant(
-            np.zeros(i_kernel.shape[0:3].concatenate(0)), dtype=self.dtype)
-        p_nodes = p_in
-        tensors = {
-            'i_kernel': i_kernel,
-            'i_nodes': i_nodes,
-            'p_nodes': p_nodes,
-            'i_mask': i_mask,
-            'p_mask': p_mask,
-        }
-        p_blocks = [{'depth':0,
-                     'nodes':[
-                         {'val':p_in[0,:,i], 'con':[]}
-                         for i in range(p_in.shape[-1])
-                     ]}]
-        i_blocks = []
-        e_blocks = []
-        for layer in self.layers:
-            layer.process(tensors, self.dtype)
-            if layer.__class__ is layers.pi_layer:
-                new_nodes = [
-                    {'val': i_nodes[0,:,:,len(i_blocks[-1]['nodes'])+i],
-                     'con':
-                     [[0.3, layer.variables[0]['val'][i,j], p_blocks[-1]]
-                             for j in range(p_nodes.shape[-1])] +
-                     [[0.6, layer.variables[0]['val'][i,j], p_blocks[-1]]
-                       for j in range(p_nodes.shape[-1])]}
-                    for i in range(layer.n_nodes)]
-                i_blocks[-1]['nodes'] += new_nodes
-            elif layer.__class__ is layers.ip_layer:
-                new_nodes = [
-                    {'val': p_nodes[0,:,len(p_blocks[-1]['nodes'])+i],
-                     'con':
-                     [[0.5, layer.variables[0]['val'][i,j], i_blocks[-1]]
-                             for j in range(i_nodes.shape[-1])]}
-                    for i in range(layer.n_nodes)]
-                p_blocks[-1]['nodes'] += new_nodes
-            elif layer.__class__ is layers.ii_layer:
-                new_nodes = [
-                    {'val': p_nodes[0,:,len(p_blocks[-1]['nodes'])+i],
-                     'con':
-                     [[0.5, layer.variables[0]['val'][i,j], i_blocks[-1]]
-                             for j in range(i_nodes.shape[-1])]}
-                    for i in range(layer.n_nodes)]
-                new_block = {
-                    'depth': i_blocks[-1]['depth'] + 1,
-                    'nodes': new_nodes}
-                i_blocks.append(new_block)
-            elif layer.__class__ is layers.pp_layer:
-                new_nodes = [
-                    {'val': p_nodes[0,:,len(p_blocks[-1]['nodes'])+i],
-                     'con':
-                     [[0.5, layer.variables[0]['val'][i,j], i_blocks[-1]]
-                             for j in range(i_nodes.shape[-1])]}
-                    for i in range(layer.n_nodes)]
-                new_block = {
-                    'depth': i_blocks[-1]['depth'] + 1,
-                    'nodes': new_nodes}
-                p_blocks.append(new_block)
-        return p_blocks, i_blocks, e_blocks
 
     def construct_training(self, batch_size, n_max):
         d_in = tf.placeholder(self.dtype, shape=(batch_size, n_max, n_max, 1))
@@ -255,21 +201,33 @@ class pinn_model():
         return c_in, p_in, energy, c_flat
 
     def construct_model(self, i_kernel, p_in, i_mask, p_mask):
-        i_nodes = tf.constant(
-            np.zeros(i_kernel.shape[0:3].concatenate(0)), dtype=self.dtype)
-        p_nodes = p_in
+        max_order = max([layer.order for layer in self.layers])
+        n, m = p_in.shape[0], p_in.shape[1]
+        nodes = [p_in]
+        for i in range(max_order):
+            nodes.append(tf.constant(
+                np.zeros([n]+[m]*(i+2)+[0]), dtype=self.dtype))
+
+        masks = [p_mask, i_mask]
+        for i in range(max_order-1):
+            dim = i+3
+            mask = tf.expand_dims(masks[-1],1)
+            for d in range(dim-1):
+                mask = mask & tf.expand_dims(masks[-1],d+2)
+            masks.append(mask)
+
         tensors = {
-            'i_kernel': i_kernel,
-            'i_nodes': i_nodes,
-            'p_nodes': p_nodes,
-            'i_mask': i_mask,
-            'p_mask': p_mask,
+            'kernel': i_kernel,
+            'nodes': nodes,
+            'masks': masks
         }
         e_out = 0
         for layer in self.layers:
+            #print(layer)
             en = layer.process(tensors, self.dtype)
             if en is not None:
                 e_out = e_out + en
+            #print([[int(i) for i in node.shape] for node in tensors['nodes']])
         return e_out
 
     def load(self, fname):
