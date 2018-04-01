@@ -63,7 +63,7 @@ class ip_layer(pinn_layer_base):
                  n_nodes=8,
                  trainable=True,
                  activation='tanh',
-                 pool_type='max',
+                 pool_type='sum',
                  variables=None):
         pinn_layer_base.__init__(self, name, order, n_nodes, variables,
                                  trainable, activation)
