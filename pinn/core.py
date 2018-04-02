@@ -89,10 +89,11 @@ class PINN(Calculator):
                     _, cost_now = sess.run([opt, cost], feed_dict=feed_dict)
                     history.append(np.sqrt(cost_now*2./batch_size))
                 if (step + 1) % log_interval == 0:
+                    for layer in self.model.layers:
+                        layer.retrive_variables(sess, self.model.dtype)
+
                     if chkfile is not None:
                         self.model.save(chkfile)
-                    [layer.retrive_variables(sess, self.model.dtype)
-                     for layer in self.model.layers]
 
                     epoch_now = np.array(history[-n_batch:])
                     if step>0:
