@@ -30,7 +30,7 @@ Finally, properties about the atoms (like the atomic potential energy) can be de
 * Benchmarks
 Example model(s) trained on the QM9 (Ramakrishnan, Raghunathan; Dral, Pavlo; Dral, Pavlo O.; Rupp, Matthias; Anatole von Lilienfeld, O. (2017): Quantum chemistry structures and properties of 134 kilo molecules. figshare. Collection.) dataset.
 | Model                | Dataset                | Training Error | Test Error   |
-| examples/l6-128.json | 133885 GDB-9 molecules | 0.42kcal/mol   | 0.60kcal/mol |
+| examples/l6-128.json | 133885 GDB-9 molecules | 0.39kcal/mol   | 0.57kcal/mol |
 
 * License
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.

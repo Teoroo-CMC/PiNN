@@ -220,26 +220,18 @@ class en_layer(pinn_layer_base):
         return energy
 
 
-def default_layers(n_nodes=24, act='tanh'):
+def default_layers(n_nodes=24, depth=6, act='tanh'):
     layers = [
-        pi_layer('pi01', order=1, n_nodes=n_nodes//2, activation=act),
-        pi_layer('pi02', order=2, n_nodes=n_nodes//4, activation=act),
-        fc_layer('fc03', order=0, n_nodes=n_nodes//2, activation=act),
-        ip_layer('ip04', order=1, n_nodes=n_nodes//2, activation=act),
-        en_layer('en-0', order=0, n_nodes=[n_nodes]),
-        fc_layer('fc05', order=1, n_nodes=n_nodes//6, activation=act),
-        pi_layer('pi06', order=1, n_nodes=n_nodes//6, activation=act),
-        ip_layer('ip07', order=2, n_nodes=n_nodes//6, activation=act),
-        fc_layer('fc08', order=0, n_nodes=n_nodes//2, activation=act),
-        pi_layer('pi09', order=2, n_nodes=n_nodes//8, activation=act),
-        ip_layer('ip10', order=1, n_nodes=n_nodes//2, activation=act),
-        en_layer('en-1', order=0, n_nodes=[n_nodes]),
-        pi_layer('pi11', order=2, n_nodes=n_nodes//8, activation=act),
-        fc_layer('fc12', order=1, n_nodes=n_nodes//6, activation=act),
-        pi_layer('pi13', order=1, n_nodes=n_nodes//6, activation=act),
-        ip_layer('ip14', order=2, n_nodes=n_nodes//6, activation=act),
-        fc_layer('fc15', order=0, n_nodes=n_nodes//2, activation=act),
-        ip_layer('ip16', order=1, n_nodes=n_nodes//2, activation=act),
-        en_layer('en-2', order=0, n_nodes=[n_nodes]),
+        pi_layer('pi0', order=1, n_nodes=n_nodes//2, activation=act),
+        ip_layer('ip0', order=1, n_nodes=n_nodes, activation=act),
+        en_layer('en0', order=0, n_nodes=[n_nodes])
     ]
+    for i in range(1, depth+1):
+        layers += [
+            fc_layer('ii%i'%i, order=1, n_nodes=n_nodes//4, activation=act),
+            pi_layer('pi%i'%i, order=1, n_nodes=n_nodes//4, activation=act),
+            fc_layer('pp%i'%i, order=1, n_nodes=n_nodes//2, activation=act),
+            ip_layer('ip%i'%i, order=1, n_nodes=n_nodes//2, activation=act),
+            en_layer('en%i'%i, order=0, n_nodes=[n_nodes])
+        ]
     return layers
