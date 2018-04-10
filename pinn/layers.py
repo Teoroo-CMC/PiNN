@@ -53,6 +53,53 @@ class pinn_layer_base:
                                                       dtype=dtype)).tolist()
 
 
+class pi_compact(pinn_layer_base):
+    '''Integrated PI and IP layer
+    '''
+
+    def __init__(self,
+                 name,
+                 order=1,
+                 n_nodes=8,
+                 trainable=True,
+                 activation='tanh',
+                 variables=None):
+        pinn_layer_base.__init__(self, name, order, n_nodes, variables, trainable,
+                                 activation)
+        if variables is None:
+            variables = [{'name': '%s-w1' % self.name, 'val': None},
+                         {'name': '%s-w2' % self.name, 'val': None},
+                         {'name': '%s-b' % self.name, 'val': None}]
+        self.variables = variables
+
+    def process(self, tensors, dtype):
+        kernel = tensors['kernel']
+        node = tensors['nodes'][self.order-1]
+        mask = tensors['masks'][self.order]
+
+        kernel = tf.expand_dims(kernel, axis=-1)
+
+        for i in range(self.order-1):
+            kernel = tf.expand_dims(kernel, axis=-3)
+        shape = [1]*(self.order+2) + [self.n_nodes]
+        shapes = [[node.shape[-1], kernel.shape[-2], self.n_nodes],
+                  [node.shape[-1], kernel.shape[-2], self.n_nodes],
+                  shape]
+        w1, w2,  b = get_variables(self.variables, dtype, shapes)
+        act = tf.nn.__getattribute__(self.activation)
+
+        output = act(
+            tf.expand_dims(tf.tensordot(node, w1, [[self.order+1], [0]]), 1) +
+            tf.expand_dims(tf.tensordot(node, w2, [[self.order+1], [0]]), 2) + b)
+
+        output = tf.reduce_sum(output * kernel, axis=-2)
+        output = tf.where(tf.tile(mask, shape),
+                          output, tf.zeros_like(output))
+        output = tf.reduce_sum(output, axis=-2)
+
+        tensors['nodes'][0] = tf.concat([tensors['nodes'][0], output], axis=-1)
+
+
 class ip_layer(pinn_layer_base):
     '''Interaction pooling layer
     '''
