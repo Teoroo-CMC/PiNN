@@ -257,4 +257,4 @@ class pinn_model():
         model_dict['p_filter'] = {'class': self.p_filter.__class__.__name__,
                                   'param': self.p_filter.__dict__}
         with open(fname, 'w') as f:
-            json.dump(model_dict, f, indent=2)
+            json.dump(model_dict, f)
