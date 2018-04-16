@@ -9,6 +9,9 @@ setup(name='pinn',
       license='GPLv3',
       packages=['pinn'],
       install_requires=[
-          'matplotlib','numpy','tensorflow',
+          'ase',
+          'numpy',
+          'matplotlib',
+          'tensorflow',
       ],
 )
