@@ -14,7 +14,7 @@ class element_filter():
     def get_tensors(self, dtype, batch_size, n_max):
         p_in = tf.placeholder(
             dtype, shape=(batch_size, n_max, len(self.element_list)))
-        p_mask = tf.reduce_sum(p_in, axis=-1, keep_dims=True) > 0
+        p_mask = tf.reduce_sum(p_in, axis=-1, keepdims=True) > 0
         return p_in, p_mask
 
 
