@@ -27,11 +27,10 @@ class pinn_model():
         self.scale = 627.5
 
 
-    def train(self, traj, optimizer=tf.train.AdamOptimizer(3e-4),
+    def train(self, dataset, optimizer=tf.train.AdamOptimizer(3e-4),
               batch_size=100, max_steps=100, log_interval=10, chkfile=None):
         tf.reset_default_graph()
-        print('Processing input data', flush=True)
-        dataset = traj_parser(traj, self.p_filter)
+        print('Building the model', flush=True)
         c_in = tf.placeholder(self.dtype,
                               shape=(batch_size, dataset.n_atoms, 3))
         # Preparing the training model
@@ -47,7 +46,7 @@ class pinn_model():
         opt = optimizer.minimize(cost)
         n_batch = dataset.size//batch_size
         history = []
-
+        print('Start training', flush=True)
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             for step in range(max_steps):
@@ -178,32 +177,4 @@ class pinn_model():
             json.dump(model_dict, f)
 
 
-class traj_parser():
-    def __init__(self, traj, p_filter):
-        self.size = len(traj)
-        self.n_atoms = max([len(atoms) for atoms in traj])
-        c_mat = []
-        p_mat = []
-        for atoms in traj:
-            n_pad = self.n_atoms - len(atoms)
-            c_mat.append(np.pad(atoms.get_positions(),
-                                     [[0, n_pad], [0, 0]], 'constant'))
-            p_mat.append(np.pad(p_filter.parse(atoms),
-                                     [[0, n_pad], [0, 0]], 'constant'))
-        self.c_mat = np.array(c_mat)
-        self.p_mat = np.array(p_mat)
-        self.e_mat = np.array([atoms.get_potential_energy() for atoms in traj])
-
-    def get_input(self, index):
-        c_in = self.c_mat[index]
-        p_in = self.p_mat[index]
-        e_in = self.e_mat[index]
-        feed_dict = {'c_in': c_in,
-                     'p_in': p_in,
-                     'e_in': e_in}
-        return feed_dict
-
-class ani_parser():
-    def __init__(self, fname, p_filter):
-        self.size
 
