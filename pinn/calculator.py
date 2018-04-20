@@ -1,9 +1,6 @@
 import tensorflow as tf
 import numpy as np
 from ase.calculators.calculator import Calculator
-
-import pinn.filters as filters
-import pinn.layers as layers
 from pinn.model import pinn_model
 
 
@@ -19,17 +16,21 @@ class PINN(Calculator):
         self.sess = None
         self.tensors = None
 
-
     def get_tensors(self):
         if self.tensors is None:
             tf.reset_default_graph()
             n_atoms = len(self.atoms)
             c_in = tf.placeholder(self.model.dtype, shape=(1, n_atoms, 3))
-            c_flat = tf.reshape(c_in, [n_atoms*3])
-            c_in_2 = tf.reshape(c_flat, [1, n_atoms, 3])
-            tensors = self.model.get_tensors(c_in_2)
-            tensors['c_in'] = c_in
-            self.tensors = tensors
+            p_in = tf.placeholder(
+                self.model.dtype,
+                shape=(1,n_atoms,
+                       len(self.model.p_filter.element_list))
+            )
+            data = {'c_in': c_in, 'p_in': p_in}
+            inputs = self.model.get_inputs(data)
+            energy = self.model.get_energy(inputs)
+            data['energy'] = energy
+            self.tensors = data
         return self.tensors
 
     def get_sess(self, config=None):
