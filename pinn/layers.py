@@ -95,6 +95,7 @@ class pi_compact(pinn_layer_base):
         output = tf.reduce_sum(output * kernel, axis=-2)
         output = tf.where(tf.tile(mask, shape),
                           output, tf.zeros_like(output))
+        tf.summary.image(self.name, output[:,:,:,0:3])
         output = tf.reduce_sum(output, axis=-2)
 
         tensors['nodes'][0] = tf.concat([tensors['nodes'][0], output], axis=-1)

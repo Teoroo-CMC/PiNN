@@ -1,4 +1,4 @@
-import json
+import json, sys
 import time
 import tensorflow as tf
 import numpy as np
@@ -16,102 +16,23 @@ class pinn_model():
                  p_filter=filters.default_p_filter,
                  i_filter=filters.default_i_filter,
                  layers=layers.default_layers(),
-                 dress_atoms=True,
                  atomic_dress=None):
         self.dtype = dtype
-        self.dress_atoms = dress_atoms
-        self.atomic_dress = atomic_dress
+
         self.p_filter = p_filter
         self.i_filter = i_filter
+        if atomic_dress is None:
+            atomic_dress = [0]*len(p_filter.element_list)
+        self.atomic_dress = atomic_dress
         self.layers = layers
         self.scale = 627.5
 
+    def get_energy(self, input, training=False):
+        p_in = input['p_in']
+        p_mask = input['p_mask']
+        i_mask = input['i_mask']
+        i_kernel = input['i_kernel']
 
-    def train(self, dataset, optimizer=tf.train.AdamOptimizer(3e-4),
-              batch_size=100, max_steps=100, log_interval=10, chkfile=None):
-        tf.reset_default_graph()
-        print('Building the model', flush=True)
-        c_in = tf.placeholder(self.dtype,
-                              shape=(batch_size, dataset.n_atoms, 3))
-        # Preparing the training model
-        tensors = self.get_tensors(c_in, training=True)
-        e_out = tensors['energy']
-        p_in = tensors['p_in']
-        e_in = tf.placeholder(self.dtype, shape=e_out.shape)
-        e_atom = tf.tensordot(tf.reduce_sum(p_in, axis=1),
-                              self.atomic_dress, [[1], [0]])
-        e_scaled = (e_in - e_atom) * self.scale
-
-        cost = tf.nn.l2_loss(e_scaled - e_out)
-        opt = optimizer.minimize(cost)
-        n_batch = dataset.size//batch_size
-        history = []
-        print('Start training', flush=True)
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            for step in range(max_steps):
-                perm = np.random.permutation(dataset.size)
-                for n in range(n_batch):
-                    indices = perm[batch_size*n: batch_size*(n+1)]
-                    feed_dict = dataset.get_input(indices)
-                    _, cost_now = sess.run([opt, cost],
-                                           feed_dict={c_in: feed_dict['c_in'],
-                                                      p_in: feed_dict['p_in'],
-                                                      e_in: feed_dict['e_in']})
-                    history.append(np.sqrt(cost_now*2./batch_size))
-                if (step + 1) % log_interval == 0:
-                    for layer in self.layers:
-                        layer.retrive_variables(sess, self.dtype)
-
-                    if chkfile is not None:
-                        self.save(chkfile)
-
-                    epoch_now = np.array(history[-n_batch:])
-                    if step > 0:
-                        epoch_prev = history[-n_batch*2:-n_batch]
-                        dcost = np.mean(epoch_now) - np.mean(epoch_prev)
-                    else:
-                        dcost = np.nan
-
-                    epoch_rms = np.sqrt(np.mean(np.square(
-                        epoch_now-np.mean(epoch_now))))
-                    print('Epoch %8i: Cost_avg=%10.4f, dCost=%10.4f RMS=%10.4f' %
-                          (step+1, np.mean(epoch_now), dcost, epoch_rms), flush=True)
-
-            # Run a last epoch to get the predictions
-            e_predict = []
-            for n in range(n_batch):
-                indices = range(batch_size*n, batch_size*(n+1))
-                feed_dict = dataset.get_input(indices)
-                e_predict.append(
-                    sess.run(e_out, feed_dict={c_in: feed_dict['c_in'],
-                                               p_in: feed_dict['p_in']}))
-        results = {
-            'energy_predict': np.concatenate(e_predict),
-            'history': history}
-        return results
-
-    def fit_atomic_dress(self, p_mat, e_mat):
-        print('Generating a new atomic dress')
-        p_sum = np.sum(p_mat, axis=1)
-        self.atomic_dress = np.linalg.lstsq(
-            p_sum, e_mat)[0].tolist()
-
-    def get_tensors(self, c_in, training=False):
-        # Prepare the inputs
-        n_image = c_in.shape[0]
-        n_atoms = c_in.shape[1]
-        d_mat = tf.expand_dims(c_in, 1) - tf.expand_dims(c_in, 2)
-        d_mat = tf.reduce_sum(tf.square(d_mat), axis=3, keepdims=True)
-        # To avould NaN gradients
-        d_mat = tf.where(d_mat > 0, d_mat, tf.zeros_like(d_mat)+1e-20)
-        d_mat = tf.where(d_mat > 1e-19, tf.sqrt(d_mat), tf.zeros_like(d_mat))
-
-        # Construct the model
-        i_kernel, i_mask = self.i_filter.get_tensors(d_mat)
-        p_in, p_mask = self.p_filter.get_tensors(self.dtype, n_image, n_atoms)
-        # Because we padded zeros when training
-        i_mask = i_mask & (tf.expand_dims(p_mask, 1) & tf.expand_dims(p_mask, 2))
         max_order = max([layer.order for layer in self.layers])
         n, m = p_in.shape[0], p_in.shape[1]
         nodes = [p_in]
@@ -133,8 +54,9 @@ class pinn_model():
             'masks': masks
         }
         e_out = 0.0
-        for layer in self.layers:
+        for i, layer in enumerate(self.layers):
             en = layer.process(tensors, self.dtype)
+
             if en is not None:
                 e_out = e_out + en
         # Atomic dress
@@ -145,8 +67,97 @@ class pinn_model():
                                              self.atomic_dress, [[1], [0]])
         energy = tf.squeeze(e_out)
         # Outputs
-        tensors = {'c_in': c_in, 'p_in': p_in, 'energy': energy}
-        return tensors
+        return energy
+
+    def get_inputs(self, data):
+        c_in = data['c_in']
+        p_in = data['p_in']
+        d_mat = coord_to_dist(c_in)
+        i_kernel, i_mask = self.i_filter.get_tensors(d_mat)
+        p_mask = tf.reduce_sum(p_in, axis=-1, keepdims=True) > 0
+        # Because we padded zeros
+        i_mask = i_mask & (tf.expand_dims(p_mask, 1) & tf.expand_dims(p_mask, 2))
+        data['p_mask'] = p_mask
+        data['i_mask'] = i_mask
+        data['i_kernel'] = i_kernel
+        return data
+
+
+    def train(self, dataset,
+              optimizer=tf.train.AdamOptimizer(3e-4),
+              n_epoch=1, max_steps=100, batch_size=100,
+              log_interval=1, chk_interval=10,
+              job_name='training'):
+        tf.reset_default_graph()
+
+        print('Building the model', flush=True)
+
+        # Preparing the training model
+        dtypes = {'c_in': self.dtype, 'p_in': self.dtype, 'e_in': self.dtype}
+        dshapes = {'c_in': [dataset.n_atoms, 3],
+                   'p_in':[dataset.n_atoms, len(self.p_filter.element_list)],
+                   'e_in':[1]}
+        dataset = dataset.get_training(self.p_filter, dtypes)
+        dataset = dataset.apply(tf.contrib.data.shuffle_and_repeat(
+            100000, n_epoch))
+        dataset = dataset.apply(
+            tf.contrib.data.padded_batch_and_drop_remainder(
+                batch_size, dshapes))
+        dataset = dataset.map(self.get_inputs)
+        dataset = dataset.prefetch(100)
+        iterator = dataset.make_one_shot_iterator()
+        input = iterator.get_next()
+
+        e_out = self.get_energy(input, training=True)
+        e_atom = tf.tensordot(tf.reduce_sum(input['p_in'], axis=1),
+                              self.atomic_dress, [[1], [0]])
+
+        e_in = (tf.squeeze(input['e_in']) - e_atom) * self.scale
+
+        cost = tf.losses.mean_squared_error(e_in, e_out)
+        opt = optimizer.minimize(cost)
+        tf.summary.scalar('batch_cost', tf.sqrt(cost))
+        tf.summary.histogram('batch_hist', e_in - e_out)
+        merged = tf.summary.merge_all()
+        run_name = time.strftime("{}-%m%d%H%M".format(job_name))
+        chk_name = '{}-chk.json'.format(job_name)
+
+        print('Start training', flush=True)
+        with tf.Session() as sess:
+            s = 0
+            log_writer = tf.summary.FileWriter('logs/{}'.format(run_name))
+            sess.run(tf.global_variables_initializer())
+
+            for step in range(int(max_steps)):
+                try:
+                    _, summary = sess.run([opt, merged])
+                    if (step + 1) % log_interval == 0:
+                        log_writer.add_summary(summary, step+1)
+                    if (step + 1) % chk_interval == 0:
+                        for layer in self.layers:
+                            layer.retrive_variables(sess, self.dtype)
+                        print('Saving {} (step={})'.format(chk_name, step+1))
+                        self.save(chk_name)
+                except tf.errors.OutOfRangeError:
+                    print('End of epoches', flush=True)
+                    break
+
+
+            # Run a last epoch to get the predictions
+            # e_predict = []
+            # for n in range(n_batch):
+            #     indices = range(batch_size*n, batch_size*(n+1))
+            #     feed_dict = dataset.get_input(indices)
+            #     e_predict.append(
+            #         sess.run(e_out, feed_dict={c_in: feed_dict['c_in'],
+            #                                    p_in: feed_dict['p_in']}))
+
+
+    def fit_atomic_dress(self):
+        print('Generating a new atomic dress')
+        p_sum = np.sum(p_mat, axis=1)
+        self.atomic_dress = np.linalg.lstsq(
+            p_sum, e_mat)[0].tolist()
 
     def load(self, fname):
         with open(fname, 'r') as f:
@@ -176,5 +187,14 @@ class pinn_model():
         with open(fname, 'w') as f:
             json.dump(model_dict, f)
 
+
+
+def coord_to_dist(c_mat, pbc=False):
+    d_mat = tf.expand_dims(c_mat, 1) - tf.expand_dims(c_mat, 2)
+    d_mat = tf.reduce_sum(tf.square(d_mat), axis=3, keepdims=True)
+    # To avould NaN gradients
+    d_mat = tf.where(d_mat > 0, d_mat, tf.zeros_like(d_mat)+1e-20)
+    d_mat = tf.where(d_mat > 1e-19, tf.sqrt(d_mat), tf.zeros_like(d_mat))
+    return d_mat
 
 

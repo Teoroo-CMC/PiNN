@@ -1,41 +1,57 @@
 import numpy as np
-class traj_parser():
-    def __init__(self, traj, p_filter):
-        self.size = len(traj)
-        self.n_atoms = max([len(atoms) for atoms in traj])
-        c_mat = []
-        p_mat = []
-        for atoms in traj:
-            n_pad = self.n_atoms - len(atoms)
-            c_mat.append(np.pad(atoms.get_positions(),
-                                     [[0, n_pad], [0, 0]], 'constant'))
-            p_mat.append(np.pad(p_filter.parse(atoms),
-                                     [[0, n_pad], [0, 0]], 'constant'))
-        self.c_mat = np.array(c_mat)
-        self.p_mat = np.array(p_mat)
-        self.e_mat = np.array([atoms.get_potential_energy() for atoms in traj])
+import tensorflow as tf
+import random, h5py
+from ase import Atoms
 
-    def get_input(self, index):
-        c_in = self.c_mat[index]
-        p_in = self.p_mat[index]
-        e_in = self.e_mat[index]
-        feed_dict = {'c_in': c_in,
-                     'p_in': p_in,
-                     'e_in': e_in}
-        return feed_dict
+class from_ani():
+    def __init__(self, files, n_training=50000, seed=None, n_atoms=None):
+        data_list = []
+        for file in files:
+            store = h5py.File(file)
+            for g in store.keys():
+                group = store[g]
+                for k in group.keys():
+                    dat = (file, '/{}/{}'.format(g,k))
+                    data_list.append(dat)
+        if seed is not None:
+            random.seed(seed)
+        random.shuffle(data_list)
 
+        self.data_list = data_list
+        self.training = self.data_list[0:n_training]
+        self.testing = self.data_list[n_training:]
 
-class npz_parser():
-    def __init__(self, fname):
-        data = np.load(fname)
-        self.c_mat = data['c_mat']
-        self.p_mat = data['p_mat']
-        self.e_mat = data['e_mat']
-        self.size = self.c_mat.shape[0]
-        self.n_atoms = self.c_mat.shape[1]
+        if n_atoms is None:
+            n_atoms = self.get_max_natoms()
+        self.n_atoms = n_atoms
 
-    def get_input(self, index):
-        feed_dict = {'c_in': self.c_mat[index],
-                     'p_in': self.p_mat[index],
-                     'e_in': self.e_mat[index]}
-        return feed_dict
+    def get_max_natoms(self):
+        n_atoms = 0
+        for file, path in self.data_list:
+            n_atoms = max(n_atoms, h5py.File(file)[path]['coordinatesHE'].shape[1])
+        return n_atoms
+
+    def get_training(self, p_filter, dtypes):
+        g = ani_generator(self.training, p_filter)
+        dataset = tf.data.Dataset.from_generator(g, dtypes)
+        return dataset
+
+    def get_testing(self, p_filter, dtypes):
+        g = ani_generator(self.test, p_filter)
+        dataset = tf.data.Dataset.from_generator(g, dtypes)
+        return dataset
+
+class ani_generator():
+    def __init__(self, data_list, p_filter):
+        self.data_list = data_list
+        self.p_filter = p_filter
+
+    def __call__(self):
+        for file,path in self.data_list:
+            data = h5py.File(file)[path]
+            c = data['coordinates'].value
+            e = data['energies'].value
+            p = data['species'].value
+            p = self.p_filter.parse(Atoms([a.decode('ascii') for a in p]))
+            for i in range(e.shape[0]):
+                yield {'c_in':c[i], 'p_in':p, 'e_in':[e[i]]}
