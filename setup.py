@@ -11,6 +11,7 @@ setup(name='pinn',
       install_requires=[
           'ase',
           'numpy',
+          'h5py',
           'matplotlib',
           'tensorflow',
       ],

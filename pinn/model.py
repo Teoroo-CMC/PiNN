@@ -64,7 +64,8 @@ class pinn_model():
             e_out = e_out/self.scale
             if self.dress_atoms:
                 e_out = e_out + tf.tensordot(tf.reduce_sum(p_in, axis=1),
-                                             self.atomic_dress, [[1], [0]])
+                                             tf.constant(self.atomic_dress,dtype=self.dtype),
+                                             [[1], [0]])
         energy = tf.squeeze(e_out)
         # Outputs
         return energy
@@ -76,12 +77,12 @@ class pinn_model():
         i_kernel, i_mask = self.i_filter.get_tensors(d_mat)
         p_mask = tf.reduce_sum(p_in, axis=-1, keepdims=True) > 0
         # Because we padded zeros
-        i_mask = i_mask & (tf.expand_dims(p_mask, 1) & tf.expand_dims(p_mask, 2))
+        i_mask = i_mask & (tf.expand_dims(p_mask, 1) &
+                           tf.expand_dims(p_mask, 2))
         data['p_mask'] = p_mask
         data['i_mask'] = i_mask
         data['i_kernel'] = i_kernel
         return data
-
 
     def train(self, dataset,
               optimizer=tf.train.AdamOptimizer(3e-4),
@@ -95,8 +96,8 @@ class pinn_model():
         # Preparing the training model
         dtypes = {'c_in': self.dtype, 'p_in': self.dtype, 'e_in': self.dtype}
         dshapes = {'c_in': [dataset.n_atoms, 3],
-                   'p_in':[dataset.n_atoms, len(self.p_filter.element_list)],
-                   'e_in':[1]}
+                   'p_in': [dataset.n_atoms, len(self.p_filter.element_list)],
+                   'e_in': [1]}
         dataset = dataset.get_training(self.p_filter, dtypes)
         dataset = dataset.apply(tf.contrib.data.shuffle_and_repeat(
             100000, n_epoch))
@@ -110,7 +111,8 @@ class pinn_model():
 
         e_out = self.get_energy(input, training=True)
         e_atom = tf.tensordot(tf.reduce_sum(input['p_in'], axis=1),
-                              self.atomic_dress, [[1], [0]])
+                              tf.constant(self.atomic_dress, self.dtype),
+                              [[1], [0]])
 
         e_in = (tf.squeeze(input['e_in']) - e_atom) * self.scale
 
@@ -142,7 +144,6 @@ class pinn_model():
                     print('End of epoches', flush=True)
                     break
 
-
             # Run a last epoch to get the predictions
             # e_predict = []
             # for n in range(n_batch):
@@ -151,7 +152,6 @@ class pinn_model():
             #     e_predict.append(
             #         sess.run(e_out, feed_dict={c_in: feed_dict['c_in'],
             #                                    p_in: feed_dict['p_in']}))
-
 
     def fit_atomic_dress(self):
         print('Generating a new atomic dress')
@@ -188,7 +188,6 @@ class pinn_model():
             json.dump(model_dict, f)
 
 
-
 def coord_to_dist(c_mat, pbc=False):
     d_mat = tf.expand_dims(c_mat, 1) - tf.expand_dims(c_mat, 2)
     d_mat = tf.reduce_sum(tf.square(d_mat), axis=3, keepdims=True)
@@ -196,5 +195,3 @@ def coord_to_dist(c_mat, pbc=False):
     d_mat = tf.where(d_mat > 0, d_mat, tf.zeros_like(d_mat)+1e-20)
     d_mat = tf.where(d_mat > 1e-19, tf.sqrt(d_mat), tf.zeros_like(d_mat))
     return d_mat
-
-
