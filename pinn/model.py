@@ -1,8 +1,8 @@
-import json, sys
-import time
+import json, os, time
 import tensorflow as tf
 import numpy as np
 from ase.calculators.calculator import Calculator
+from tensorflow.python.lib.io import file_io
 import pinn.filters as filters
 import pinn.layers as layers
 
@@ -86,13 +86,18 @@ class pinn_model():
 
     def train(self, dataset,
               optimizer=tf.train.AdamOptimizer(3e-4),
-              n_epoch=1, max_steps=100, batch_size=100,
-              log_interval=1, chk_interval=10,
+              max_epoch=10, max_steps=100, batch_size=100,
+              log_dir='logs', log_interval=10,
+              chk_dir='chks', chk_interval=100,
               job_name='training'):
+
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        if not os.path.exists(chk_dir):
+            os.makedirs(chk_dir)
+
         tf.reset_default_graph()
-
         print('Building the model', flush=True)
-
         # Preparing the training model
         dtypes = {'c_in': self.dtype, 'p_in': self.dtype, 'e_in': self.dtype}
         dshapes = {'c_in': [dataset.n_atoms, 3],
@@ -100,7 +105,7 @@ class pinn_model():
                    'e_in': [1]}
         dataset = dataset.get_training(self.p_filter, dtypes)
         dataset = dataset.apply(tf.contrib.data.shuffle_and_repeat(
-            100000, n_epoch))
+            100000, max_epoch))
         dataset = dataset.apply(
             tf.contrib.data.padded_batch_and_drop_remainder(
                 batch_size, dshapes))
@@ -122,12 +127,13 @@ class pinn_model():
         tf.summary.histogram('batch_hist', e_in - e_out)
         merged = tf.summary.merge_all()
         run_name = time.strftime("{}-%m%d%H%M".format(job_name))
-        chk_name = '{}-chk.json'.format(job_name)
+        chk_name = os.path.join(chk_dir,'{}-chk.json'.format(job_name))
 
         print('Start training', flush=True)
         with tf.Session() as sess:
-            s = 0
-            log_writer = tf.summary.FileWriter('logs/{}'.format(run_name))
+            log_writer = tf.summary.FileWriter(
+                os.path.join(log_dir, run_name))
+
             sess.run(tf.global_variables_initializer())
 
             for step in range(int(max_steps)):
@@ -144,15 +150,6 @@ class pinn_model():
                     print('End of epoches', flush=True)
                     break
 
-            # Run a last epoch to get the predictions
-            # e_predict = []
-            # for n in range(n_batch):
-            #     indices = range(batch_size*n, batch_size*(n+1))
-            #     feed_dict = dataset.get_input(indices)
-            #     e_predict.append(
-            #         sess.run(e_out, feed_dict={c_in: feed_dict['c_in'],
-            #                                    p_in: feed_dict['p_in']}))
-
     def fit_atomic_dress(self):
         print('Generating a new atomic dress')
         p_sum = np.sum(p_mat, axis=1)
@@ -160,7 +157,7 @@ class pinn_model():
             p_sum, e_mat)[0].tolist()
 
     def load(self, fname):
-        with open(fname, 'r') as f:
+        with file_io.FileIO(fname, 'r') as f:
             model_dict = json.load(f)
         self.dtype = tf.__getattribute__(model_dict['dtype'])
         self.dress_atoms = model_dict['dress_atoms']
@@ -184,7 +181,7 @@ class pinn_model():
                                   'param': self.i_filter.__dict__}
         model_dict['p_filter'] = {'class': self.p_filter.__class__.__name__,
                                   'param': self.p_filter.__dict__}
-        with open(fname, 'w') as f:
+        with file_io.FileIO(fname, 'w') as f:
             json.dump(model_dict, f)
 
 

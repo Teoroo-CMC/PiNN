@@ -6,17 +6,11 @@ class element_filter():
     def __init__(self, element_list=[1, 6, 7, 8, 9]):
         self.element_list = element_list
 
-    def parse(self, atoms):
-        p_mat = np.array([np.where(atoms.get_atomic_numbers() == e, 1, 0)
-                          for e in self.element_list]).transpose()
+    def parse(self, elements, dtype):
+        element_list = tf.expand_dims(tf.constant(self.element_list), 0)
+        elements = tf.expand_dims(elements, 1)
+        p_mat = tf.cast(tf.equal(elements, element_list), dtype)
         return p_mat
-
-    def get_tensors(self, dtype, batch_size, n_max):
-        p_in = tf.placeholder(
-            dtype, shape=(batch_size, n_max, len(self.element_list)))
-        p_mask = tf.reduce_sum(p_in, axis=-1, keepdims=True) > 0
-        return p_in, p_mask
-
 
 class f1_symm_func_filter():
     def __init__(self, rc=6.0, order=5):

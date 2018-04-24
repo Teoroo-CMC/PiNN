@@ -2,6 +2,55 @@ import numpy as np
 import tensorflow as tf
 import random, h5py
 from ase import Atoms
+import os
+
+class from_tfrecord_ani():
+    def __init__(self, data_path, n_atoms=26):
+        self.train_file = os.path.join(data_path, 'train.tfrecord')
+        self.test_file = os.path.join(data_path, 'test.tfrecord')
+        self.vali_file = os.path.join(data_path, 'vali.tfrecord')
+        self.n_atoms = n_atoms
+
+    def get_training(self, p_filter, dtypes):
+        return _tfrecord_to_dataset(self.train_file, p_filter, dtypes)
+
+
+def _tfrecord_to_dataset(record_file, p_filter, dtypes):
+    def _record_to_dataset(tfrecord, p_filter, dtypes):
+        feature_dtypes = {
+            'atoms_raw': tf.FixedLenFeature([], tf.string),
+            'energ_raw': tf.FixedLenFeature([], tf.string),
+            'coord_raw': tf.FixedLenFeature([], tf.string),
+            'n_samples': tf.FixedLenFeature([], tf.int64),
+            'n_atoms': tf.FixedLenFeature([], tf.int64),
+        }
+        record = tf.parse_single_example(tfrecord, features=feature_dtypes)
+        # HARD-CODED datatypes
+        atoms = tf.decode_raw(record['atoms_raw'], tf.int32)
+        energ = tf.decode_raw(record['energ_raw'], tf.float64)
+        coord = tf.decode_raw(record['coord_raw'], tf.float32)
+
+        n_samples = tf.cast(record['n_samples'], tf.int64)
+        n_atoms = tf.cast(record['n_atoms'], tf.int64)
+
+        coord_shape = tf.stack([n_samples, n_atoms, 3])
+        coord = tf.reshape(coord, coord_shape)
+        energ = tf.expand_dims(tf.cast(energ, tf.float32),1)
+
+        dataset_c = tf.data.Dataset.from_tensor_slices(coord)
+        dataset_e = tf.data.Dataset.from_tensor_slices(energ)
+        dataset_a = tf.data.Dataset.from_tensors(atoms).repeat(n_samples)
+        dataset_p = dataset_a.map(lambda x: (p_filter.parse(x, tf.float32)))
+        dataset = tf.data.Dataset.zip({'c_in': dataset_c,
+                                       'p_in': dataset_p,
+                                       'e_in': dataset_e,})
+        return dataset
+
+    dataset = tf.data.TFRecordDataset(record_file)
+    dataset = dataset.flat_map(lambda x: _record_to_dataset(x, p_filter, dtypes))
+    return dataset
+
+
 
 class from_ani():
     def __init__(self, files, n_training=50000, seed=None, n_atoms=None):
