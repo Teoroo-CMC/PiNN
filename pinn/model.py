@@ -85,20 +85,15 @@ class pinn_model():
         return data
 
     def train(self, dataset,
-              optimizer=tf.train.AdamOptimizer(3e-4),
-              max_epoch=10, max_steps=100, batch_size=100,
+              max_epoch=10, max_steps=100,
+              batch_size=100, learning_rate=3e-4,
               log_dir='logs', log_interval=10,
               chk_dir='chks', chk_interval=100,
               job_name='training'):
-
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        if not os.path.exists(chk_dir):
-            os.makedirs(chk_dir)
-
         tf.reset_default_graph()
         print('Building the model', flush=True)
         # Preparing the training model
+        optimizer=tf.train.AdamOptimizer(learning_rate)
         dtypes = {'c_in': self.dtype, 'p_in': self.dtype, 'e_in': self.dtype}
         dshapes = {'c_in': [dataset.n_atoms, 3],
                    'p_in': [dataset.n_atoms, len(self.p_filter.element_list)],
@@ -144,7 +139,7 @@ class pinn_model():
                     if (step + 1) % chk_interval == 0:
                         for layer in self.layers:
                             layer.retrive_variables(sess, self.dtype)
-                        print('Saving {} (step={})'.format(chk_name, step+1))
+                        print('Saving {} (step={})'.format(chk_name, step+1), flush=True)
                         self.save(chk_name)
                 except tf.errors.OutOfRangeError:
                     print('End of epoches', flush=True)

@@ -13,6 +13,5 @@ setup(name='pinn',
           'numpy',
           'h5py',
           'matplotlib',
-          'tensorflow',
       ],
 )
