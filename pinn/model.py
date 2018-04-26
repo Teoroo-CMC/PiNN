@@ -104,10 +104,11 @@ class pinn_model():
         dataset = dataset.apply(
             tf.contrib.data.padded_batch_and_drop_remainder(
                 batch_size, dshapes))
-        dataset = dataset.map(self.get_inputs)
+        #dataset = dataset.map(self.get_inputs)
         dataset = dataset.prefetch(100)
         iterator = dataset.make_one_shot_iterator()
         input = iterator.get_next()
+        input = self.get_inputs(input)
 
         e_out = self.get_energy(input, training=True)
         e_atom = tf.tensordot(tf.reduce_sum(input['p_in'], axis=1),
