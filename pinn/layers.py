@@ -102,6 +102,74 @@ class pi_compact(pinn_layer_base):
         tensors['nodes'][0] = tf.concat([tensors['nodes'][0], output], axis=-1)
 
 
+class pi_flat(pinn_layer_base):
+    '''Integrated PI and IP layer
+    '''
+
+    def __init__(self,
+                 name,
+                 order=1,
+                 n_nodes=8,
+                 trainable=True,
+                 activation='tanh',
+                 variables=None):
+        pinn_layer_base.__init__(self, name, order, n_nodes, variables, trainable,
+                                 activation)
+        if variables is None:
+            variables = []
+            for i, n_node in enumerate(n_nodes):
+                variables += [{'name': '%s-w%i' % (self.name, i), 'val': None},
+                              {'name': '%s-b%i' % (self.name, i), 'val': None}]
+        self.variables = variables
+
+    def process(self, tensors, dtype):
+        kernel = tensors['kernel']
+        node = tensors['nodes'][self.order-1]
+        mask = tensors['masks'][self.order]
+
+        n_nodes = self.n_nodes.copy()
+        n_kernel = kernel.shape[-1]
+        n_nodes[-1] *= int(n_kernel)
+
+        n_atoms, batch_size = node.shape[-2], node.shape[0]
+
+        tile1 = [1, 1, n_atoms, 1]
+        tile2 = [1, n_atoms, 1, 1]
+
+        output = tf.concat([tf.tile(tf.expand_dims(node, -2), tile1),
+                            tf.tile(tf.expand_dims(node, -3), tile2)],
+                           axis=-1)
+        input_size = output.shape[-1]
+        shapes = []
+        for i, n_node in enumerate(n_nodes):
+            shapes += [[input_size, n_node],
+                       [1, 1, 1, n_node]]
+            input_size = n_node
+        shapes.append([input_size, 1])
+
+        v = get_variables(self.variables, dtype, shapes)
+        act = tf.nn.__getattribute__(self.activation)
+
+        for i in range(len(n_nodes)):
+            w, b = v[i*2], v[i*2+1]
+            output = act(tf.tensordot(output, w, [[3], [0]]) + b)
+
+        output = tf.reshape(output,
+                            [batch_size, n_atoms, n_atoms,
+                             n_kernel, self.n_nodes[-1]])
+
+        kernel = tf.expand_dims(kernel, -1)
+        output = tf.reduce_sum(output * kernel, axis=-2)
+        output = tf.where(tf.tile(mask, [1, 1, 1, self.n_nodes[-1]]),
+                          output, tf.zeros_like(output))
+
+        slice = tf.abs(output[:,:,:,0:3])
+        tf.summary.image(self.name, slice/tf.reduce_max(slice))
+        output = tf.reduce_sum(output, axis=-2)
+
+        tensors['nodes'][0] = tf.concat([tensors['nodes'][0], output], axis=-1)
+
+
 class ip_layer(pinn_layer_base):
     '''Interaction pooling layer
     '''
@@ -269,15 +337,15 @@ class en_layer(pinn_layer_base):
         return energy
 
 
-def default_layers(p_nodes=32, i_nodes=4, depth=6, act='tanh'):
+def default_layers(p_nodes=32, i_nodes=[32,4], depth=6, act='tanh'):
     layers = [
-        pi_compact('pi0', order=1, n_nodes=i_nodes, activation=act),
+        pi_flat('pi0', order=1, n_nodes=i_nodes, activation=act),
         en_layer('en0', order=0, n_nodes=[p_nodes])
     ]
     for i in range(1, depth+1):
         layers += [
             fc_layer('pp%i'%i, order=0, n_nodes=p_nodes, activation=act),
-            pi_compact('pi%i'%i, order=1, n_nodes=i_nodes, activation=act),
+            pi_flat('pi%i'%i, order=1, n_nodes=i_nodes, activation=act),
             en_layer('en%i'%i, order=0, n_nodes=[p_nodes])
         ]
     return layers
