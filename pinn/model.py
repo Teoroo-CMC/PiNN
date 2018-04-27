@@ -100,7 +100,7 @@ class pinn_model():
                    'e_in': [1]}
         dataset = dataset.get_training(self.p_filter, dtypes)
         dataset = dataset.apply(tf.contrib.data.shuffle_and_repeat(
-            100000, max_epoch))
+            1000000, max_epoch))
         dataset = dataset.apply(
             tf.contrib.data.padded_batch_and_drop_remainder(
                 batch_size, dshapes))
