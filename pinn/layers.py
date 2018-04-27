@@ -269,15 +269,15 @@ class en_layer(pinn_layer_base):
         return energy
 
 
-def default_layers(n_nodes=16, depth=6, act='tanh'):
+def default_layers(p_nodes=32, i_nodes=4, depth=6, act='tanh'):
     layers = [
-        pi_compact('pi0', order=1, n_nodes=n_nodes, activation=act),
-        en_layer('en0', order=0, n_nodes=[n_nodes])
+        pi_compact('pi0', order=1, n_nodes=i_nodes, activation=act),
+        en_layer('en0', order=0, n_nodes=[p_nodes])
     ]
     for i in range(1, depth+1):
         layers += [
-            fc_layer('pp%i'%i, order=0, n_nodes=n_nodes//2, activation=act),
-            pi_compact('pi%i'%i, order=1, n_nodes=n_nodes//2, activation=act),
-            en_layer('en%i'%i, order=0, n_nodes=[n_nodes])
+            fc_layer('pp%i'%i, order=0, n_nodes=p_nodes, activation=act),
+            pi_compact('pi%i'%i, order=1, n_nodes=i_nodes, activation=act),
+            en_layer('en%i'%i, order=0, n_nodes=[p_nodes])
         ]
     return layers
