@@ -94,9 +94,9 @@ class pinn_model():
         print('Building the model', flush=True)
         # Preparing the training model
         optimizer=tf.train.AdamOptimizer(learning_rate)
-        dtypes = {'c_in': self.dtype, 'p_in': tf.int32, 'e_in': self.dtype}
+        dtypes = {'c_in': self.dtype, 'a_in': tf.int32, 'e_in': self.dtype}
         dshapes = {'c_in': [dataset.n_atoms, 3],
-                   'p_in': [dataset.n_atoms],
+                   'a_in': [dataset.n_atoms],
                    'e_in': [1]}
         dataset = dataset.get_training(dtypes)
         #dataset = dataset.map(lambda data: self.p_filter.parse(data, self.dtype))

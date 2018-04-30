@@ -21,11 +21,11 @@ class PINN(Calculator):
         if self.tensors is None:
             n_atoms = len(self.atoms)
             c_in = tf.placeholder(self.model.dtype, shape=(1, n_atoms, 3))
-            p_in = tf.placeholder(
-                self.model.dtype,
-                shape=(1,n_atoms,
-                       len(self.model.p_filter.element_list)))
-            data = {'c_in': c_in, 'p_in': p_in}
+            a_in = tf.placeholder(
+                tf.int32,
+                shape=(1,n_atoms))
+            data = {'c_in': c_in, 'a_in': a_in}
+            data = self.model.p_filter.parse(data, self.model.dtype)
             inputs = self.model.get_inputs(data)
             energy = self.model.get_energy(inputs)
             data['energy'] = energy
@@ -42,7 +42,7 @@ class PINN(Calculator):
         self.atoms = atoms
         tensors = self.get_tensors()
         c_in = tensors['c_in']
-        p_in = tensors['p_in']
+        a_in = tensors['a_in']
         # Properties to calculate
         if 'forces' in properties and 'forces' not in self.tensors:
             tensors['forces'] = - tf.gradients(tensors['energy'],
@@ -56,15 +56,13 @@ class PINN(Calculator):
 
         # Run the calculation
         c_mat = [atoms.get_positions()]
-        p_mat = [np.equal(np.expand_dims(atoms.get_atomic_numbers(),1),
-                          [self.model.p_filter.element_list])]
+        a_mat = [atoms.get_atomic_numbers()]
 
-        p_mat = np.where(p_mat, 1, 0)
         sess = self.get_sess()
         vars = self.get_tensors()
         sess.run(tf.global_variables_initializer())
         self.results = sess.run(
-            to_calc, feed_dict={c_in: c_mat, p_in: p_mat})
+            to_calc, feed_dict={c_in: c_mat, a_in: a_mat})
 
     def get_vibrational_modes(self, atoms=None):
         if atoms is None:

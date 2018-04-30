@@ -20,7 +20,7 @@ def traj_generater(traj):
         c_mat = atoms.get_positions()
         a_mat = atoms.get_atomic_numbers()
         e_mat = [atoms.get_potential_energy()]
-        yield {'c_in': c_mat, 'p_in': a_mat, 'e_in': e_mat}
+        yield {'c_in': c_mat, 'a_in': a_mat, 'e_in': e_mat}
 
 
 class from_tfrecord_ani():
@@ -60,7 +60,7 @@ def _tfrecord_to_dataset(record_file, dtypes):
         dataset_e = tf.data.Dataset.from_tensor_slices(energ)
         dataset_a = tf.data.Dataset.from_tensors(atoms).repeat(n_samples)
         dataset = tf.data.Dataset.zip({'c_in': dataset_c,
-                                       'p_in': dataset_a,
+                                       'a_in': dataset_a,
                                        'e_in': dataset_e,})
         return dataset
 
@@ -121,4 +121,4 @@ class ani_generator():
             p = data['species'].value
             p = self.p_filter.parse(Atoms([a.decode('ascii') for a in p]))
             for i in range(e.shape[0]):
-                yield {'c_in':c[i], 'p_in':p, 'e_in':[e[i]]}
+                yield {'c_in':c[i], 'a_in':p, 'e_in':[e[i]]}

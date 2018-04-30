@@ -9,7 +9,7 @@ class element_filter():
     def parse(self, dataset, dtype):
         element_list = tf.expand_dims(tf.expand_dims(tf.constant(self.element_list), 0),0)
 
-        elements = tf.expand_dims(dataset['p_in'], 2)
+        elements = tf.expand_dims(dataset['a_in'], 2)
         p_mat = tf.cast(tf.equal(elements, element_list), dtype)
         dataset['p_in'] = p_mat
         return dataset
