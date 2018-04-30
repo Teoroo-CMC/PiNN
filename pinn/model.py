@@ -94,21 +94,26 @@ class pinn_model():
         print('Building the model', flush=True)
         # Preparing the training model
         optimizer=tf.train.AdamOptimizer(learning_rate)
-        dtypes = {'c_in': self.dtype, 'p_in': self.dtype, 'e_in': self.dtype}
+        dtypes = {'c_in': self.dtype, 'p_in': tf.int32, 'e_in': self.dtype}
         dshapes = {'c_in': [dataset.n_atoms, 3],
-                   'p_in': [dataset.n_atoms, len(self.p_filter.element_list)],
+                   'p_in': [dataset.n_atoms],
                    'e_in': [1]}
-        dataset = dataset.get_training(self.p_filter, dtypes)
+        dataset = dataset.get_training(dtypes)
+        #dataset = dataset.map(lambda data: self.p_filter.parse(data, self.dtype))
         dataset = dataset.apply(tf.contrib.data.shuffle_and_repeat(
-            1000000, max_epoch))
+            100000, max_epoch))
         dataset = dataset.apply(
             tf.contrib.data.padded_batch_and_drop_remainder(
                 batch_size, dshapes))
+
         #dataset = dataset.map(self.get_inputs)
-        dataset = dataset.prefetch(100)
+        dataset = dataset.prefetch(1000)
         iterator = dataset.make_one_shot_iterator()
         input = iterator.get_next()
+        input = self.p_filter.parse(input, self.dtype)
         input = self.get_inputs(input)
+
+
 
         e_out = self.get_energy(input, training=True)
         e_atom = tf.tensordot(tf.reduce_sum(input['p_in'], axis=1),
@@ -116,11 +121,12 @@ class pinn_model():
                               [[1], [0]])
 
         e_in = (tf.squeeze(input['e_in']) - e_atom) * self.scale
-
         cost = tf.losses.mean_squared_error(e_in, e_out)
         opt = optimizer.minimize(cost)
         tf.summary.scalar('batch_cost', tf.sqrt(cost))
         tf.summary.histogram('batch_hist', e_in - e_out)
+        tf.summary.histogram('batch_e_in', e_in)
+        tf.summary.histogram('batch_e_out', e_out)
         merged = tf.summary.merge_all()
         run_name = time.strftime("{}-%m%d%H%M".format(job_name))
         chk_name = os.path.join(chk_dir,'{}-chk.json'.format(job_name))

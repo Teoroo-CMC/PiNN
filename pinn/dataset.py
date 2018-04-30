@@ -4,6 +4,25 @@ import random, h5py
 from ase import Atoms
 import os
 
+
+class from_ase_traj():
+    def __init__(self, traj, n_atoms=29):
+        self.traj = traj
+        self.n_atoms = n_atoms
+
+    def get_training(self, dtypes):
+        generator = lambda : traj_generater(self.traj)
+        dataset = tf.data.Dataset.from_generator(generator, dtypes)
+        return dataset
+
+def traj_generater(traj):
+    for atoms in traj:
+        c_mat = atoms.get_positions()
+        a_mat = atoms.get_atomic_numbers()
+        e_mat = [atoms.get_potential_energy()]
+        yield {'c_in': c_mat, 'p_in': a_mat, 'e_in': e_mat}
+
+
 class from_tfrecord_ani():
     def __init__(self, data_path, n_atoms=26):
         self.train_file = os.path.join(data_path, 'train.tfrecord')
@@ -11,12 +30,12 @@ class from_tfrecord_ani():
         self.vali_file = os.path.join(data_path, 'vali.tfrecord')
         self.n_atoms = n_atoms
 
-    def get_training(self, p_filter, dtypes):
-        return _tfrecord_to_dataset(self.train_file, p_filter, dtypes)
+    def get_training(self, dtypes):
+        return _tfrecord_to_dataset(self.train_file, dtypes)
 
 
-def _tfrecord_to_dataset(record_file, p_filter, dtypes):
-    def _record_to_dataset(tfrecord, p_filter, dtypes):
+def _tfrecord_to_dataset(record_file, dtypes):
+    def _record_to_dataset(tfrecord, dtypes):
         feature_dtypes = {
             'atoms_raw': tf.FixedLenFeature([], tf.string),
             'energ_raw': tf.FixedLenFeature([], tf.string),
@@ -40,14 +59,13 @@ def _tfrecord_to_dataset(record_file, p_filter, dtypes):
         dataset_c = tf.data.Dataset.from_tensor_slices(coord)
         dataset_e = tf.data.Dataset.from_tensor_slices(energ)
         dataset_a = tf.data.Dataset.from_tensors(atoms).repeat(n_samples)
-        dataset_p = dataset_a.map(lambda x: (p_filter.parse(x, tf.float32)))
         dataset = tf.data.Dataset.zip({'c_in': dataset_c,
-                                       'p_in': dataset_p,
+                                       'p_in': dataset_a,
                                        'e_in': dataset_e,})
         return dataset
 
     dataset = tf.data.TFRecordDataset(record_file)
-    dataset = dataset.flat_map(lambda x: _record_to_dataset(x, p_filter, dtypes))
+    dataset = dataset.flat_map(lambda x: _record_to_dataset(x, dtypes))
     return dataset
 
 

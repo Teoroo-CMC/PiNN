@@ -6,11 +6,13 @@ class element_filter():
     def __init__(self, element_list=[1, 6, 7, 8, 9]):
         self.element_list = element_list
 
-    def parse(self, elements, dtype):
-        element_list = tf.expand_dims(tf.constant(self.element_list), 0)
-        elements = tf.expand_dims(elements, 1)
+    def parse(self, dataset, dtype):
+        element_list = tf.expand_dims(tf.expand_dims(tf.constant(self.element_list), 0),0)
+
+        elements = tf.expand_dims(dataset['p_in'], 2)
         p_mat = tf.cast(tf.equal(elements, element_list), dtype)
-        return p_mat
+        dataset['p_in'] = p_mat
+        return dataset
 
 class f1_symm_func_filter():
     def __init__(self, rc=6.0, order=5):
