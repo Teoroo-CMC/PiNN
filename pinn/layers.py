@@ -1,351 +1,139 @@
+"""
+   Layers are operations on the dataset
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
 import tensorflow as tf
-import numpy as np
+from tensorflow.contrib.layers import xavier_initializer
 
 
-def get_variables(variables, dtype, shapes):
-    tensors = []
-    with tf.variable_scope('layers'):
-        for i, var in enumerate(variables):
-            trainable = not ('fix' in var.keys() and var['fix'])
-            if var['val'] is None:
-                tensor = tf.get_variable(
-                    dtype=dtype,
-                    name=var['name'],
-                    shape=shapes[i],
-                    trainable=trainable,
-                    initializer=tf.contrib.layers.xavier_initializer())
-            else:
-                tensor = tf.get_variable(
-                    dtype=dtype,
-                    name=var['name'],
-                    shape=np.shape(var['val']),
-                    trainable=trainable,
-                    initializer=tf.constant_initializer(var['val']))
-            tensors.append(tensor)
-    return tensors[:]
+class fc_layer(object):
+    """Documentation for fc_layer
 
+    """
 
-class pinn_layer_base:
-    ''' Template for layers of PiNN
-    '''
-
-    def __init__(self,
-                 name,
-                 order=1,
-                 n_nodes=10,
-                 variables=None,
-                 trainable=True,
-                 activation='tanh'):
+    def __init__(self, name, n_nodes, order=0, act='tanh'):
+        self.n_nodes = n_nodes
         self.name = name
         self.order = order
+        self.act = tf.nn.__getattribute__(act)
+
+    def parse(self, tensors, dtype):
+        nodes = tensors['nodes'][self.order]
+        masks = tensors['pi_masks'][self.order]
+
+        for i, n_out in enumerate(self.n_nodes):
+            n_in = nodes.shape[-1]
+            w = tf.get_variable('{}-w{}'.format(self.name, i),
+                                shape=[n_in, n_out], dtype=dtype,
+                                initializer=xavier_initializer())
+            b = tf.get_variable('{}-b{}'.format(self.name, i),
+                                shape=[1, n_out], dtype=dtype,
+                                initializer=xavier_initializer())
+            nodes = self.act(tf.tensordot(nodes, w, [-1, 0]) + b)
+        nodes = masks * nodes
+        tensors['nodes'][self.order] = nodes
+
+
+class pi_layer(object):
+    """Documentation for pi_layer
+
+    """
+
+    def __init__(self, name, n_nodes, order=1, act='tanh'):
         self.n_nodes = n_nodes
-        self.variables = variables
-        self.trainable = trainable
-        self.activation = activation
+        self.name = name
+        self.order = order
+        self.act = tf.nn.__getattribute__(act)
 
-    def __repr__(self):
-        return '{0}[{1},{2}]'.format(self.name, self.order, self.n_nodes)
+    def parse(self, tensors, dtype):
+        nodes = tensors['nodes'][self.order-1]
+        masks = tensors['pi_masks'][self.order]
+        i_kernel = tensors['pi_kernel'][self.order]
 
-    def retrive_variables(self, sess, dtype):
-        with tf.variable_scope('layers', reuse=True):
-            for var in self.variables:
-                var['val'] = sess.run(tf.get_variable(var['name'],
-                                                      dtype=dtype)).tolist()
-
-
-class pi_compact(pinn_layer_base):
-    '''Integrated PI and IP layer
-    '''
-
-    def __init__(self,
-                 name,
-                 order=1,
-                 n_nodes=8,
-                 trainable=True,
-                 activation='tanh',
-                 variables=None):
-        pinn_layer_base.__init__(self, name, order, n_nodes, variables, trainable,
-                                 activation)
-        if variables is None:
-            variables = [{'name': '%s-w1' % self.name, 'val': None},
-                         {'name': '%s-w2' % self.name, 'val': None},
-                         {'name': '%s-b' % self.name, 'val': None}]
-        self.variables = variables
-
-    def process(self, tensors, dtype):
-        kernel = tensors['kernel']
-        node = tensors['nodes'][self.order-1]
-        mask = tensors['masks'][self.order]
-
-        kernel = tf.expand_dims(kernel, axis=-1)
-
-        for i in range(self.order-1):
-            kernel = tf.expand_dims(kernel, axis=-3)
-        shape = [1]*(self.order+2) + [self.n_nodes]
-        shapes = [[node.shape[-1], kernel.shape[-2], self.n_nodes],
-                  [node.shape[-1], kernel.shape[-2], self.n_nodes],
-                  shape]
-        w1, w2,  b = get_variables(self.variables, dtype, shapes)
-        act = tf.nn.__getattribute__(self.activation)
-
-        output = act(
-            tf.expand_dims(tf.tensordot(node, w1, [[self.order+1], [0]]), 1) +
-            tf.expand_dims(tf.tensordot(node, w2, [[self.order+1], [0]]), 2) + b)
-
-        output = tf.reduce_sum(output * kernel, axis=-2)
-        output = tf.where(tf.tile(mask, shape),
-                          output, tf.zeros_like(output))
-        slice = tf.abs(output[:,:,:,0:3])
-        tf.summary.image(self.name, slice/tf.reduce_max(slice))
-        output = tf.reduce_sum(output, axis=-2)
-
-        tensors['nodes'][0] = tf.concat([tensors['nodes'][0], output], axis=-1)
-
-
-class pi_flat(pinn_layer_base):
-    '''Integrated PI and IP layer
-    '''
-
-    def __init__(self,
-                 name,
-                 order=1,
-                 n_nodes=8,
-                 trainable=True,
-                 activation='tanh',
-                 variables=None):
-        pinn_layer_base.__init__(self, name, order, n_nodes, variables, trainable,
-                                 activation)
-        if variables is None:
-            variables = []
-            for i, n_node in enumerate(n_nodes):
-                variables += [{'name': '%s-w%i' % (self.name, i), 'val': None},
-                              {'name': '%s-b%i' % (self.name, i), 'val': None}]
-        self.variables = variables
-
-    def process(self, tensors, dtype):
-        kernel = tensors['kernel']
-        node = tensors['nodes'][self.order-1]
-        mask = tensors['masks'][self.order]
-
+        # Shape: n x atoms x atoms x channel
         n_nodes = self.n_nodes.copy()
-        n_kernel = kernel.shape[-1]
-        n_nodes[-1] *= int(n_kernel)
+        n_kernel = i_kernel.shape[-1]
+        n_nodes[-1] *= n_kernel
 
-        n_atoms, batch_size = node.shape[-2], node.shape[0]
+        nodes1 = tf.expand_dims(nodes, -2)
+        nodes2 = tf.expand_dims(nodes, -3)
+        nodes = tf.concat(
+            [nodes1+tf.zeros_like(nodes2),
+             nodes2+tf.zeros_like(nodes1)], -1)
 
-        tile1 = [1, 1, n_atoms, 1]
-        tile2 = [1, n_atoms, 1, 1]
+        for i, n_out in enumerate(n_nodes):
+            n_in = nodes.shape[-1]
+            w = tf.get_variable('{}-w{}'.format(self.name, i),
+                                shape=[n_in, n_out], dtype=dtype,
+                                initializer=xavier_initializer())
+            b = tf.get_variable('{}-b{}'.format(self.name, i),
+                                shape=[n_out], dtype=dtype,
+                                initializer=xavier_initializer())
+            nodes = self.act(tf.tensordot(nodes, w, [-1, 0]) + b)
 
-        output = tf.concat([tf.tile(tf.expand_dims(node, -2), tile1),
-                            tf.tile(tf.expand_dims(node, -3), tile2)],
-                           axis=-1)
-        input_size = output.shape[-1]
-        shapes = []
-        for i, n_node in enumerate(n_nodes):
-            shapes += [[input_size, n_node],
-                       [1, 1, 1, n_node]]
-            input_size = n_node
-        shapes.append([input_size, 1])
-
-        v = get_variables(self.variables, dtype, shapes)
-        act = tf.nn.__getattribute__(self.activation)
-
-        for i in range(len(n_nodes)):
-            w, b = v[i*2], v[i*2+1]
-            output = act(tf.tensordot(output, w, [[3], [0]]) + b)
-
-        output = tf.reshape(output,
-                            [batch_size, n_atoms, n_atoms,
-                             n_kernel, self.n_nodes[-1]])
-
-        kernel = tf.expand_dims(kernel, -1)
-        output = tf.reduce_sum(output * kernel, axis=-2)
-        output = tf.where(tf.tile(mask, [1, 1, 1, self.n_nodes[-1]]),
-                          output, tf.zeros_like(output))
-
-        slice = tf.abs(output[:,:,:,0:3])
-        tf.summary.image(self.name, slice/tf.reduce_max(slice))
-        output = tf.reduce_sum(output, axis=-2)
-
-        tensors['nodes'][0] = tf.concat([tensors['nodes'][0], output], axis=-1)
+        # Shape: n x atoms x atoms x n_nodes x n_kernel
+        nodes = tf.reshape(nodes,
+                           tf.concat([tf.shape(nodes)[:-1],
+                                      [self.n_nodes[-1], n_kernel]], 0))
+        nodes = tf.reduce_sum(nodes * i_kernel, axis=-1)
+        nodes = masks * nodes
+        tensors['nodes'][self.order] = nodes
 
 
-class ip_layer(pinn_layer_base):
-    '''Interaction pooling layer
-    '''
+class ip_layer(object):
+    """Documentation for ip_layer
 
-    def __init__(self,
-                 name,
-                 order=1,
-                 n_nodes=8,
-                 trainable=True,
-                 activation='tanh',
-                 pool_type='sum',
-                 variables=None):
-        pinn_layer_base.__init__(self, name, order, n_nodes, variables,
-                                 trainable, activation)
-        self.pool_type = pool_type
-        if variables is None:
-            variables = [{'name': '%s-w' % self.name, 'val': None},
-                         {'name': '%s-b' % self.name, 'val': None}]
-        self.variables = variables
+    """
 
-    def process(self, tensors, dtype):
-        node = tensors['nodes'][self.order]
-        mask = tensors['masks'][self.order]
+    def __init__(self, name,  order=1, pool_type='sum'):
+        self.name = name
+        self.order = order
+        self.pool = {
+            'sum': lambda x: tf.reduce_sum(x, axis=-2),
+            'max': lambda x: tf.reduce_max(x, axis=-2)
+        }[pool_type]
 
-        shape = [1]*(self.order+2) + [self.n_nodes]
-        shapes = [[node.shape[-1], self.n_nodes],
-                  shape]
-        w, b = get_variables(self.variables, dtype, shapes)
-        act = tf.nn.__getattribute__(self.activation)
+    def parse(self, tensors, dtype):
+        i_nodes = tensors['nodes'][self.order]
+        p_mask = tensors['pi_masks'][self.order - 1]
 
-        output = act(tf.tensordot(node, w, [[self.order+2], [0]]) + b)
-        output = tf.where(tf.tile(mask, shape),
-                          output, tf.zeros_like(output))
-        output = {
-            'max': lambda x: tf.reduce_max(x, axis=-2),
-            'sum': lambda x: tf.reduce_sum(x, axis=-2)
-        }[self.pool_type](output)
+        p_nodes = self.pool(i_nodes)
+        p_nodes = p_mask * p_nodes
 
-        tensors['nodes'][self.order-1] = tf.concat([tensors['nodes'][self.order-1], output], axis=-1)
+        tensors['nodes'][self.order - 1] = p_nodes
 
 
-class pi_layer(pinn_layer_base):
-    '''Pairwise interaction layer
-    '''
+class en_layer(object):
+    """Documentation for fc_layer
 
-    def __init__(self,
-                 name,
-                 order=1,
-                 n_nodes=8,
-                 trainable=True,
-                 activation='tanh',
-                 variables=None):
-        pinn_layer_base.__init__(self, name, order, n_nodes, variables, trainable,
-                                 activation)
-        if variables is None:
-            variables = [{'name': '%s-w1' % self.name, 'val': None},
-                         {'name': '%s-w2' % self.name, 'val': None},
-                         {'name': '%s-b' % self.name, 'val': None}]
-        self.variables = variables
+    """
 
-    def process(self, tensors, dtype):
-        kernel = tensors['kernel']
-        node = tensors['nodes'][self.order-1]
-        mask = tensors['masks'][self.order]
+    def __init__(self, name, n_nodes, order=0, act='tanh'):
+        self.n_nodes = n_nodes
+        self.name = name
+        self.order = order
+        self.act = tf.nn.__getattribute__(act)
 
-        kernel = tf.expand_dims(kernel, axis=-1)
+    def parse(self, tensors, dtype):
+        nodes = tensors['nodes'][self.order]
+        masks = tensors['pi_masks'][self.order]
 
-        for i in range(self.order-1):
-            kernel = tf.expand_dims(kernel, axis=-3)
-        shape = [1]*(self.order+2) + [self.n_nodes]
-        shapes = [[node.shape[-1], kernel.shape[-2], self.n_nodes],
-                  [node.shape[-1], kernel.shape[-2], self.n_nodes],
-                  shape]
-        w1, w2,  b = get_variables(self.variables, dtype, shapes)
-        act = tf.nn.__getattribute__(self.activation)
+        for i, n_out in enumerate(self.n_nodes):
+            n_in = nodes.shape[-1]
+            w = tf.get_variable('{}-w{}'.format(self.name, i),
+                                shape=[n_in, n_out], dtype=dtype,
+                                initializer=xavier_initializer())
+            b = tf.get_variable('{}-b{}'.format(self.name, i),
+                                shape=[1, n_out], dtype=dtype,
+                                initializer=xavier_initializer())
+            nodes = self.act(tf.tensordot(nodes, w, [-1, 0]) + b)
 
-        output = act(
-            tf.expand_dims(tf.tensordot(node, w1, [[self.order+1], [0]]), 1) +
-            tf.expand_dims(tf.tensordot(node, w2, [[self.order+1], [0]]), 2) + b)
+        nodes = masks * nodes
 
-        output = tf.reduce_sum(output * kernel, axis=-2)
-        output = tf.where(tf.tile(mask, shape),
-                          output, tf.zeros_like(output))
+        w = tf.get_variable('{}-en'.format(self.name),
+                            shape=[n_out], dtype=dtype,
+                            initializer=xavier_initializer())
 
-        tensors['nodes'][self.order] = tf.concat([tensors['nodes'][self.order], output], axis=-1)
-
-
-class fc_layer(pinn_layer_base):
-    '''Fully connected property layer
-    '''
-    def __init__(self,
-                 name,
-                 order=0,
-                 n_nodes=8,
-                 trainable=True,
-                 activation='tanh',
-                 variables=None):
-        pinn_layer_base.__init__(self, name, order, n_nodes, variables, trainable,
-                                 activation)
-        if variables is None:
-            variables = [{'name': '%s-w' % self.name, 'val': None},
-                         {'name': '%s-b' % self.name, 'val': None}]
-        self.variables = variables
-
-    def process(self, tensors, dtype):
-        node = tensors['nodes'][self.order]
-        mask = tensors['masks'][self.order]
-
-        shape = [1]*(self.order+2) + [self.n_nodes]
-        shapes = [[node.shape[-1], self.n_nodes],
-                  shape]
-
-        w, b = get_variables(self.variables, dtype, shapes)
-        act = tf.nn.__getattribute__(self.activation)
-        output = act(tf.tensordot(node, w, [[self.order+2], [0]]) + b)
-        output = tf.where(tf.tile(mask, shape),
-                          output, tf.zeros_like(output))
-        tensors['nodes'][self.order] = output
-
-
-class en_layer(pinn_layer_base):
-    '''Energy generation layer
-    '''
-
-    def __init__(self,
-                 name,
-                 order=0,
-                 n_nodes=[32],
-                 trainable=True,
-                 activation='tanh',
-                 variables=None):
-        pinn_layer_base.__init__(self, name, order, n_nodes, variables, trainable,
-                                 activation)
-        if variables is None:
-            variables = []
-            for i, n_node in enumerate(n_nodes):
-                variables += [{'name': '%s-w%i' % (self.name, i), 'val': None},
-                              {'name': '%s-b%i' % (self.name, i), 'val': None}]
-            variables.append({'name': '%s-final' % self.name, 'val': None})
-        self.variables = variables
-
-    def process(self, tensors, dtype):
-        node = tensors['nodes'][self.order]
-        mask = tensors['masks'][self.order]
-
-        output = node
-        shapes = []
-        input_size = output.shape[-1]
-        for i, n_node in enumerate(self.n_nodes):
-            shapes += [[input_size, n_node],
-                       [1, 1, n_node]]
-            input_size = n_node
-        shapes.append([input_size, 1])
-        v = get_variables(self.variables, dtype, shapes)
-        act = tf.nn.__getattribute__(self.activation)
-        for i in range(len(self.n_nodes)):
-            w, b = v[i*2], v[i*2+1]
-            output = act(tf.tensordot(output, w, [[2], [0]]) + b)
-            output = tf.where(tf.tile(mask, [1]*(self.order+2)+ [self.n_nodes[i]]),
-                              output, tf.zeros_like(output))
-        W = v[-1]
-        output = tf.tensordot(output, W,  [[self.order+2], [0]])
-        output = tf.where(mask, output, tf.zeros_like(output))
-        energy = tf.reduce_sum(output, [1, 2])
-        return energy
-
-
-def default_layers(p_nodes=32, i_nodes=[32,4], depth=6, act='tanh'):
-    layers = [
-        pi_flat('pi0', order=1, n_nodes=i_nodes, activation=act),
-        en_layer('en0', order=0, n_nodes=[p_nodes])
-    ]
-    for i in range(1, depth+1):
-        layers += [
-            fc_layer('pp%i'%i, order=0, n_nodes=p_nodes, activation=act),
-            pi_flat('pi%i'%i, order=1, n_nodes=i_nodes, activation=act),
-            en_layer('en%i'%i, order=0, n_nodes=[p_nodes])
-        ]
-    return layers
+        nodes = tf.tensordot(nodes, w, [-1, 0])
+        nodes = tf.reduce_sum(nodes, [i-1 for i in range(self.order + 1)])
+        tensors['energy'] += nodes

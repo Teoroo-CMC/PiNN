@@ -1,124 +1,180 @@
-import numpy as np
-import tensorflow as tf
-import random, h5py
-from ase import Atoms
+"""
+    Datasets in PiNN feeds the atomic data to models
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Output shapes:
+    'coord':   [natoms, 3]
+    'element': [natoms]
+    'energy':  []
+
+"""
+
 import os
+import tensorflow as tf
 
 
-class from_ase_traj():
-    def __init__(self, traj, n_atoms=29):
-        self.traj = traj
-        self.n_atoms = n_atoms
+class ANI_H5_dataset():
+    """H5 dataset that follows the format of ANI1 dataset
 
-    def get_training(self, dtypes):
-        generator = lambda : traj_generater(self.traj)
-        dataset = tf.data.Dataset.from_generator(generator, dtypes)
-        return dataset
+    ANI-1, A data set of 20 million calculated off-equilibrium conformations
+    for organic molecules.
+    Justin S. Smith, Olexandr Isayev, Adrian E. Roitberg.
+    DOI: 10.1038/sdata.2017.193
 
-def traj_generater(traj):
-    for atoms in traj:
-        c_mat = atoms.get_positions()
-        a_mat = atoms.get_atomic_numbers()
-        e_mat = [atoms.get_potential_energy()]
-        yield {'c_in': c_mat, 'a_in': a_mat, 'e_in': e_mat}
+    The dataset is split on a 'molecular' basis, meaninig the same molecule
+    show up in only one of the train/vali/test datasets.
+    """
 
+    def __init__(self, files, n_atoms=None,
+                 split_ratio=[0.9, 0.05, 0.05], shuffle=True, seed=None):
+        """
+        Args:
+            files (list): A list of database files or one database file
+            natoms (:obj:`int`, optional): The maximum number of atoms in the
+                dataset
+        """
+        import h5py
+        import random
 
-class from_tfrecord_ani():
-    def __init__(self, data_path, n_atoms=26):
-        self.train_file = os.path.join(data_path, 'train.tfrecord')
-        self.test_file = os.path.join(data_path, 'test.tfrecord')
-        self.vali_file = os.path.join(data_path, 'vali.tfrecord')
-        self.n_atoms = n_atoms
+        if type(files) == str:
+            files = [files]
 
-    def get_training(self, dtypes):
-        return _tfrecord_to_dataset(self.train_file, dtypes)
-
-
-def _tfrecord_to_dataset(record_file, dtypes):
-    def _record_to_dataset(tfrecord, dtypes):
-        feature_dtypes = {
-            'atoms_raw': tf.FixedLenFeature([], tf.string),
-            'energ_raw': tf.FixedLenFeature([], tf.string),
-            'coord_raw': tf.FixedLenFeature([], tf.string),
-            'n_samples': tf.FixedLenFeature([], tf.int64),
-            'n_atoms': tf.FixedLenFeature([], tf.int64),
-        }
-        record = tf.parse_single_example(tfrecord, features=feature_dtypes)
-        # HARD-CODED datatypes
-        atoms = tf.decode_raw(record['atoms_raw'], tf.int32)
-        energ = tf.decode_raw(record['energ_raw'], tf.float64)
-        coord = tf.decode_raw(record['coord_raw'], tf.float32)
-
-        n_samples = tf.cast(record['n_samples'], tf.int64)
-        n_atoms = tf.cast(record['n_atoms'], tf.int64)
-
-        coord_shape = tf.stack([n_samples, n_atoms, 3])
-        coord = tf.reshape(coord, coord_shape)
-        energ = tf.expand_dims(tf.cast(energ, tf.float32),1)
-
-        dataset_c = tf.data.Dataset.from_tensor_slices(coord)
-        dataset_e = tf.data.Dataset.from_tensor_slices(energ)
-        dataset_a = tf.data.Dataset.from_tensors(atoms).repeat(n_samples)
-        dataset = tf.data.Dataset.zip({'c_in': dataset_c,
-                                       'a_in': dataset_a,
-                                       'e_in': dataset_e,})
-        return dataset
-
-    dataset = tf.data.TFRecordDataset(record_file)
-    dataset = dataset.flat_map(lambda x: _record_to_dataset(x, dtypes))
-    return dataset
-
-
-
-class from_ani():
-    def __init__(self, files, n_training=50000, seed=None, n_atoms=None):
         data_list = []
+        n_atoms = 0
+
         for file in files:
             store = h5py.File(file)
             for g in store.keys():
                 group = store[g]
                 for k in group.keys():
-                    dat = (file, '/{}/{}'.format(g,k))
+                    dat = (file, '/{}/{}'.format(g, k))
                     data_list.append(dat)
-        if seed is not None:
-            random.seed(seed)
+
+        random.seed(seed)
         random.shuffle(data_list)
+        n_train = int(len(data_list) * split_ratio[0])
+        n_test = int(len(data_list) * sum(split_ratio[:2]))
 
-        self.data_list = data_list
-        self.training = self.data_list[0:n_training]
-        self.testing = self.data_list[n_training:]
-
-        if n_atoms is None:
-            n_atoms = self.get_max_natoms()
+        self._train_list = data_list[:n_train]
+        self._test_list = data_list[:n_test]
+        self._vali_list = data_list[n_test:]
         self.n_atoms = n_atoms
+        self.shuffle = 1000000
 
-    def get_max_natoms(self):
-        n_atoms = 0
-        for file, path in self.data_list:
-            n_atoms = max(n_atoms, h5py.File(file)[path]['coordinatesHE'].shape[1])
-        return n_atoms
-
-    def get_training(self, p_filter, dtypes):
-        g = ani_generator(self.training, p_filter)
-        dataset = tf.data.Dataset.from_generator(g, dtypes)
+    def get_train(self, dtype=tf.float32):
+        dataset = _ani_to_dataset(self._train_list, dtype)
+        dataset.shuffle(self.shuffle)
         return dataset
 
-    def get_testing(self, p_filter, dtypes):
-        g = ani_generator(self.test, p_filter)
-        dataset = tf.data.Dataset.from_generator(g, dtypes)
+    def get_test(self, dtype=tf.float32):
+        dataset = _ani_to_dataset(self._test_list, dtype)
         return dataset
 
-class ani_generator():
-    def __init__(self, data_list, p_filter):
-        self.data_list = data_list
-        self.p_filter = p_filter
+    def get_vali(self, dtype=tf.float32):
+        dataset = _ani_to_dataset(self._vali_list, dtype)
+        return dataset
 
-    def __call__(self):
-        for file,path in self.data_list:
-            data = h5py.File(file)[path]
-            c = data['coordinates'].value
-            e = data['energies'].value
-            p = data['species'].value
-            p = self.p_filter.parse(Atoms([a.decode('ascii') for a in p]))
-            for i in range(e.shape[0]):
-                yield {'c_in':c[i], 'a_in':p, 'e_in':[e[i]]}
+
+def _ani_generator(datalist):
+    import h5py
+    import ase
+
+    for fname, path in datalist:
+        data = h5py.File(fname)[path]
+
+        atoms = [ase.data.atomic_numbers[i.decode('ascii')]
+                 for i in data['species'].value]
+        coord = data['coordinates'].value
+        energ = data['energies'].value
+
+        size = energ.shape[0]
+
+        for i in range(size):
+            data = {'coord': coord[i],
+                    'atoms': atoms,
+                    'e_data': energ[i]}
+            yield data
+
+
+def _ani_to_dataset(datalist, dtype):
+    dataset = tf.data.Dataset.from_generator(
+        lambda: _ani_generator(datalist),
+        {'coord': dtype, 'atoms': tf.int32, 'e_data': dtype},
+        {'coord': [None, 3], 'atoms': [None], 'e_data': []},
+    )
+    return dataset
+
+
+class QM9_dataset():
+    """Dataset with format as specified in QM9 dataset
+
+    This implementation is VERY INEFFICIENT
+    For real training, the dataset should be converted to other formats
+    """
+
+    def __init__(self, files, n_atoms=None):
+        pass
+
+    def convert_to_tfrecord(self, shuffle=True, seed=None):
+        pass
+
+
+class tfrecord_dataset():
+    """Dataset stored with the tfrecord format
+
+    Dataset is splited into 'chunks' of data, and
+    """
+
+    def __init__(self, folder, n_atoms=None):
+        sef.folder = folder
+
+    def get_train(self, dtype):
+        fname = os.path.join(self.folder, 'train.tfrecord')
+        return _tfrecord_to_dataset(fname, dtype)
+
+
+def _tfrecord_to_dataset(fname):
+    dataset = tf.data.TFRecordDataset(fname)
+    raw_dtypes = {
+        'atoms': tf.int32,
+        'energ': tf.float32,
+        'coord': tf.float32}
+    raw_shapes = {
+        'atoms': lambda size, natoms: [1, natoms],
+        'energ': lambda size, natoms: [size, 1],
+        'coord': lambda size, natoms: [size, natoms, 3]
+    }
+    out_dtypes = {
+        'atoms': tf.int32,
+        'energ': dtype,
+        'coord': dtype}
+    dataset = dataset.flat_map(
+        lambda data: _record_to_structrue(
+            data, raw_dtypes, raw_shapes, out_dtypes))
+    return dataset
+
+
+def _record_to_structure(record):
+    """Convert one record (chunk of data) to a dataset
+
+    The record should be arranged as following:
+        size          :(int64)  number of structures in this record
+        natoms        :(int64)  maximum number of atoms in each structure
+        {featrue}_raw :(string) raw data of the features
+    """
+    feature_dtypes = {
+        'size':  tf.FixedLenFeature([], tf.int64),
+        'natoms': tf.FixedLenFeature([], tf.int64),
+        'atoms_raw': tf.FixedLenFeature([], tf.string),
+        'energ_raw': tf.FixedLenFeature([], tf.string),
+        'coord_raw': tf.FixedLenFeature([], tf.string)}
+
+    datasets = {}
+    for key in raw_shapes:
+        data = tf.decode_raw(record['{}_raw'.format(key)], raw_dtypes[key])
+        data = tf.reshape(data, raw_shape[key](size, natoms))
+        data = tf.cast(data, out_dtypes[key])
+        dataset = tf.data.Dataset.from_tensor_slices(data)
+        if data.shape[0] == 1:
+            dataset = dataset.repeat(size)
+        datasets[key] = data
+    dataset = tf.data.Dataset.zip(datasets)
