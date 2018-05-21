@@ -1,6 +1,7 @@
 #+TITLE: Pairwise interaction neural network
 #+BEGIN_HTML
-<img src="https://travis-ci.org/yqshao/pinn.svg?branch=master">
+<a href='https://travis-ci.org/yqshao/pinn.svg?branch=master'><img src="https://travis-ci.org/yqshao/pinn.svg?branch=master"></a>
+<a href='https://coveralls.io/github/yqshao/pinn?branch=master'><img src='https://coveralls.io/repos/github/yqshao/pinn/badge.svg?branch=master' alt='Coverage Status' /></a>
 #+END_HTML
 PiNN is a atomic neural network potential algorithm. This package is currently being developed primarily by Yunqi Shao at East China University of Science and Technology (ECUST), and is published under the GNU General Public Licence. The pinn package is designed to work with ASE and tensorflow.
 

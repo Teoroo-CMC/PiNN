@@ -1,9 +1,13 @@
 language: python
 install:
-  - pip install .
+  - pip install -e .
+  - pip install python-coveralls
+  - pip install pytest-cov
 python:
   - "3.6"
 script:
-  - pytest
+  - pytest --cov pinn
+after_success:
+  - coveralls
 notifications:
   email: false
