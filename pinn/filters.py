@@ -46,13 +46,12 @@ class distance_mat():
         coord = tensors['coord']
         diff = tf.expand_dims(coord, -2) - tf.expand_dims(coord, -3)
 
-        # if tensors['cell'] is not None:
-        #     # TODO: Implement PBC here
-        #     pass
+        if 'cell' in tensors and tensors['cell'].shape == [3]:
+            diff = diff - tf.rint(diff / tensors['cell']) * tensors['cell']
+        # elif tensors['cell'].shape == [3, 3]:
+        #     #TODO Implement PBC for triclinic cells
 
         dist = tf.sqrt(tf.reduce_sum(tf.square(diff), axis=-1))
-        # TODO: dist should be differentiable
-
         tensors['dist'] = dist
 
 
