@@ -26,31 +26,36 @@ def potential_model_fn(features, labels, mode, params):
         loss = tf.losses.mean_squared_error(features['e_data'],
                                             features['energy'])
         return tf.estimator.EstimatorSpec(
-            mode=tf.estimator.ModeKeys.TRAIN,
-            loss=loss,
+            mode, loss=loss,
             train_op=optimizer.minimize(loss, global_step=global_step))
 
     if mode == tf.estimator.ModeKeys.EVAL:
         loss = tf.losses.mean_squared_error(features['e_data'],
                                             features['energy'])
 
-        print(features['e_data'].shape)
-        print(features['energy'].shape)
         metrics = {
             'MAE': tf.metrics.mean_absolute_error(
                 features['e_data'], features['energy']),
             'RMSE': tf.metrics.root_mean_squared_error(
-                features['e_data'], features['energy'])
+                features['e_data'], features['energy'])}
+
+        return tf.estimator.EstimatorSpec(mode, loss=loss,
+                                          eval_metric_ops=metrics)
+
+    if mode == tf.estimator.ModeKeys.PREDICT:
+        energy = features['energy']
+        predictions = {
+            'energy': energy,
+            'forces': -tf.gradients(energy, features['coord'])[0]
         }
-
-        return tf.estimator.EstimatorSpec(
-            mode=tf.estimator.ModeKeys.EVAL,
-            loss=loss,
-            eval_metric_ops=metrics)
+        print(predictions)
+        return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
 
-def PiNN(depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0):
-    """"""
+def PiNN(model_dir='PiNN',
+         depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0):
+    """
+    """
     filters = [
         f.atomic_mask(),
         f.atomic_dress({0: 0.0}),
@@ -68,9 +73,9 @@ def PiNN(depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0):
     params = {
         'filters': filters,
         'layers': layers,
-        'dtype': tf.float32
+        'dtype': tf.float32,
     }
 
     estimator = tf.estimator.Estimator(
-        model_fn=potential_model_fn, params=params)
+        model_fn=potential_model_fn, params=params, model_dir=model_dir)
     return estimator

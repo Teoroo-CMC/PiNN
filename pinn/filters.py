@@ -49,10 +49,14 @@ class distance_mat():
         if 'cell' in tensors and tensors['cell'].shape == [3]:
             diff = diff - tf.rint(diff / tensors['cell']) * tensors['cell']
         # elif tensors['cell'].shape == [3, 3]:
-        #     #TODO Implement PBC for triclinic cells
+        #TODO Implement PBC for triclinic cells
 
-        dist = tf.sqrt(tf.reduce_sum(tf.square(diff), axis=-1))
-        tensors['dist'] = dist
+        square = tf.reduce_sum(tf.square(diff), axis=-1)
+        # To make the distance differentiable
+        zeros = tf.equal(square, 0)
+        square = tf.where(zeros,  tf.ones_like(square), square)
+        dist = tf.where(zeros, tf.sqrt(square), tf.zeros_like(square))
+        tensors['dist'] = square
 
 
 class pi_atomic():

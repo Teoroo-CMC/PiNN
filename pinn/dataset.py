@@ -194,10 +194,12 @@ class ANI_H5_dataset():
 
     def get_test(self, dtype=tf.float32):
         dataset = _ani_to_dataset(self._test_list, dtype)
+
         return dataset
 
     def get_vali(self, dtype=tf.float32):
         dataset = _ani_to_dataset(self._vali_list, dtype)
+        dataset = dataset.batch(1)
         return dataset
 
 

@@ -26,5 +26,19 @@ def test_pinn_model():
     eval_spec = tf.estimator.EvalSpec(
         input_fn=dataset.get_vali)
 
-    estimator = PiNN()
+    estimator = PiNN('tmp/PiNN-ANI')
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
+
+
+def test_pinn_calculator():
+    from pinn.models import PiNN
+    from pinn.calculator import PiNN_calc
+    from ase.collections import g2
+    from ase.optimize import BFGS
+
+    model = PiNN('tmp/PiNN-ANI')
+    calc = PiNN_calc(model=model)
+    water = g2['H2O']
+    water.set_calculator(calc)
+    dyn = BFGS(water)
+    dyn.run(fmax=0.05)
