@@ -40,10 +40,14 @@ class QSO_XML_dataset():
         self._train_list = []
         self._test_list = []
         self._vali_list = []
+        self.n_atoms = 0
 
         for fname in files:
             tree = etree.parse(fname)
             size = int(tree.findall('iteration')[-1].values()[0])
+            n_atoms = len(tree.find('iteration').find('atomset').findall('atom'))
+            self.n_atoms = max(n_atoms, self.n_atoms)
+
             split_list = [i+1 for i in range(size)]
             random.shuffle(split_list)
             n_train = int(len(split_list) * split_ratio[0])
@@ -53,9 +57,20 @@ class QSO_XML_dataset():
             self._test_list.append((fname, split_list[n_train: n_test]))
             self._vali_list.append((fname, split_list[n_test:]))
 
-
-    def get_train(self, dtype=tf.float32):
+    def get_train(self, shuffle=1000, batch_size=100, dtype=tf.float32):
         dataset = _qso_xml_to_dataset(self._train_list, self.pbc, dtype)
+
+        padded_shapes = {
+            'coord': [self.n_atoms, 3],
+            'atoms': [self.n_atoms],
+            'e_data': []}
+        if self.pbc == 1:
+            padded_shapes['cell'] = [3]
+
+        dataset = dataset.shuffle(shuffle).repeat()
+        if batch_size:
+            dataset = dataset.padded_batch(batch_size, padded_shapes)
+
         return dataset
 
     def get_test(self, dtype=tf.float32):
@@ -69,7 +84,9 @@ class QSO_XML_dataset():
 
 def _qso_xml_generator(filelist, pbc):
     from lxml import etree
-
+    import ase
+    # the QSO xml format uses Bohr as the length unit
+    scale = ase.units.Bohr / ase.units.Angstrom
     for fname, iters in filelist:
         species = {}
         for event, elem in etree.iterparse(fname):
@@ -79,9 +96,8 @@ def _qso_xml_generator(filelist, pbc):
                 species[name] = int(atomic_number.text)
             if elem.tag == "iteration" and int(elem.values()[0]) in iters:
                 atomset = elem.find('atomset')
-
                 atoms = atomset.findall('atom')
-                coord = [[float(i) for i in
+                coord = [[float(i) * scale for i in
                           atom.find('position').text.split()]
                          for atom in atoms]
                 atoms = [species[atom.values()[1]] for atom in atoms]
@@ -93,22 +109,23 @@ def _qso_xml_generator(filelist, pbc):
                 }
                 if pbc == 1:
                     cell = atomset.find('unit_cell')
-                    cell = [float(cell.values()[i].split()[i]) for i in range(3)]
+                    cell = [float(cell.values()[i].split()[i]) * scale
+                            for i in range(3)]
                     data['cell'] = cell
                 yield data
 
 
 def _qso_xml_to_dataset(filelist, pbc, dtype):
     dtypes = {'coord': dtype, 'atoms': tf.int32, 'e_data': dtype}
-    shapes = {'coord': [None, 3], 'atoms': [None], 'e_data': []},
-    if pbc==1:
+    shapes = {'coord': [None, 3], 'atoms': [None], 'e_data': []}
+    if pbc == 1:
         dtypes['cell'] = dtype
         shapes['cell'] = [3]
-    elif pbc==2:
+    elif pbc == 2:
         dtypes['cell'] = dtype
         shapes['cell'] = [3, 3]
     dataset = tf.data.Dataset.from_generator(
-        lambda: _qso_xml_generator(filelist, orth_cell), dtypes, shapes)
+        lambda: _qso_xml_generator(filelist, pbc), dtypes, shapes)
 
     return dataset
 
@@ -140,15 +157,18 @@ class ANI_H5_dataset():
             files = [files]
 
         data_list = []
-        n_atoms = 0
+        self.n_atoms = 0
 
-        for file in files:
-            store = h5py.File(file)
+        for fname in files:
+            store = h5py.File(fname)
             for g in store.keys():
                 group = store[g]
                 for k in group.keys():
-                    dat = (file, '/{}/{}'.format(g, k))
+                    path = '/{}/{}'.format(g, k)
+                    dat = (fname, path)
                     data_list.append(dat)
+                    n_atoms = store[path]['coordinates'].shape[1]
+                    self.n_atoms = max(self.n_atoms, n_atoms)
 
         random.seed(seed)
         random.shuffle(data_list)
@@ -158,10 +178,18 @@ class ANI_H5_dataset():
         self._train_list = data_list[:n_train]
         self._test_list = data_list[n_train:n_test]
         self._vali_list = data_list[n_test:]
-        self.n_atoms = n_atoms
 
-    def get_train(self, dtype=tf.float32):
+    def get_train(self, shuffle=10000, batch_size=100, dtype=tf.float32):
         dataset = _ani_to_dataset(self._train_list, dtype)
+        padded_shapes = {
+            'coord': [self.n_atoms, 3],
+            'atoms': [self.n_atoms],
+            'e_data': []
+        }
+        dataset = dataset.shuffle(10000).repeat()
+        if batch_size:
+            dataset = dataset.padded_batch(batch_size, padded_shapes)
+
         return dataset
 
     def get_test(self, dtype=tf.float32):
@@ -201,20 +229,6 @@ def _ani_to_dataset(datalist, dtype):
         {'coord': [None, 3], 'atoms': [None], 'e_data': []},
     )
     return dataset
-
-
-class QM9_dataset():
-    """Dataset with format as specified in QM9 dataset
-
-    This implementation is VERY INEFFICIENT
-    For real training, the dataset should be converted to other formats
-    """
-
-    def __init__(self, files, n_atoms=None):
-        pass
-
-    def convert_to_tfrecord(self, shuffle=True, seed=None):
-        pass
 
 
 class tfrecord_dataset():

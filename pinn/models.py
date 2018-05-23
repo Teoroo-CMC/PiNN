@@ -49,7 +49,6 @@ def potential_model_fn(features, labels, mode, params):
             eval_metric_ops=metrics)
 
 
-
 def PiNN(depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0):
     """"""
     filters = [
@@ -69,8 +68,6 @@ def PiNN(depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0):
     params = {
         'filters': filters,
         'layers': layers,
-        'prefetch_level': 0,
-        'batch_size': 100,
         'dtype': tf.float32
     }
 

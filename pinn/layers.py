@@ -135,5 +135,5 @@ class en_layer(object):
                             initializer=xavier_initializer())
 
         nodes = tf.tensordot(nodes, w, [-1, 0])
-        nodes = tf.reduce_sum(nodes, [i-1 for i in range(self.order + 1)])
+        nodes = tf.reduce_sum(nodes, [-i-1 for i in range(self.order+1)])
         tensors['energy'] += nodes
