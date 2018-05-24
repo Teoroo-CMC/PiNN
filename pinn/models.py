@@ -53,27 +53,32 @@ def potential_model_fn(features, labels, mode, params):
 
 
 def PiNN(model_dir='PiNN',
-         depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0):
+         depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0,
+         atom_types=[1, 6, 7, 8, 9], atomic_dress={0: 0.0}):
     """
     """
     filters = [
         f.atomic_mask(),
-        f.atomic_dress({0: 0.0}),
+        f.atomic_dress(atomic_dress),
         f.distance_mat(),
         f.pi_kernel(),
-        f.pi_atomic([1, 6, 7, 8, 9])
+        f.pi_atomic(atom_types)
     ]
 
-    layers = [
-        l.fc_layer('fc_01', order=0, n_nodes=[p_nodes], act=act),
-        l.pi_layer('pi_01', order=1, n_nodes=[i_nodes], act=act),
-        l.ip_layer('ip_01', order=1, pool_type='sum'),
-        l.en_layer('en_01', order=1, n_nodes=[p_nodes], act=act)]
+    layers = []
+
+    for i in range(depth):
+        layers += [
+            l.fc_layer('fc_{}'.format(i), order=0, n_nodes=[p_nodes], act=act),
+            l.pi_layer('pi_{}'.format(i), order=1, n_nodes=[i_nodes], act=act),
+            l.ip_layer('ip_{}'.format(i), order=1, pool_type='sum'),
+            l.en_layer('en_{}'.format(i), order=1, n_nodes=[p_nodes], act=act)
+        ]
 
     params = {
         'filters': filters,
         'layers': layers,
-        'dtype': tf.float32,
+        'dtype': tf.float32
     }
 
     estimator = tf.estimator.Estimator(

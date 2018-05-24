@@ -28,6 +28,10 @@ class PiNN_calc(Calculator):
         shapes = {'coord': [None, 3], 'atoms': [None]}
         properties = ['energy', 'forces']
 
+        if self._atoms_to_calc.pbc.any():
+            shapes['cell'] = self._atoms_to_calc.cell.shape
+            dtypes['cell'] = dtype
+
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
                 self._generator, dtypes, shapes).batch(1),
