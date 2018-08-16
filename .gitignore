@@ -1,2 +1,4 @@
 */__pycache__
 .pytest_cache
+pinn.egg-info/
+tmp/
