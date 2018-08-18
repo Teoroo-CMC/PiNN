@@ -18,13 +18,19 @@ def potential_model_fn(features, labels, mode, params):
 
     for layer in params['layers']:
         layer.parse(features, dtype=params['dtype'])
+        if mode == tf.estimator.ModeKeys.TRAIN and layer.name.startswith('pi'):
+            tf.summary.image(layer.name, features['nodes'][1][:,:,:,0:3])
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
-        optimizer = tf.train.AdamOptimizer(learning_rate=1e-3)
+        optimizer = tf.train.AdamOptimizer(learning_rate=1e-5)
 
         loss = tf.losses.mean_squared_error(features['e_data'],
                                             features['energy'])
+        tf.summary.histogram('HIST_ERROR', features['e_data'] - features['energy'])
+        tf.summary.histogram('HIST_DATA', features['e_data'])
+        tf.summary.histogram('HIST_PRED', features['energy'])
+
         return tf.estimator.EstimatorSpec(
             mode, loss=loss,
             train_op=optimizer.minimize(loss, global_step=global_step))
@@ -54,7 +60,7 @@ def potential_model_fn(features, labels, mode, params):
 
 def PiNN(model_dir='PiNN',
          depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0,
-         atom_types=[1, 6, 7, 8, 9], atomic_dress={0: 0.0}):
+         atom_types=[1, 6, 7, 8], atomic_dress={0: 0.0}):
     """
     """
     filters = [

@@ -189,7 +189,7 @@ class ANI_H5_dataset():
         dataset = dataset.shuffle(10000).repeat()
         if batch_size:
             dataset = dataset.padded_batch(batch_size, padded_shapes)
-
+        dataset = dataset.prefetch(30000)
         return dataset
 
     def get_test(self, dtype=tf.float32):

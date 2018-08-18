@@ -33,8 +33,11 @@ class atomic_dress():
             tf.where(tf.equal(atoms, key),
                      val * tf.cast(tf.ones_like(atoms), dtype),
                      tf.cast(tf.zeros_like(atoms), dtype))
-            for key, val in self.dress.items()], [-1, -2])
-        tensors['energy'] = energy
+            for key, val in self.dress.items()], [-1, 0])
+        if 'e_data' in tensors:
+            tensors['e_data'] -= energy
+            tensors['e_data'] *= 627.509
+        tensors['energy'] = 0
 
 
 class distance_mat():
@@ -55,8 +58,8 @@ class distance_mat():
         # To make the distance differentiable
         zeros = tf.equal(square, 0)
         square = tf.where(zeros,  tf.ones_like(square), square)
-        dist = tf.where(zeros, tf.sqrt(square), tf.zeros_like(square))
-        tensors['dist'] = square
+        dist = tf.where(zeros, tf.zeros_like(square), tf.sqrt(square))
+        tensors['dist'] = dist
 
 
 class pi_atomic():
@@ -104,6 +107,7 @@ class pi_kernel():
         p_mask = tf.expand_dims(tf.cast(tensors['a_mask'], dtype), -1)
         i_mask = tf.expand_dims(
             tf.cast((dist > 0) & (dist < self.rc), dtype), -1)
+        i_mask = i_mask * tf.expand_dims(p_mask, -2) *tf.expand_dims(p_mask, -3)
 
         tensors['pi_kernel'] = {1: kernel}
         tensors['pi_masks'] = {0: p_mask, 1: i_mask}
