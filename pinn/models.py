@@ -90,3 +90,36 @@ def PiNN(model_dir='PiNN',
     estimator = tf.estimator.Estimator(
         model_fn=potential_model_fn, params=params, model_dir=model_dir)
     return estimator
+
+
+def BPNN(model_dir='/tmp/BPNN',
+         atomic_dress={0:0.0},
+         elements=[1, 6, 7, 8],
+         fc_depth=None,
+         symm_funcs=None):
+    """
+    """
+    if fc_depth is None:
+        fc_depth = {i: [5,5,5] for i in elements}
+
+    filters = [
+        f.atomic_mask(),
+        f.atomic_dress(atomic_dress),
+        f.distance_mat(),
+        f.symm_func()
+    ]
+    if symm_funcs is None:
+        filters += [f.bp_G2(rs=rs) for rs in [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]]
+        filters += [f.bp_G3(lambd=lambd) for lambd in [0.8, 1.0, 1.2, 1.4]]
+    else:
+        filters += symm_funcs
+
+    params = {
+        'filters': filters,
+        'layers': [l.bp_fc_layer(fc_depth)],
+        'dtype': tf.float32
+    }
+
+    estimator = tf.estimator.Estimator(
+        model_fn=potential_model_fn, params=params, model_dir=model_dir)
+    return estimator

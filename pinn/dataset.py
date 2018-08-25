@@ -186,9 +186,9 @@ class ANI_H5_dataset():
             'atoms': [self.n_atoms],
             'e_data': []
         }
-        dataset = dataset.shuffle(10000).repeat()
-        if batch_size:
-            dataset = dataset.padded_batch(batch_size, padded_shapes)
+        dataset = dataset.shuffle(shuffle).repeat()
+        dataset = dataset.padded_batch(batch_size, padded_shapes,
+                                       drop_remainder=True)
         dataset = dataset.prefetch(30000)
         return dataset
 
@@ -197,9 +197,16 @@ class ANI_H5_dataset():
 
         return dataset
 
-    def get_vali(self, dtype=tf.float32):
+    def get_vali(self, shuffle=10000, batch_size=10, dtype=tf.float32):
         dataset = _ani_to_dataset(self._vali_list, dtype)
-        dataset = dataset.batch(1)
+        padded_shapes = {
+            'coord': [self.n_atoms, 3],
+            'atoms': [self.n_atoms],
+            'e_data': []
+        }
+        dataset = dataset.shuffle(shuffle).repeat()
+        dataset = dataset.padded_batch(batch_size, padded_shapes,
+                                       drop_remainder=True)
         return dataset
 
 

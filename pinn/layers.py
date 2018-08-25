@@ -5,6 +5,46 @@
 import tensorflow as tf
 from tensorflow.contrib.layers import xavier_initializer
 
+class bp_fc_layer(object):
+    """Documentation for bp_fc_layer
+    """
+    def __init__(self,
+                 n_nodes,
+                 act='tanh'):
+        self.name = 'bp_fc_layer'
+        self.n_nodes = n_nodes
+        self.act = tf.nn.__getattribute__(act)
+
+    def parse(self, tensors, dtype):
+        atoms = tensors['atoms']
+        bp_sf = tensors['bp_sf']
+
+        elem_maps = {}
+        energy = 0
+        for elem in self.n_nodes:
+            n_nodes = self.n_nodes[elem]
+
+            elem_map = tf.where(tf.equal(atoms, elem))
+            nodes = tf.gather_nd(bp_sf, elem_map)
+
+            for i, n_out in enumerate(n_nodes):
+                n_in = nodes.shape[-1]
+                w = tf.get_variable('bp-{}-w{}'.format(elem, i),
+                                    shape=[n_in, n_out],
+                                    initializer=xavier_initializer())
+                b = tf.get_variable('bp-{}-b{}'.format(elem, i),
+                                    shape=[n_out],
+                                    initializer=xavier_initializer())
+                nodes = self.act(tf.tensordot(nodes, w, [-1, 0]) + b)
+            w = tf.get_variable('bp-{}-en'.format(elem),
+                                shape=[n_out, 1],
+                                initializer=xavier_initializer())
+
+            nodes =  tf.reduce_sum(tf.tensordot(nodes, w, [-1, 0]), axis=-1)
+            e_elem = tf.SparseTensor(elem_map, nodes, atoms.shape)
+            energy += tf.sparse_reduce_sum(e_elem, axis=-1)
+
+        tensors['energy'] = energy
 
 class fc_layer(object):
     """Documentation for fc_layer

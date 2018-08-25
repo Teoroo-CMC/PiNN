@@ -7,6 +7,7 @@ class PiNN_calc(Calculator):
         Calculator.__init__(self)
         self.implemented_properties = ['energy', 'forces']
         self.model = model
+        self.size = 0
         self.atoms = atoms
         self.predictor = None
 
@@ -24,8 +25,10 @@ class PiNN_calc(Calculator):
         if self.predictor is not None:
             return self.predictor
 
+        self.size = len(self._atoms_to_calc)
+
         dtypes = {'coord': dtype, 'atoms': tf.int32}
-        shapes = {'coord': [None, 3], 'atoms': [None]}
+        shapes = {'coord': [self.size, 3], 'atoms': [self.size]}
         properties = ['energy', 'forces']
 
         if self._atoms_to_calc.pbc.any():
@@ -34,7 +37,7 @@ class PiNN_calc(Calculator):
 
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
-                self._generator, dtypes, shapes).batch(1),
+                self._generator, dtypes, shapes).batch(1, drop_remainder=True),
             predict_keys=properties)
         return self.predictor
 
@@ -44,6 +47,10 @@ class PiNN_calc(Calculator):
             self._atoms_to_calc = self.atoms
         else:
             self._atoms_to_calc = atoms
+
+        if len(self._atoms_to_calc) != self.size:
+            print('Generating the graph')
+            self.predictor = None
 
         predictor = self.get_predictor()
         self.results = next(predictor)
