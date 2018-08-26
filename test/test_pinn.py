@@ -43,6 +43,7 @@ def test_pinn_calculator():
     dyn = BFGS(water)
     dyn.run(fmax=0.05)
 
+
 def test_bpnn_model():
     from pinn.models import BPNN
     from pinn.dataset import ANI_H5_dataset
@@ -57,6 +58,7 @@ def test_bpnn_model():
 
     estimator = BPNN('tmp/BPNN-ANI')
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
+
 
 def test_bpnn_calculator():
     from pinn.models import BPNN

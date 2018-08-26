@@ -19,7 +19,7 @@ def potential_model_fn(features, labels, mode, params):
     for layer in params['layers']:
         layer.parse(features, dtype=params['dtype'])
         if mode == tf.estimator.ModeKeys.TRAIN and layer.name.startswith('pi'):
-            tf.summary.image(layer.name, features['nodes'][1][:,:,:,0:3])
+            tf.summary.image(layer.name, features['nodes'][1].get_dense()[:,:,:,0:3])
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
@@ -67,7 +67,8 @@ def PiNN(model_dir='PiNN',
         f.atomic_mask(),
         f.atomic_dress(atomic_dress),
         f.distance_mat(),
-        f.pi_kernel(),
+        f.symm_func(),
+        f.pi_basis(),
         f.pi_atomic(atom_types)
     ]
 
@@ -75,10 +76,10 @@ def PiNN(model_dir='PiNN',
 
     for i in range(depth):
         layers += [
-            l.fc_layer('fc_{}'.format(i), order=0, n_nodes=[p_nodes], act=act),
-            l.pi_layer('pi_{}'.format(i), order=1, n_nodes=[i_nodes], act=act),
+            l.fc_layer('fc_{}'.format(i), order=0, n_nodes=[p_nodes, p_nodes], act=act),
+            l.pi_layer('pi_{}'.format(i), order=1, n_nodes=[p_nodes, i_nodes], act=act),
             l.ip_layer('ip_{}'.format(i), order=1, pool_type='sum'),
-            l.en_layer('en_{}'.format(i), order=1, n_nodes=[p_nodes], act=act)
+            l.en_layer('en_{}'.format(i), order=0, n_nodes=[p_nodes], act=act)
         ]
 
     params = {
