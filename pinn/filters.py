@@ -33,7 +33,7 @@ class sparse_node(dict):
                                        list(self.mask.shape)+list(self.sparse.shape[1:]))
         return self.dense
 
-    def new_node(self, new_sparse):
+    def new_nodes(self, new_sparse):
         return sparse_node(mask=self.mask,
                            indices=self.indices,
                            sparse=new_sparse)
@@ -86,7 +86,7 @@ class pi_atomic():
         elem = tf.expand_dims(tensors['atoms'].sparse, -1)
         sparse = tf.concat(
             [tf.cast(tf.equal(elem, e), dtype) for e in self.types], axis=-1)
-        tensors['nodes'] = {0: tensors['atoms'].new_node(sparse)}
+        tensors['nodes'] = {0: tensors['atoms'].new_nodes(sparse)}
 
 
 class distance_mat():
@@ -133,8 +133,9 @@ class symm_func():
         sf_mask = tf.sparse_to_dense(sf_indices, d_mask.shape, True, False)
 
         sf_sparse = {
-            'f1': lambda x: 0.5*(tf.cos(np.pi*x/self.rc)+1),
-            'f2': lambda x: tf.tanh(1-x/self.rc)**3
+            'f1':  lambda x: 0.5*(tf.cos(np.pi*x/self.rc)+1),
+            'f2':  lambda x: tf.tanh(1-x/self.rc)**3,
+            'hip': lambda x: tf.cos(np.pi*x/self.rc)**2,
         }[self.func](sf_sparse)
 
         tensors['symm_func'] = sparse_node(mask=sf_mask,
@@ -159,7 +160,7 @@ class pi_basis():
         basis = tf.concat([basis**(i+1)
                             for i in range(self.order)], axis=-1)
         basis = tf.expand_dims(basis, -2)
-        tensors['pi_basis'] = symm_func.new_node(basis)
+        tensors['pi_basis'] = symm_func.new_nodes(basis)
 
 
 class bp_G3():
@@ -223,7 +224,7 @@ class bp_G2():
         dist = tf.gather_nd(tensors['dist'].get_dense(), symm_func.indices)
         sf = symm_func.sparse
         G2 = tf.exp(-self.etta*(dist-self.rs)**2)*sf
-        G2 = tf.reduce_sum(symm_func.new_node(G2).get_dense(),
+        G2 = tf.reduce_sum(symm_func.new_nodes(G2).get_dense(),
                            axis=-1, keepdims=True)
         if 'bp_sf' in tensors:
             tensors['bp_sf'] = tf.concat([tensors['bp_sf'], G2], -1)

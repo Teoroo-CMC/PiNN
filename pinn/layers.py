@@ -33,7 +33,7 @@ class fc_layer(object):
                                 initializer=xavier_initializer())
             sparse = self.act(tf.tensordot(sparse, w, [-1, 0]) + b)
 
-        tensors['nodes'][self.order] = nodes.new_node(sparse)
+        tensors['nodes'][self.order] = nodes.new_nodes(sparse)
 
 
 class pi_layer(object):
@@ -107,7 +107,7 @@ class ip_layer(object):
         p_nodes = tensors['nodes'][self.order-1]
 
         sparse = tf.gather_nd(self.pool(i_nodes.get_dense()), p_nodes.indices)
-        tensors['nodes'][self.order-1] = p_nodes.new_node(sparse)
+        tensors['nodes'][self.order-1] = p_nodes.new_nodes(sparse)
 
 
 class en_layer(object):
@@ -182,3 +182,65 @@ class bp_fc_layer(object):
             energy += tf.sparse_reduce_sum(e_elem, axis=-1)
 
         tensors['energy'] = energy
+
+class res_fc_layer(object):
+    def __init__(self, order=0, n_nodes=[10], act='tanh'):
+        self.name = 'res_fc_layer'
+        self.order = order
+        self.n_nodes = n_nodes
+        self.act = tf.nn.__getattribute__(act)
+
+    def parse(self, tensors, dtype):
+        nodes = tensors['nodes'][self.order]
+        sparse = nodes.sparse
+
+        for i, n_out in enumerate(self.n_nodes):
+            n_in = sparse.shape[-1]
+            w = tf.get_variable('{}-w{}'.format(self.name, i),
+                                shape=[n_in, n_in], dtype=dtype,
+                                initializer=xavier_initializer())
+            b = tf.get_variable('{}-b{}'.format(self.name, i),
+                                shape=[1, n_in], dtype=dtype,
+                                initializer=xavier_initializer())
+            sparse_t = self.act(tf.tensordot(sparse, w, [-1, 0]) + b)
+
+            w_t = tf.get_variable('{}-w_t{}'.format(self.name, i),
+                                  shape=[n_in, n_out], dtype=dtype,
+                                  initializer=xavier_initializer())
+            m_t = tf.get_variable('{}-m_t{}'.format(self.name, i),
+                                  shape=[n_in, n_out], dtype=dtype,
+                                  initializer=xavier_initializer())
+            b_t = tf.get_variable('{}-b_t{}'.format(self.name, i),
+                                  shape=[1, n_out], dtype=dtype,
+                                  initializer=xavier_initializer())
+
+            sparse = tf.tensordot(sparse, w_t) + tf.tensordot(sparse, m_t) + b_t
+        tensors['nodes'][self.order] = nodes.new_nodes(sparse)
+
+
+class HIP_inter_layer(object):
+    def __init__(self, n_nodes=10, act='tanh'):
+        self.name = 'HIP_inter_layer'
+        self.n_nodes = n_nodes
+        self.act = tf.nn.__getattribute__(act)
+
+    def parse(self, tensors, dtype):
+        nodes = tensors['nodes'][0]
+        basis = tensors['pi_basis']
+        tensors['nodes'][0] = nodes
+
+        sparse = tf.tensordot(basis, v) * tf.expand_dims(nodes)
+        sparse = self.act(tf.reduce_sum(sparse, -2))
+        tensors['nodes'][0] = nodes.new_nodes(sparse)
+
+
+class SchNet_inter_layer(object):
+    def __init__(self, n_nodes=10):
+        self.name = 'SchNet_inter_layer'
+        self.n_nodes = n_nodes
+        self.act = tf.nn.__getattribute__(act)
+
+    def parse(self, tensors, dtype):
+        nodes = tensors['nodes'][0]
+        basis = tensors['pi_basis']
+        tensors['nodes'][0] = nodes
