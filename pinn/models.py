@@ -23,7 +23,7 @@ def potential_model_fn(features, labels, mode, params):
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
-        optimizer = tf.train.AdamOptimizer(learning_rate=1e-5)
+        optimizer = tf.train.AdamOptimizer(learning_rate=1e-4)
 
         loss = tf.losses.mean_squared_error(features['e_data'],
                                             features['energy'])
@@ -54,7 +54,6 @@ def potential_model_fn(features, labels, mode, params):
             'energy': energy,
             'forces': -tf.gradients(energy, features['coord'])[0]
         }
-        print(predictions)
         return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
 
@@ -68,7 +67,7 @@ def PiNN(model_dir='PiNN',
         f.atomic_dress(atomic_dress),
         f.distance_mat(),
         f.symm_func(),
-        f.pi_basis(),
+        f.pi_basis(order=5),
         f.pi_atomic(atom_types)
     ]
 
@@ -109,6 +108,7 @@ def BPNN(model_dir='/tmp/BPNN',
         f.distance_mat(),
         f.symm_func()
     ]
+
     if symm_funcs is None:
         filters += [f.bp_G2(rs=rs) for rs in [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]]
         filters += [f.bp_G3(lambd=lambd) for lambd in [0.8, 1.0, 1.2, 1.4]]

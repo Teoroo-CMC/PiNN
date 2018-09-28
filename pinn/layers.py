@@ -7,7 +7,6 @@ from tensorflow.contrib.layers import xavier_initializer
 from pinn.filters import sparse_node
 
 
-
 class fc_layer(object):
     """Documentation for fc_layer
 
@@ -24,14 +23,9 @@ class fc_layer(object):
         sparse = nodes.sparse
 
         for i, n_out in enumerate(self.n_nodes):
-            n_in = sparse.shape[-1]
-            w = tf.get_variable('{}-w{}'.format(self.name, i),
-                                shape=[n_in, n_out], dtype=dtype,
-                                initializer=xavier_initializer())
-            b = tf.get_variable('{}-b{}'.format(self.name, i),
-                                shape=[1, n_out], dtype=dtype,
-                                initializer=xavier_initializer())
-            sparse = self.act(tf.tensordot(sparse, w, [-1, 0]) + b)
+            sparse = tf.layers.dense(sparse, n_out,
+                                     activation=self.act,
+                                     name='{}-{}'.format(self.name, i))
 
         tensors['nodes'][self.order] = nodes.new_nodes(sparse)
 
@@ -63,30 +57,26 @@ class pi_layer(object):
 
         nodes_i = tf.gather_nd(p_nodes, indices_i)
         nodes_j = tf.gather_nd(p_nodes, indices_j)
-        nodes = tf.concat([nodes_i, nodes_j], -1)
+        sparse = tf.concat([nodes_i, nodes_j], -1)
         # Shape: n x atoms x atoms x channel
         n_nodes = self.n_nodes.copy()
         n_basis = basis.shape[-1]
         n_nodes[-1] *= n_basis
+
         # Fully Connected Layers
         for i, n_out in enumerate(n_nodes):
-            n_in = nodes.shape[-1]
-            w = tf.get_variable('{}-w{}'.format(self.name, i),
-                                shape=[n_in, n_out], dtype=dtype,
-                                initializer=xavier_initializer())
-            b = tf.get_variable('{}-b{}'.format(self.name, i),
-                                shape=[n_out], dtype=dtype,
-                                initializer=xavier_initializer())
-            nodes = self.act(tf.tensordot(nodes, w, [-1, 0]) + b)
-        # Shape: n x atoms x atoms x n_nodes x n_kernel
-        nodes = tf.reshape(nodes,
-                           tf.concat([tf.shape(nodes)[:-1],
-                                      [self.n_nodes[-1], n_basis]], 0))
-        nodes = nodes * basis
-        nodes = tf.reduce_sum(nodes, axis=-1)
+            sparse = tf.layers.dense(sparse, n_out,
+                                     activation=self.act,
+                                     name='{}-{}'.format(self.name,i))
+
+        sparse = tf.reshape(sparse,
+                            tf.concat([tf.shape(sparse)[:-1],
+                                       [self.n_nodes[-1], n_basis]], 0))
+        sparse = sparse * basis
+        sparse = tf.reduce_sum(sparse, axis=-1)
         tensors['nodes'][self.order] = sparse_node(mask=mask,
                                                    indices=indices,
-                                                   sparse=nodes)
+                                                   sparse=sparse)
 
 
 class ip_layer(object):
@@ -125,22 +115,19 @@ class en_layer(object):
 
 
         for i, n_out in enumerate(self.n_nodes):
-            n_in = sparse.shape[-1]
-            w = tf.get_variable('{}-w{}'.format(self.name, i),
-                                shape=[n_in, n_out], dtype=dtype,
-                                initializer=xavier_initializer())
-            b = tf.get_variable('{}-b{}'.format(self.name, i),
-                                shape=[1, n_out], dtype=dtype,
-                                initializer=xavier_initializer())
-            sparse = self.act(tf.tensordot(sparse, w, [-1, 0]) + b)
+            sparse = tf.layers.dense(sparse, n_out,
+                                     activation=self.act,
+                                     name='{}-{}'.format(self.name, i))
 
-        w = tf.get_variable('{}-en'.format(self.name),
-                            shape=[n_out], dtype=dtype,
-                            initializer=xavier_initializer())
-        sparse = tf.tensordot(sparse, w, [-1, 0])
+        sparse = tf.layers.dense(sparse, 1, use_bias=False,
+                                 activation=None,
+                                 name='{}-en'.format(self.name))
+        sparse = tf.squeeze(sparse, -1)
+
         sparse = tf.SparseTensor(nodes.indices, sparse, nodes.mask.shape)
         sparse = tf.sparse_reduce_sum(sparse,
                                       [-i-1 for i in range(self.order+1)])
+
         tensors['energy'] += sparse
 
 
@@ -163,22 +150,19 @@ class bp_fc_layer(object):
         for elem, n_nodes in self.n_nodes.items():
             elem_map = tf.gather_nd(atoms.indices,
                                     tf.where(tf.equal(atoms.sparse, elem)))
-            nodes = tf.gather_nd(bp_sf, elem_map)
-            for i, n_out in enumerate(n_nodes):
-                n_in = nodes.shape[-1]
-                w = tf.get_variable('bp-{}-w{}'.format(elem, i),
-                                    shape=[n_in, n_out], dtype=dtype,
-                                    initializer=xavier_initializer())
-                b = tf.get_variable('bp-{}-b{}'.format(elem, i),
-                                    shape=[n_out], dtype=dtype,
-                                    initializer=xavier_initializer())
-                nodes = self.act(tf.tensordot(nodes, w, [-1, 0]) + b)
-            w = tf.get_variable('bp-{}-en'.format(elem),
-                                shape=[n_out, 1], dtype=dtype,
-                                initializer=xavier_initializer())
+            sparse = tf.gather_nd(bp_sf, elem_map)
 
-            nodes =  tf.reduce_sum(tf.tensordot(nodes, w, [-1, 0]), axis=-1)
-            e_elem = tf.SparseTensor(elem_map, nodes, atoms.mask.shape)
+            for i, n_out in enumerate(n_nodes):
+                sparse = tf.layers.dense(sparse, n_out,
+                                         activation=self.act,
+                                         name='{}-{}-{}'.format(self.name, elem, i))
+
+            sparse = tf.layers.dense(sparse, 1, use_bias=False,
+                                     activation=None,
+                                     name='{}-{}-en'.format(self.name, elem))
+            sparse = tf.squeeze(sparse, -1)
+
+            e_elem = tf.SparseTensor(elem_map, sparse, atoms.mask.shape)
             energy += tf.sparse_reduce_sum(e_elem, axis=-1)
 
         tensors['energy'] = energy
@@ -195,26 +179,13 @@ class res_fc_layer(object):
         sparse = nodes.sparse
 
         for i, n_out in enumerate(self.n_nodes):
-            n_in = sparse.shape[-1]
-            w = tf.get_variable('{}-w{}'.format(self.name, i),
-                                shape=[n_in, n_in], dtype=dtype,
-                                initializer=xavier_initializer())
-            b = tf.get_variable('{}-b{}'.format(self.name, i),
-                                shape=[1, n_in], dtype=dtype,
-                                initializer=xavier_initializer())
-            sparse_t = self.act(tf.tensordot(sparse, w, [-1, 0]) + b)
+            sparse_t = tf.layers.dense(sparse, sparse.shape[-1],
+                                       activation=self.act,
+                                       name='{}-{}t'.format(self.name, i))
 
-            w_t = tf.get_variable('{}-w_t{}'.format(self.name, i),
-                                  shape=[n_in, n_out], dtype=dtype,
-                                  initializer=xavier_initializer())
-            m_t = tf.get_variable('{}-m_t{}'.format(self.name, i),
-                                  shape=[n_in, n_out], dtype=dtype,
-                                  initializer=xavier_initializer())
-            b_t = tf.get_variable('{}-b_t{}'.format(self.name, i),
-                                  shape=[1, n_out], dtype=dtype,
-                                  initializer=xavier_initializer())
-
-            sparse = tf.tensordot(sparse, w_t) + tf.tensordot(sparse, m_t) + b_t
+            sparse = tf.layers.dense(tf.concat([sparse_t, sparse], -1), n_out,
+                                     activation=None,
+                                     name='{}-{}'.format(self.name, i))
         tensors['nodes'][self.order] = nodes.new_nodes(sparse)
 
 
@@ -235,6 +206,10 @@ class HIP_inter_layer(object):
 
 
 class SchNet_inter_layer(object):
+    """
+    A SchNet interaction layer is a filter to pool atomic properties.
+    SchNet interaction layer currently does not create higher dimension nodes.
+    """
     def __init__(self, n_nodes=10):
         self.name = 'SchNet_inter_layer'
         self.n_nodes = n_nodes
@@ -243,4 +218,6 @@ class SchNet_inter_layer(object):
     def parse(self, tensors, dtype):
         nodes = tensors['nodes'][0]
         basis = tensors['pi_basis']
-        tensors['nodes'][0] = nodes
+
+        for i, n_out in enumerate(self.n_nodes):
+            n_in = sparse.shape[-1]
