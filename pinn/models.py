@@ -57,7 +57,7 @@ def potential_model_fn(features, labels, mode, params):
         return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
 
-def PiNN(model_dir='PiNN',
+def PiNN(model_dir='PiNN', config=None,
          depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0,
          atom_types=[1, 6, 7, 8], atomic_dress={0: 0.0}):
     """
@@ -88,7 +88,42 @@ def PiNN(model_dir='PiNN',
     }
 
     estimator = tf.estimator.Estimator(
-        model_fn=potential_model_fn, params=params, model_dir=model_dir)
+        model_fn=potential_model_fn, params=params,
+        model_dir=model_dir, config=config)
+    return estimator
+
+
+def SchNet(model_dir='SchNet', config=None,
+           n_blockes=4, act='softplus',
+           atom_types=[1, 6, 7, 8], atomic_dress={0: 0.0}):
+    """
+    """
+    filters = [
+        f.atomic_mask(),
+        f.atomic_dress(atomic_dress),
+        f.distance_mat(),
+        f.schnet_basis(),
+        f.pi_atomic(atom_types)
+    ]
+
+    layers = []
+    for i in range(n_blockes):
+        layers.append(l.fc_layer(n_nodes=[64], name='atom-wise-{}-1'.format(i)))
+        layers.append(l.schnet_cfconv_layer(name='cfconv-{}'.format(i)))
+        layers.append(l.fc_layer(n_nodes=[64], name='atom-wise-{}-2'.format(i)))
+
+    layers.append(l.fc_layer(n_nodes=[32], name='atom-wise-{}'.format(i+1)))
+    layers.append(l.en_layer('en_{}'.format(i), order=0, n_nodes=[32, 32], act=act))
+
+    params = {
+        'filters': filters,
+        'layers': layers,
+        'dtype': tf.float32
+    }
+
+    estimator = tf.estimator.Estimator(
+        model_fn=potential_model_fn, params=params,
+        model_dir=model_dir, config=config)
     return estimator
 
 

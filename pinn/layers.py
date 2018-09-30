@@ -48,7 +48,7 @@ class pi_layer(object):
         if self.order == 1:
             indices = basis.indices
             mask = basis.mask
-            basis = basis.sparse
+            basis = tf.expand_dims(basis.sparse, -2)
         # else:
         #     indices =
 
@@ -189,7 +189,7 @@ class res_fc_layer(object):
         tensors['nodes'][self.order] = nodes.new_nodes(sparse)
 
 
-class HIP_inter_layer(object):
+class hip_inter_layer(object):
     def __init__(self, n_nodes=10, act='tanh'):
         self.name = 'HIP_inter_layer'
         self.n_nodes = n_nodes
@@ -205,13 +205,14 @@ class HIP_inter_layer(object):
         tensors['nodes'][0] = nodes.new_nodes(sparse)
 
 
-class SchNet_inter_layer(object):
+class schnet_cfconv_layer(object):
     """
     A SchNet interaction layer is a filter to pool atomic properties.
     SchNet interaction layer currently does not create higher dimension nodes.
     """
-    def __init__(self, n_nodes=10):
-        self.name = 'SchNet_inter_layer'
+    def __init__(self, name='schnet_cfconv_layer',
+                 n_nodes=[64, 64], act='softplus'):
+        self.name = name
         self.n_nodes = n_nodes
         self.act = tf.nn.__getattribute__(act)
 
@@ -219,5 +220,23 @@ class SchNet_inter_layer(object):
         nodes = tensors['nodes'][0]
         basis = tensors['pi_basis']
 
+        indices_i = basis.indices[:, 0:-1]
+        nodes_i = tf.gather_nd(nodes.get_dense(), indices_i)
+        sparse = basis.sparse
+
         for i, n_out in enumerate(self.n_nodes):
-            n_in = sparse.shape[-1]
+            sparse = tf.layers.dense(sparse, n_out,
+                                     activation=self.act)
+
+        sparse = sparse * nodes_i
+        dense = sparse_node(mask=basis.mask,
+                            indices=basis.indices,
+                            sparse=sparse).get_dense()
+        tf.summary.image(self.name,
+                         dense[:,:,:,0:3])
+
+        sparse = tf.gather_nd(tf.reduce_sum(dense, axis=-3), nodes.indices)
+        sparse = tf.layers.dense(sparse, n_out, activation=None, use_bias=False)
+        sparse = sparse + nodes.sparse
+
+        tensors['nodes'][0] = nodes.new_nodes(sparse)

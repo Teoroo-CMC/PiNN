@@ -72,3 +72,19 @@ def test_bpnn_calculator():
     water.set_calculator(calc)
     dyn = BFGS(water)
     dyn.run(fmax=0.05)
+
+
+def test_schnet_model():
+    from pinn.models import SchNet
+    from pinn.dataset import ANI_H5_dataset
+
+    files = glob('examples/ani/*.h5')
+    dataset = ANI_H5_dataset(files)
+
+    train_spec = tf.estimator.TrainSpec(
+        input_fn=dataset.get_train, max_steps=10)
+    eval_spec = tf.estimator.EvalSpec(
+        input_fn=dataset.get_vali)
+
+    estimator = SchNet('tmp/SchNet')
+    tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
