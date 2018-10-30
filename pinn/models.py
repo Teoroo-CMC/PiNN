@@ -23,17 +23,24 @@ def potential_model_fn(features, labels, mode, params):
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
-        optimizer = tf.train.AdamOptimizer(learning_rate=1e-4)
+        optimizer = tf.train.AdamOptimizer(learning_rate=1e-5)
+
 
         loss = tf.losses.mean_squared_error(features['e_data'],
                                             features['energy'])
+
+        tvars = tf.trainable_variables()
+        grads, _ = tf.clip_by_global_norm(tf.gradients(loss, tvars), 0.2)
+        train_op = optimizer.apply_gradients(zip(grads, tvars), global_step=global_step)
+
+
         tf.summary.histogram('HIST_ERROR', features['e_data'] - features['energy'])
         tf.summary.histogram('HIST_DATA', features['e_data'])
         tf.summary.histogram('HIST_PRED', features['energy'])
 
         return tf.estimator.EstimatorSpec(
             mode, loss=loss,
-            train_op=optimizer.minimize(loss, global_step=global_step))
+            train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
         loss = tf.losses.mean_squared_error(features['e_data'],
