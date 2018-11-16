@@ -23,7 +23,7 @@ def potential_model_fn(features, labels, mode, params):
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
-        optimizer = tf.train.AdamOptimizer(learning_rate=1e-5)
+        optimizer = tf.train.AdamOptimizer(learning_rate=params['learning_rate'])
 
 
         loss = tf.losses.mean_squared_error(features['e_data'],
@@ -66,7 +66,7 @@ def potential_model_fn(features, labels, mode, params):
 
 def PiNN(model_dir='PiNN', config=None,
          depth=6, p_nodes=32, i_nodes=8, act='tanh', rc=4.0,
-         atom_types=[1, 6, 7, 8], atomic_dress={0: 0.0}):
+         atom_types=[1, 6, 7, 8], atomic_dress={0: 0.0}, learning_rate=1e-4):
     """
     """
     filters = [
@@ -82,8 +82,9 @@ def PiNN(model_dir='PiNN', config=None,
 
     for i in range(depth):
         layers += [
-            l.fc_layer('fc_{}'.format(i), order=0, n_nodes=[p_nodes, p_nodes], act=act),
+            l.fc_layer('pp_{}'.format(i), order=0, n_nodes=[p_nodes, p_nodes], act=act),
             l.pi_layer('pi_{}'.format(i), order=1, n_nodes=[p_nodes, i_nodes], act=act),
+            l.fc_layer('ii_{}'.format(i), order=1, n_nodes=[i_nodes, i_nodes], act=act),
             l.ip_layer('ip_{}'.format(i), order=1, pool_type='sum'),
             l.en_layer('en_{}'.format(i), order=0, n_nodes=[p_nodes], act=act)
         ]
@@ -91,6 +92,7 @@ def PiNN(model_dir='PiNN', config=None,
     params = {
         'filters': filters,
         'layers': layers,
+        'learning_rate': learning_rate,
         'dtype': tf.float32
     }
 
@@ -101,7 +103,7 @@ def PiNN(model_dir='PiNN', config=None,
 
 
 def SchNet(model_dir='SchNet', config=None,
-           n_blockes=4, act='softplus',
+           n_blockes=4, act='softplus', learning_rate=1e-4,
            atom_types=[1, 6, 7, 8], atomic_dress={0: 0.0}):
     """
     """
@@ -125,6 +127,7 @@ def SchNet(model_dir='SchNet', config=None,
     params = {
         'filters': filters,
         'layers': layers,
+        'learning_rate': learning_rate,
         'dtype': tf.float32
     }
 
@@ -138,6 +141,7 @@ def BPNN(model_dir='/tmp/BPNN',
          atomic_dress={0:0.0},
          elements=[1, 6, 7, 8],
          fc_depth=None,
+         learning_rate=1e-4,
          symm_funcs=None):
     """
     """
@@ -160,6 +164,7 @@ def BPNN(model_dir='/tmp/BPNN',
     params = {
         'filters': filters,
         'layers': [l.bp_fc_layer(fc_depth)],
+        'learning_rate': learning_rate,
         'dtype': tf.float32
     }
 
