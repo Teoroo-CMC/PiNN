@@ -1,11 +1,19 @@
+# -*- coding: utf-8 -*-
+"""ASE calcualtor for to use with PiNN
+"""
+
 import tensorflow as tf
 from ase.calculators.calculator import Calculator
 
 
 class PiNN_calc(Calculator):
     def __init__(self, model=None, atoms=None):
+        """
+        Args:
+            model: tf.Estimator object
+        """
         Calculator.__init__(self)
-        self.implemented_properties = ['energy', 'forces']
+        self.implemented_properties = ['energy', 'forces', 'stress']
         self.model = model
         self.size = 0
         self.atoms = atoms

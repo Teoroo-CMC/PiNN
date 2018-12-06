@@ -1,275 +1,231 @@
-"""
-    Filters are layers without trainable variables
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# -*- coding: utf-8 -*-
+"""Filters are special layers that does not contain trainable vairables
+
+To ease the preprocessing, all filters act on a tensor (nested) dictionary.
+Note that the filters return a function, which accepts a nested tensor object
+and adds certain keys.
 """
 
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
+from functools import wraps
 
+def pinn_filter(func):
+    @wraps(func)
+    def filter_wrapper(*args, **kwargs):
+        return lambda t: func(t, *args, **kwargs)
+    return filter_wrapper
 
-class sparse_node(dict):
-    """Sparse node class for use with PiNN
-    Node inherits dictionary so that it is can be used as a 'fetches' and runned
-    - Init with a dense tesnor and a mask
-    - Init with indices, sparse value and shape
-    - Sparse value can be updated
-    - Dense value is constructed while needed
+@pinn_filter
+def sparsify(tensors):
+    """ Sparsity atomic inputs"""
+    ind = tf.where(tensors['atoms'])
+    ind_g = tf.cumsum(tf.ones(tf.shape(ind)[0], tf.int32))-1
+    elem = tf.gather_nd(tensors['atoms'], ind)
+    coord = tf.gather_nd(tensors['coord'], ind)
+
+    tensors['ind'] = [ind]
+    tensors['ind_g'] = {0:ind_g}
+    tensors['elem'] = elem
+    tensors['coord'] = coord
+
+@pinn_filter
+def naive_nl(tensors, rc=5.0):
+    """ Construct pairs by calculating all possible pairs, without PBC
     """
+    ind = tensors['ind'][0]
+    ind_g = tensors['ind_g'][0]
+    coord = tensors['coord']
+    nl_dense_p1 = tf.scatter_nd(ind, ind_g+1,
+                                tf.shape(tensors['atoms'],
+                                         out_type=tf.int64))
+    nl_g = tf.gather_nd(nl_dense_p1, ind[:,:1])
+    nl_ind = tf.where(nl_g)
+    nl_i_g = tf.gather(ind_g, nl_ind[:,0])
+    nl_j_g = tf.gather_nd(nl_g, nl_ind)-1
+    ind_g = tf.stack([nl_i_g, nl_j_g], axis=1)
+    # Gathering the interacting indices
+    diff = tf.gather_nd(coord, ind_g[:,:1]) - tf.gather_nd(coord, ind_g[:,1:])
+    dist = tf.sqrt(tf.nn.relu(tf.reduce_sum(tf.square(diff), axis=-1)))
+    ind_rc = tf.where((dist>0) & (dist<rc))
+    tensors['ind_g'][1] = tf.gather_nd(ind_g, ind_rc)
+    # The gradient of this sparse diff is masked,
+    dist = tf.gather_nd(dist, ind_rc)
+    diff = tf.gather_nd(diff, ind_rc)
+    # Rewire the back-prop, the displacement can be differentiated now
+    # Todo: this should be handeled by networks after we implement
+    #       the rewiring of following derivitives during preprocessing:
+    #       coord -> diff -> dist -> symm_func -> basis
+    #       so that we can preprocess while training forces
+    @tf.custom_gradient
+    def _rewire_diff_dist(diff, dist):
+        def _grad(ddist, diff, dist):
+            return tf.expand_dims(ddist/dist, 1)*diff, None
+        return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)
+    dist = _rewire_diff_dist(diff, dist)
+    tensors['diff'] = diff
+    tensors['dist'] = dist
 
-    def __init__(self, dense=None, mask=None,
-                 indices=None, sparse=None):
 
-        if dense is not None:
-            indices = tf.where(mask)
-            sparse = tf.gather_nd(dense, indices)
+@pinn_filter
+def atomic_dress(tensors, dress, dtype=tf.float32):
+    """Assign an energy to each specified elems
 
-        self.indices = indices
-        self.sparse = sparse
-        self.dense = dense
-        self.mask = mask
-
-    def get_dense(self):
-        # Construct the dense tensor while needed
-        if self.dense is None:
-            self.dense = tf.scatter_nd(self.indices, self.sparse,
-                                       list(self.mask.shape)+list(self.sparse.shape[1:]))
-        return self.dense
-
-    def new_nodes(self, new_sparse):
-        return sparse_node(mask=self.mask,
-                           indices=self.indices,
-                           sparse=new_sparse)
-
-
-class atomic_mask():
-    """Atomic filter
-    Boolean for existing atoms
+    Args:
+        dress (dict): dictionary consisting the atomic energies
     """
+    elem = tensors['elem']
+    e_dress = tf.expand_dims(tf.zeros_like(elem, dtype),1)
+    for k, val in dress.items():
+        indices = tf.where(tf.equal(elem, k))
+        e_dress += tf.scatter_nd(indices,
+                                 tf.ones_like(indices, dtype)*
+                                 tf.cast(val, dtype),
+                                 tf.shape(e_dress, out_type=tf.int64))
+        tensors['e_dress'] = tf.squeeze(e_dress)
 
-    def parse(self, tensors, dtype):
-        atoms = tensors['atoms']
-        coord = tensors['coord']
-        mask = tf.cast(atoms, tf.bool)
-        tensors['atoms'] = sparse_node(dense=atoms, mask=mask)
+@pinn_filter
+def symm_func(tensors, sf_type='f1', rc=5.0):
+    """Adds the symmetry function of given type
 
-
-class atomic_dress():
-    """Atomic dress
-    Assign an energy for each type of atom
+    Args:
+        sf_type (string): name of the symmetry function
+        rc: cutoff radius
     """
+    dist = tensors['dist']
+    sf = {'f1': lambda x: 0.5*(tf.cos(np.pi*x/rc)+1),
+          'f2': lambda x: tf.tanh(1-x/rc)**3,
+          'hip': lambda x: tf.cos(np.pi*x/rc)**2}
+    tensors['symm_func'] = sf[sf_type](dist)
 
-    def __init__(self, dress):
-        self.dress = dress
+@pinn_filter
+def pi_basis(tensors, order=4):
+    """ Adds PiNN stype basis function for interation
 
-    def parse(self, tensors, dtype):
-        atoms = tensors['atoms']
-
-        sparse = 0.0
-
-        for key, val in self.dress.items():
-            sparse += tf.cast(tf.equal(atoms.sparse, key), dtype)*val
-
-        sparse = tf.SparseTensor(atoms.indices, sparse, atoms.mask.shape)
-        energy = tf.sparse_reduce_sum(sparse, [-1])
-
-        if 'e_data' in tensors:
-            # We are in training
-            tensors['e_data'] -= energy
-            tensors['e_data'] *= 627.509
-        tensors['energy'] = tf.constant(0.0)
-
-
-class pi_atomic():
+    Args:
+        order (int): the order of the polynomial expansion
     """
-    Transform the atomic numbers to element property nodes
+    symm_func = tensors['symm_func']
+    basis = tf.expand_dims(symm_func, -1)
+    basis = tf.concat(
+        [basis**(i+1) for i in range(order)], axis=-1)
+    tensors['pi_basis'] = tf.expand_dims(basis,-2)
+
+@pinn_filter
+def atomic_onehot(tensors, atom_types=[1,6,7,8,9],
+                  dtype=tf.float32):
+    """ Perform one-hot encoding on elements
+
+    Args:
+        atom_types (list): elements to encode
+        dtype: dtype for the output
     """
-
-    def __init__(self, types):
-        self.types = types
-
-    def parse(self, tensors, dtype):
-        elem = tf.expand_dims(tensors['atoms'].sparse, -1)
-        sparse = tf.concat(
-            [tf.cast(tf.equal(elem, e), dtype) for e in self.types], axis=-1)
-        tensors['nodes'] = {0: tensors['atoms'].new_nodes(sparse)}
+    output = tf.equal(tf.expand_dims(tensors['elem'],1),
+                      tf.expand_dims(atom_types, 0))
+    output = tf.cast(output, dtype)
+    tensors['elem_onehot'] = output
 
 
-class distance_mat():
-    """Distance filter
-    Generates a distance tensor from the coordinates
-    """
+# class schnet_basis():
+#     """
 
-    def parse(self, tensors, dtype):
-        coord = tensors['coord']
-        a_mask = tensors['atoms'].mask
-        n = int(a_mask.shape[0])
-        i = int(a_mask.shape[1])
+#     """
 
-        d_mask = (tf.expand_dims(a_mask, -1) & tf.expand_dims(a_mask, -2) & ~
-                  tf.eye(i, batch_shape=[n], dtype=tf.bool))
-        d_indices = tf.where(d_mask)
-        coord_i = tf.gather_nd(coord, d_indices[:, 0:-1])
-        coord_j = tf.gather_nd(coord, tf.concat([d_indices[:, 0:-2],
-                                                 d_indices[:, -1:]], -1))
-        diff = coord_i - coord_j
+#     def __init__(self, miu_min=0, dmiu=0.1, gamma=0.1,
+#                  n_basis=300, rc=30):
+#         self.rc = rc
+#         self.miumin = miu_min
+#         self.dmiu = dmiu
+#         self.gamma = gamma
+#         self.n_basis = n_basis
 
-        if 'cell' in tensors and tensors['cell'].shape == [3]:
-            diff = diff - tf.rint(diff / tensors['cell']) * tensors['cell']
-        # elif tensors['cell'].shape == [3, 3]:
-        # TODO Implement PBC for triclinic cells
-        dist = tf.sqrt(tf.reduce_sum(tf.square(diff), axis=-1))
-        tensors['dist'] = sparse_node(
-            mask=d_mask, indices=d_indices, sparse=dist)
+#     def parse(self, tensors, dtype):
+#         d_sparse = tensors['dist'].sparse
+#         d_indices = tensors['dist'].indices
+#         d_mask = tensors['dist'].mask
 
+#         bf_indices = tf.gather_nd(d_indices, tf.where(d_sparse < self.rc))
+#         bf_sparse = tf.gather_nd(d_sparse, tf.where(d_sparse < self.rc))
+#         bf_mask = tf.sparse_to_dense(bf_indices, d_mask.shape, True, False)
+#         bf_sparse = tf.expand_dims(bf_sparse, -1)
 
-class symm_func():
-    """
-    """
+#         sparse = []
+#         for i in range(self.n_basis):
+#             miu = self.miumin + i*self.dmiu
+#             sparse.append(tf.exp(-self.gamma*(bf_sparse-miu)**2))
+#         sparse = tf.concat(sparse, axis=-1)
 
-    def __init__(self, func='f1', rc=4.0):
-        self.rc = rc
-        self.func = func
-
-    def parse(self, tensors, dtype):
-        d_sparse = tensors['dist'].sparse
-        d_indices = tensors['dist'].indices
-        d_mask = tensors['dist'].mask
-
-        sf_indices = tf.gather_nd(d_indices, tf.where(d_sparse < self.rc))
-        sf_sparse = tf.gather_nd(d_sparse, tf.where(d_sparse < self.rc))
-        sf_mask = tf.sparse_to_dense(sf_indices, d_mask.shape, True, False)
-
-        sf_sparse = {
-            'f1': lambda x: 0.5*(tf.cos(np.pi*x/self.rc)+1),
-            'f2': lambda x: tf.tanh(1-x/self.rc)**3,
-            'hip': lambda x: tf.cos(np.pi*x/self.rc)**2,
-        }[self.func](sf_sparse)
-
-        tensors['symm_func'] = sparse_node(mask=sf_mask,
-                                           indices=sf_indices,
-                                           sparse=sf_sparse)
+#         tensors['pi_basis'] = sparse_node(mask=bf_mask,
+#                                            indices=bf_indices,
+#                                            sparse=sparse)
 
 
-class pi_basis():
-    """
+# class bp_G3():
+#     """BP-style G3 symmetry function descriptor
+#     """
 
-    """
+#     def __init__(self, lambd=1, zeta=1, eta=1):
+#         self.lambd = lambd
+#         self.zeta = zeta
+#         self.eta = eta
 
-    def __init__(self, func='f1', order=3, rc=4.0):
-        self.rc = rc
-        self.func = func
-        self.order = order
+#     def parse(self, tensors, dtype):
+#         # Indices
+#         symm_func = tensors['symm_func']
+#         mask = symm_func.mask
+#         sf_dense = symm_func.get_dense()
+#         dist_dense = tensors['dist'].get_dense()
 
-    def parse(self, tensors, dtype):
-        symm_func = tensors['symm_func']
+#         mask_ij = tf.expand_dims(mask, -1)
+#         mask_ik = tf.expand_dims(mask, -2)
+#         mask_jk = tf.expand_dims(mask, -3)
+#         mask_ijk = mask_ij & mask_ik & mask_jk
+#         indices = tf.where(mask_ijk)
 
-        basis = tf.expand_dims(symm_func.sparse, -1)
-        basis = tf.concat([basis**(i+1)
-                           for i in range(self.order)], axis=-1)
-
-        tensors['pi_basis'] = symm_func.new_nodes(basis)
-
-
-class schnet_basis():
-    """
-
-    """
-
-    def __init__(self, miu_min=0, dmiu=0.1, gamma=0.1,
-                 n_basis=300, rc=30):
-        self.rc = rc
-        self.miumin = miu_min
-        self.dmiu = dmiu
-        self.gamma = gamma
-        self.n_basis = n_basis
-
-    def parse(self, tensors, dtype):
-        d_sparse = tensors['dist'].sparse
-        d_indices = tensors['dist'].indices
-        d_mask = tensors['dist'].mask
-
-        bf_indices = tf.gather_nd(d_indices, tf.where(d_sparse < self.rc))
-        bf_sparse = tf.gather_nd(d_sparse, tf.where(d_sparse < self.rc))
-        bf_mask = tf.sparse_to_dense(bf_indices, d_mask.shape, True, False)
-        bf_sparse = tf.expand_dims(bf_sparse, -1)
-
-        sparse = []
-        for i in range(self.n_basis):
-            miu = self.miumin + i*self.dmiu
-            sparse.append(tf.exp(-self.gamma*(bf_sparse-miu)**2))
-        sparse = tf.concat(sparse, axis=-1)
-
-        tensors['pi_basis'] = sparse_node(mask=bf_mask,
-                                           indices=bf_indices,
-                                           sparse=sparse)
+#         i_ij = indices[:, 0:3]
+#         i_ik = tf.concat([indices[:, 0:2], indices[:, 3:]], -1)
+#         i_jk = tf.concat([indices[:, 0:1], indices[:, 2:4]], -1)
+#         # Collect
+#         f_ij = tf.gather_nd(sf_dense, i_ij)
+#         f_ik = tf.gather_nd(sf_dense, i_ik)
+#         f_jk = tf.gather_nd(sf_dense, i_jk)
+#         r_ij = tf.gather_nd(dist_dense, i_ij)
+#         r_ik = tf.gather_nd(dist_dense, i_ik)
+#         r_jk = tf.gather_nd(dist_dense, i_jk)
+#         # Calculate
+#         lambd = self.lambd
+#         zeta = self.zeta
+#         eta = self.eta
+#         cosin = (r_ij**2+r_jk**2-r_jk**2)/(r_ij*r_jk*2)
+#         gauss = tf.exp(-eta*(r_ij**2+r_jk**2+r_jk**2))
+#         G3 = (1+lambd*cosin)**zeta*gauss*f_ij*f_jk*f_ik
+#         # Reshape
+#         #G3 = tf.SparseTensor(indices, G3, mask_ijk.shape)
+#         G3 = tf.sparse_to_dense(indices, mask_ijk.shape, G3)
+#         G3 = 2**(1-zeta)*tf.reduce_sum(G3, axis=[-1, -2])
+#         G3 = tf.expand_dims(G3, -1)
+#         if 'bp_sf' in tensors:
+#             tensors['bp_sf'] = tf.concat([tensors['bp_sf'], G3], -1)
+#         else:
+#             tensors['bp_sf'] = G3
 
 
-class bp_G3():
-    """BP-style G3 symmetry function descriptor
-    """
+# class bp_G2():
+#     """BP-style G2 symmetry function descriptor
+#     """
 
-    def __init__(self, lambd=1, zeta=1, eta=1):
-        self.lambd = lambd
-        self.zeta = zeta
-        self.eta = eta
+#     def __init__(self, rs=2.0, etta=1):
+#         self.rs = rs
+#         self.etta = etta
 
-    def parse(self, tensors, dtype):
-        # Indices
-        symm_func = tensors['symm_func']
-        mask = symm_func.mask
-        sf_dense = symm_func.get_dense()
-        dist_dense = tensors['dist'].get_dense()
-
-        mask_ij = tf.expand_dims(mask, -1)
-        mask_ik = tf.expand_dims(mask, -2)
-        mask_jk = tf.expand_dims(mask, -3)
-        mask_ijk = mask_ij & mask_ik & mask_jk
-        indices = tf.where(mask_ijk)
-
-        i_ij = indices[:, 0:3]
-        i_ik = tf.concat([indices[:, 0:2], indices[:, 3:]], -1)
-        i_jk = tf.concat([indices[:, 0:1], indices[:, 2:4]], -1)
-        # Collect
-        f_ij = tf.gather_nd(sf_dense, i_ij)
-        f_ik = tf.gather_nd(sf_dense, i_ik)
-        f_jk = tf.gather_nd(sf_dense, i_jk)
-        r_ij = tf.gather_nd(dist_dense, i_ij)
-        r_ik = tf.gather_nd(dist_dense, i_ik)
-        r_jk = tf.gather_nd(dist_dense, i_jk)
-        # Calculate
-        lambd = self.lambd
-        zeta = self.zeta
-        eta = self.eta
-        cosin = (r_ij**2+r_jk**2-r_jk**2)/(r_ij*r_jk*2)
-        gauss = tf.exp(-eta*(r_ij**2+r_jk**2+r_jk**2))
-        G3 = (1+lambd*cosin)**zeta*gauss*f_ij*f_jk*f_ik
-        # Reshape
-        #G3 = tf.SparseTensor(indices, G3, mask_ijk.shape)
-        G3 = tf.sparse_to_dense(indices, mask_ijk.shape, G3)
-        G3 = 2**(1-zeta)*tf.reduce_sum(G3, axis=[-1, -2])
-        G3 = tf.expand_dims(G3, -1)
-        if 'bp_sf' in tensors:
-            tensors['bp_sf'] = tf.concat([tensors['bp_sf'], G3], -1)
-        else:
-            tensors['bp_sf'] = G3
-
-
-class bp_G2():
-    """BP-style G2 symmetry function descriptor
-    """
-
-    def __init__(self, rs=2.0, etta=1):
-        self.rs = rs
-        self.etta = etta
-
-    def parse(self, tensors, dtype):
-        symm_func = tensors['symm_func']
-        dist = tf.gather_nd(tensors['dist'].get_dense(), symm_func.indices)
-        sf = symm_func.sparse
-        G2 = tf.exp(-self.etta*(dist-self.rs)**2)*sf
-        G2 = tf.reduce_sum(symm_func.new_nodes(G2).get_dense(),
-                           axis=-1, keepdims=True)
-        if 'bp_sf' in tensors:
-            tensors['bp_sf'] = tf.concat([tensors['bp_sf'], G2], -1)
-        else:
-            tensors['bp_sf'] = G2
+#     def parse(self, tensors, dtype):
+#         symm_func = tensors['symm_func']
+#         dist = tf.gather_nd(tensors['dist'].get_dense(), symm_func.indices)
+#         sf = symm_func.sparse
+#         G2 = tf.exp(-self.etta*(dist-self.rs)**2)*sf
+#         G2 = tf.reduce_sum(symm_func.new_nodes(G2).get_dense(),
+#                            axis=-1, keepdims=True)
+#         if 'bp_sf' in tensors:
+#             tensors['bp_sf'] = tf.concat([tensors['bp_sf'], G2], -1)
+#         else:
+#             tensors['bp_sf'] = G2
