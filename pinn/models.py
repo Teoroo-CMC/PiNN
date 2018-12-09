@@ -8,24 +8,40 @@ A model defines the goal/loss of the model, as well as training paramters.
 import tensorflow as tf
 import pinn.filters as f
 import pinn.layers as l
+import pinn
 
 
-def potential_model_fn(features, labels, mode, params):
-    """Model function for neural network potentials
+def _get_loss(features, pred):
+    loss = tf.losses.mean_squared_error(features['e_data'], pred)
+    return loss
 
-    Args:
-        params: a dictionary specifing the model
-        config: tensorflow config for the estimator
-    """
-    network_fn = getattr(pinn.networks, params['network']['func'])
+def _get_train_op(loss, global_step, learning_rate=1e-4,
+                  regularization=None):
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    tvars = tf.trainable_variables()
+    grads = tf.gradients(loss, tvars)
+    if regularization=='clip':
+        grads, _ = tf.clip_by_global_norm(grads, 0.2)
+    train_op = optimizer.apply_gradients(
+        zip(grads, tvars), global_step=global_step)
+    return train_op
+
+
+def _potential_model_fn(features, labels, mode, params):
+    """Model function for neural network potentials"""
+    if isinstance(params['network']['func'], str):
+        network_fn = getattr(pinn.networks, params['network']['func'])
+    else:
+        network_fn = params['network']['func']
     net_param = params['network']['params']
     model_param = params['model']
     pred = network_fn(features, **net_param)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
-        loss = get_loss(**model_param['loss'])(features, pred)
-        train_op = get_train_op(**model_param['train'])
+        loss = _get_loss(features, pred, **model_param['loss'])
+        train_op = _get_train_op(loss, global_step, **model_param['train'])
+
         return tf.estimator.EstimatorSpec(
             mode, loss=loss, train_op=train_op)
 
@@ -41,15 +57,19 @@ def potential_model_fn(features, labels, mode, params):
             pred = pred * model_param['loss']['e_scale']
         predictions = {
             'energy': pred,
-            'forces': l.get_forces(pred, features['coord'])
+            'forces': l.get_forces(pred, features['coord']),
             'stress': l.get_stress(pred, features['diff'])}
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
 
 def potential_model(params, config=None):
     """Shortcut for generating potential model from paramters
+
+    Args:
+        params: a dictionary specifing the model
+        config: tensorflow config for the estimator
     """
     model = tf.estimator.Estimator(
-        model_fn=potential_model_fn, params=params,
+        model_fn=_potential_model_fn, params=params,
         model_dir=params['model_dir'], config=config)
     return model

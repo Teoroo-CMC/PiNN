@@ -48,7 +48,7 @@ def qm9_format(n_atoms=29,
         'e_data': {'dtype': float_dtype, 'shape': [],           'encode':False}}
     return format_dict
 
-def load_QM9_dataset(filelist, n_atoms=27,
+def load_QM9_dataset(filelist, n_atoms=29,
                      float_dtype=tf.float32, int_dtype=tf.int32,
                      split_ratio={'train': 8, 'test':1, 'vali':1},
                      shuffle=True, seed=0):
