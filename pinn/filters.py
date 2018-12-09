@@ -18,40 +18,53 @@ def pinn_filter(func):
 
 @pinn_filter
 def sparsify(tensors):
-    """ Sparsity atomic inputs"""
-    ind = tf.where(tensors['atoms'])
-    ind_g = tf.cumsum(tf.ones(tf.shape(ind)[0], tf.int32))-1
-    elem = tf.gather_nd(tensors['atoms'], ind)
-    coord = tf.gather_nd(tensors['coord'], ind)
+    """ Sparsity atomic inputs
 
-    tensors['ind'] = [ind]
-    tensors['ind_g'] = {0:ind_g}
+    ind and nl are sparse representations of connections.
+    From n -> n + 1 order
+       0: image -> 1: atom -> 2: pair -> 3: triplet (pair of pairs)...
+    ind[n] is a i*j tensor where
+       i = number of order n elements,
+       j = number of entries defining a element
+       each entry is the index of n-1 order element in ind[n-1]
+    nl[n] is a i*j tensor where:
+       i = the number of n-1 level elements
+       j = max number of neighbors
+       each non-zero entry is the index of i's neighbour plus one
+    """
+    atom_ind = tf.cast(tf.where(tensors['atoms']), tf.int32)
+    ind_1 = atom_ind[:,:1]
+    ind_sp = tf.cumsum(tf.ones(tf.shape(ind_1), tf.int32))-1
+    nl_1 = tf.scatter_nd(atom_ind, tf.squeeze(ind_sp)+1,
+                         tf.shape(tensors['atoms'],
+                                  out_type=tf.int32))
+    tensors['ind'] = {1: ind_1}
+    tensors['nl'] = {1: nl_1}
+    elem = tf.gather_nd(tensors['atoms'], atom_ind)
+    coord = tf.gather_nd(tensors['coord'], atom_ind)
     tensors['elem'] = elem
     tensors['coord'] = coord
+
 
 @pinn_filter
 def naive_nl(tensors, rc=5.0):
     """ Construct pairs by calculating all possible pairs, without PBC
     """
-    ind = tensors['ind'][0]
-    ind_g = tensors['ind_g'][0]
+    ind_1 = tensors['ind'][1]
     coord = tensors['coord']
-    nl_dense_p1 = tf.scatter_nd(ind, ind_g+1,
-                                tf.shape(tensors['atoms'],
-                                         out_type=tf.int64))
-    nl_g = tf.gather_nd(nl_dense_p1, ind[:,:1])
-    nl_ind = tf.where(nl_g)
-    nl_i_g = tf.gather(ind_g, nl_ind[:,0])
-    nl_j_g = tf.gather_nd(nl_g, nl_ind)-1
-    ind_g = tf.stack([nl_i_g, nl_j_g], axis=1)
+    # Naive nl_1, will be abandoned
+    nl_2 = tf.gather_nd(tensors['nl'][1], ind_1)
+    pair_ind = tf.cast(tf.where(nl_2), tf.int32)
+    ind_2_i = pair_ind[:, 0]
+    ind_2_j = tf.gather_nd(nl_2, pair_ind)-1
+    ind_2 = tf.stack([ind_2_i, ind_2_j], axis=1)
     # Gathering the interacting indices
-    diff = tf.gather_nd(coord, ind_g[:,:1]) - tf.gather_nd(coord, ind_g[:,1:])
-    dist = tf.sqrt(tf.nn.relu(tf.reduce_sum(tf.square(diff), axis=-1)))
+    diff = tf.gather(coord, ind_2_j) - tf.gather(coord, ind_2_i)
+    dist = tf.sqrt((tf.reduce_sum(tf.square(diff), axis=-1)))
     ind_rc = tf.where((dist>0) & (dist<rc))
-    tensors['ind_g'][1] = tf.gather_nd(ind_g, ind_rc)
     # The gradient of this sparse diff is masked,
-    dist = tf.gather_nd(dist, ind_rc)
     diff = tf.gather_nd(diff, ind_rc)
+    dist = tf.gather_nd(dist, ind_rc)
     # Rewire the back-prop, the displacement can be differentiated now
     # Todo: this should be handeled by networks after we implement
     #       the rewiring of following derivitives during preprocessing:
@@ -65,6 +78,8 @@ def naive_nl(tensors, rc=5.0):
     dist = _rewire_diff_dist(diff, dist)
     tensors['diff'] = diff
     tensors['dist'] = dist
+    tensors['ind'][2] = tf.gather_nd(ind_2, ind_rc)
+    tensors['nl'][2] = nl_2
 
 
 @pinn_filter
@@ -77,11 +92,11 @@ def atomic_dress(tensors, dress, dtype=tf.float32):
     elem = tensors['elem']
     e_dress = tf.expand_dims(tf.zeros_like(elem, dtype),1)
     for k, val in dress.items():
-        indices = tf.where(tf.equal(elem, k))
+        indices = tf.cast(tf.where(tf.equal(elem, k)), tf.int32)
         e_dress += tf.scatter_nd(indices,
                                  tf.ones_like(indices, dtype)*
                                  tf.cast(val, dtype),
-                                 tf.shape(e_dress, out_type=tf.int64))
+                                 tf.shape(e_dress, out_type=tf.int32))
         tensors['e_dress'] = tf.squeeze(e_dress)
 
 @pinn_filter

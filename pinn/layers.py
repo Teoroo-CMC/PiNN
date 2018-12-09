@@ -8,12 +8,13 @@ import tensorflow as tf
 from tensorflow.contrib.layers import xavier_initializer as default_init
 
 
-def pi_layer(ind_g, nodes, basis, n_nodes=[4, 4], act=tf.nn.tanh,
-             name='pi_layer'):
-    """The PiNN style interaction layer
+def pi_layer(ind, nodes, basis,
+             n_nodes=[4, 4], name='pi_layer',
+             act='tanh'):
+    """PiNN style interaction layer
 
     Args:
-        ind_g: global indices of the interating pair
+        ind: indices of the interating pair
         nodes: feature nodes of order (n-1)
         n_nodes: number of nodes to use
             Note that the last element of n_nodes specifies the dimention of
@@ -24,11 +25,11 @@ def pi_layer(ind_g, nodes, basis, n_nodes=[4, 4], act=tf.nn.tanh,
     Returns:
         Feature nodes of order n
     """
-    ind_i = ind_g[:,:1]
-    ind_j = ind_g[:,1:]
-    prop_i = tf.gather_nd(nodes, ind_i)
-    prop_j = tf.gather_nd(nodes, ind_j)
-    inter = tf.concat([prop_i, prop_j], -1)
+    ind_i = ind[:,0]
+    ind_j = ind[:,1]
+    prop_i = tf.gather(nodes, ind_i)
+    prop_j = tf.gather(nodes, ind_j)
+    inter = tf.concat([prop_i, prop_j], axis=-1)
 
     n_nodes_iter = n_nodes.copy()
     n_basis = basis.shape[-1]
@@ -41,8 +42,29 @@ def pi_layer(ind_g, nodes, basis, n_nodes=[4, 4], act=tf.nn.tanh,
     return inter
 
 
-def fc_layer(nodes, n_nodes=[4,4], act=tf.nn.tanh,
-             name='fc_layer'):
+def ip_layer(ind, nodes, n_prop,
+             pool_type='sum', name='ip_layer'):
+    """Interaction pooling layer
+
+    Args:
+        ind: indices of the interaction
+        nodes: feature nodes of order n
+        n_prop: number of n-1 elements to pool into
+        pool_type (string): sum or max
+        Todo:
+            Implement max pooling
+
+    Return:
+        Feature nodes of order n-1
+    """
+    prop_shape = tf.concat([[n_prop], nodes.shape[1:]],0)
+    prop = tf.scatter_nd(ind[:,:1], nodes, prop_shape)
+    return prop
+
+
+def fc_layer(nodes,
+             n_nodes=[4,4], name='fc_layer',
+             act='tanh'):
     """Fully connected layer, just a shortcut for multiple dense layers
 
     Args:
@@ -53,63 +75,33 @@ def fc_layer(nodes, n_nodes=[4,4], act=tf.nn.tanh,
     Returns:
         Nodes after the fc layers
     """
-
     for i,n_out in  enumerate(n_nodes):
         nodes = tf.layers.dense(nodes, n_out, activation=act,
                                 name='{}-{}'.format(name, i))
     return nodes
 
-
-def ip_layer(ind_g_p, ind_g_i, nodes, pool_type='sum',
-             name='ip_layer'):
-    """Interaction pooling layer
+def en_layer(ind, nodes, n_batch, n_nodes,
+             name='en_layer',
+             act='tanh'):
+    """Just like ip layer, but allow for with fc_nodes and coefficients
 
     Args:
-        ind_g: global indices of the interaction
+        ind: indices of the interaction
         nodes: feature nodes of order n
-        pool_type (string): sum or max
-
+        n_batch: number of samples in a batch
+        n_nodes: fc_layers before adding
     Return:
         Feature nodes of order n-1
     """
-    prop_shape = tf.concat(
-        [tf.shape(ind_g_p)[:1],nodes.shape[1:]],0)
-
-    prop = tf.scatter_nd(ind_g_i[:,:1], nodes, prop_shape)
-    return prop
-
-
-
-#def en_layer()
-# class en_layer(object):
-#     """Documentation for en_layer
-#     """
-#     def __init__(self, name, n_nodes, order=0, act='tanh'):
-#         self.n_nodes = n_nodes
-#         self.name = name
-#         self.order = order
-#         self.act = tf.nn.__getattribute__(act)
-
-#     def parse(self, tensors, dtype):
-#         nodes = tensors['nodes'][self.order]
-#         sparse = nodes.sparse
-
-
-#         for i, n_out in enumerate(self.n_nodes):
-#             sparse = tf.layers.dense(sparse, n_out,
-#                                      activation=self.act,
-#                                      name='{}-{}'.format(self.name, i))
-
-#         sparse = tf.layers.dense(sparse, 1, use_bias=False,
-#                                  activation=None,
-#                                  name='{}-en'.format(self.name))
-#         sparse = tf.squeeze(sparse, -1)
-
-#         sparse = tf.SparseTensor(nodes.indices, sparse, nodes.mask.shape)
-#         sparse = tf.sparse_reduce_sum(sparse,
-#                                       [-i-1 for i in range(self.order+1)])
-
-#         tensors['energy'] += sparse
+    for i,n_out in  enumerate(n_nodes):
+        nodes = tf.layers.dense(nodes, n_out, activation=act,
+                                name='{}-{}'.format(name, i))
+    nodes = tf.layers.dense(nodes, 1, use_bias=False,
+                            activation=None,
+                            name='{}-en'.format(name))
+    prop_shape = tf.concat([[n_batch], [1]],0)
+    nodes = tf.scatter_nd(ind[:,:1], nodes, prop_shape)
+    return tf.squeeze(nodes)
 
 
 # class bp_fc_layer(object):

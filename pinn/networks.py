@@ -7,6 +7,7 @@ goals/loss of the model, this allows for the usage of same network
 structure for different tasks.
 """
 
+import tensorflow as tf
 import pinn.filters as f
 import pinn.layers as l
 
@@ -44,23 +45,26 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         f.pi_basis(n_basis)]
     # Preprocess
     if pre_level<0:
-        for layer in filters[:-pre_level]:
-            layer(tensors)
+        for fi in filters[:-pre_level]:
+            fi(tensors)
         return tensors
     else:
-        for t in filters[pre_level:]:
-            layer(tensors)
+        for fi in filters[pre_level:]:
+            fi(tensors)
     # Then Construct the model
-    nodes = {0: tensors['elem_onehot']}
+    nodes = {1: tensors['elem_onehot']}
+    ind = tensors['ind']
+    basis = tensors['pi_basis']
+    natom = tf.shape(ind[1])[0]
+    nbatch =  tf.shape(tensors['atoms'])[0]
+    nodes[0] = 0.0
     for i in range(depth):
         if i>0:
-            nodes[1] = l.fc_layer(nodes[0], pp_nodes, 'pp-{}'.format(i))
-        nodes[2] = l.pi_layer(ind[2], ind[1], nodes[0], pi_nodes,
-                              'pi-{}'.format(i))
-        nodes[2] = l.fc_layer(ind[1], ii_nodes, 'ii-{}'.format(i))
-        nodes[1] = l.ip_layer(ind[1], ind[2], nodes[2], 'ip_{}'.format(i))
-        nodes[0] += l.en_layer(ind[0], ind[1], nodes[1], en_nodes,
-                               'en_{}'.format(i))
+            nodes[1] = l.fc_layer(nodes[1], pp_nodes, 'pp-{}'.format(i))
+        nodes[2] = l.pi_layer(ind[2], nodes[1], basis, pi_nodes, 'pi-{}'.format(i))
+        nodes[2] = l.fc_layer(nodes[2], ii_nodes, 'ii-{}'.format(i))
+        nodes[1] = l.ip_layer(ind[2], nodes[2], natom, 'ip_{}'.format(i))
+        nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes, 'en_{}'.format(i))
     return nodes[0]
 
 

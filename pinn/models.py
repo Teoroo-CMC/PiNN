@@ -41,6 +41,15 @@ def potential_model_fn(features, labels, mode, params):
             pred = pred * model_param['loss']['e_scale']
         predictions = {
             'energy': pred,
-            'forces': -get_forces(pred, features['coord'])}
+            'forces': l.get_forces(pred, features['coord'])
+            'stress': l.get_stress(pred, features['diff'])}
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
+
+def potential_model(params, config=None):
+    """Shortcut for generating potential model from paramters
+    """
+    model = tf.estimator.Estimator(
+        model_fn=potential_model_fn, params=params,
+        model_dir=params['model_dir'], config=config)
+    return model
