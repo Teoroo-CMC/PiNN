@@ -90,19 +90,13 @@ def atomic_dress(tensors, dress, dtype=tf.float32):
         dress (dict): dictionary consisting the atomic energies
     """
     elem = tensors['elem']
-    e_dress = tf.expand_dims(tf.zeros_like(elem, dtype),1)
+    e_dress = tf.zeros_like(elem, dtype)
     for k, val in dress.items():
-        indices = tf.cast(tf.where(tf.equal(elem, k)), tf.int32)
-        e_dress += tf.scatter_nd(indices,
-                                 tf.ones_like(indices, dtype)*
-                                 tf.cast(val, dtype),
-                                 tf.shape(e_dress, out_type=tf.int32))
-
+        indices = tf.cast(tf.equal(elem, k), dtype)
+        e_dress += indices * tf.cast(val, dtype)
     n_batch = tf.shape(tensors['atoms'])[0]
-    prop_shape = tf.concat([[n_batch], [1]],0)
-    e_dress = tf.squeeze(tf.scatter_nd(tensors['ind'][1][:,:1], e_dress,
-                                       prop_shape))
-
+    e_dress = tf.unsorted_segment_sum(
+        e_dress, tensors['ind'][1][:,0], n_batch)
     tensors['e_dress'] = tf.squeeze(e_dress)
 
 @pinn_filter

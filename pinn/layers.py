@@ -57,8 +57,7 @@ def ip_layer(ind, nodes, n_prop,
     Return:
         Feature nodes of order n-1
     """
-    prop_shape = tf.concat([[n_prop], nodes.shape[1:]],0)
-    prop = tf.scatter_nd(ind[:,:1], nodes, prop_shape)
+    prop = tf.unsorted_segment_sum(nodes, ind[:,0], n_prop)
     return prop
 
 
@@ -99,8 +98,7 @@ def en_layer(ind, nodes, n_batch, n_nodes,
     nodes = tf.layers.dense(nodes, 1, use_bias=False,
                             activation=None,
                             name='{}-en'.format(name))
-    prop_shape = tf.concat([[n_batch], [1]],0)
-    nodes = tf.scatter_nd(ind[:,:1], nodes, prop_shape)
+    nodes = tf.unsorted_segment_sum(nodes, ind[:,0], n_batch)
     return tf.squeeze(nodes)
 
 
