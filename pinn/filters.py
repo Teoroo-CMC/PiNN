@@ -97,7 +97,13 @@ def atomic_dress(tensors, dress, dtype=tf.float32):
                                  tf.ones_like(indices, dtype)*
                                  tf.cast(val, dtype),
                                  tf.shape(e_dress, out_type=tf.int32))
-        tensors['e_dress'] = tf.squeeze(e_dress)
+
+    n_batch = tf.shape(tensors['atoms'])[0]
+    prop_shape = tf.concat([[n_batch], [1]],0)
+    e_dress = tf.squeeze(tf.scatter_nd(tensors['ind'][1][:,:1], e_dress,
+                                       prop_shape))
+
+    tensors['e_dress'] = tf.squeeze(e_dress)
 
 @pinn_filter
 def symm_func(tensors, sf_type='f1', rc=5.0):

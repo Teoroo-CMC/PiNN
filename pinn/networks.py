@@ -60,11 +60,11 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
     nodes[0] = 0.0
     for i in range(depth):
         if i>0:
-            nodes[1] = l.fc_layer(nodes[1], pp_nodes, 'pp-{}'.format(i))
-        nodes[2] = l.pi_layer(ind[2], nodes[1], basis, pi_nodes, 'pi-{}'.format(i))
-        nodes[2] = l.fc_layer(nodes[2], ii_nodes, 'ii-{}'.format(i))
-        nodes[1] = l.ip_layer(ind[2], nodes[2], natom, 'ip_{}'.format(i))
-        nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes, 'en_{}'.format(i))
+            nodes[1] = l.fc_layer(nodes[1], pp_nodes, 'pp-{}/'.format(i))
+        nodes[2] = l.pi_layer(ind[2], nodes[1], basis, pi_nodes, 'pi-{}/'.format(i))
+        nodes[2] = l.fc_layer(nodes[2], ii_nodes, 'ii-{}/'.format(i))
+        nodes[1] = l.ip_layer(ind[2], nodes[2], natom, 'ip_{}/'.format(i))
+        nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes, 'en_{}/'.format(i))
     return nodes[0]
 
 

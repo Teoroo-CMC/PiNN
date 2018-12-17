@@ -11,17 +11,23 @@ import pinn.layers as l
 import pinn
 
 
-def _get_loss(features, pred):
+def _get_loss(features, pred, scale=None):
+    if 'e_dress' in features:
+        features['e_data'] = features['e_data'] - features['e_dress']
+    if scale is not None:
+        features['e_data'] = features['e_data'] * scale
     loss = tf.losses.mean_squared_error(features['e_data'], pred)
     return loss
 
 def _get_train_op(loss, global_step, learning_rate=1e-4,
                   regularization=None):
+    learning_rate = tf.train.exponential_decay(learning_rate, global_step,
+                                              100000, 0.96, staircase=True)
     optimizer = tf.train.AdamOptimizer(learning_rate)
     tvars = tf.trainable_variables()
     grads = tf.gradients(loss, tvars)
     if regularization=='clip':
-        grads, _ = tf.clip_by_global_norm(grads, 0.2)
+        grads, _ = tf.clip_by_global_norm(grads, 0.01)
     train_op = optimizer.apply_gradients(
         zip(grads, tvars), global_step=global_step)
     return train_op
@@ -46,7 +52,13 @@ def _potential_model_fn(features, labels, mode, params):
             mode, loss=loss, train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
-        loss = get_loss(**model_param['loss'])(features, pred)
+        loss = _get_loss(features, pred, **model_param['loss'])
+        metrics = {
+            'MAE': tf.metrics.mean_absolute_error(
+                features['e_data'], pred),
+            'RMSE': tf.metrics.root_mean_squared_error(
+                features['e_data'], pred)}
+ 
         return tf.estimator.EstimatorSpec(
             mode, loss=loss, eval_metric_ops=metrics)
 
