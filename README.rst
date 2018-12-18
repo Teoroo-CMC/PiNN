@@ -1,18 +1,35 @@
 =========================================
 PiNN: Pairwise interaction Neural Network
 =========================================
-PiNN is a atomic neural network potential algorithm. This package is currently
-being developed primarily by Yunqi Shao. The PiNN package is designed to work
-with ASE and tensorflow.
+PiNN is a neural network designed for modeling atomic potentials.
+The PiNN package also provides elemental layers and abstractions to implement
+various atomic neural networks.
+
+The code is currenly developed by Yunqi Shao at Uppsala Unversiy.
 
 Introduction
 ============
-The PiNN code is a machine learning package for atomic systems.
-For more discussion, please visit our documentation.
+PiNN is a atomic neural network potential which:
 
-The goal of PiNN is to develope a common abstraction for different atomic neural
-networks(ANNs), and allow for the efficient construction of ANNs.
+- Requires minimal feature-design
+- Is based on solely pairwise interactions
+- Preduces state-of-art accurary and speed
+  
+For more information, see our preprint.(**doesn't exist yet**)
 
+PiNN is also a tool to:
+
+- Train and evaluate different atomic neural networks
+- Construct new neural networks with existing building blocks
+- Develope new building blocks for ANNs
+  
+Read the documentation for more details.
+
+Requirements
+============
+- Python 3
+- Tensorflow, ASE
+- h5py (optional, for reading ANI-1 dataset)
 
 Installation
 ============
@@ -21,23 +38,33 @@ PiNN is currently under development and available via git repo::
   git clone https://github.com/yqshao/pinn.git
   cd pinn && pip install -e .
 
+Quick Start
+===========
+A set of tutorial notebooks can be found in the documentation.
 
 Models and datasets
 ===================
 
 Implemented Models
 ------------------
-- Behler-Parrinello Neural Network
-- PiNN/DTNN/SchNet/HIPNN
+- Graph convolutional based
+  
+  - PiNN
+  - (TODO) SchNet/DTNN
+  - (TODO) HIPNN 
+- Symmtry function based
+  
+  - (TODO) Behler-Parrinello Neural Network
 
-Datasets
---------
-- QM9
-- ANI-1
-
-License
-=======
-
+Dataset Connectors
+------------------
+- Organic Moleclues
+  
+  - ANI-1
+  - QM9
+- Bulk Materials
+  
+  - (TODO) MP 
 
 References
 ==========
