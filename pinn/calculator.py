@@ -37,7 +37,7 @@ class PiNN_calc(Calculator):
 
         dtypes = {'coord': dtype, 'atoms': tf.int32}
         shapes = {'coord': [self.size, 3], 'atoms': [self.size]}
-        properties = ['energy', 'forces']
+        properties = ['energy', 'forces', 'stress']
 
         if self._atoms_to_calc.pbc.any():
             shapes['cell'] = self._atoms_to_calc.cell.shape

@@ -10,7 +10,18 @@ import pinn.filters as f
 import pinn.layers as l
 import pinn
 
-
+def _get_forces(energy, coord):
+    import warnings
+    index_warning = 'Converting sparse IndexedSlices'
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', index_warning)
+        force = tf.gradients(energy, coord)[0]
+    if type(force) == tf.IndexedSlices:
+        force = tf.scatter_nd(tf.expand_dims(force.indices, 1),
+                              force.values, tf.cast(force.dense_shape, tf.int32))
+    print(force.shape)
+    return force
+    
 def _get_loss(features, pred, scale=None):
     if 'e_dress' in features:
         features['e_data'] = features['e_data'] - features['e_dress']
@@ -40,37 +51,47 @@ def _potential_model_fn(features, labels, mode, params):
     else:
         network_fn = params['network']['func']
     net_param = params['network']['params']
-    model_param = params['model']
+    train_param = params['train']
+    if mode == tf.estimator.ModeKeys.PREDICT:
+        net_param['pre_level'] = 0
+
     pred = network_fn(features, **net_param)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
-        loss = _get_loss(features, pred, **model_param['loss'])
-        train_op = _get_train_op(loss, global_step, **model_param['train'])
-
+        loss = _get_loss(features, pred, train_param)
+        train_op = _get_train_op(loss, global_step, train_param)
         return tf.estimator.EstimatorSpec(
             mode, loss=loss, train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
-        loss = _get_loss(features, pred, **model_param['loss'])
+        loss = _get_loss(features, pred, train_param)
         metrics = {
             'MAE': tf.metrics.mean_absolute_error(
                 features['e_data'], pred),
             'RMSE': tf.metrics.root_mean_squared_error(
                 features['e_data'], pred)}
- 
         return tf.estimator.EstimatorSpec(
             mode, loss=loss, eval_metric_ops=metrics)
 
     if mode == tf.estimator.ModeKeys.PREDICT:
-        if 'atomic_dress' in tensors:
-            pred = pred + features['atomic_dress']
+        # if 'atomic_dress' in tensors:
+        #     pred = pred + features['atomic_dress']
+        print(pred)
         if 'e_scale' in model_param['loss']:
             pred = pred * model_param['loss']['e_scale']
+        forces = _get_forces(pred, features['coord'])
+        forces = tf.expand_dims(forces, 0)
+        stress = _get_forces(pred, features['diff'])
+        stress = tf.reduce_sum(
+            tf.expand_dims(stress,1)*
+            tf.expand_dims(features['diff'],2),
+            axis=0, keepdims=True)
         predictions = {
             'energy': pred,
-            'forces': l.get_forces(pred, features['coord']),
-            'stress': l.get_stress(pred, features['diff'])}
+            'forces': - forces,
+            'stress': stress
+        }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
 

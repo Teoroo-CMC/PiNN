@@ -99,7 +99,7 @@ def en_layer(ind, nodes, n_batch, n_nodes,
                             activation=None,
                             name='{}-en'.format(name))
     nodes = tf.unsorted_segment_sum(nodes, ind[:,0], n_batch)
-    return tf.squeeze(nodes)
+    return tf.squeeze(nodes,-1)
 
 
 # class bp_fc_layer(object):

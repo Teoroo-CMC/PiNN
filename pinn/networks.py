@@ -40,7 +40,7 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         f.sparsify(),
         f.atomic_onehot(atom_types),
         f.atomic_dress(atomic_dress),
-        f.naive_nl(rc),
+        f.cell_list_nl(rc),
         f.symm_func(sf_type, rc),
         f.pi_basis(n_basis)]
     # Preprocess

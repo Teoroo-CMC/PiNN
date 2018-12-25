@@ -35,11 +35,7 @@ def sparsify(tensors):
     atom_ind = tf.cast(tf.where(tensors['atoms']), tf.int32)
     ind_1 = atom_ind[:,:1]
     ind_sp = tf.cumsum(tf.ones(tf.shape(ind_1), tf.int32))-1
-    nl_1 = tf.scatter_nd(atom_ind, tf.squeeze(ind_sp)+1,
-                         tf.shape(tensors['atoms'],
-                                  out_type=tf.int32))
     tensors['ind'] = {1: ind_1}
-    tensors['nl'] = {1: nl_1}
     elem = tf.gather_nd(tensors['atoms'], atom_ind)
     coord = tf.gather_nd(tensors['coord'], atom_ind)
     tensors['elem'] = elem
@@ -88,17 +84,16 @@ def cell_list_nl(tensors, rc=5.0):
     """
     atom_sind = tensors['ind'][1]
     atom_apos = tensors['coord']
-    atom_aind = tf.cumsum(tf.ones_like(atom_sind), 0)
-    to_collect = atom_aind - 1
+    atom_gind = tf.cumsum(tf.ones_like(atom_sind), 0)
+    atom_aind = atom_gind - 1
+    to_collect = atom_aind
     if 'cell' in tensors:
         rep_apos, rep_sind, rep_aind = _pbc_repeat(tensors, rc)
         atom_sind = tf.concat([atom_sind, rep_sind], 0)
         atom_apos = tf.concat([atom_apos, rep_apos], 0)
         atom_aind = tf.concat([atom_aind, rep_aind], 0)
         atom_gind = tf.cumsum(tf.ones_like(atom_sind), 0)
-    else:
-        atom_gind = atom_aind
-
+        
     atom_apos = atom_apos - tf.reduce_min(atom_apos, axis=0)
     atom_cpos = tf.concat([atom_sind, tf.cast(atom_apos//rc, tf.int32)],axis=1)
     cpos_shap = tf.concat([tf.reduce_max(atom_cpos, axis=0) + 1,[1]], axis=0)
@@ -153,6 +148,15 @@ def cell_list_nl(tensors, rc=5.0):
     ind_rc = tf.where((dist<rc) & (dist>0))
     dist = tf.gather_nd(dist, ind_rc)
     diff = tf.gather_nd(diff, ind_rc)
+    pair_i_aind = tf.gather_nd(tf.gather(atom_aind, pair_ij_i), ind_rc)
+    pair_j_aind = tf.gather_nd(tf.gather(atom_aind, pair_ij_j), ind_rc)
+    tensors['ind'][2] = tf.concat([pair_i_aind, pair_j_aind], 1)
+    @tf.custom_gradient
+    def _rewire_diff_dist(diff, dist):
+        def _grad(ddist, diff, dist):
+            return tf.expand_dims(ddist/dist, 1)*diff, None
+        return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)
+    dist = _rewire_diff_dist(diff, dist)
     tensors['dist'] = dist
     tensors['diff'] = diff
 
@@ -160,10 +164,14 @@ def cell_list_nl(tensors, rc=5.0):
 def naive_nl(tensors, rc=5.0):
     """ Construct pairs by calculating all possible pairs, without PBC
     """
+    # Naive nl_1, will be abandoned
     ind_1 = tensors['ind'][1]
     coord = tensors['coord']
-    # Naive nl_1, will be abandoned
-    nl_2 = tf.gather_nd(tensors['nl'][1], ind_1)
+    atom_ind = tf.cast(tf.where(tensors['atoms']), tf.int32)
+    nl_1 = tf.scatter_nd(atom_ind, tf.squeeze(ind_sp)+1,
+                         tf.shape(tensors['atoms'],
+                                  out_type=tf.int32))
+    nl_2 = tf.gather_nd(nl_1, ind_1)
     pair_ind = tf.cast(tf.where(nl_2), tf.int32)
     ind_2_i = pair_ind[:, 0]
     ind_2_j = tf.gather_nd(nl_2, pair_ind)-1
@@ -189,7 +197,6 @@ def naive_nl(tensors, rc=5.0):
     tensors['diff'] = diff
     tensors['dist'] = dist
     tensors['ind'][2] = tf.gather_nd(ind_2, ind_rc)
-    tensors['nl'][2] = nl_2
 
 
 @pinn_filter
