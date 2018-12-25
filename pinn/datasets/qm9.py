@@ -66,6 +66,6 @@ def load_QM9_dataset(filelist, n_atoms=29,
     shapes = {k: v['shape'] for k,v in format_dict.items()}
     generator_fn = lambda filelist: tf.data.Dataset.from_generator(
         lambda: _qm9_generator(filelist, n_atoms), dtypes, shapes)
-    subsets = split_list(filelist, split_ratio)
+    subsets = split_list(filelist, split_ratio, shuffle, seed)
     splitted = map_nested(generator_fn, subsets)
     return splitted
