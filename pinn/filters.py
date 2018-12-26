@@ -40,7 +40,8 @@ def sparsify(tensors):
     coord = tf.gather_nd(tensors['coord'], atom_ind)
     tensors['elem'] = elem
     tensors['coord'] = coord
-
+    if 'f_data' in tensors:
+        tensors['f_data'] = tf.gather_nd(tensors['f_data'], atom_ind)
 
 def _displace_matrix(max_repeat):
     d = []

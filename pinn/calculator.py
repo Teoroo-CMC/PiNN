@@ -59,6 +59,10 @@ class PiNN_calc(Calculator):
         if len(self._atoms_to_calc) != self.size:
             print('Generating the graph')
             self.predictor = None
-
         predictor = self.get_predictor()
-        self.results = next(predictor)
+        results = next(predictor)
+        if 'stress' in properties:
+            results['stress'] /= self._atoms_to_calc.get_volume()
+            results['stress'] = results['stress'].flat[[0, 4, 8, 5, 2, 1]]
+        self.results = results
+

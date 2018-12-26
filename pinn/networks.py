@@ -11,6 +11,28 @@ import tensorflow as tf
 import pinn.filters as f
 import pinn.layers as l
 
+def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
+    """Lennard-Jones Potential
+
+    Args:
+        tensors: input data (nested tensor from dataset).
+        rc: cutoff radius.
+        sigma: 
+        epsilon:
+    """
+    f.sparsify()(tensors)
+    f.cell_list_nl(rc)(tensors)
+    e0 = 4 * epsilon * ((sigma / rc)**12 - (sigma / rc)**6)
+    c6 = (sigma/tensors['dist'])**6
+    c12 = c6 ** 2
+    en = 4*epsilon*(c12-c6)-e0
+    ind = tensors['ind']
+    natom = tf.shape(ind[1])[0]
+    nbatch = tf.shape(tensors['atoms'])[0]
+    en = tf.unsorted_segment_sum(en, ind[2][:,0], natom)
+    en = tf.unsorted_segment_sum(en, ind[1][:,0], nbatch)
+    return en/2.0
+
 def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
                  ii_nodes=[16,16], en_nodes=[16,16], depth=4,
                  atomic_dress={}, atom_types=[1,6,7,8],
@@ -57,7 +79,7 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
     basis = tensors['pi_basis']
     natom = tf.shape(ind[1])[0]
     nbatch =  tf.shape(tensors['atoms'])[0]
-    nodes[0] = 0.0
+    nodes[0] = 0.0 + tensors['e_dress']
     for i in range(depth):
         if i>0:
             nodes[1] = l.fc_layer(nodes[1], pp_nodes, 'pp-{}/'.format(i))
