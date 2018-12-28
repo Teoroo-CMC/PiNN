@@ -22,6 +22,7 @@ def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
     """
     f.sparsify()(tensors)
     f.cell_list_nl(rc)(tensors)
+    _reset_dist_grad(tensors)
     e0 = 4 * epsilon * ((sigma / rc)**12 - (sigma / rc)**6)
     c6 = (sigma/tensors['dist'])**6
     c12 = c6 ** 2
@@ -37,7 +38,7 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
                  ii_nodes=[16,16], en_nodes=[16,16], depth=4,
                  atomic_dress={}, atom_types=[1,6,7,8],
                  rc=4.0, sf_type='f1', n_basis=4,
-                 pre_level=0):
+                 pre_level=0, preprocess=False):
     """
     Args:
         tensors: input data (nested tensor from dataset).
@@ -52,8 +53,8 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         n_basis: number of polynomials to use with the basis.
         pre_level (int): flag for preprocessing:
             0: no preprocessing.
-            n: receiving inputs with n preprocessing.
-            -n: excecute the first n preprocessing.
+            1: preprocess till the cell list nl
+            2: preprocess all filters (cannot do force training)
     Returns:
         - prediction tensor if n>=0
         - preprocessed nested tensors if n<0
@@ -66,12 +67,17 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         f.symm_func(sf_type, rc),
         f.pi_basis(n_basis)]
     # Preprocess
-    if pre_level<0:
-        for fi in filters[:-pre_level]:
+    to_pre = {0: 0, 1: 4, 2: 6}[pre_level]
+    if preprocess:
+        for fi in filters[:to_pre]:
             fi(tensors)
         return tensors
-    else:
-        for fi in filters[pre_level:]:
+    if pre_level==0:
+        for fi in filters[:4]:
+            fi(tensors)
+    if pre_level<=1:
+        _reset_dist_grad(tensors)
+        for fi in filters[4:]:
             fi(tensors)
     # Then Construct the model
     nodes = {1: tensors['elem_onehot']}
@@ -88,7 +94,8 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         nodes[2] = l.fc_layer(nodes[2], ii_nodes, 'ii-{}/'.format(i))
         nodes[2] = nodes[2] * tensors['pi_basis'][:,:,0]
         nodes[1] = l.ip_layer(ind[2], nodes[2], natom, 'ip_{}/'.format(i))
-        nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes, 'en_{}/'.format(i))
+        nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes,
+                               'en_{}/'.format(i))
     return nodes[0]
 
 
@@ -161,4 +168,26 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
 #     estimator = tf.estimator.Estimator(
 #         model_fn=potential_model_fn, params=params, model_dir=model_dir)
 #     return estimator
+# Helper functions
+def _reset_dist_grad(tensors):
+    tensors['diff'] = _connect_diff_grad(tensors['coord'], tensors['diff'],
+                                         tensors['ind'][2])
+    tensors['dist'] = _connect_dist_grad(tensors['diff'], tensors['dist'])
 
+@tf.custom_gradient
+def _connect_diff_grad(coord, diff, ind):
+    """Returns a new diff with its gradients connected to coord"""
+    def _grad(ddiff, coord, diff, ind):
+        natoms = tf.shape(coord)[0]
+        dcoord = tf.unsorted_segment_sum(ddiff, ind[:,1], natoms)
+        dcoord -= tf.unsorted_segment_sum(ddiff, ind[:,0], natoms)
+        return dcoord, None, None
+    return tf.identity(diff), lambda ddiff: _grad(ddiff, coord, diff, ind)
+
+
+@tf.custom_gradient
+def _connect_dist_grad(diff, dist):
+    """Returns a new dist with its gradients connected to diff"""
+    def _grad(ddist, diff, dist):
+        return tf.expand_dims(ddist/dist, 1)*diff, None
+    return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)    

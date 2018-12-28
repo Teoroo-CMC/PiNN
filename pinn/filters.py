@@ -152,14 +152,9 @@ def cell_list_nl(tensors, rc=5.0):
     pair_i_aind = tf.gather_nd(tf.gather(atom_aind, pair_ij_i), ind_rc)
     pair_j_aind = tf.gather_nd(tf.gather(atom_aind, pair_ij_j), ind_rc)
     tensors['ind'][2] = tf.concat([pair_i_aind, pair_j_aind], 1)
-    @tf.custom_gradient
-    def _rewire_diff_dist(diff, dist):
-        def _grad(ddist, diff, dist):
-            return tf.expand_dims(ddist/dist, 1)*diff, None
-        return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)
-    dist = _rewire_diff_dist(diff, dist)
     tensors['dist'] = dist
     tensors['diff'] = diff
+
 
 @pinn_filter
 def naive_nl(tensors, rc=5.0):
@@ -189,12 +184,6 @@ def naive_nl(tensors, rc=5.0):
     #       the rewiring of following derivitives during preprocessing:
     #       coord -> diff -> dist -> symm_func -> basis
     #       so that we can preprocess while training forces
-    @tf.custom_gradient
-    def _rewire_diff_dist(diff, dist):
-        def _grad(ddist, diff, dist):
-            return tf.expand_dims(ddist/dist, 1)*diff, None
-        return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)
-    dist = _rewire_diff_dist(diff, dist)
     tensors['diff'] = diff
     tensors['dist'] = dist
     tensors['ind'][2] = tf.gather_nd(ind_2, ind_rc)
@@ -257,6 +246,8 @@ def atomic_onehot(tensors, atom_types=[1,6,7,8,9],
                       tf.expand_dims(atom_types, 0))
     output = tf.cast(output, dtype)
     tensors['elem_onehot'] = output
+
+
 
 
 # class schnet_basis():

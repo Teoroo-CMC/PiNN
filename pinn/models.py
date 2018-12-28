@@ -10,71 +10,18 @@ import pinn.filters as f
 import pinn.layers as l
 import pinn.networks
 
-def _get_forces(energy, coord):
-    import warnings
-    index_warning = 'Converting sparse IndexedSlices'
-    with warnings.catch_warnings():
-        warnings.filterwarnings('ignore', index_warning)
-        force = tf.gradients(energy, coord)[0]
-    if type(force) == tf.IndexedSlices:
-        force = tf.scatter_nd(tf.expand_dims(force.indices, 1),
-                              force.values, tf.cast(force.dense_shape, tf.int32))
-    return force
-    
-def _get_loss(features, pred, train_param):
-    if 'e_dress'in features:
-        features['e_data'] = features['e_data'] - features['e_dress']
-    features['e_data'] = features['e_data'] * train_param['en_scale']
-    loss = tf.losses.mean_squared_error(features['e_data'], pred)
-    if train_param['train_force']:
-        features['f_data'] = features['f_data'] * train_param['en_scale']
-        features['forces'] = -_get_forces(pred, features['coord'])
-        frc_loss = tf.losses.mean_squared_error(
-            features['f_data'], features['forces'])
-        loss = loss + train_param['force_ratio'] * frc_loss
-    return loss
-
-def _get_metrics(features, pred, train_param):
-    metrics = {
-        'ENG_MAE': tf.metrics.mean_absolute_error(
-            features['e_data'], pred),
-        'ENG_RMSE': tf.metrics.root_mean_squared_error(
-            features['e_data'], pred)}
-    if train_param['train_force']:
-        metrics['FRC_MAE'] = tf.metrics.mean_absolute_error(
-            features['f_data'], features['forces'])
-        metrics['FRC_RMSE'] = tf.metrics.root_mean_squared_error(
-            features['f_data'], features['forces'])
-    return metrics
-
-
-def _get_train_op(loss, global_step, train_param):
-    learning_rate = train_param['learning_rate']
-    regularization = train_param['regularization']
-    learning_rate = tf.train.exponential_decay(
-        learning_rate, global_step, 100000, 0.96, staircase=True)
-    optimizer = tf.train.AdamOptimizer(learning_rate)
-    tvars = tf.trainable_variables()
-    grads = tf.gradients(loss, tvars)
-    if regularization=='clip':
-        grads, _ = tf.clip_by_global_norm(grads, 0.01)
-    train_op = optimizer.apply_gradients(
-        zip(grads, tvars), global_step=global_step)
-    return train_op
-
-
 def _potential_model_fn(features, labels, mode, params):
     """Model function for neural network potentials"""
-    if isinstance(params['network']['func'], str):
-        network_fn = getattr(pinn.networks, params['network']['func'])
+    if isinstance(params['network'], str):
+        network_fn = getattr(pinn.networks, params['network'])
     else:
-        network_fn = params['network']['func']
-    net_param = params['network']['params']
+        network_fn = params['network']
+    net_param = params['netparam']
     train_param = params['train']
     if 'train_force' not in train_param:
         train_param['train_force'] = False
+        
     pred = network_fn(features, **net_param)
-
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
         loss = _get_loss(features, pred, train_param)
@@ -138,3 +85,79 @@ def potential_model(params, config=None):
         model_fn=_potential_model_fn, params=params,
         model_dir=params['model_dir'], config=config)
     return model
+
+
+def _reset_dist_grad(tensors):
+    tensors['diff'] = _connect_diff_grad(tensors['coord'], tensors['diff'],
+                                         tensors['ind'][2])
+    tensors['dist'] = _connect_dist_grad(tensors['diff'], tensors['dist'])
+
+@tf.custom_gradient
+def _connect_diff_grad(coord, diff, ind):
+    """Returns a new diff with its gradients connected to coord"""
+    def _grad(ddiff, coord, diff, ind):
+        natoms = tf.shape(coord)[0]
+        dcoord = tf.unsorted_segment_sum(ddiff, ind[:,1], natoms)
+        dcoord -= tf.unsorted_segment_sum(ddiff, ind[:,0], natoms)
+        return dcoord, None, None, None
+    return tf.identity(diff), lambda ddist: _grad(ddiff, coord, diff, ind)
+
+@tf.custom_gradient
+def _connect_dist_grad(diff, dist):
+    """Returns a new dist with its gradients connected to diff"""
+    def _grad(ddist, diff, dist):
+        return tf.expand_dims(ddist/dist, 1)*diff, None
+    return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)    
+    
+
+def _get_forces(energy, coord):
+    import warnings
+    index_warning = 'Converting sparse IndexedSlices'
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', index_warning)
+        force = tf.gradients(energy, coord)[0]
+    if type(force) == tf.IndexedSlices:
+        force = tf.scatter_nd(tf.expand_dims(force.indices, 1),
+                              force.values, tf.cast(force.dense_shape, tf.int32))
+    return force
+    
+def _get_loss(features, pred, train_param):
+    if 'e_dress'in features:
+        features['e_data'] = features['e_data'] - features['e_dress']
+    features['e_data'] = features['e_data'] * train_param['en_scale']
+    loss = tf.losses.mean_squared_error(features['e_data'], pred)
+    if train_param['train_force']:
+        features['f_data'] = features['f_data'] * train_param['en_scale']
+        features['forces'] = -_get_forces(pred, features['coord'])
+        frc_loss = tf.losses.mean_squared_error(
+            features['f_data'], features['forces'])
+        loss = loss + train_param['force_ratio'] * frc_loss
+    return loss
+
+def _get_metrics(features, pred, train_param):
+    metrics = {
+        'ENG_MAE': tf.metrics.mean_absolute_error(
+            features['e_data'], pred),
+        'ENG_RMSE': tf.metrics.root_mean_squared_error(
+            features['e_data'], pred)}
+    if train_param['train_force']:
+        metrics['FRC_MAE'] = tf.metrics.mean_absolute_error(
+            features['f_data'], features['forces'])
+        metrics['FRC_RMSE'] = tf.metrics.root_mean_squared_error(
+            features['f_data'], features['forces'])
+    return metrics
+
+
+def _get_train_op(loss, global_step, train_param):
+    learning_rate = train_param['learning_rate']
+    regularization = train_param['regularization']
+    learning_rate = tf.train.exponential_decay(
+        learning_rate, global_step, 100000, 0.96, staircase=True)
+    optimizer = tf.train.AdamOptimizer(learning_rate)
+    tvars = tf.trainable_variables()
+    grads = tf.gradients(loss, tvars)
+    if regularization=='clip':
+        grads, _ = tf.clip_by_global_norm(grads, 0.01)
+    train_op = optimizer.apply_gradients(
+        zip(grads, tvars), global_step=global_step)
+    return train_op
