@@ -79,7 +79,7 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
     basis = tensors['pi_basis']
     natom = tf.shape(ind[1])[0]
     nbatch =  tf.shape(tensors['atoms'])[0]
-    nodes[0] = 0.0 + tensors['e_dress']
+    nodes[0] = 0.0
     for i in range(depth):
         if i>0:
             nodes[1] = l.fc_layer(nodes[1], pp_nodes, 'pp-{}/'.format(i))

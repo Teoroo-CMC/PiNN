@@ -22,6 +22,8 @@ def _get_forces(energy, coord):
     return force
     
 def _get_loss(features, pred, train_param):
+    if 'e_dress'in features:
+        features['e_data'] = features['e_data'] - features['e_dress']
     features['e_data'] = features['e_data'] * train_param['en_scale']
     loss = tf.losses.mean_squared_error(features['e_data'], pred)
     if train_param['train_force']:
