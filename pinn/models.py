@@ -10,6 +10,20 @@ import pinn.filters as f
 import pinn.layers as l
 import pinn.networks
 
+
+def potential_model(params, config=None):
+    """Shortcut for generating potential model from paramters
+
+    Args:
+        params: a dictionary specifing the model
+        config: tensorflow config for the estimator
+    """
+    model = tf.estimator.Estimator(
+        model_fn=_potential_model_fn, params=params,
+        model_dir=params['model_dir'], config=config)
+    return model
+
+
 def _potential_model_fn(features, labels, mode, params):
     """Model function for neural network potentials"""
     if isinstance(params['network'], str):
@@ -17,7 +31,7 @@ def _potential_model_fn(features, labels, mode, params):
     else:
         network_fn = params['network']
     net_param = params['netparam']
-    train_param = params['train']
+    train_param = _get_train_param(params['train'])
     if 'train_force' not in train_param:
         train_param['train_force'] = False
         
@@ -73,18 +87,6 @@ def _potential_model_fn(features, labels, mode, params):
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
-
-def potential_model(params, config=None):
-    """Shortcut for generating potential model from paramters
-
-    Args:
-        params: a dictionary specifing the model
-        config: tensorflow config for the estimator
-    """
-    model = tf.estimator.Estimator(
-        model_fn=_potential_model_fn, params=params,
-        model_dir=params['model_dir'], config=config)
-    return model
 
 
 def _reset_dist_grad(tensors):
@@ -161,3 +163,13 @@ def _get_train_op(loss, global_step, train_param):
     train_op = optimizer.apply_gradients(
         zip(grads, tvars), global_step=global_step)
     return train_op
+
+def _get_train_param(train_param):
+    default_param = {
+        'learning_rate': 3e-4,
+        'regularization': 'clip',
+        'en_scale': 1}
+    for k, v in default_param.items():
+        if k not in train_param:
+            train_param[k]=v
+    return train_param

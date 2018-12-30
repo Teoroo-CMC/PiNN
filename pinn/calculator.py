@@ -7,7 +7,7 @@ from ase.calculators.calculator import Calculator
 
 
 class PiNN_calc(Calculator):
-    def __init__(self, model=None, atoms=None):
+    def __init__(self, model=None, atoms=None, unit=1):
         """
         Args:
             model: tf.Estimator object
@@ -15,7 +15,8 @@ class PiNN_calc(Calculator):
         Calculator.__init__(self)
         self.implemented_properties = ['energy', 'forces', 'stress']
         self.model = model
-        self.size = 0
+        self.pbc = False
+        self.unit = unit
         self.atoms = atoms
         self.predictor = None
 
@@ -36,12 +37,13 @@ class PiNN_calc(Calculator):
         self.size = len(self._atoms_to_calc)
 
         dtypes = {'coord': dtype, 'atoms': tf.int32}
-        shapes = {'coord': [self.size, 3], 'atoms': [self.size]}
+        shapes = {'coord': [None, 3], 'atoms': [None]}
         properties = ['energy', 'forces', 'stress']
 
         if self._atoms_to_calc.pbc.any():
             shapes['cell'] = self._atoms_to_calc.cell.shape
             dtypes['cell'] = dtype
+            self.pbc=True
 
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
@@ -55,12 +57,15 @@ class PiNN_calc(Calculator):
             self._atoms_to_calc = self.atoms
         else:
             self._atoms_to_calc = atoms
-
-        if len(self._atoms_to_calc) != self.size:
-            print('Generating the graph')
+            
+        if self._atoms_to_calc.pbc.any() != self.pbc:
+            print('PBC condition changed, reset the predictor.')
             self.predictor = None
+            
         predictor = self.get_predictor()
         results = next(predictor)
+        results = {k: v*self.unit for k,v in results.items()}
+        
         if 'stress' in properties:
             results['stress'] /= self._atoms_to_calc.get_volume()
             results['stress'] = results['stress'].flat[[0, 4, 8, 5, 2, 1]]
