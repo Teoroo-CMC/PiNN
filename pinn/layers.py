@@ -102,112 +102,35 @@ def en_layer(ind, nodes, n_batch, n_nodes,
     return tf.squeeze(nodes,-1)
 
 
-# class bp_fc_layer(object):
-#     """Documentation for bp_fc_layer
-#     """
-#     def __init__(self,
-#                  n_nodes,
-#                  act='tanh'):
-#         self.name = 'bp_fc_layer'
-#         self.n_nodes = n_nodes
-#         self.act = tf.nn.__getattribute__(act)
+def schnet_cfconv_layer():
+    """ cfconv layer as described in 
+    SchNet: https://doi.org/10.1063/1.5019779
 
-#     def parse(self, tensors, dtype):
-#         atoms = tensors['atoms']
-#         bp_sf = tensors['bp_sf']
+    TODO: implement this
+    """
+    pass
 
-#         elem_maps = {}
-#         energy = 0
-#         for elem, n_nodes in self.n_nodes.items():
-#             elem_map = tf.gather_nd(atoms.indices,
-#                                     tf.where(tf.equal(atoms.sparse, elem)))
-#             sparse = tf.gather_nd(bp_sf, elem_map)
-
-#             for i, n_out in enumerate(n_nodes):
-#                 sparse = tf.layers.dense(sparse, n_out,
-#                                          activation=self.act,
-#                                          name='{}-{}-{}'.format(self.name, elem, i))
-
-#             sparse = tf.layers.dense(sparse, 1, use_bias=False,
-#                                      activation=None,
-#                                      name='{}-{}-en'.format(self.name, elem))
-#             sparse = tf.squeeze(sparse, -1)
-
-#             e_elem = tf.SparseTensor(elem_map, sparse, atoms.mask.shape)
-#             energy += tf.sparse_reduce_sum(e_elem, axis=-1)
-
-#         tensors['energy'] = energy
-
-# class res_fc_layer(object):
-#     def __init__(self, order=0, n_nodes=[10], act='tanh'):
-#         self.name = 'res_fc_layer'
-#         self.order = order
-#         self.n_nodes = n_nodes
-#         self.act = tf.nn.__getattribute__(act)
-
-#     def parse(self, tensors, dtype):
-#         nodes = tensors['nodes'][self.order]
-#         sparse = nodes.sparse
-
-#         for i, n_out in enumerate(self.n_nodes):
-#             sparse_t = tf.layers.dense(sparse, sparse.shape[-1],
-#                                        activation=self.act,
-#                                        name='{}-{}t'.format(self.name, i))
-
-#             sparse = tf.layers.dense(tf.concat([sparse_t, sparse], -1), n_out,
-#                                      activation=None,
-#                                      name='{}-{}'.format(self.name, i))
-#         tensors['nodes'][self.order] = nodes.new_nodes(sparse)
+def bp_fc_layer():
+    """ Behler-Parenello style element specific fully connected layer
+    
+    TODO: implement this
+    """
+    pass
 
 
-# class hip_inter_layer(object):
-#     def __init__(self, n_nodes=10, act='tanh'):
-#         self.name = 'HIP_inter_layer'
-#         self.n_nodes = n_nodes
-#         self.act = tf.nn.__getattribute__(act)
+def res_fc_layer():
+    """ Fully connected layer with residue, as described in 
+    HIPNN: https://doi.org/10.1063/1.5011181
 
-#     def parse(self, tensors, dtype):
-#         nodes = tensors['nodes'][0]
-#         basis = tensors['pi_basis']
-#         tensors['nodes'][0] = nodes
-
-#         sparse = tf.tensordot(basis, v) * tf.expand_dims(nodes)
-#         sparse = self.act(tf.reduce_sum(sparse, -2))
-#         tensors['nodes'][0] = nodes.new_nodes(sparse)
+    TODO: implement this
+    """
+    pass
 
 
-# class schnet_cfconv_layer(object):
-#     """
-#     A SchNet interaction layer is a filter to pool atomic properties.
-#     SchNet interaction layer currently does not create higher dimension nodes.
-#     """
-#     def __init__(self, name='schnet_cfconv_layer',
-#                  n_nodes=[64, 64], act='softplus'):
-#         self.name = name
-#         self.n_nodes = n_nodes
-#         self.act = tf.nn.__getattribute__(act)
+def hip_ip_layer():
+    """ HIPNN style interaction pooling layer
 
-#     def parse(self, tensors, dtype):
-#         nodes = tensors['nodes'][0]
-#         basis = tensors['pi_basis']
+    TODO: implement this
+    """
+    pass
 
-#         indices_i = basis.indices[:, 0:-1]
-#         nodes_i = tf.gather_nd(nodes.get_dense(), indices_i)
-#         sparse = basis.sparse
-
-#         for i, n_out in enumerate(self.n_nodes):
-#             sparse = tf.layers.dense(sparse, n_out,
-#                                      activation=self.act)
-
-#         sparse = sparse * nodes_i
-#         dense = sparse_node(mask=basis.mask,
-#                             indices=basis.indices,
-#                             sparse=sparse).get_dense()
-#         tf.summary.image(self.name,
-#                          dense[:,:,:,0:3])
-
-#         sparse = tf.gather_nd(tf.reduce_sum(dense, axis=-3), nodes.indices)
-#         sparse = tf.layers.dense(sparse, n_out, activation=None, use_bias=False)
-#         sparse = sparse + nodes.sparse
-
-#         tensors['nodes'][0] = nodes.new_nodes(sparse)

@@ -249,107 +249,28 @@ def atomic_onehot(tensors, atom_types=[1,6,7,8,9],
 
 
 
+@pinn_filter
+def schnet_basis(tensors):
+    """ SchNet style basis for interaction (filters)
 
-# class schnet_basis():
-#     """
-
-#     """
-
-#     def __init__(self, miu_min=0, dmiu=0.1, gamma=0.1,
-#                  n_basis=300, rc=30):
-#         self.rc = rc
-#         self.miumin = miu_min
-#         self.dmiu = dmiu
-#         self.gamma = gamma
-#         self.n_basis = n_basis
-
-#     def parse(self, tensors, dtype):
-#         d_sparse = tensors['dist'].sparse
-#         d_indices = tensors['dist'].indices
-#         d_mask = tensors['dist'].mask
-
-#         bf_indices = tf.gather_nd(d_indices, tf.where(d_sparse < self.rc))
-#         bf_sparse = tf.gather_nd(d_sparse, tf.where(d_sparse < self.rc))
-#         bf_mask = tf.sparse_to_dense(bf_indices, d_mask.shape, True, False)
-#         bf_sparse = tf.expand_dims(bf_sparse, -1)
-
-#         sparse = []
-#         for i in range(self.n_basis):
-#             miu = self.miumin + i*self.dmiu
-#             sparse.append(tf.exp(-self.gamma*(bf_sparse-miu)**2))
-#         sparse = tf.concat(sparse, axis=-1)
-
-#         tensors['pi_basis'] = sparse_node(mask=bf_mask,
-#                                            indices=bf_indices,
-#                                            sparse=sparse)
+    TODO: implement this
+    """
+    pass
 
 
-# class bp_G3():
-#     """BP-style G3 symmetry function descriptor
-#     """
-
-#     def __init__(self, lambd=1, zeta=1, eta=1):
-#         self.lambd = lambd
-#         self.zeta = zeta
-#         self.eta = eta
-
-#     def parse(self, tensors, dtype):
-#         # Indices
-#         symm_func = tensors['symm_func']
-#         mask = symm_func.mask
-#         sf_dense = symm_func.get_dense()
-#         dist_dense = tensors['dist'].get_dense()
-
-#         mask_ij = tf.expand_dims(mask, -1)
-#         mask_ik = tf.expand_dims(mask, -2)
-#         mask_jk = tf.expand_dims(mask, -3)
-#         mask_ijk = mask_ij & mask_ik & mask_jk
-#         indices = tf.where(mask_ijk)
-
-#         i_ij = indices[:, 0:3]
-#         i_ik = tf.concat([indices[:, 0:2], indices[:, 3:]], -1)
-#         i_jk = tf.concat([indices[:, 0:1], indices[:, 2:4]], -1)
-#         # Collect
-#         f_ij = tf.gather_nd(sf_dense, i_ij)
-#         f_ik = tf.gather_nd(sf_dense, i_ik)
-#         f_jk = tf.gather_nd(sf_dense, i_jk)
-#         r_ij = tf.gather_nd(dist_dense, i_ij)
-#         r_ik = tf.gather_nd(dist_dense, i_ik)
-#         r_jk = tf.gather_nd(dist_dense, i_jk)
-#         # Calculate
-#         lambd = self.lambd
-#         zeta = self.zeta
-#         eta = self.eta
-#         cosin = (r_ij**2+r_jk**2-r_jk**2)/(r_ij*r_jk*2)
-#         gauss = tf.exp(-eta*(r_ij**2+r_jk**2+r_jk**2))
-#         G3 = (1+lambd*cosin)**zeta*gauss*f_ij*f_jk*f_ik
-#         # Reshape
-#         #G3 = tf.SparseTensor(indices, G3, mask_ijk.shape)
-#         G3 = tf.sparse_to_dense(indices, mask_ijk.shape, G3)
-#         G3 = 2**(1-zeta)*tf.reduce_sum(G3, axis=[-1, -2])
-#         G3 = tf.expand_dims(G3, -1)
-#         if 'bp_sf' in tensors:
-#             tensors['bp_sf'] = tf.concat([tensors['bp_sf'], G3], -1)
-#         else:
-#             tensors['bp_sf'] = G3
+@pinn_filter
+def g2_sf(tensors):
+    """ BP-style g2 symmetry functions
+    
+    TODO: implement this
+    """
+    pass
 
 
-# class bp_G2():
-#     """BP-style G2 symmetry function descriptor
-#     """
-
-#     def __init__(self, rs=2.0, etta=1):
-#         self.rs = rs
-#         self.etta = etta
-
-#     def parse(self, tensors, dtype):
-#         symm_func = tensors['symm_func']
-#         dist = tf.gather_nd(tensors['dist'].get_dense(), symm_func.indices)
-#         sf = symm_func.sparse
-#         G2 = tf.exp(-self.etta*(dist-self.rs)**2)*sf
-#         G2 = tf.reduce_sum(symm_func.new_nodes(G2).get_dense(),
-#                            axis=-1, keepdims=True)
-#         if 'bp_sf' in tensors:
-#             tensors['bp_sf'] = tf.concat([tensors['bp_sf'], G2], -1)
-#         else:
-#             tensors['bp_sf'] = G2
+@pinn_filter
+def g3_sf(tensors):
+    """ BP-style g3 symmetry functions
+    
+    TODO: implement this
+    """
+    pass

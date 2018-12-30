@@ -1,9 +1,10 @@
 """TFRecord Datasets for PiNN
+
+TODO: finish this and implement converting functions
 """
 
 import tensorflow as tf
-# Encoding helpers
-#
+
 
 _int64_feature = lambda value: tf.train.Feature(
     int64_list=tf.train.Int64List(value=[value]))
