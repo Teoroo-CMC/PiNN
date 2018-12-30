@@ -63,6 +63,7 @@ we can preprocess the dataset with filters during the training process and speed
 up the training.
 
 For example, the following layers are considered filters:
+
 - neighbor list construction
 - symmetry function and interaction basis calculation
 - atomic dressing
