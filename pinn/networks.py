@@ -38,7 +38,8 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
                  ii_nodes=[16,16], en_nodes=[16,16], depth=4,
                  atomic_dress={}, atom_types=[1,6,7,8],
                  rc=4.0, sf_type='f1', n_basis=4,
-                 pre_level=0, preprocess=False):
+                 pre_level=0, preprocess=False,
+                 to_return=0):
     """
     Args:
         tensors: input data (nested tensor from dataset).
@@ -96,7 +97,7 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         nodes[1] = l.ip_layer(ind[2], nodes[2], natom, 'ip_{}/'.format(i))
         nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes,
                                'en_{}/'.format(i))
-    return nodes[0]
+    return nodes[to_return]
 
 
 def schnet_network(tensors):
