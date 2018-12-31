@@ -22,12 +22,15 @@ class PiNN_calc(Calculator):
 
     def _generator(self):
         while True:
-            coord = self._atoms_to_calc.get_positions()
-            atoms = self._atoms_to_calc.get_atomic_numbers()
-            data = {'coord': coord, 'atoms': atoms}
             if self._atoms_to_calc.pbc.any():
-                cell = self._atoms_to_calc.cell
-                data['cell'] = cell
+                data = {
+                    'cell': self._atoms_to_calc.cell,
+                    'coord': self._atoms_to_calc.get_positions(wrap=True),
+                    'atoms': self._atoms_to_calc.numbers}
+            else:
+                data = {
+                    'coord': self._atoms_to_calc.positions,
+                    'atoms': self._atoms_to_calc.numbers}
             yield data
 
     def get_predictor(self, dtype=tf.float32):
@@ -41,13 +44,13 @@ class PiNN_calc(Calculator):
         properties = ['energy', 'forces', 'stress']
 
         if self._atoms_to_calc.pbc.any():
-            shapes['cell'] = self._atoms_to_calc.cell.shape
+            shapes['cell'] = [3,3]
             dtypes['cell'] = dtype
             self.pbc=True
 
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
-                self._generator, dtypes, shapes).batch(1, drop_remainder=True),
+                self._generator, dtypes, shapes).batch(1),
             predict_keys=properties)
         return self.predictor
 
