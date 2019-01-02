@@ -16,14 +16,15 @@ def test_derivitives():
     import numpy as np
     params = {
     'model_dir': '',
-    'network':{
-        'func': 'lj',
-        'params': {'rc':3}},
+    'network':'lj',
+    'netparam': {'rc':3},
     'train':{}}
     model = potential_model(params)
     pi_lj = PiNN_calc(model)
     test_set = [bulk('Cu').repeat([3,3,3]), bulk('Mg'), g2['H2O']]
     for atoms in test_set:
+        pos = atoms.get_positions()
+        atoms.set_positions(pos+np.random.uniform(0,1,pos.shape))
         atoms.set_calculator(pi_lj)
         f_pinn, e_pinn = atoms.get_forces(), atoms.get_potential_energy()
         atoms.set_calculator(LennardJones())
