@@ -153,8 +153,11 @@ def _get_metrics(features, pred, train_param):
 def _get_train_op(loss, global_step, train_param):
     learning_rate = train_param['learning_rate']
     regularization = train_param['regularization']
-    learning_rate = tf.train.exponential_decay(
-        learning_rate, global_step, 100000, 0.96, staircase=True)
+    if train_param['decay']:
+        learning_rate = tf.train.exponential_decay(
+            learning_rate, global_step,
+            train_param['decay_interval'], train_param['decay_rate'], 
+            staircase=True)
     optimizer = tf.train.AdamOptimizer(learning_rate)
     tvars = tf.trainable_variables()
     grads = tf.gradients(loss, tvars)
@@ -166,9 +169,12 @@ def _get_train_op(loss, global_step, train_param):
 
 def _get_train_param(train_param):
     default_param = {
+        'en_scale': 1,
         'learning_rate': 3e-4,
         'regularization': 'clip',
-        'en_scale': 1}
+        'decay': True,
+        'decay_interval':100000,
+        'decay_rate':0.96}
     for k, v in default_param.items():
         if k not in train_param:
             train_param[k]=v
