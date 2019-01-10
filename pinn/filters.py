@@ -216,8 +216,8 @@ def symm_func(tensors, sf_type='f1', rc=5.0):
     """
     dist = tensors['dist']
     sf = {'f1': lambda x: 0.5*(tf.cos(np.pi*x/rc)+1),
-          'f2': lambda x: tf.tanh(1-x/rc)**3,
-          'hip': lambda x: tf.cos(np.pi*x/rc)**2}
+          'f2': lambda x: (tf.tanh(1-x/rc)/np.tanh(1))**3,
+          'hip': lambda x: tf.cos(np.pi*x/rc/2)**2}
     tensors['symm_func'] = sf[sf_type](dist)
 
 @pinn_filter
