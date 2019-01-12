@@ -134,6 +134,11 @@ def _get_loss(features, pred, train_param):
         frc_loss = tf.losses.mean_squared_error(
             features['f_data'], features['forces'])
         loss = loss + train_param['force_ratio'] * frc_loss
+    tvars = tf.trainable_variables()
+    if train_param['regularize_l2']:
+        loss += train_param['regularize_l2'] * tf.add_n([
+            tf.nn.l2_loss(v) for v in tvars if
+            ('bias' not in v.name and 'energy' not in v.name)]) 
     return loss
 
 def _get_metrics(features, pred, train_param):
@@ -152,17 +157,16 @@ def _get_metrics(features, pred, train_param):
 
 def _get_train_op(loss, global_step, train_param):
     learning_rate = train_param['learning_rate']
-    regularization = train_param['regularization']
     if train_param['decay']:
         learning_rate = tf.train.exponential_decay(
             learning_rate, global_step,
-            train_param['decay_interval'], train_param['decay_rate'], 
+            train_param['decay_step'], train_param['decay_rate'], 
             staircase=True)
     optimizer = tf.train.AdamOptimizer(learning_rate)
     tvars = tf.trainable_variables()
     grads = tf.gradients(loss, tvars)
-    if regularization=='clip':
-        grads, _ = tf.clip_by_global_norm(grads, 0.01)
+    if train_param['norm_clip']:
+        grads, _ = tf.clip_by_global_norm(grads, train_param['norm_clip'])
     train_op = optimizer.apply_gradients(
         zip(grads, tvars), global_step=global_step)
     return train_op
@@ -171,9 +175,10 @@ def _get_train_param(train_param):
     default_param = {
         'en_scale': 1,
         'learning_rate': 3e-4,
-        'regularization': 'clip',
+        'norm_clip': 0.01,
         'decay': True,
-        'decay_interval':100000,
+        'regularize_l2': 0.001,
+        'decay_step':100000,
         'decay_rate':0.96}
     for k, v in default_param.items():
         if k not in train_param:
