@@ -8,15 +8,10 @@ and adds certain keys.
 
 import numpy as np
 import tensorflow as tf
-from functools import wraps
-
-def pinn_filter(func):
-    @wraps(func)
-    def filter_wrapper(*args, **kwargs):
-        return lambda t: func(t, *args, **kwargs)
-    return filter_wrapper
+from pinn.utils import pi_named, pinn_filter
 
 @pinn_filter
+@pi_named('sparsify')
 def sparsify(tensors):
     """ Sparsity atomic inputs
 
@@ -77,6 +72,7 @@ def _pbc_repeat(tensors, rc):
 
 
 @pinn_filter
+@pi_named('cell_list_nl')
 def cell_list_nl(tensors, rc=5.0):
     """ Compute neighbour list with celllist approach
     https://en.wikipedia.org/wiki/Cell_lists
@@ -157,6 +153,7 @@ def cell_list_nl(tensors, rc=5.0):
 
 
 @pinn_filter
+@pi_named('naive_nl')
 def naive_nl(tensors, rc=5.0):
     """ Construct pairs by calculating all possible pairs, without PBC
     """
@@ -190,6 +187,7 @@ def naive_nl(tensors, rc=5.0):
 
 
 @pinn_filter
+@pi_named('atomic_dress')
 def atomic_dress(tensors, dress, dtype=tf.float32):
     """Assign an energy to each specified elems
 
@@ -207,6 +205,7 @@ def atomic_dress(tensors, dress, dtype=tf.float32):
     tensors['e_dress'] = tf.squeeze(e_dress)
 
 @pinn_filter
+@pi_named('symm_func')
 def symm_func(tensors, sf_type='f1', rc=5.0):
     """Adds the symmetry function of given type
 
@@ -221,6 +220,7 @@ def symm_func(tensors, sf_type='f1', rc=5.0):
     tensors['symm_func'] = sf[sf_type](dist)
 
 @pinn_filter
+@pi_named('pi_basis')
 def pi_basis(tensors, order=4):
     """ Adds PiNN stype basis function for interation
 
@@ -234,6 +234,7 @@ def pi_basis(tensors, order=4):
     tensors['pi_basis'] = tf.expand_dims(basis,-2)
 
 @pinn_filter
+@pi_named('atomic_onehot')
 def atomic_onehot(tensors, atom_types=[1,6,7,8,9],
                   dtype=tf.float32):
     """ Perform one-hot encoding on elements

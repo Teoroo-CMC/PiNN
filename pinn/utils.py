@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+from functools import wraps
 
 def get_atomic_dress(dataset, elems, max_iter=1000):
     """
@@ -32,3 +33,19 @@ def get_atomic_dress(dataset, elems, max_iter=1000):
     dress = {e:beta[i] for (i, e) in enumerate(elems)}
     error = np.dot(x, beta) - y
     return dress, error
+
+def pi_named(default_name='unnamed'):
+    """Decorate a layer to have a name """
+    def decorator(func):
+        @wraps(func)
+        def named_layer(*args, name=default_name, **kwargs):
+            with tf.variable_scope(name):
+                return func(*args, **kwargs)
+        return named_layer
+    return decorator
+
+def pinn_filter(func):
+    @wraps(func)
+    def filter_wrapper(*args, **kwargs):
+        return lambda t: func(t, *args, **kwargs)
+    return filter_wrapper

@@ -5,11 +5,12 @@ Layers here should be pure functions.
 """
 import numpy as np
 import tensorflow as tf
+from pinn.utils import pi_named
 from tensorflow.contrib.layers import xavier_initializer as default_init
 
-
+@pi_named('pi_layer')
 def pi_layer(ind, nodes, basis,
-             n_nodes=[4, 4], name='pi_layer',
+             n_nodes=[4, 4],
              act='tanh'):
     """PiNN style interaction layer
 
@@ -35,15 +36,15 @@ def pi_layer(ind, nodes, basis,
     n_basis = basis.shape[-1]
     n_nodes_iter[-1] *= n_basis
 
-    inter = fc_layer(inter, n_nodes_iter, act=act, name=name)
+    inter = fc_layer(inter, n_nodes_iter, act=act)
     inter = tf.reshape(inter, tf.concat(
         [tf.shape(inter)[:-1], [n_nodes[-1]], [n_basis]],0))
     inter = tf.reduce_sum(inter*basis, axis=-1)
     return inter
 
-
+@pi_named('ip_layer')
 def ip_layer(ind, nodes, n_prop,
-             pool_type='sum', name='ip_layer'):
+             pool_type='sum'):
     """Interaction pooling layer
 
     Args:
@@ -60,9 +61,9 @@ def ip_layer(ind, nodes, n_prop,
     prop = tf.unsorted_segment_sum(nodes, ind[:,0], n_prop)
     return prop
 
-
+@pi_named('fc_layer')
 def fc_layer(nodes,
-             n_nodes=[4,4], name='fc_layer',
+             n_nodes=[4,4],
              act='tanh'):
     """Fully connected layer, just a shortcut for multiple dense layers
 
@@ -76,11 +77,12 @@ def fc_layer(nodes,
     """
     for i,n_out in  enumerate(n_nodes):
         nodes = tf.layers.dense(nodes, n_out, activation=act,
-                                name='{}-{}'.format(name, i))
+                                name='dense-{}'.format(i))
     return nodes
 
+
+@pi_named('en_layer')
 def en_layer(ind, nodes, n_batch, n_nodes,
-             name='en_layer',
              act='tanh'):
     """Just like ip layer, but allow for with fc_nodes and coefficients
 
@@ -94,10 +96,10 @@ def en_layer(ind, nodes, n_batch, n_nodes,
     """
     for i,n_out in  enumerate(n_nodes):
         nodes = tf.layers.dense(nodes, n_out, activation=act,
-                                name='{}-{}'.format(name, i))
+                                name='dense-{}'.format(i))
+
     nodes = tf.layers.dense(nodes, 1, use_bias=False,
-                            activation=None,
-                            name='{}-en'.format(name))
+                            activation=None, name='energy')
     nodes = tf.unsorted_segment_sum(nodes, ind[:,0], n_batch)
     return tf.squeeze(nodes,-1)
 

@@ -9,6 +9,7 @@ import tensorflow as tf
 import pinn.filters as f
 import pinn.layers as l
 import pinn.networks
+from pinn.utils import pi_named
 
 
 def potential_model(params, config=None):
@@ -38,31 +39,11 @@ def _potential_model_fn(features, labels, mode, params):
     pred = network_fn(features, **net_param)
     if mode == tf.estimator.ModeKeys.TRAIN:
         global_step = tf.train.get_global_step()
-        loss = _get_loss(features, pred, train_param)
-
-        tf.summary.scalar(
-            'ENG_RMSE', tf.sqrt(tf.losses.mean_squared_error(
-                features['e_data'], pred)))
-        tf.summary.scalar(
-            'ENG_MAE', tf.reduce_mean(tf.abs(
-                features['e_data'] - pred)))
-        tf.summary.histogram('E_DATA', features['e_data'])
-        tf.summary.histogram('E_PRED', pred)
-        tf.summary.histogram('E_ERROR', features['e_data'] - pred)
-
-        if train_param['train_force']:
-            tf.summary.scalar(
-                'FRC_RMSE', tf.sqrt(tf.losses.mean_squared_error(
-                    features['f_data'], features['forces'])))
-            tf.summary.scalar(
-                'FRC_MAE', tf.reduce_mean(tf.abs(
-                    features['f_data'] - features['forces'])))
-            tf.summary.histogram('F_DATA', features['f_data'])
-            tf.summary.histogram('F_PRED', features['forces'])
-            tf.summary.histogram(
-                'F_ERROR', features['f_data']-features['forces'])
         
+        loss = _get_loss(features, pred, train_param)
+        _get_train_summary(features, pred, train_param)
         train_op = _get_train_op(loss, global_step, train_param)
+        
         return tf.estimator.EstimatorSpec(
             mode, loss=loss, train_op=train_op)
 
@@ -111,7 +92,6 @@ def _connect_dist_grad(diff, dist):
         return tf.expand_dims(ddist/dist, 1)*diff, None
     return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)    
     
-
 def _get_forces(energy, coord):
     import warnings
     index_warning = 'Converting sparse IndexedSlices'
@@ -122,7 +102,8 @@ def _get_forces(energy, coord):
         force = tf.scatter_nd(tf.expand_dims(force.indices, 1),
                               force.values, tf.cast(force.dense_shape, tf.int32))
     return force
-    
+
+@pi_named('LOSSES')
 def _get_loss(features, pred, train_param):
     if 'e_dress'in features:
         features['e_data'] = features['e_data'] - features['e_dress']
@@ -141,20 +122,22 @@ def _get_loss(features, pred, train_param):
             ('bias' not in v.name and 'energy' not in v.name)]) 
     return loss
 
+@pi_named('METRICS')
 def _get_metrics(features, pred, train_param):
     metrics = {
-        'ENG_MAE': tf.metrics.mean_absolute_error(
+        'METRICS/ENG_MAE': tf.metrics.mean_absolute_error(
+
             features['e_data'], pred),
-        'ENG_RMSE': tf.metrics.root_mean_squared_error(
+        'METRICS/ENG_RMSE': tf.metrics.root_mean_squared_error(
             features['e_data'], pred)}
     if train_param['train_force']:
-        metrics['FRC_MAE'] = tf.metrics.mean_absolute_error(
+        metrics['METRICS/FRC_MAE'] = tf.metrics.mean_absolute_error(
             features['f_data'], features['forces'])
-        metrics['FRC_RMSE'] = tf.metrics.root_mean_squared_error(
+        metrics['METRICS/FRC_RMSE'] = tf.metrics.root_mean_squared_error(
             features['f_data'], features['forces'])
     return metrics
 
-
+@pi_named('TRAIN_OP')
 def _get_train_op(loss, global_step, train_param):
     learning_rate = train_param['learning_rate']
     if train_param['decay']:
@@ -171,6 +154,32 @@ def _get_train_op(loss, global_step, train_param):
         zip(grads, tvars), global_step=global_step)
     return train_op
 
+
+@pi_named('METRICS')
+def _get_train_summary(features, pred, train_param):
+    tf.summary.scalar(
+        'ENG_RMSE', tf.sqrt(tf.losses.mean_squared_error(
+            features['e_data'], pred)))
+    tf.summary.scalar(
+        'ENG_MAE', tf.reduce_mean(tf.abs(
+            features['e_data'] - pred)))
+    tf.summary.histogram('E_DATA', features['e_data'])
+    tf.summary.histogram('E_PRED', pred)
+    tf.summary.histogram('E_ERROR', features['e_data'] - pred)
+
+    if train_param['train_force']:
+        tf.summary.scalar(
+            'FRC_RMSE', tf.sqrt(tf.losses.mean_squared_error(
+                features['f_data'], features['forces'])))
+        tf.summary.scalar(
+            'FRC_MAE', tf.reduce_mean(tf.abs(
+                features['f_data'] - features['forces'])))
+        tf.summary.histogram('F_DATA', features['f_data'])
+        tf.summary.histogram('F_PRED', features['forces'])
+        tf.summary.histogram(
+            'F_ERROR', features['f_data']-features['forces'])
+
+        
 def _get_train_param(train_param):
     default_param = {
         'en_scale': 1,
