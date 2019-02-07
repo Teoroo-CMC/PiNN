@@ -35,8 +35,8 @@ Installation
 ============
 PiNN is currently under development and available via git repo::
 
-  git clone https://github.com/yqshao/pinn.git
-  cd pinn && pip install -e .
+  git clone git@github.com:Teoroo-CMC/PiNN_dev.git
+  cd PiNN_dev && pip install -e .
 
 Quick Start
 ===========
