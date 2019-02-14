@@ -7,9 +7,13 @@ PiNN abstract atomic neural networks (ANNs) with three levels: layers, networks
 and models. This abstraction helps to reuse common parts of various ANNs and
 construct customized models with existing components.
 
+
+Layers
+------
+
 Nodes
------
-Nodes are the most basic elements of ANNs. A node refers to some property that
+^^^^^^
+Nodes are the most basic elements of layers. A node refers to some property that
 is tied to some object: be it molecule, atom, pair or triplet.
 
 In PiNN, all nodes are represented sparsely. Higher order nodes are specified
@@ -31,8 +35,9 @@ are just pairwise interaction of (n-1)-body properties. It also seems easier
 for neural networks to model a pairwise function than to model the multibody
 function directly.
 
-Layers
-------
+
+Common types of layers
+^^^^^^^^^^^^^^^^^^^^^^
 Layers are functions connecting different nodes. Furthermore, layers can be
 classified to three types: pairwise interaction (PI, mapping from lower order
 nodes to higher ones), interaction pooing (IP, as the opposite to PI), and
@@ -55,8 +60,8 @@ In PiNN, layers are defined as pure functions and are expected to behave like
 any tf functions. They do not contain information about their connections so
 that they can be freely rewired to construct new (and hybrid) models.
 
-Filters
--------
+Special types of layers
+^^^^^^^^^^^^^^^^^^^^^^^
 Filters are special types of layers: they do not contain trainable variables.
 This makes it possible to evaluate the output of filters prior to training. Thus,
 we can preprocess the dataset with filters during the training process and speed
