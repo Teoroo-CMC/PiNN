@@ -113,7 +113,7 @@ def schnet_cfconv_layer():
     pass
 
 def bp_fc_layer():
-    """ Behler-Parenello style element specific fully connected layer
+    """ Behler-Parrinello style element specific fully connected layer
     
     TODO: implement this
     """
