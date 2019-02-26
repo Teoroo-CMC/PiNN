@@ -59,12 +59,14 @@ Implemented Models
 Dataset Connectors
 ------------------
 - Organic Moleclues
-  
+
   - ANI-1
   - QM9
+  
 - Bulk Materials
   
-  - (TODO) MP 
+  - (TODO) Bulk solid: MP or NOMAD 
+  - (TODO) Bulk liquid: Liquid water 
 
 References
 ==========
