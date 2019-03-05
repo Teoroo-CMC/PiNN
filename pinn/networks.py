@@ -52,10 +52,12 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         rc: cutoff radius.
         sf_type: symmetry function to use with the basis.
         n_basis: number of polynomials to use with the basis.
-        pre_level (int): flag for preprocessing:
-            0: no preprocessing.
-            1: preprocess till the cell list nl
-            2: preprocess all filters (cannot do force training)
+        pre_level (int): 
+            flag for preprocessing:
+
+            * 0 for no preprocessing.
+            * 1 for preprocess till the cell list nl
+            * 2 for preprocess all filters (cannot do force training)
     Returns:
         - prediction tensor if n>=0
         - preprocessed nested tensors if n<0

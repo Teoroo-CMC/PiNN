@@ -78,10 +78,17 @@ input feature tensors instead of returning a new dict of features.
 
 Networks
 --------
-Network indicates the connection of layers. This is where the actual model is
-defined. 
+Network abstracts the connection of layers, which is the core of ANN models.
+Several neual networks from the literature are implemented in PiNN and
+are explained individually.
 
-In PiNN, a network is a function that yields prediction from input features.
+.. toctree::
+   :maxdepth: 1
+	      
+   networks/bpnn.rst
+   networks/pinn.rst
+   networks/schnet.rst
+
 
 Models
 ------

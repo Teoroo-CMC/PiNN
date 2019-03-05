@@ -44,6 +44,7 @@ extensions = [
     'nbsphinx',
     'sphinx.ext.mathjax',
     'sphinxcontrib.bibtex',
+    'sphinx.ext.napoleon',
 ]
 nbsphinx_execute = 'never'
 
