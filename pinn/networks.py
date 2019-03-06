@@ -11,13 +11,18 @@ import tensorflow as tf
 import pinn.filters as f
 import pinn.layers as l
 
+
 def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
     """Lennard-Jones Potential
+
+    This is a simple implementation of LJ potential
+    for the purpose of testing distance/force calculations
+    rather than a network.
 
     Args:
         tensors: input data (nested tensor from dataset).
         rc: cutoff radius.
-        sigma: 
+        sigma:
         epsilon:
     """
     f.sparsify()(tensors)
@@ -34,30 +39,29 @@ def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
     en = tf.unsorted_segment_sum(en, ind[1][:,0], nbatch)
     return en/2.0
 
-def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
-                 ii_nodes=[16,16], en_nodes=[16,16], depth=4,
-                 atomic_dress={}, atom_types=[1,6,7,8],
+
+def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
+                 ii_nodes=[16, 16], en_nodes=[16, 16], depth=4,
+                 atomic_dress={}, atom_types=[1, 6, 7, 8],
                  rc=4.0, sf_type='f1', n_basis=4, act='tanh',
                  pre_level=0, preprocess=False,
                  to_return=0):
     """
     Args:
         tensors: input data (nested tensor from dataset).
-        pp_nodes: number of nodes for pp layer.
-        pi_nodes: number of nodes for pi layer.
-        ii_nodes: number of nodes for ii layer.
-        en_nodes: number of nodes for en layer.
-        depth: number of interaction blocks.
-        atom_types: number of types for the one hot encoding.
-        rc: cutoff radius.
-        sf_type: symmetry function to use with the basis.
-        n_basis: number of polynomials to use with the basis.
-        pre_level (int): 
-            flag for preprocessing:
-
-            * 0 for no preprocessing.
-            * 1 for preprocess till the cell list nl
-            * 2 for preprocess all filters (cannot do force training)
+        atom_types (list): elements for the one-hot embedding.
+        pp_nodes (list): number of nodes for pp layer.
+        pi_nodes (list): number of nodes for pi layer.
+        ii_nodes (list): number of nodes for ii layer.
+        en_nodes (list): number of nodes for en layer.
+        depth (int): number of interaction blocks.
+        rc (float): cutoff radius.
+        n_basis (int): number of polynomials to use with the basis.
+        sf_type (string): symmetry function to use with the basis.
+        pre_level (int): flag for preprocessing:
+            0 for no preprocessing;
+            1 for preprocess till the cell list nl;
+            2 for preprocess all filters (cannot do force training).
     Returns:
         - prediction tensor if n>=0
         - preprocessed nested tensors if n<0
@@ -75,7 +79,7 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
         for fi in filters[:to_pre]:
             fi(tensors)
         return tensors
-    if pre_level==0:
+    if pre_level == 0:
         for fi in filters[:4]:
             fi(tensors)
     if pre_level<=1:
@@ -87,17 +91,17 @@ def pinn_network(tensors, pp_nodes=[16,16], pi_nodes=[16,16],
     ind = tensors['ind']
     basis = tensors['pi_basis']
     natom = tf.shape(ind[1])[0]
-    nbatch =  tf.shape(tensors['atoms'])[0]
+    nbatch = tf.shape(tensors['atoms'])[0]
     nodes[0] = 0.0
     for i in range(depth):
-        if i>0:
+        if i > 0:
             nodes[1] = l.fc_layer(nodes[1], pp_nodes,
                                   act=act, name='pp-{}/'.format(i))
         nodes[2] = l.pi_layer(ind[2], nodes[1], basis, pi_nodes,
                               act=act, name='pi-{}/'.format(i))
         nodes[2] = l.fc_layer(nodes[2], ii_nodes,
                               act=act, name='ii-{}/'.format(i))
-        nodes[2] = nodes[2] * tensors['pi_basis'][:,:,0]
+        nodes[2] = nodes[2] * tensors['pi_basis'][:, :, 0]
         nodes[1] = l.ip_layer(ind[2], nodes[2], natom,
                               name='ip_{}/'.format(i))
         nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes,
@@ -110,29 +114,68 @@ def schnet_network(tensors):
     SchNet: https://doi.org/10.1063/1.5019779
 
     TODO: Implement this
+
+    Args: 
+        tensors: input data (nested tensor from dataset).
+        gamma (float): "width" of the radial basis.
+        miu_max (float): minimal distance of the radial basis.
+        miu_min (float): maximal distance of the radial basis.
+        n_basis (int): number of radial basis.
+        n_atomic (int): number of nodes to be used in atomic layers.
+        n_cfconv (int): number of nodes to be used in cfconv layers.
+        T (int): number of interaction blocks.
+        pre_level (int): flag for preprocessing:
+            0 for no preprocessing;
+            1 for preprocess till the cell list nl;
+            2 for preprocess all filters (cannot do force training).
+    Returns:
+        - preprocessed nested tensors if n<0
+        - prediction tensor if n>=0
     """
     pass
+
 
 def bpnn_network(tensors):
     """ Network function for
     BPNN: https://doi.org/10.1103/PhysRevLett.98.146401
 
     TODO: Implement this
+
+    Args:
+        tensors: input data (nested tensor from dataset).
+        sf_spec (dict): elementwise symmetry function specification
+            symmetry functions can depend on only the central atom or
+            the atom pair (in that case a nested dictionary like
+            :code:`{n_center:{n_neighb:[sf_spec]}...}` is expected)
+        nn_spec (dict): elementwise network specification,
+            each key points list specifying the
+            number of nodes in the fully-connected subnets.
+        rc (float): cutoff radius.
+        pre_level (int): flag for preprocessing:
+            0 for no preprocessing;
+            1 for preprocess till the cell list nl;
+            2 for preprocess all filters (cannot do force training).
+    Returns:
+        - preprocessed nested tensors if n<0
+        - prediction tensor if n>=0
     """
     pass
+
+
 # Helper functions
 def _reset_dist_grad(tensors):
     tensors['diff'] = _connect_diff_grad(tensors['coord'], tensors['diff'],
                                          tensors['ind'][2])
     tensors['dist'] = _connect_dist_grad(tensors['diff'], tensors['dist'])
 
+
 @tf.custom_gradient
 def _connect_diff_grad(coord, diff, ind):
     """Returns a new diff with its gradients connected to coord"""
     def _grad(ddiff, coord, diff, ind):
         natoms = tf.shape(coord)[0]
-        dcoord = tf.unsorted_segment_sum(ddiff, ind[:,1], natoms)
-        dcoord -= tf.unsorted_segment_sum(ddiff, ind[:,0], natoms)
+        dcoord = tf.unsorted_segment_sum(ddiff, ind[:, 1], natoms)
+        dcoord -= tf.unsorted_segment_sum(ddiff, ind[:, 0], natoms)
         return dcoord, None, None
     return tf.identity(diff), lambda ddiff: _grad(ddiff, coord, diff, ind)
 

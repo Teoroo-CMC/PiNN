@@ -7,3 +7,4 @@ PiNN: Pairwise interaction Neural Network
    concepts.rst
    datasets.rst
    notebooks.rst
+   reference.rst

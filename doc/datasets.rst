@@ -29,7 +29,6 @@ return a nested structure of datasets with corresponding ratios.
 By default, the dataset are splitted into three subsets (train: 80%,
 test: 10%, vali: 10%)
 
-
 Numpy dataset
 -------------
 The easist way to generate you own dataset is to store the data as a
@@ -43,7 +42,6 @@ on Google Cloud, it's more efficient to store the data in the
 tfrecord format. (The converter and loader of TFRecord datasets are
 under development)
 
-
 Parsers for common datasets
 ---------------------------
 For common QML datasets, we provide the function to directly load
@@ -56,9 +54,13 @@ The QM9 dataset (https://doi.org/10.6084/m9.figshare.978904) consists
 of 134K organic molecules. The QM9 dataset include many properties,
 however, our dataset load only the enthalpy at this moment.
 
-
 ANI-1 dataset
 .............
 The ANI-1 dataset (https://doi.org/10.6084/m9.figshare.c.3846712.v1)
 consists of 20M off-equilibrium DFT energies for orginic molecules.
 (ANI-1 dataset parser is currently under development)
+
+Write your own dataset parser
+-----------------------------
+It is very likely that you will want to parse data from some other sources.
+There is a :doc:`notebook <notebooks/4_Customized_dataset>` on how to do that.

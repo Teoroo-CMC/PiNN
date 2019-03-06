@@ -79,16 +79,34 @@ input feature tensors instead of returning a new dict of features.
 Networks
 --------
 Network abstracts the connection of layers, which is the core of ANN models.
-Several neual networks from the literature are implemented in PiNN and
-are explained individually.
+Several neual networks from the literature are implemented in PiNN.
+The concepts are expalined separately for each network.
+The networks can generally be splitted to two classes,
+fingerprints methods and graph convolution methods.
+
+Fingerprint methods requires a description of the atomic environment,
+so that the prediction of potential energy can be treated as a classical
+regression problem.
+The challenge here is to find a "good" descriptor for the local environment.
 
 .. toctree::
    :maxdepth: 1
 	      
    networks/bpnn.rst
+
+The general idea behind graph convolution methods is that just like
+"atomic energy", other features about the atom can be predicted.
+And more complex features can be constructed from those simple ones.
+Therefore, ANN can be constructed by concatenating convolution
+layers which "learns" complex features from simple ones.
+Unlike the fingerprint methods, the description of atomic environment
+must be learnt from training process.
+
+.. toctree::
+   :maxdepth: 1
+	      
    networks/pinn.rst
    networks/schnet.rst
-
 
 Models
 ------
@@ -98,5 +116,8 @@ defines the loss function, and thus the objective, of the network.
 
 Models are essentially model functions to interface with tensorflow's
 `estimator` api. Various training related parameters are also defined in the
-model function. 
+model function.
+
+Currently, only the potential model is implemented,
+which also provides interface to the ASE calcualtor.
 
