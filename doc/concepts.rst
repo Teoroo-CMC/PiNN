@@ -7,7 +7,6 @@ PiNN abstract atomic neural networks (ANNs) with three levels: layers, networks
 and models. This abstraction helps to reuse common parts of various ANNs and
 construct customized models with existing components.
 
-
 Layers
 ------
 
@@ -35,6 +34,7 @@ are just pairwise interaction of (n-1)-body properties. It also seems easier
 for neural networks to model a pairwise function than to model the multibody
 function directly.
 
+.. _layer_types:
 
 Common types of layers
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -80,19 +80,16 @@ Networks
 --------
 Network abstracts the connection of layers, which is the core of ANN models.
 Several neual networks from the literature are implemented in PiNN.
-The concepts are expalined separately for each network.
 The networks can generally be splitted to two classes,
 fingerprints methods and graph convolution methods.
+(The details are expalined separately for each network)
 
 Fingerprint methods requires a description of the atomic environment,
 so that the prediction of potential energy can be treated as a classical
 regression problem.
 The challenge here is to find a "good" descriptor for the local environment.
 
-.. toctree::
-   :maxdepth: 1
-	      
-   networks/bpnn.rst
+- :doc:`networks/bpnn`
 
 The general idea behind graph convolution methods is that just like
 "atomic energy", other features about the atom can be predicted.
@@ -102,11 +99,8 @@ layers which "learns" complex features from simple ones.
 Unlike the fingerprint methods, the description of atomic environment
 must be learnt from training process.
 
-.. toctree::
-   :maxdepth: 1
-	      
-   networks/pinn.rst
-   networks/schnet.rst
+- :doc:`networks/pinn`
+- :doc:`networks/schnet`
 
 Models
 ------
