@@ -56,3 +56,33 @@ def split_list(data_list, split_ratio, shuffle=True, seed=None):
     return splitted
 
 
+def default_formater(n_atoms):
+    """Default formater for datasets"""
+    format_dict = {
+    'atoms': {'dtype':  tf.int32,   'shape': [n_atoms]},
+    'coord': {'dtype':  tf.float32, 'shape': [n_atoms, 3]},
+    'e_data': {'dtype': tf.float32, 'shape': []}}
+    return format_dict
+
+
+def list_loader(formater=default_formater):
+    from functools import wraps
+    """Decorator for building dataset loaders"""
+    def decorator(func):
+        @wraps(func)
+        def data_loader(data_list, n_atoms,
+                        split_ratio={'train': 8, 'test':1, 'vali':1},
+                        shuffle=True, seed=0):
+            def _data_generator(data_list, n_atoms):
+                for data in data_list:
+                    yield func(data, n_atoms)
+            format_dict = formater(n_atoms)
+            dtypes = {k: v['dtype'] for k,v in format_dict.items()}
+            shapes = {k: v['shape'] for k,v in format_dict.items()}
+            generator_fn = lambda data_list: tf.data.Dataset.from_generator(
+                lambda: _data_generator(data_list, n_atoms), dtypes, shapes)
+            subsets = split_list(data_list, split_ratio, shuffle, seed)
+            splitted = map_nested(generator_fn, subsets)
+            return splitted
+        return data_loader
+    return decorator
