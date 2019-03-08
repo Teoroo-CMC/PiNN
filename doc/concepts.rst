@@ -104,9 +104,10 @@ must be learnt from training process.
 
 Models
 ------
-The same network can be used for different purposes. The same same network can
-be used to predict energies, toxicities, dipoles, etc. The model abstraction
-defines the loss function, and thus the objective, of the network.
+The same network can be used for different purposes,
+to predict energies, toxicities, dipoles, etc.
+The model abstraction defines the loss function,
+and thus the objective of the network.
 
 Models are essentially model functions to interface with tensorflow's
 `estimator` api. Various training related parameters are also defined in the
