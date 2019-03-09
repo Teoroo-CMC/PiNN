@@ -17,22 +17,25 @@ is tied to some object: be it molecule, atom, pair or triplet.
 
 In PiNN, all nodes are represented sparsely. Higher order nodes are specified
 by the indices of their components. For example, pairs are defined by two atoms,
-triplets are defined by two pairs, etc. This representation makes it easy to
-compute pairwise interactions without constructing a NxN matrix.
+triplets are defined by two pairs (with a shared atoms), etc.
+Additionally, atoms are labeled by their ids in the batch during training.
+One way to think about it is that there's a 0th order object (the sample)
+connected to each atom.
 
-The representation also allows for easy pooling of higher order nodes to lower
-order ones (with tensorflow's `segment_*` functions). Additionally, atoms
-are labeled by their positions in the batch during training. One way to think
-about it is that there's a 0th order object (the sample) connected to each
-atom.
+.. image:: images/sparse_representation.svg
+   :width: 60%
+   :align: center
 
-It is possible to construct "real" triplets with three atoms. But the idea of
-PiNN is that the triplet interaction function (say the bond angle) can be seen
-as a function of a pairwise distance, whose shape depends on the properties of
-of two pairs (in this case, the bond length). This way, n-body interactions
-are just pairwise interaction of (n-1)-body properties. It also seems easier
-for neural networks to model a pairwise function than to model the multibody
-function directly.
+The idea of PiNN is that the triplet interaction function (say the bond angle)
+can be seen as a function of a pairwise distance, whose shape depends on the
+properties of of two pairs (in this case, the bond length).
+This way, n-body interactions are just pairwise interaction of (n-1)-body
+properties.
+
+In this representation pairwise interactions are computed sparsely without
+calculating a NxN matrix.
+Pooling of higher order nodes to lower order ones is implemented
+with tensorflow's `segment_*` functions.
 
 .. _layer_types:
 

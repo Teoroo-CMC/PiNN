@@ -15,6 +15,8 @@ The interaction are meant to be a continous function with cutoff,
 therefore, the basis is constructed by the polynomial of the symmetry function
 f1 or f2 defined by Behler. :cite:`behler_constructinghighdimensionalneural_2015`
 
+.. image:: ../images/pi-layer.svg
+
 The weights of the interaction are determined from the pairwise interaction (ip)
 layer which takes as input the properties from interacting atoms.
 The interactions from different neigbours are refined with a fully connected ii
@@ -23,10 +25,12 @@ and subsequently summed to the central atoms
 through a interaction pooling (ip) layer.
 The properties are refined with a fully connected pp (property -> property) layer.
 
+.. image:: ../images/flowchart-pinn.svg
+   :width: 30%
+
 Elements are encoded with a one-hot embedding as input.
-A PI block consists of such a (pp -> pi -> ii -> ip) cycle,
-where pp/pi/ii are essentially fully connected layers.
-A fully connected output layer is attached after several PI blocks.
+A PI block consists of such a (pi -> ii -> ip -> pp) cycle,
+where pp/ii/pi are essentially fully connected layers.
 
 API reference
 -------------

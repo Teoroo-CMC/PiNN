@@ -24,10 +24,16 @@ Early attempt in this direction often requies the while atomic structure
 This approach were found limited for make general predictions, as the
 input size must be fixed.
 
+.. image:: images/global_net.svg
+
 Later approaches switch to more "local" features as inputs
 (e.g. atom densities, symmetry functions).
 Those networks achieved nice performance and were proven
 useful for performing large-scale simulations.
+
+
+.. image:: images/local_net.svg
+
 After that, more implementations emerged
 with varing structures and applications.
 Nevertheless, dispite the difference between those models,
@@ -38,27 +44,25 @@ they share quite rather similar components
 - obtaining atomic property from interactions (ip layers)
 - feed-forward neural networks to fit complex functions (fc layers)
 - and needless to say, those models requires similar input/output.
+
+.. image:: images/layers.svg
   
-Therefore, PiNN seeks to provide a framework and optimized components to
+PiNN seeks to provide a framework and optimized components to
 build and train those atomic neural networks.
+The goal is to be flexible, fast and reliable.
 
-Capabilities
-------------
+Flexibiliy
+^^^^^^^^^^
 
-Flexibility
-^^^^^^^^^^^
+PiNN is als built with modularized components and we try to make it as easy
+as possible to tweak.
+So there's no need to rewrite everything if you just want to change
+some of the layers, or use existing network for predicting new properties.
+
+Speed
+^^^^^
+
 PiNN fully adheres to tensorflow's high-level Estimator and Dataset API.
 It is straitforward to train and predict on different compute resources
 (CPU, multi-GPU, google cloud, etc) without worring about optimization.
 
-PiNN is als built with modularized components and we try to make it as easy
-as possible to tweak.
-So there's no need to reinvent the wheel if you just want to change some
-component to fit your need.
-
-Finally, PiNN is capable of representing most popular ANN structures,
-so that they can be easily compared.
-
-Speed
-^^^^^
-Wait for the benchmarks
