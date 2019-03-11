@@ -20,7 +20,7 @@ f1 or f2 defined by Behler. :cite:`behler_constructinghighdimensionalneural_2015
 The weights of the interaction are determined from the pairwise interaction (ip)
 layer which takes as input the properties from interacting atoms.
 The interactions from different neigbours are refined with a fully connected ii
-(interaction -> intreation) layer,
+(interaction -> interaction) layer,
 and subsequently summed to the central atoms
 through a interaction pooling (ip) layer.
 The properties are refined with a fully connected pp (property -> property) layer.

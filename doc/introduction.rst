@@ -7,17 +7,8 @@ The primary usage of PiNN is to build and train ANN potentials,
 but also capable of predicting other properties from atomci structures.
 PiNN is also named after our own :doc:`network structure <networks/pinn>`.
 
-Example
--------
 
-The quickest way to start with PiNN is to follow our tutorial :doc:`notebooks`.
-The notebooks shall guide you from training a simple ANN potential with
-to customize PiNN for your own systems.
-
-Goal
-----
-
-Atomic neural network is a machine learning approach to make predictions
+ANN is a machine learning approach to make predictions
 from atomic structures.
 Early attempt in this direction often requies the while atomic structure
 (e.g. coulomb matrix, internal coordinates as input).
@@ -66,3 +57,9 @@ PiNN fully adheres to tensorflow's high-level Estimator and Dataset API.
 It is straitforward to train and predict on different compute resources
 (CPU, multi-GPU, google cloud, etc) without worring about optimization.
 
+Example
+^^^^^^^
+
+The quickest way to start with PiNN is to follow our tutorial :doc:`notebooks`.
+The notebooks shall guide you from training a simple ANN potential with
+to customize PiNN for your own systems.

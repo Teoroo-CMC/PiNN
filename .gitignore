@@ -3,5 +3,6 @@
 pinn.egg-info/
 tmp/
 *.pyc
+*~
 _build/
 .ipynb_checkpoints/
