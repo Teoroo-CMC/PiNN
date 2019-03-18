@@ -28,8 +28,8 @@ def _qm9_generator(filenames, n_atoms):
         f.close()
 
         to_pad = n_atoms-len(atoms)
-        atoms = np.pad(atoms, [0,to_pad], 'constant')
-        coord = np.pad(coord, [[0,to_pad], [0,0]], 'constant')
+        atoms = np.pad(atoms, [0,to_pad], 'constant').astype(int)
+        coord = np.pad(coord, [[0,to_pad], [0,0]], 'constant').astype(float)
 
         data = {
             'atoms': atoms,
