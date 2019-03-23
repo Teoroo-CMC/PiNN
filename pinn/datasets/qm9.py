@@ -43,9 +43,9 @@ def qm9_format(n_atoms=29,
                int_dtype=tf.int32):
     """Returns format dict for the QM9 dataset"""
     format_dict = {
-        'atoms': {'dtype':  int_dtype,   'shape': [n_atoms],    'encode':False},
-        'coord': {'dtype':  float_dtype, 'shape': [n_atoms, 3], 'encode':False},
-        'e_data': {'dtype': float_dtype, 'shape': [],           'encode':False}}
+        'atoms': {'dtype':  int_dtype,   'shape': [n_atoms]},
+        'coord': {'dtype':  float_dtype, 'shape': [n_atoms, 3]},
+        'e_data': {'dtype': float_dtype, 'shape': []}}
     return format_dict
 
 def load_QM9_dataset(filelist, n_atoms=29,

@@ -1,73 +1,108 @@
-"""TFRecord Datasets for PiNN
+""":code:`pinn.dataset.tfr` 
+is a helper module to write Dataset objects as tfrecord files.
 
-TODO: finish this and implement converting functions
+The functions expect a format_dict to specify the format of 
+the dataset.
+Each key of the format_dict should be a dictionary with two 
+keys, a 'dtype' of tensorflow dtype and a 'shape' of integer list.
+
+For example:
+
+.. code-block:: python
+
+   format_dict = {
+       'atoms': {'dtype':  int_dtype,   'shape': [n_atoms]},
+       'coord': {'dtype':  float_dtype, 'shape': [n_atoms, 3]},
+       'e_data': {'dtype': float_dtype, 'shape': []}}
 """
-
+import sys
 import tensorflow as tf
 
 
 _int64_feature = lambda value: tf.train.Feature(
-    int64_list=tf.train.Int64List(value=[value]))
-_bytes_feature = lambda value: tf.train.Feature(
-    bytes_list=tf.train.BytesList(value=[value]))
-float_feature = lambda value: tf.train.Feature(
-    float_list=tf.train.FloatList(value=[value]))
+    int64_list=tf.train.Int64List(value=value))
+_float_feature = lambda value: tf.train.Feature(
+    float_list=tf.train.FloatList(value=value))
 
+_feature_fn = {
+    tf.float32: _float_feature,
+    tf.int32: _int64_feature}
 
-def write_block_tfrecord(dataset, fname,
-                         format_dict,
-                         chunksize=100):
-    """Write dataset into a block format tfrecord,
+_dtype_map = {tf.float32: tf.float32,
+             tf.int32: tf.int64}
+        
+def write_tfrecord(dataset, fname, format_dict,
+                   batch=0, log_every=100):
+    """Helper function to convert dataset object into tfrecord file.
 
-    The function assumes that the dataset is already padded
-    and each chunk will have the same size (except for the last one).
-    However, the load_block_tfrecord function can work with
-    heterogeneous blocks
+    The dataset can be batched for faster loading. 
+    In that case, the remainder part of the dataset will be dropped.
+    
+    Args:
+        dataset (Dataset): input dataset.
+        fname (str): filename of the dataset to save.
+        format_dict (dict): shape and dtype of dataset.
+        batch (int): 
+            write chunk of data instead of one sample per record
+            defaults to 0 (no batching).
     """
-    d = dataset.batch(chunksize)
-    sess = tf.Session()
+    if batch is not 0:
+        dataset = dataset.batch(batch, drop_remainder=True)
     writer = tf.python_io.TFRecordWriter(fname)
-    n = d.make_one_shot_iterator().get_next()
-    print('Start converting, to {} ...'.format(fname))
+    items = dataset.make_one_shot_iterator().get_next()
+    sess = tf.Session()
+    print('Converting to {} ...'.format(fname))
+    n_parsed = 0
     try:
         while True:
             example = tf.train.Example(
                 features = tf.train.Features(
-                    feature = {
-                        'chunksize': _int64_feature(chunksize),
-                        'max_atom': _int64_feature(max_atom),
-                        'pos_raw': _bytes_feature(pos_raw)}))
+                    feature = {key: _feature_fn[format_dict[key]['dtype']](
+                        val.flatten())
+                               for key, val in sess.run(items).items()}))
             writer.write(example.SerializeToString())
+            n_parsed += (1 if batch == 0 else batch)
+            if n_parsed % log_every==0:
+                sys.stdout.write('\r {} samples'.format(n_parsed))
+                sys.stdout.flush()
     except tf.errors.OutOfRangeError:
-        print('Convertion done, {} chunks.'.format(i))
+        sys.stdout.write('\rDone, {} samples.'.format(n_parsed))
+        sys.stdout.flush()
         sess.close()
         writer.close()
 
 
-def load_block_tfrecord(fname, cycle_length=32):
-    """Load
+def load_tfrecord(fname, format_dict, batch=0,
+                  interleave=False, cycle_length=4):
+    """Load tfrecord dataset.
+
+    While loading a batched dataset, 
+    the dataset is iterated as how it was written.
+    One can shuffle or re-batch the dataset with :code:`interleave=True`,
+    please refer to the Tensorflow `documentation
+    <https://www.tensorflow.org/api_docs/python/tf/data/Dataset#interleave>`_
+    for more details.
+
     Args:
-       cycle_length (int): number of parallel processes to decode the data
+       fname (str): filename of the dataset to load.
+       format_dict (dict): shape and dtype of dataset.
+       batch (int): batch size of the tfrecord dataset.
+       interleave (bool): interleave the batched tfrecord.
+       cycle_length (int): cycle length for the interleave.
     """
-    def _record_parser(tensors, features, shapes):
-        tensors = tf.parse_single_example(tensors_tf, features)
-        outputs = {}
-
-        insert_tensor = lambda shape: [tensors[s] if s.is_string else s
-                                  for s in shape]
-        shapes = {k: insert_tensor(v) for k,v in shapes.items()}
-
-        for key in (shapes):
-            if key.endswith('_raw'):
-                real_key = key[:-4]
-                temp = tf.decode_raw(tensors[key], tf.float32)
-                outputs[real_key] = tf.reshape(temp, shapes[real_key])
-            elif shapes[key] is not []:
-                outputs[key] = tf.reshape(tensors[key], shapes[key])
-        return tf.data.Dataset.from_tensor_slices(pos)
-
-    metadata = load(fname)
-    d = tf.data.TFRecordDataset(metadata['file'])
-
-    d = d.interleave(_record_parser, cycle_length=cycle_length)
-    return d
+    feature_dict = {}
+    for key, val in format_dict.items():
+        dtype = val['dtype']
+        shape = val['shape']
+        if batch != 0:
+            shape = [batch] + shape
+        feature_dict[key] = tf.FixedLenFeature(shape, _dtype_map[dtype])
+    parser = lambda example: tf.parse_single_example(example, feature_dict)
+    converter = lambda tensors: {k: tf.cast(v, format_dict[k]['dtype'])
+                                 for k, v in tensors.items()}
+    dataset = tf.data.TFRecordDataset(fname).map(parser).map(converter)
+    if interleave and batch!=0:
+        dataset = dataset.interleave(
+            lambda x: tf.data.Dataset.from_tensor_slices(x),
+            cycle_length=cycle_length)
+    return dataset

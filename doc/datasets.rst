@@ -39,8 +39,30 @@ TFRecord dataset
 ----------------
 For larger datasets which do not fit in the memory, or for training
 on Google Cloud, it's more efficient to store the data in the
-tfrecord format. (The converter and loader of TFRecord datasets are
-under development)
+tfrecord format.
+
+Example usage
+.............
+.. code-block:: python
+		
+   from glob import glob
+   from pinn.datasets.qm9 import load_QM9_dataset, qm9_format
+   from pinn.datasets.tfr import write_tfrecord, load_tfrecord
+   # Load QM9 dataset
+   filelist = glob('/home/yunqi/datasets/QM9/dsgdb9nsd/*.xyz')
+   dataset = load_QM9_dataset(filelist, split_ratio={'train':8, 'test':2})['train']
+   dformat = qm9_format()
+   # Write as tfrecord and read
+   write_tfrecord(dataset, 'train.tfrecord', dformat, batch=100)
+   dataset = load_tfrecord('train.tfrecord', dformat, batch=100, interleave=True)
+
+API reference
+.............
+.. automodule:: pinn.datasets.tfr
+		  
+.. autofunction:: pinn.datasets.tfr.write_tfrecord
+		  
+.. autofunction:: pinn.datasets.tfr.load_tfrecord
 
 Parsers for common datasets
 ---------------------------
