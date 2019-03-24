@@ -73,8 +73,9 @@ memory, you can simply cache the dataset with ``dataset.cache()``.
 QM9 dataset
 ...........
 The QM9 dataset (https://doi.org/10.6084/m9.figshare.978904) consists
-of 134K organic molecules. The QM9 dataset include many properties,
-however, our dataset load only the enthalpy at this moment.
+of 134K organic molecules. The QM9 dataset include many properties.
+The default behavior is to label the internal energy "U0" as "e_data".
+This behavior can be tweaked with the :code:`label_map` parameter.
 
 ANI-1 dataset
 .............
