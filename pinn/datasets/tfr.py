@@ -11,9 +11,9 @@ For example:
 .. code-block:: python
 
    format_dict = {
-       'atoms': {'dtype':  int_dtype,   'shape': [n_atoms]},
-       'coord': {'dtype':  float_dtype, 'shape': [n_atoms, 3]},
-       'e_data': {'dtype': float_dtype, 'shape': []}}
+       'atoms': {'dtype':  tf.int32,   'shape': [n_atoms]},
+       'coord': {'dtype':  tf.float32, 'shape': [n_atoms, 3]},
+       'e_data': {'dtype': tf.float32, 'shape': []}}
 """
 import sys
 import tensorflow as tf
@@ -43,7 +43,7 @@ def write_tfrecord(dataset, fname, format_dict,
         fname (str): filename of the dataset to save.
         format_dict (dict): shape and dtype of dataset.
         batch (int): 
-            write chunk of data instead of one sample per record
+            write chunk of data instead of one sample per record,
             defaults to 0 (no batching).
     """
     if batch is not 0:

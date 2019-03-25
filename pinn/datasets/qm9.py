@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
-"""The QM9 dataset
+"""The QM9 dataset (https://doi.org/10.6084/m9.figshare.978904) 
 
-Url: http://quantum-machine.org/datasets/
-
-@article{ramakrishnan2014quantum,
-title={Quantum chemistry structures and properties of 134 kilo molecules},
-author={Ramakrishnan, Raghunathan and Dral, Pavlo O and Rupp, Matthias and von Lilienfeld, O Anatole},
-journal={Scientific Data},
-volume={1},
-year={2014},
-publisher={Nature Publishing Group}
-}
+Please cite the original paper when using this dataset.
+See also: http://quantum-machine.org/datasets/ 
 """
 import numpy as np
 import tensorflow as tf
@@ -53,9 +45,10 @@ def load_QM9_dataset(filelist, n_atoms=29,
     """Loads the QM9 dataset
 
     Args:
-        filelist (list):
-        float_dtype: 
-        int_dtype:
+        filelist (list): list of QM9 data files.
+        natoms (int): max number of atoms.
+        float_dtype: tensorflow datatype for float values.
+        int_dtype: tensorflow datatype for integer values.
         split_ratio, shuffle, seed:
             see ``pinn.datasets.base.split_list``
     """

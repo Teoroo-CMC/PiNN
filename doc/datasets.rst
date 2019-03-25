@@ -72,16 +72,20 @@ memory, you can simply cache the dataset with ``dataset.cache()``.
 
 QM9 dataset
 ...........
-The QM9 dataset (https://doi.org/10.6084/m9.figshare.978904) consists
-of 134K organic molecules. The QM9 dataset include many properties.
-The default behavior is to label the internal energy "U0" as "e_data".
+The QM9 dataset includes many computed properties for 134 stable organic molecules.
+See ref. :cite:`ramakrishnan_dral_dral_rupp_anatole_von_lilienfeld_2017` for more details
+
+The default behavior here is to label the internal energy "U0" as "e_data".
 This behavior can be tweaked with the :code:`label_map` parameter.
+
+.. autofunction:: pinn.datasets.qm9.load_QM9_dataset
 
 ANI-1 dataset
 .............
-The ANI-1 dataset (https://doi.org/10.6084/m9.figshare.c.3846712.v1)
-consists of 20M off-equilibrium DFT energies for orginic molecules.
-(ANI-1 dataset parser is currently under development)
+The ANI-1 dataset consists of 20M off-equilibrium DFT energies for orginic molecules.
+See ref. :cite:`smith_isayev_roitberg_2017` for more details
+
+.. autofunction:: pinn.datasets.ani.load_ANI_dataset
 
 Write your own dataset parser
 -----------------------------
