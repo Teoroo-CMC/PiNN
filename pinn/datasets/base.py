@@ -72,10 +72,10 @@ def list_loader(formater=default_formater):
         @wraps(func)
         def data_loader(data_list, n_atoms,
                         split_ratio={'train': 8, 'test':1, 'vali':1},
-                        shuffle=True, seed=0):
+                        shuffle=True, seed=0, **kwargs):
             def _data_generator(data_list, n_atoms):
                 for data in data_list:
-                    yield func(data, n_atoms)
+                    yield func(data, n_atoms, **kwargs)
             format_dict = formater(n_atoms)
             dtypes = {k: v['dtype'] for k,v in format_dict.items()}
             shapes = {k: v['shape'] for k,v in format_dict.items()}
