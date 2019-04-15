@@ -24,12 +24,12 @@ def test_derivitives():
     test_set = [bulk('Cu').repeat([3,3,3]), bulk('Mg'), g2['H2O']]
     for atoms in test_set:
         pos = atoms.get_positions()
-        atoms.set_positions(pos+np.random.uniform(0,1,pos.shape))
+        atoms.set_positions(pos+np.random.uniform(0,0.2,pos.shape))
         atoms.set_calculator(pi_lj)
         f_pinn, e_pinn = atoms.get_forces(), atoms.get_potential_energy()
         atoms.set_calculator(LennardJones())
         f_ase, e_ase = atoms.get_forces(), atoms.get_potential_energy()
-        assert np.all((f_pinn-f_ase)<1e-4)
+        assert np.all((f_pinn-f_ase)<1e-3)
         assert (e_pinn-e_ase)<1e-4
         if np.any(atoms.pbc):
             atoms.set_calculator(pi_lj)

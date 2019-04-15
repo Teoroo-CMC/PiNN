@@ -8,11 +8,8 @@ setup(name='pinn',
       author_email='yunqi_shao@yahoo.com',
       license='GPLv3',
       packages=['pinn'],
-      install_requires=[
-          'ase',
-          'numpy',
-          'h5py',
-          'tensorflow',
-          'matplotlib',
-      ],
+      install_requires=['ase', 'numpy'],
+      extras_require={'ani': ["h5py"],
+                      'cpu': ['tensorflow'],
+                      'gpu': ['tensorflow-gpu']}
 )

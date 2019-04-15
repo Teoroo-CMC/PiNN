@@ -6,3 +6,5 @@ tmp/
 *~
 _build/
 .ipynb_checkpoints/
+/.coverage
+/coverage.xml

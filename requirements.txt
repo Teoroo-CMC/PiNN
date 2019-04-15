@@ -1,0 +1,4 @@
+ase
+h5py
+numpy
+tensorflow
