@@ -43,7 +43,7 @@ def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
 def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
                  ii_nodes=[16, 16], en_nodes=[16, 16], depth=4,
                  atomic_dress={}, atom_types=[1, 6, 7, 8],
-                 rc=4.0, sf_type='f1', n_basis=4, act='tanh',
+                 rc=4.0, cutoff='f1', n_basis=4, act='tanh',
                  pre_level=0, preprocess=False,
                  to_return=0):
     """
@@ -57,7 +57,7 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         depth (int): number of interaction blocks.
         rc (float): cutoff radius.
         n_basis (int): number of polynomials to use with the basis.
-        sf_type (string): symmetry function to use with the basis.
+        cutoff (string): cutoff function to use with the basis.
         pre_level (int): flag for preprocessing:
             0 for no preprocessing;
             1 for preprocess till the cell list nl;
@@ -71,7 +71,7 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         f.atomic_onehot(atom_types),
         f.atomic_dress(atomic_dress),
         f.cell_list_nl(rc),
-        f.symm_func(sf_type, rc),
+        f.cutoff_func(cutoff, rc),
         f.pi_basis(n_basis)]
     # Preprocess
     to_pre = {0: 0, 1: 4, 2: 6}[pre_level]

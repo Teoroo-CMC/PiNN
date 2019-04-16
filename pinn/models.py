@@ -56,14 +56,14 @@ def _potential_model_fn(features, labels, mode, params):
     if mode == tf.estimator.ModeKeys.PREDICT:
         forces = _get_forces(pred, features['coord'])
         forces = tf.expand_dims(forces, 0)
-        stress = _get_forces(pred, features['diff'])
+        stress = -_get_forces(pred, features['diff'])
         stress = tf.reduce_sum(
             tf.expand_dims(stress,1)*
             tf.expand_dims(features['diff'],2),
             axis=0, keepdims=True)
         predictions = {
             'energy': pred,
-            'forces': -forces,
+            'forces': forces,
             'stress': stress
         }
         return tf.estimator.EstimatorSpec(
@@ -101,7 +101,7 @@ def _get_forces(energy, coord):
     if type(force) == tf.IndexedSlices:
         force = tf.scatter_nd(tf.expand_dims(force.indices, 1),
                               force.values, tf.cast(force.dense_shape, tf.int32))
-    return force
+    return -force
 
 @pi_named('LOSSES')
 def _get_loss(features, pred, train_param):
@@ -111,7 +111,7 @@ def _get_loss(features, pred, train_param):
     loss = tf.losses.mean_squared_error(features['e_data'], pred)
     if train_param['train_force']:
         features['f_data'] = features['f_data'] * train_param['en_scale']
-        features['forces'] = -_get_forces(pred, features['coord'])
+        features['forces'] = _get_forces(pred, features['coord'])
         frc_loss = tf.losses.mean_squared_error(
             features['f_data'], features['forces'])
         loss = loss + train_param['force_ratio'] * frc_loss

@@ -205,19 +205,19 @@ def atomic_dress(tensors, dress, dtype=tf.float32):
     tensors['e_dress'] = tf.squeeze(e_dress)
 
 @pinn_filter
-@pi_named('symm_func')
-def symm_func(tensors, sf_type='f1', rc=5.0):
-    """Adds the symmetry function of given type
+@pi_named('cutoff_func')
+def cutoff_func(tensors, cutoff_type='f1', rc=5.0):
+    """Adds the cutoff function of given type
 
     Args:
-        sf_type (string): name of the symmetry function
+        cutoff_type (string): name of the cutoff function
         rc: cutoff radius
     """
     dist = tensors['dist']
     sf = {'f1': lambda x: 0.5*(tf.cos(np.pi*x/rc)+1),
           'f2': lambda x: (tf.tanh(1-x/rc)/np.tanh(1))**3,
           'hip': lambda x: tf.cos(np.pi*x/rc/2)**2}
-    tensors['symm_func'] = sf[sf_type](dist)
+    tensors['cutoff_func'] = sf[cutoff_type](dist)
 
 @pinn_filter
 @pi_named('pi_basis')
@@ -227,8 +227,8 @@ def pi_basis(tensors, order=4):
     Args:
         order (int): the order of the polynomial expansion
     """
-    symm_func = tensors['symm_func']
-    basis = tf.expand_dims(symm_func, -1)
+    cutoff_func = tensors['cutoff_func']
+    basis = tf.expand_dims(cutoff_func, -1)
     basis = tf.concat(
         [basis**(i+1) for i in range(order)], axis=-1)
     tensors['pi_basis'] = tf.expand_dims(basis,-2)
