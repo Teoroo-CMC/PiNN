@@ -47,6 +47,8 @@ class PiNN_calc(Calculator):
             shapes['cell'] = [3,3]
             dtypes['cell'] = dtype
             self.pbc=True
+        else:
+            self.pbc=False
 
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
