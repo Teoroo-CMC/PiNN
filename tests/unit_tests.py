@@ -4,6 +4,10 @@ import os
 
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
+def test_symm_funcs():
+    """ Test BP-style symmetry functions
+    """
+
 def test_derivitives():
     """ Test the calcualted derivitives: forces and stress
     with a LJ calculator against ASE's implementation

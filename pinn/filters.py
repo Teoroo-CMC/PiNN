@@ -38,6 +38,7 @@ def sparsify(tensors):
     if 'f_data' in tensors:
         tensors['f_data'] = tf.gather_nd(tensors['f_data'], atom_ind)
 
+
 def _displace_matrix(max_repeat):
     d = []
     n_repeat = max_repeat*2 + 1
@@ -153,40 +154,6 @@ def cell_list_nl(tensors, rc=5.0):
 
 
 @pinn_filter
-@pi_named('naive_nl')
-def naive_nl(tensors, rc=5.0):
-    """ Construct pairs by calculating all possible pairs, without PBC
-    """
-    # Naive nl_1, will be abandoned
-    ind_1 = tensors['ind'][1]
-    coord = tensors['coord']
-    atom_ind = tf.cast(tf.where(tensors['atoms']), tf.int32)
-    nl_1 = tf.scatter_nd(atom_ind, tf.squeeze(ind_sp)+1,
-                         tf.shape(tensors['atoms'],
-                                  out_type=tf.int32))
-    nl_2 = tf.gather_nd(nl_1, ind_1)
-    pair_ind = tf.cast(tf.where(nl_2), tf.int32)
-    ind_2_i = pair_ind[:, 0]
-    ind_2_j = tf.gather_nd(nl_2, pair_ind)-1
-    ind_2 = tf.stack([ind_2_i, ind_2_j], axis=1)
-    # Gathering the interacting indices
-    diff = tf.gather(coord, ind_2_j) - tf.gather(coord, ind_2_i)
-    dist = tf.sqrt((tf.reduce_sum(tf.square(diff), axis=-1)))
-    ind_rc = tf.where((dist>0) & (dist<rc))
-    # The gradient of this sparse diff is masked,
-    diff = tf.gather_nd(diff, ind_rc)
-    dist = tf.gather_nd(dist, ind_rc)
-    # Rewire the back-prop, the displacement can be differentiated now
-    # Todo: this should be handeled by models after we implement
-    #       the rewiring of following derivitives during preprocessing:
-    #       coord -> diff -> dist -> symm_func -> basis
-    #       so that we can preprocess while training forces
-    tensors['diff'] = diff
-    tensors['dist'] = dist
-    tensors['ind'][2] = tf.gather_nd(ind_2, ind_rc)
-
-
-@pinn_filter
 @pi_named('atomic_dress')
 def atomic_dress(tensors, dress, dtype=tf.float32):
     """Assign an energy to each specified elems
@@ -219,6 +186,7 @@ def cutoff_func(tensors, cutoff_type='f1', rc=5.0):
           'hip': lambda x: tf.cos(np.pi*x/rc/2)**2}
     tensors['cutoff_func'] = sf[cutoff_type](dist)
 
+
 @pinn_filter
 @pi_named('pi_basis')
 def pi_basis(tensors, order=4):
@@ -249,7 +217,6 @@ def atomic_onehot(tensors, atom_types=[1,6,7,8,9],
     tensors['elem_onehot'] = output
 
 
-
 @pinn_filter
 def schnet_basis(tensors):
     """ SchNet style basis for interaction (filters)
@@ -260,18 +227,152 @@ def schnet_basis(tensors):
 
 
 @pinn_filter
-def g2_sf(tensors):
-    """ BP-style g2 symmetry functions
-    
-    TODO: implement this
+@pi_named('bp_symm_func')
+def bp_symm_func(tensors, sf_spec):
+    """ Wrapper for building Behler-style symmetry functions"""
+    sf_func = {'G2': G2_SF, 'G3': G3_SF, 'G4': G4_SF}
+    tensors['symm_func'] = {}
+    for sf in sf_spec:
+        sf_func[sf['type']](**{k:v for k,v in sf.items() if k!="type"})(tensors)
+
+        
+@pinn_filter
+@pi_named('G2_symm_func')
+def G2_SF(tensors, Rs, etta, i='ALL', j='ALL'):
+    """ BP-style G2 symmetry functions.
+  
+    Args:
+        i: central atom type, defaults to "ALL".
+        j: neighbor atom type, defaults to "ALL".
+        Rs: a list of Rs values.    
+        etta: a list of etta values, etta and Rs must have the same length.
     """
-    pass
+    R = tensors['dist']
+    fc = tensors['cutoff_func']
+    # Compute p_filter => boolean mask of relavent pairwise interactions
+    p_filter = None
+    a_filter = None
+    i_rind = tensors['ind'][2][:,0]
+    a_rind = tf.cumsum(tf.ones_like(tensors['elem'],tf.int32))-1 
+    if i!='ALL':
+        i_elem = tf.gather(tensors['elem'], i_rind)
+        p_filter = tf.equal(i_elem, i)
+        a_rind = tf.cumsum(tf.cast(tf.equal(tensors['elem'], i), tf.int32))-1
+    if j!='ALL':
+        j_elem = tf.gather(tensors['elem'], tensors['ind'][2][:,1])
+        j_filter = tf.equal(j_elem, j)
+        p_filter = tf.reduce_all([p_filter, j_filter],axis=0) if p_filter is not None else j_filter 
+    # Gather the interactions
+    if p_filter is not None:
+        p_ind = tf.where(p_filter)[:,0]
+        R = tf.gather(R, p_ind)
+        fc = tf.gather(fc, p_ind)
+        i_rind = tf.gather(a_rind, tf.gather(i_rind, p_ind))
+    # Symmetry function
+    R = tf.expand_dims(R, 1)
+    fc = tf.expand_dims(fc, 1)
+    Rs = tf.expand_dims(Rs, 0)
+    etta = tf.expand_dims(etta, 0)
+    sf = tf.exp(-etta*(R-Rs)**2)*fc
+    sf = tf.scatter_nd(tf.expand_dims(i_rind,1),sf,
+                       [tf.reduce_max(a_rind)+1,tf.shape(etta)[1]])
+    if i not in tensors['symm_func']:
+        tensors['symm_func'][i] = sf
+    else:
+        tensors['symm_func'][i] = tf.concat([tensors['symm_func'][i], sf],
+                                            axis=-1)
+
+@pinn_filter
+@pi_named('G3_symm_func')
+def G3_SF(tensors, ):
+    """ BP-style G3 symmetry functions.
+    
+    Args:
+        i: central atom type, defaults to "ALL".
+        j: neighbor atom type, defaults to "ALL".
+    """
+    raise NotImplementedError(
+        "G3 type symmetry function is not (yet) implemented")
 
 
 @pinn_filter
-def g3_sf(tensors):
-    """ BP-style g3 symmetry functions
-    
-    TODO: implement this
+@pi_named('G4_symm_func')
+def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
+    """ BP-style G4 symmetry functions.
+
+    lambd, etta should have the same length,
+    each element corresponds to a symmetry function.
+
+    Args:
+        lambd: a list of lambda values.
+        zeta: a list of zeta values.
+        etta: a list of etta values.
     """
-    pass
+    if 'ind_G4' not in tensors:
+        tensors['ind_G4'] = _G4_triplet(tensors)
+    R = tensors['dist']
+    fc = tensors['cutoff_func']
+    diff = tensors['diff']
+    ind_ij = tensors['ind_G4'][:, 0]
+    ind_ik = tensors['ind_G4'][:, 1]
+    ind2 = tensors['ind'][2]
+    i_rind = tf.gather(tensors['ind'][2][:,0], ind_ij)
+    # Build triplet filter
+    t_filter = None
+    a_rind = tf.cumsum(tf.ones_like(tensors['elem'],tf.int32))-1 
+    if i!='ALL':
+        i_elem = tf.gather(tensors['elem'], tf.gather(ind2[:,0], ind_ij))
+        t_filter = tf.equal(i_elem, i)
+        a_rind = tf.cumsum(tf.cast(tf.equal(tensors['elem'], i), tf.int32))-1
+    if j!='ALL':
+        j_elem = tf.gather(tensors['elem'], tf.gather(ind2[:,1], ind_ij))
+        j_filter = tf.equal(j_elem, j)
+        t_filter = tf.reduce_all([t_filter, j_filter],axis=0) if t_filter is not None else j_filter
+    if k!='ALL':
+        k_elem = tf.gather(tensors['elem'], tf.gather(ind2[:,1], ind_ik))
+        k_filter = tf.equal(k_elem, k)
+        t_filter = tf.reduce_all([t_filter, k_filter],axis=0) if t_filter is not None else k_filter
+    if t_filter is not None:
+        t_ind = tf.where(t_filter)[:,0]
+        ind_ij = tf.gather(ind_ij, t_ind)
+        ind_ik = tf.gather(ind_ik, t_ind)
+        i_rind = tf.gather(a_rind, tf.gather(i_rind, t_ind))
+    # G4 symmetry function        
+    R_ij = tf.expand_dims(tf.gather(R, ind_ij), 1)
+    R_ik = tf.expand_dims(tf.gather(R, ind_ik), 1)
+    fc_ij = tf.expand_dims(tf.gather(fc, ind_ij), 1)
+    fc_ik = tf.expand_dims(tf.gather(fc, ind_ik), 1)
+    diff_ij = tf.expand_dims(tf.gather_nd(diff, tf.expand_dims(ind_ij,1)), 1)
+    diff_ik = tf.expand_dims(tf.gather_nd(diff, tf.expand_dims(ind_ik,1)), 1)
+    etta = tf.expand_dims(etta, 0)
+    zeta = tf.expand_dims(zeta, 0)
+    lambd = tf.expand_dims(lambd, 0)    
+    sf = 2**(1-zeta)*(1+lambd*tf.reduce_sum(
+        diff_ij*diff_ik,axis=-1))**zeta*tf.exp(
+            -etta*(R_ij**2+R_ik**2))*fc_ij*fc_ik
+    sf = tf.scatter_nd(tf.expand_dims(i_rind,1),sf,
+                       [tf.reduce_max(a_rind)+1,tf.shape(etta)[1]])
+    if i not in tensors['symm_func']:
+        tensors['symm_func'][i] = sf
+    else:
+        tensors['symm_func'][i] = tf.concat([tensors['symm_func'][i], sf],
+                                            axis=-1)
+
+
+@pi_named('G4_tripet')
+def _G4_triplet(tensors):
+    """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
+    p_iind = tensors['ind'][2][:,0]
+    n_pairs = tf.shape(tensors['ind'][2])[0]
+    p_aind = tf.cumsum(tf.ones(n_pairs, tf.int32)) 
+    p_rind = p_aind - tf.gather(tf.segment_min(p_aind, p_iind),p_iind)
+    t_dense = tf.scatter_nd(tf.stack([p_iind, p_rind],axis=1), p_aind, 
+                            [n_pairs, tf.reduce_max(p_rind)+1])
+    t_dense = tf.gather(t_dense, p_iind)
+    t_index = tf.cast(tf.where(t_dense),tf.int32)
+    t_ijind = t_index[:,0]
+    t_ikind = tf.gather_nd(t_dense, t_index)-1 
+    t_ind_G4 = tf.gather_nd(tf.stack([t_ijind, t_ikind],axis=1),
+                            tf.where(tf.not_equal(t_ijind, t_ikind)))
+    return t_ind_G4
+

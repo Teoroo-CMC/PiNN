@@ -135,32 +135,80 @@ def schnet_network(tensors):
     pass
 
 
-def bpnn_network(tensors):
-    """ Network function for
-    BPNN: https://doi.org/10.1103/PhysRevLett.98.146401
+def bpnn_network(tensors, sf_spec, nn_spec, rc=5.0, act='tanh',
+                 atomic_dress={}, preprocess=False, pre_level=0):
+    """ Network function for Behler-Parrinello Neural Network
 
-    TODO: Implement this
+    Example of sf_spec:
+        [{'type':'G2', 'i': 1, 'j': 8, 'Rs': [1.,2.], 'etta': [0.1,0.2]},
+         {'type':'G2', 'i': 8, 'j': 1, 'Rs': [1.,2.], 'etta': [0.1,0.2]},
+         {'type':'G4', 'i': 8, 'j': 8, 'lambd':[0.5,1], 'zeta': [1.,2.], 'etta': [0.1,0.2]}]
+
+    The symmetry functions are defined according to this paper:
+        Behler, Jörg. “Constructing High-Dimensional Neural Network Potentials: A Tutorial Review.” 
+        International Journal of Quantum Chemistry 115, no. 16 (August 15, 2015): 103250. 
+        https://doi.org/10.1002/qua.24890.
+        (Note the naming of symmetry functiosn are different from http://dx.doi.org/10.1063/1.3553717)
+
+    For more detials about symmetry functions, see the definitions of symmetry functions.
+
+    Example of nn_spec:
+        {8: [32, 32, 32],
+         1: [16, 16, 16]}
 
     Args:
         tensors: input data (nested tensor from dataset).
-        sf_spec (dict): elementwise symmetry function specification
-            symmetry functions can depend on only the central atom or
-            the atom pair (in that case a nested dictionary like
-            :code:`{n_center:{n_neighb:[sf_spec]}...}` is expected)
-        nn_spec (dict): elementwise network specification,
-            each key points list specifying the
+        sf_spec (dict): symmetry function specification
+        nn_spec (dict): elementwise network specification
+            each key points to a list specifying the
             number of nodes in the fully-connected subnets.
         rc (float): cutoff radius.
+        act (str): activation function to use in dense layers.
+        preprocess (bool): 
+            If True preprocess the input dataset instead of returning prediction.
         pre_level (int): flag for preprocessing:
             0 for no preprocessing;
             1 for preprocess till the cell list nl;
             2 for preprocess all filters (cannot do force training).
     Returns:
-        - preprocessed nested tensors if n<0
-        - prediction tensor if n>=0
+        - preprocessed nested tensors if preprocess
+        - prediction tensor if not preprocess
     """
-    pass
-
+    filters = [
+        f.sparsify(),
+        f.atomic_dress(atomic_dress),
+        f.cell_list_nl(rc),
+        f.cutoff_func(rc=rc),
+        f.bp_symm_func(sf_spec)]
+    to_pre = {0: 0, 1: 3, 2: 5}[pre_level]
+    if preprocess:
+        for fi in filters[:to_pre]:
+            fi(tensors)
+        return tensors
+    if pre_level == 0:
+        for fi in filters[:4]:
+            fi(tensors)
+    if pre_level<=1:
+        _reset_dist_grad(tensors)
+        for fi in filters[4:]:
+            fi(tensors)
+    en = 0.0
+    n_sample = tf.reduce_max(tensors['ind'][1])+1
+    for k, v in nn_spec.items():
+        with tf.name_scope("BP_DENSE_{}".format(k)):
+            nodes = []
+            ind = tf.where(tf.equal(tensors['elem'], k))        
+            if k in tensors['symm_func']:
+                nodes.append(tensors['symm_func'][k])
+            if 'ALL' in tensors['symm_func']:
+                nodes.append(tf.gather_nd(tensors['symm_func']['ALL'], ind))
+            nodes = tf.concat(nodes, axis=-1)
+            for n_node in v:
+                nodes = tf.layers.dense(nodes, n_node, activation=act)
+            atomic_en = tf.layers.dense(nodes, 1, activation=None, use_bias=False)
+        en += tf.unsorted_segment_sum(
+            atomic_en[:,0], tf.gather_nd(tensors['ind'][1], ind)[:,0], n_sample)
+    return en
 
 # Helper functions
 def _reset_dist_grad(tensors):

@@ -126,7 +126,6 @@ def _get_loss(features, pred, train_param):
 def _get_metrics(features, pred, train_param):
     metrics = {
         'METRICS/ENG_MAE': tf.metrics.mean_absolute_error(
-
             features['e_data'], pred),
         'METRICS/ENG_RMSE': tf.metrics.root_mean_squared_error(
             features['e_data'], pred)}
