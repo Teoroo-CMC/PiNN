@@ -30,7 +30,7 @@ def get_atomic_dress(dataset, elems, max_iter=1000):
         x, y = np.concatenate(x, 0), np.concatenate(y, 0)
     x = np.sum(np.expand_dims(x,2)==np.reshape(elems, [1,1,len(elems)]),1)
     beta = np.dot(np.dot(np.linalg.pinv(np.dot(x.T, x)),x.T),np.array(y))
-    dress = {e:beta[i] for (i, e) in enumerate(elems)}
+    dress = {e:float(beta[i]) for (i, e) in enumerate(elems)}
     error = np.dot(x, beta) - y
     return dress, error
 
@@ -49,3 +49,62 @@ def pinn_filter(func):
     def filter_wrapper(*args, **kwargs):
         return lambda t: func(t, *args, **kwargs)
     return filter_wrapper
+
+def TuneTrainable(trainer_fn):
+    """Helper function for geting a trainable to use with Tune
+    
+    The function expectes a trainer_fn function which takes a config as input,
+    and returns four items.
+
+    - model: the tensorflow estimator.
+    - train_spec: training specification.
+    - eval_spec: evaluation specification.
+    - reporter: a function which returns the metrics given evalution.
+
+    The resulting trainable reports the metrics when checkpoints are saved,
+    the report frequency is controlled by the checkpoint frequency,
+    and the metrics are determined by reporter.
+    """
+    import os 
+    from ray.tune import Trainable
+    from tensorflow.train import CheckpointSaverListener
+    class _tuneStoper(CheckpointSaverListener):
+        def after_save(self, session, global_step_value):
+            return True
+    class TuneTrainable(Trainable):
+        def _setup(self, config):
+            tf.logging.set_verbosity(tf.logging.ERROR)
+            self.config = config
+            model, train_spec, eval_spec, reporter = trainer_fn(config)
+            self.model = model
+            self.train_spec = train_spec
+            self.eval_spec = eval_spec
+            self.reporter = reporter
+        
+        def _train(self):
+            import warnings
+            index_warning = 'Converting sparse IndexedSlices'
+            warnings.filterwarnings('ignore', index_warning)
+            model = self.model
+            model.train(input_fn=self.train_spec.input_fn,
+                        max_steps=self.train_spec.max_steps,
+                        hooks=self.train_spec.hooks,
+                        saving_listeners=[_tuneStoper()])
+            eval_out = model.evaluate(input_fn=self.eval_spec.input_fn,
+                                     steps=self.eval_spec.steps,
+                                     hooks=self.eval_spec.hooks)
+            metrics = self.reporter(eval_out)
+            return metrics
+
+        def _save(self, checkpoint_dir):
+            latest_checkpoint = self.model.latest_checkpoint()
+            chkpath = os.path.join(checkpoint_dir, 'path.txt')
+            with open(chkpath, 'w') as f:
+                f.write(latest_checkpoint)
+            return chkpath
+    
+        def _restore(self, checkpoint_path):
+            with open(checkpoint_path) as f:
+                chkpath = f.readline().strip()
+            self.model, _, _, _ = trainer_fn(self.config, chkpath)
+    return TuneTrainable

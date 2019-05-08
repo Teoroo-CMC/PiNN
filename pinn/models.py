@@ -11,17 +11,18 @@ import pinn.layers as l
 import pinn.networks
 from pinn.utils import pi_named
 
-
-def potential_model(params, config=None):
+def potential_model(params, config=None, warm_start_from=None):
     """Shortcut for generating potential model from paramters
 
     Args:
         params: a dictionary specifing the model
         config: tensorflow config for the estimator
     """
-    model = tf.estimator.Estimator(
+    from tensorflow.estimator import Estimator
+    model = Estimator(
         model_fn=_potential_model_fn, params=params,
-        model_dir=params['model_dir'], config=config)
+        model_dir=params['model_dir'], config=config,
+        warm_start_from=warm_start_from)
     return model
 
 
