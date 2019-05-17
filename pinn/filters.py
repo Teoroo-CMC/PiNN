@@ -195,10 +195,12 @@ def pi_basis(tensors, order=4):
     Args:
         order (int): the order of the polynomial expansion
     """
+    if type(order) != list:
+        order = [(i+1) for i in range(order)]
     cutoff_func = tensors['cutoff_func']
     basis = tf.expand_dims(cutoff_func, -1)
     basis = tf.concat(
-        [basis**(i+1) for i in range(order)], axis=-1)
+        [basis**(i) for i in order], axis=-1)
     tensors['pi_basis'] = tf.expand_dims(basis,-2)
 
 @pinn_filter
