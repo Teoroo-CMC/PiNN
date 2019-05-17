@@ -64,7 +64,7 @@ def ip_layer(ind, nodes, n_prop,
 @pi_named('fc_layer')
 def fc_layer(nodes,
              n_nodes=[4,4],
-             act='tanh'):
+             act='tanh', use_bias=True):
     """Fully connected layer, just a shortcut for multiple dense layers
 
     Args:
@@ -76,7 +76,7 @@ def fc_layer(nodes,
         Nodes after the fc layers
     """
     for i,n_out in  enumerate(n_nodes):
-        nodes = tf.layers.dense(nodes, n_out, activation=act,
+        nodes = tf.layers.dense(nodes, n_out, activation=act, use_bias=use_bias,
                                 name='dense-{}'.format(i))
     return nodes
 

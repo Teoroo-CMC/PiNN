@@ -99,9 +99,8 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
                                   act=act, name='pp-{}/'.format(i))
         nodes[2] = l.pi_layer(ind[2], nodes[1], basis, pi_nodes,
                               act=act, name='pi-{}/'.format(i))
-        nodes[2] = l.fc_layer(nodes[2], ii_nodes,
+        nodes[2] = l.fc_layer(nodes[2], ii_nodes, use_bias=False,
                               act=act, name='ii-{}/'.format(i))
-        nodes[2] = nodes[2] * tensors['pi_basis'][:, :, 0]
         nodes[1] = l.ip_layer(ind[2], nodes[2], natom,
                               name='ip_{}/'.format(i))
         nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes,
