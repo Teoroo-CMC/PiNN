@@ -106,20 +106,23 @@ def _get_forces(energy, coord):
 
 @pi_named('LOSSES')
 def _get_loss(features, pred, train_param):
+    # Dress atoms here
     if 'e_dress'in features:
         features['e_data'] = features['e_data'] - features['e_dress']
     features['e_data'] = features['e_data'] * train_param['en_scale']
+    # Determine the loss function
     if train_param['loss_type'] == 'MSE':
         loss = tf.losses.mean_squared_error(features['e_data'], pred)
     elif train_param['loss_type'] == 'MAE':
-        print ('Using MAE!!')
         loss = tf.reduce_mean(tf.abs(features['e_data'] - pred))
+    # Force?
     if train_param['train_force']:
         features['f_data'] = features['f_data'] * train_param['en_scale']
         features['forces'] = _get_forces(pred, features['coord'])
         frc_loss = tf.losses.mean_squared_error(
             features['f_data'], features['forces'])
         loss = loss + train_param['force_ratio'] * frc_loss
+    # Regularizations
     tvars = tf.trainable_variables()
     if train_param['regularize_l2']:
         loss += train_param['regularize_l2'] * tf.add_n([
@@ -191,7 +194,8 @@ def _get_train_param(train_param):
         'norm_clip': 0.01,
         'decay': True,
         'loss_type': 'MSE',
-        'regularize_l2': 0.001,
+        'regularize_nh': False,        
+        'regularize_l2': False,
         'decay_step':100000,
         'decay_rate':0.96}
     for k, v in default_param.items():

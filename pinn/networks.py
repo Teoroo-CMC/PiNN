@@ -101,8 +101,11 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
                               act=act, name='pi-{}/'.format(i))
         nodes[2] = l.fc_layer(nodes[2], ii_nodes, use_bias=False,
                               act=act, name='ii-{}/'.format(i))
-        nodes[1] = l.ip_layer(ind[2], nodes[2], natom,
-                              name='ip_{}/'.format(i))
+        if nodes[1].shape[-1] != nodes[2].shape[-1]:
+            nodes[1] = tf.layers.dense(nodes[1], nodes[2].shape[-1],
+                                       use_bias=False, activation=None)
+        nodes[1] += l.ip_layer(ind[2], nodes[2], natom,
+                               name='ip_{}/'.format(i))
         nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes,
                                act=act, name='en_{}/'.format(i))
     return nodes[to_return]
