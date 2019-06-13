@@ -4,10 +4,6 @@ import os
 
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
-def test_symm_funcs():
-    """ Test BP-style symmetry functions
-    """
-
 def test_derivitives():
     """ Test the calcualted derivitives: forces and stress
     with a LJ calculator against ASE's implementation
@@ -59,7 +55,7 @@ def test_clist_nl():
 
     with tf.Graph().as_default():
         tensors = {
-            'ind': {1: tf.constant(np.concatenate(ind, axis=0), tf.int32)},
+            'ind_1': tf.constant(np.concatenate(ind, axis=0), tf.int32),
             'coord': tf.constant(np.concatenate(coord, axis=0), tf.float32),
             'cell': tf.constant(np.stack(cell, axis=0), tf.float32)}
         f.cell_list_nl(10)(tensors)

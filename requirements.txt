@@ -2,3 +2,4 @@ ase
 h5py
 numpy
 tensorflow
+pyyaml

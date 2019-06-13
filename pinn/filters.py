@@ -10,34 +10,6 @@ import numpy as np
 import tensorflow as tf
 from pinn.utils import pi_named, pinn_filter
 
-@pinn_filter
-@pi_named('sparsify')
-def sparsify(tensors):
-    """ Sparsity atomic inputs
-
-    ind and nl are sparse representations of connections.
-    From n -> n + 1 order
-       0: image -> 1: atom -> 2: pair -> 3: triplet (pair of pairs)...
-    ind[n] is a i*j tensor where
-       i = number of order n elements,
-       j = number of entries defining a element
-       each entry is the index of n-1 order element in ind[n-1]
-    nl[n] is a i*j tensor where:
-       i = the number of n-1 level elements
-       j = max number of neighbors
-       each non-zero entry is the index of i's neighbour plus one
-    """
-    atom_ind = tf.cast(tf.where(tensors['atoms']), tf.int32)
-    ind_1 = atom_ind[:,:1]
-    ind_sp = tf.cumsum(tf.ones(tf.shape(ind_1), tf.int32))-1
-    tensors['ind'] = {1: ind_1}
-    elem = tf.gather_nd(tensors['atoms'], atom_ind)
-    coord = tf.gather_nd(tensors['coord'], atom_ind)
-    tensors['elem'] = elem
-    tensors['coord'] = coord
-    if 'f_data' in tensors:
-        tensors['f_data'] = tf.gather_nd(tensors['f_data'], atom_ind)
-
 
 def _displace_matrix(max_repeat):
     d = []
@@ -59,11 +31,11 @@ def _pbc_repeat(tensors, rc):
 
     repeat_mask = tf.reduce_all(
         tf.expand_dims(n_repeat,1)>=tf.abs(disp_mat),axis=2)
-    atom_mask = tf.gather(repeat_mask, tensors['ind'][1])
+    atom_mask = tf.gather(repeat_mask, tensors['ind_1'])
     repeat_ar = tf.cast(tf.where(atom_mask), tf.int32)
     repeat_a = repeat_ar[:,:1]
     repeat_r = repeat_ar[:,2]
-    repeat_s = tf.gather_nd(tensors['ind'][1], repeat_a)
+    repeat_s = tf.gather_nd(tensors['ind_1'], repeat_a)
     repeat_pos = (tf.gather_nd(tensors['coord'], repeat_a) +
                   tf.reduce_sum(
                       tf.gather_nd(tensors['cell'], repeat_s) *
@@ -80,7 +52,7 @@ def cell_list_nl(tensors, rc=5.0):
     This is very lengthy and confusing implementation of cell list nl.
     Probably needs optimization outside Tensorflow.
     """
-    atom_sind = tensors['ind'][1]
+    atom_sind = tensors['ind_1']
     atom_apos = tensors['coord']
     atom_gind = tf.cumsum(tf.ones_like(atom_sind), 0)
     atom_aind = atom_gind - 1
@@ -91,7 +63,6 @@ def cell_list_nl(tensors, rc=5.0):
         atom_apos = tf.concat([atom_apos, rep_apos], 0)
         atom_aind = tf.concat([atom_aind, rep_aind], 0)
         atom_gind = tf.cumsum(tf.ones_like(atom_sind), 0)
-        
     atom_apos = atom_apos - tf.reduce_min(atom_apos, axis=0)
     atom_cpos = tf.concat([atom_sind, tf.cast(atom_apos//rc, tf.int32)],axis=1)
     cpos_shap = tf.concat([tf.reduce_max(atom_cpos, axis=0) + 1,[1]], axis=0)
@@ -148,7 +119,7 @@ def cell_list_nl(tensors, rc=5.0):
     diff = tf.gather_nd(diff, ind_rc)
     pair_i_aind = tf.gather_nd(tf.gather(atom_aind, pair_ij_i), ind_rc)
     pair_j_aind = tf.gather_nd(tf.gather(atom_aind, pair_ij_j), ind_rc)
-    tensors['ind'][2] = tf.concat([pair_i_aind, pair_j_aind], 1)
+    tensors['ind_2'] = tf.concat([pair_i_aind, pair_j_aind], 1)
     tensors['dist'] = dist
     tensors['diff'] = diff
 
@@ -161,14 +132,14 @@ def atomic_dress(tensors, dress, dtype=tf.float32):
     Args:
         dress (dict): dictionary consisting the atomic energies
     """
-    elem = tensors['elem']
+    elem = tensors['elems']
     e_dress = tf.zeros_like(elem, dtype)
     for k, val in dress.items():
         indices = tf.cast(tf.equal(elem, k), dtype)
         e_dress += indices * tf.cast(val, dtype)
-    n_batch = tf.shape(tensors['atoms'])[0]
+    n_batch = tf.reduce_max(tensors['ind_1'])+1
     e_dress = tf.unsorted_segment_sum(
-        e_dress, tensors['ind'][1][:,0], n_batch)
+        e_dress, tensors['ind_1'][:,0], n_batch)
     tensors['e_dress'] = tf.squeeze(e_dress)
 
 @pinn_filter
@@ -213,7 +184,7 @@ def atomic_onehot(tensors, atom_types=[1,6,7,8,9],
         atom_types (list): elements to encode
         dtype: dtype for the output
     """
-    output = tf.equal(tf.expand_dims(tensors['elem'],1),
+    output = tf.equal(tf.expand_dims(tensors['elems'],1),
                       tf.expand_dims(atom_types, 0))
     output = tf.cast(output, dtype)
     tensors['elem_onehot'] = output
@@ -254,14 +225,14 @@ def G2_SF(tensors, Rs, etta, i='ALL', j='ALL'):
     # Compute p_filter => boolean mask of relavent pairwise interactions
     p_filter = None
     a_filter = None
-    i_rind = tensors['ind'][2][:,0]
+    i_rind = tensors['ind_2'][:,0]
     a_rind = tf.cumsum(tf.ones_like(tensors['elem'],tf.int32))-1 
     if i!='ALL':
         i_elem = tf.gather(tensors['elem'], i_rind)
         p_filter = tf.equal(i_elem, i)
         a_rind = tf.cumsum(tf.cast(tf.equal(tensors['elem'], i), tf.int32))-1
     if j!='ALL':
-        j_elem = tf.gather(tensors['elem'], tensors['ind'][2][:,1])
+        j_elem = tf.gather(tensors['elem'], tensors['ind_2'][:,1])
         j_filter = tf.equal(j_elem, j)
         p_filter = tf.reduce_all([p_filter, j_filter],axis=0) if p_filter is not None else j_filter 
     # Gather the interactions
@@ -317,8 +288,8 @@ def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
     diff = tensors['diff']
     ind_ij = tensors['ind_G4'][:, 0]
     ind_ik = tensors['ind_G4'][:, 1]
-    ind2 = tensors['ind'][2]
-    i_rind = tf.gather(tensors['ind'][2][:,0], ind_ij)
+    ind2 = tensors['ind_2']
+    i_rind = tf.gather(tensors['ind_2'][:,0], ind_ij)
     # Build triplet filter
     t_filter = None
     a_rind = tf.cumsum(tf.ones_like(tensors['elem'],tf.int32))-1 
@@ -364,8 +335,8 @@ def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
 @pi_named('G4_tripet')
 def _G4_triplet(tensors):
     """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
-    p_iind = tensors['ind'][2][:,0]
-    n_pairs = tf.shape(tensors['ind'][2])[0]
+    p_iind = tensors['ind_2'][:,0]
+    n_pairs = tf.shape(tensors['ind_2'])[0]
     p_aind = tf.cumsum(tf.ones(n_pairs, tf.int32)) 
     p_rind = p_aind - tf.gather(tf.segment_min(p_aind, p_iind),p_iind)
     t_dense = tf.scatter_nd(tf.stack([p_iind, p_rind],axis=1), p_aind, 

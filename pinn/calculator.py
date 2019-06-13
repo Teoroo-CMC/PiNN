@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ASE calcualtor for to use with PiNN
 """
-
+import numpy as np
 import tensorflow as tf
 from ase.calculators.calculator import Calculator
 
@@ -24,13 +24,15 @@ class PiNN_calc(Calculator):
         while True:
             if self._atoms_to_calc.pbc.any():
                 data = {
-                    'cell': self._atoms_to_calc.cell,
+                    'cell': self._atoms_to_calc.cell[np.newaxis,:,:],
                     'coord': self._atoms_to_calc.get_positions(wrap=True),
-                    'atoms': self._atoms_to_calc.numbers}
+                    'ind_1': np.zeros([len(self._atoms_to_calc), 1]),
+                    'elems': self._atoms_to_calc.numbers}
             else:
                 data = {
                     'coord': self._atoms_to_calc.positions,
-                    'atoms': self._atoms_to_calc.numbers}
+                    'ind_1': np.zeros([len(self._atoms_to_calc), 1]),
+                    'elems': self._atoms_to_calc.numbers}
             yield data
 
     def get_predictor(self, dtype=tf.float32):
@@ -39,12 +41,12 @@ class PiNN_calc(Calculator):
 
         self.size = len(self._atoms_to_calc)
 
-        dtypes = {'coord': dtype, 'atoms': tf.int32}
-        shapes = {'coord': [None, 3], 'atoms': [None]}
+        dtypes = {'coord': dtype, 'elems': tf.int32, 'ind_1': tf.int32}
+        shapes = {'coord': [None, 3], 'elems': [None], 'ind_1': [None, 1]}
         properties = ['energy', 'forces', 'stress']
 
         if self._atoms_to_calc.pbc.any():
-            shapes['cell'] = [3,3]
+            shapes['cell'] = [1,3,3]
             dtypes['cell'] = dtype
             self.pbc=True
         else:
@@ -52,7 +54,7 @@ class PiNN_calc(Calculator):
 
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
-                self._generator, dtypes, shapes).batch(1),
+                self._generator, dtypes, shapes),
             predict_keys=properties)
         return self.predictor
 

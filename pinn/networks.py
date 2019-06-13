@@ -25,18 +25,16 @@ def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
         sigma:
         epsilon:
     """
-    f.sparsify()(tensors)
     f.cell_list_nl(rc)(tensors)
     _reset_dist_grad(tensors)
     e0 = 4 * epsilon * ((sigma / rc)**12 - (sigma / rc)**6)
     c6 = (sigma/tensors['dist'])**6
     c12 = c6 ** 2
     en = 4*epsilon*(c12-c6)-e0
-    ind = tensors['ind']
-    natom = tf.shape(ind[1])[0]
-    nbatch = tf.shape(tensors['atoms'])[0]
-    en = tf.unsorted_segment_sum(en, ind[2][:,0], natom)
-    en = tf.unsorted_segment_sum(en, ind[1][:,0], nbatch)
+    natom = tf.shape(tensors['ind_1'])[0]
+    nbatch = tf.reduce_max(tensors['ind_1'])+1
+    en = tf.unsorted_segment_sum(en, tensors['ind_2'][:,0], natom)
+    en = tf.unsorted_segment_sum(en, tensors['ind_1'][:,0], nbatch)
     return en/2.0
 
 
@@ -67,46 +65,47 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         - preprocessed nested tensors if n<0
     """
     filters = [
-        f.sparsify(),
         f.atomic_onehot(atom_types),
         f.atomic_dress(atomic_dress),
         f.cell_list_nl(rc),
         f.cutoff_func(cutoff, rc),
         f.pi_basis(n_basis)]
     # Preprocess
-    to_pre = {0: 0, 1: 4, 2: 6}[pre_level]
+    to_pre = {0: 0, 1: 3, 2: 5}[pre_level]
     if preprocess:
         for fi in filters[:to_pre]:
             fi(tensors)
         return tensors
     if pre_level == 0:
-        for fi in filters[:4]:
+        for fi in filters[:3]:
             fi(tensors)
     if pre_level<=1:
         _reset_dist_grad(tensors)
-        for fi in filters[4:]:
+        for fi in filters[3:]:
             fi(tensors)
+
     # Then Construct the model
     nodes = {1: tensors['elem_onehot']}
-    ind = tensors['ind']
+    ind_1 = tensors['ind_1']
+    ind_2 = tensors['ind_2']    
     basis = tensors['pi_basis']
-    natom = tf.shape(ind[1])[0]
-    nbatch = tf.shape(tensors['atoms'])[0]
+    natom = tf.shape(tensors['ind_1'])[0]
+    nbatch = tf.reduce_max(tensors['ind_1'])+1
     nodes[0] = 0.0
     for i in range(depth):
         if i > 0:
             nodes[1] = l.fc_layer(nodes[1], pp_nodes,
                                   act=act, name='pp-{}/'.format(i))
-        nodes[2] = l.pi_layer(ind[2], nodes[1], basis, pi_nodes,
+        nodes[2] = l.pi_layer(ind_2, nodes[1], basis, pi_nodes,
                               act=act, name='pi-{}/'.format(i))
         nodes[2] = l.fc_layer(nodes[2], ii_nodes, use_bias=False,
                               act=act, name='ii-{}/'.format(i))
         if nodes[1].shape[-1] != nodes[2].shape[-1]:
             nodes[1] = tf.layers.dense(nodes[1], nodes[2].shape[-1],
                                        use_bias=False, activation=None)
-        nodes[1] += l.ip_layer(ind[2], nodes[2], natom,
+        nodes[1] += l.ip_layer(ind_2, nodes[2], natom,
                                name='ip_{}/'.format(i))
-        nodes[0] += l.en_layer(ind[1], nodes[1], nbatch, en_nodes,
+        nodes[0] += l.en_layer(ind_1, nodes[1], nbatch, en_nodes,
                                act=act, name='en_{}/'.format(i))
     return nodes[to_return]
 
@@ -177,22 +176,21 @@ def bpnn_network(tensors, sf_spec, nn_spec, rc=5.0, act='tanh',
         - prediction tensor if not preprocess
     """
     filters = [
-        f.sparsify(),
         f.atomic_dress(atomic_dress),
         f.cell_list_nl(rc),
         f.cutoff_func(rc=rc),
         f.bp_symm_func(sf_spec)]
-    to_pre = {0: 0, 1: 3, 2: 5}[pre_level]
+    to_pre = {0: 0, 1: 2, 2: 4}[pre_level]
     if preprocess:
         for fi in filters[:to_pre]:
             fi(tensors)
         return tensors
     if pre_level == 0:
-        for fi in filters[:4]:
+        for fi in filters[:2]:
             fi(tensors)
     if pre_level<=1:
         _reset_dist_grad(tensors)
-        for fi in filters[4:]:
+        for fi in filters[2:]:
             fi(tensors)
     en = 0.0
     n_sample = tf.reduce_max(tensors['ind'][1])+1
@@ -215,7 +213,7 @@ def bpnn_network(tensors, sf_spec, nn_spec, rc=5.0, act='tanh',
 # Helper functions
 def _reset_dist_grad(tensors):
     tensors['diff'] = _connect_diff_grad(tensors['coord'], tensors['diff'],
-                                         tensors['ind'][2])
+                                         tensors['ind_2'])
     tensors['dist'] = _connect_dist_grad(tensors['diff'], tensors['dist'])
 
 
