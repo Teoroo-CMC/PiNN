@@ -63,17 +63,109 @@ def G2_SF(tensors, Rs, etta, i, j):
     return fp, jacob, jacob_ind
 
 @pi_named('G3_symm_func')
-def G3_SF(tensors, **kwargs):
-    """NOT IMPLEMENTED YET
-    In theory one can use the same function as G4 and use (diff_ij - diff_ik)
-    to calculate/filter the sfs.
+def G3_SF(tensors, cutoff_type, rc, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
+    """BP-style G3 symmetry functions.
+
+    NOTE(YS): here diff_jk is calculated through diff_ik - diff_ij instead of 
+    retrieving the distance calcualted in cell_list_nl.
+    This makes is easier to get the jacobian with grad(sf, [diff_ij, diff_ik]).
+    However, this also introduce some waste of computation during the fingerprint
+    generation.
+
+    Args:
+        cutoff_type, rc: cutoff function and radius
+            (we need them again because diff_jk is re-calculated)
+        lambd: a list of lambda values.
+        zeta: a list of zeta values.
+        etta: a list of etta values.
+        i, j, k: atom types (as int32)
+        
+    Returns:
+        fp: a (n_atom x n_fingerprint) tensor of fingerprints
+            where n_atom is the number of central atoms defined by "i"
+        jacob: a (n_pair x n_fingerprint) tensor 
+            where n_pair is the number of relavent pairs in this SF
+        jacob_ind: a (n_pair) tensor 
+            each row correspond to the (p_ind, i_rind) of the pair
+            p_ind => the relative position of this pair within all pairs
+            i_rind => the index of the central atom for this pair    
     """
-    raise NotImplementedError("G3 symmetry funtion is not implemented yet.")
+    if 'ind_3' not in tensors:
+        tensors['ind_3'] = _form_triplet(tensors)
+        
+    R = tensors['dist']
+    fc = tensors['cutoff_func']
+    diff = tensors['diff']
+    ind_ij = tensors['ind_3'][:, 0]
+    ind_ik = tensors['ind_3'][:, 1]
+    ind2 = tensors['ind_2']
+    i_rind = tf.gather(tensors['ind_2'][:,0], ind_ij)
+    # Build triplet filter
+    t_filter = None
+    a_rind = tf.cumsum(tf.ones_like(tensors['elems'],tf.int32))-1 
+    if i!='ALL':
+        i_elem = tf.gather(tensors['elems'], tf.gather(ind2[:,0], ind_ij))
+        t_filter = tf.equal(i_elem, i)
+        a_rind = tf.cumsum(tf.cast(tf.equal(tensors['elems'], i), tf.int32))-1
+    if j!='ALL':
+        j_elem = tf.gather(tensors['elems'], tf.gather(ind2[:,1], ind_ij))
+        j_filter = tf.equal(j_elem, j)
+        t_filter = tf.reduce_all([t_filter, j_filter],axis=0) if t_filter is not None else j_filter
+    if k!='ALL':
+        k_elem = tf.gather(tensors['elems'], tf.gather(ind2[:,1], ind_ik))
+        k_filter = tf.equal(k_elem, k)
+        t_filter = tf.reduce_all([t_filter, k_filter],axis=0) if t_filter is not None else k_filter
+    if t_filter is not None:
+        t_ind = tf.where(t_filter)[:,0]
+        ind_ij = tf.gather(ind_ij, t_ind)
+        ind_ik = tf.gather(ind_ik, t_ind)
+        i_rind = tf.gather(a_rind, tf.gather(i_rind, t_ind))
+    # Filter according to R_jk, once more
+    diff_ij = tf.gather_nd(diff, tf.expand_dims(ind_ij,1))
+    diff_ik = tf.gather_nd(diff, tf.expand_dims(ind_ik,1))    
+    diff_jk = diff_ik - diff_ij
+    R_jk = tf.norm(diff_jk, axis=1)
+    t_ind = tf.where(R_jk<rc)[:,0]
+    R_jk = tf.gather(R_jk, t_ind)
+    fc_jk = cutoff_func(R_jk, cutoff_type)
+    ind_ij = tf.gather(ind_ij, t_ind)
+    ind_ik = tf.gather(ind_ik, t_ind)
+    i_rind = tf.gather(i_rind, t_ind)
+    diff_ij = tf.gather_nd(diff_ij, tf.expand_dims(t_ind,1))
+    diff_ik = tf.gather_nd(diff_ik, tf.expand_dims(t_ind,1))        
+    # G3 symmetry function
+    R_ij = tf.expand_dims(tf.gather(R, ind_ij), 1)
+    R_ik = tf.expand_dims(tf.gather(R, ind_ik), 1)
+    R_jk = tf.expand_dims(R_jk, 1)
+    fc_ij = tf.expand_dims(tf.gather(fc, ind_ij), 1)
+    fc_ik = tf.expand_dims(tf.gather(fc, ind_ik), 1)
+    fc_jk = tf.expand_dims(fc_jk, 1)
+    diff_ij = tf.expand_dims(diff_ij, 1)
+    diff_ik = tf.expand_dims(diff_ik, 1)
+    etta = tf.expand_dims(etta, 0)
+    zeta = tf.expand_dims(zeta, 0)
+    lambd = tf.expand_dims(lambd, 0)
+    # SF definition 
+    sf = 2**(1-zeta)*\
+         (1+lambd*tf.reduce_sum(diff_ij*diff_ik, axis=-1)/R_ij/R_ik)**zeta*\
+         tf.exp(-etta*(R_ij**2+R_ik**2+R_jk**2))*fc_ij*fc_ik*fc_jk
+    fp = tf.scatter_nd(tf.expand_dims(i_rind,1),sf,
+                       [tf.reduce_max(a_rind)+1,tf.shape(etta)[1]])
+    # Generate Jacobian
+    n_sf = sf.shape[-1]
+    p_ind, p_uniq_idx = tf.unique(tf.concat([ind_ij, ind_ik], axis=0))
+    i_rind = tf.unsorted_segment_max(
+        tf.concat([i_rind, i_rind],axis=0), p_uniq_idx, tf.shape(p_ind)[0])
+    jacob = tf.stack([tf.gradients(sf[:,i], tensors['diff'])[0]
+                       for i in range(n_sf)], axis=2)
+    jacob = tf.gather_nd(jacob, tf.expand_dims(p_ind,1))
+    jacob_ind = tf.stack([p_ind, i_rind], axis=1)
+    return fp, jacob, jacob_ind    
 
 
 @pi_named('G4_symm_func')
 def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
-    """ BP-style G4 symmetry functions.
+    """BP-style G4 symmetry functions.
 
     lambd, etta should have the same length,
     each element corresponds to a symmetry function.
@@ -94,14 +186,14 @@ def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
             p_ind => the relative position of this pair within all pairs
             i_rind => the index of the central atom for this pair
     """
-    if 'ind_G4' not in tensors:
-        tensors['ind_G4'] = _G4_triplet(tensors)
+    if 'ind_3' not in tensors:
+        tensors['ind_3'] = _form_triplet(tensors)
         
     R = tensors['dist']
     fc = tensors['cutoff_func']
     diff = tensors['diff']
-    ind_ij = tensors['ind_G4'][:, 0]
-    ind_ik = tensors['ind_G4'][:, 1]
+    ind_ij = tensors['ind_3'][:, 0]
+    ind_ik = tensors['ind_3'][:, 1]
     ind2 = tensors['ind_2']
     i_rind = tf.gather(tensors['ind_2'][:,0], ind_ij)
     # Build triplet filter
@@ -134,9 +226,9 @@ def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
     etta = tf.expand_dims(etta, 0)
     zeta = tf.expand_dims(zeta, 0)
     lambd = tf.expand_dims(lambd, 0)    
-    sf = 2**(1-zeta)*(1+lambd*tf.reduce_sum(
-        diff_ij*diff_ik,axis=-1))**zeta*tf.exp(
-            -etta*(R_ij**2+R_ik**2))*fc_ij*fc_ik
+    sf = 2**(1-zeta)*\
+         (1+lambd*tf.reduce_sum(diff_ij*diff_ik, axis=-1)/R_ij/R_ik)**zeta*\
+         tf.exp(-etta*(R_ij**2+R_ik**2))*fc_ij*fc_ik
     fp = tf.scatter_nd(tf.expand_dims(i_rind,1),sf,
                        [tf.reduce_max(a_rind)+1,tf.shape(etta)[1]])
 
@@ -152,11 +244,10 @@ def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
                        for i in range(n_sf)], axis=2)
     jacob = tf.gather_nd(jacob, tf.expand_dims(p_ind,1))
     jacob_ind = tf.stack([p_ind, i_rind], axis=1)
-        
     return fp, jacob, jacob_ind
 
-@pi_named('G4_tripet')
-def _G4_triplet(tensors):
+@pi_named('form_tripet')
+def _form_triplet(tensors):
     """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
     p_iind = tensors['ind_2'][:,0]
     n_pairs = tf.shape(tensors['ind_2'])[0]
@@ -168,19 +259,22 @@ def _G4_triplet(tensors):
     t_index = tf.cast(tf.where(t_dense),tf.int32)
     t_ijind = t_index[:,0]
     t_ikind = tf.gather_nd(t_dense, t_index)-1 
-    t_ind_G4 = tf.gather_nd(tf.stack([t_ijind, t_ikind],axis=1),
+    t_ind = tf.gather_nd(tf.stack([t_ijind, t_ikind],axis=1),
                             tf.where(tf.not_equal(t_ijind, t_ikind)))
-    return t_ind_G4
+    return t_ind
 
 
 @pi_named('bp_symm_func')
-def bp_symm_func(tensors, sf_spec):
+def bp_symm_func(tensors, sf_spec, rc, cutoff_type):
     """ Wrapper for building Behler-style symmetry functions"""
     sf_func = {'G2': G2_SF, 'G3':G3_SF, 'G4': G4_SF}
     fps = {}
     for i, sf in enumerate(sf_spec):
+        options = {k:v for k,v in sf.items() if k!="type"}
+        if sf['type'] == 'G3': # Workaround for G3 only
+            options.update({'rc': rc, 'cutoff_type': cutoff_type})
         fp, jacob, jacob_ind = sf_func[sf['type']](
-            tensors,  **{k:v for k,v in sf.items() if k!="type"})
+            tensors,  **options)
         fps[f'fp_{i}'] = fp
         fps[f'jacob_{i}'] = jacob
         fps[f'jacob_ind_{i}'] = jacob_ind
@@ -265,7 +359,7 @@ def bpnn_network(tensors, sf_spec, nn_spec,
         tensors.update(cell_list_nl(tensors, rc))
         connect_dist_grad(tensors)
         tensors['cutoff_func'] = cutoff_func(tensors['dist'], cutoff_type, rc)
-        tensors.update(bp_symm_func(tensors,sf_spec))
+        tensors.update(bp_symm_func(tensors,sf_spec, rc, cutoff_type))
         if preprocess:
             tensors.pop('dist')
             tensors.pop('cutoff_func')            
