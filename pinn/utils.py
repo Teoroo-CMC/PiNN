@@ -1,3 +1,5 @@
+""" Misc tools"""
+
 import tensorflow as tf
 import numpy as np
 from functools import wraps
@@ -7,11 +9,11 @@ def get_atomic_dress(dataset, elems, max_iter=1000):
     Fit the atomic energy with a element dependent atomic dress
     
     Args:
-         dataset: dataset to fit
-         elems: a list of element numbers
+        dataset: dataset to fit
+        elems: a list of element numbers
     Returns:
-         atomic_dress: a dictionary comprising the atomic energy of each element
-         error: residue error of the atomic dress
+        atomic_dress: a dictionary comprising the atomic energy of each element
+        error: residue error of the atomic dress
     """
     tensors = dataset.make_one_shot_iterator().get_next()
     if 'ind_1' not in tensors:
@@ -36,7 +38,7 @@ def get_atomic_dress(dataset, elems, max_iter=1000):
     return dress, error
 
 def pi_named(default_name='unnamed'):
-    """Decorate a layer to have a name """
+    """Decorate a layer to have a name"""
     def decorator(func):
         @wraps(func)
         def named_layer(*args, name=default_name, **kwargs):
@@ -44,12 +46,6 @@ def pi_named(default_name='unnamed'):
                 return func(*args, **kwargs)
         return named_layer
     return decorator
-
-def pinn_filter(func):
-    @wraps(func)
-    def filter_wrapper(*args, **kwargs):
-        return lambda t: func(t, *args, **kwargs)
-    return filter_wrapper
 
 def TuneTrainable(trainer_fn):
     """Helper function for geting a trainable to use with Tune
@@ -109,3 +105,59 @@ def TuneTrainable(trainer_fn):
                 chkpath = f.readline().strip()
             self.model, _, _, _ = trainer_fn(self.config, chkpath)
     return TuneTrainable
+
+
+def connect_dist_grad(tensors):
+    """ 
+    This function assumes tensors is a dictionary containing
+    'ind_2', 'diff' and 'dist' from a neighbor list layer
+    It rewirtes the 'dist' and 'dist' tensor so that their gradients 
+    are properly propogated during force calculations
+    """ 
+    tensors['diff'] = _connect_diff_grad(tensors['coord'], tensors['diff'],
+                                         tensors['ind_2'])
+    if 'dist' in tensors:
+        # dist can be deleted if the jacobian is cached, so we may skip this
+        tensors['dist'] = _connect_dist_grad(tensors['diff'], tensors['dist'])
+
+
+@tf.custom_gradient
+def _connect_diff_grad(coord, diff, ind):
+    """Returns a new diff with its gradients connected to coord"""
+    def _grad(ddiff, coord, diff, ind):
+        natoms = tf.shape(coord)[0]
+        if type(ddiff) == tf.IndexedSlices:
+            # handle sparse gradient inputs
+            ind = tf.gather_nd(ind, tf.expand_dims(ddiff.indices,1))
+            ddiff = ddiff.values
+        dcoord = tf.unsorted_segment_sum(ddiff, ind[:, 1], natoms)
+        dcoord -= tf.unsorted_segment_sum(ddiff, ind[:, 0], natoms)
+        return dcoord, None, None
+    return tf.identity(diff), lambda ddiff: _grad(ddiff, coord, diff, ind)
+
+
+@tf.custom_gradient
+def _connect_dist_grad(diff, dist):
+    """Returns a new dist with its gradients connected to diff"""
+    def _grad(ddist, diff, dist):
+        return tf.expand_dims(ddist/dist, 1)*diff, None
+    return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)    
+
+@pi_named('form_basis_jacob')
+def make_basis_jacob(basis, diff):
+    jacob = [tf.gradients(basis[:,i], diff)[0]
+             for i in range(basis.shape[1])]
+    jacob = tf.stack(jacob, axis=2)
+    return jacob
+
+def connect_basis_jacob(tensors):
+    tensors['basis'] = _connect_basis_grad(
+        tensors['diff'], tensors['basis'], tensors['jacob'])
+
+@tf.custom_gradient
+def _connect_basis_grad(diff, basis, jacob):
+    def _grad(dbasis, jacob):
+        ddiff = jacob * tf.expand_dims(dbasis, 1)
+        ddiff = tf.reduce_sum(ddiff, axis=2)
+        return ddiff, None, None
+    return tf.identity(basis), lambda dbasis: _grad(dbasis, jacob)

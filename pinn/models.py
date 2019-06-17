@@ -6,8 +6,6 @@ A model defines the goal/loss of the model, as well as training paramters.
 """
 
 import tensorflow as tf
-import pinn.filters as f
-import pinn.layers as l
 import pinn.networks
 from pinn.utils import pi_named
 
@@ -70,29 +68,6 @@ def _potential_model_fn(features, labels, mode, params):
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
 
-
-def _reset_dist_grad(tensors):
-    tensors['diff'] = _connect_diff_grad(tensors['coord'], tensors['diff'],
-                                         tensors['ind'][2])
-    tensors['dist'] = _connect_dist_grad(tensors['diff'], tensors['dist'])
-
-@tf.custom_gradient
-def _connect_diff_grad(coord, diff, ind):
-    """Returns a new diff with its gradients connected to coord"""
-    def _grad(ddiff, coord, diff, ind):
-        natoms = tf.shape(coord)[0]
-        dcoord = tf.unsorted_segment_sum(ddiff, ind[:,1], natoms)
-        dcoord -= tf.unsorted_segment_sum(ddiff, ind[:,0], natoms)
-        return dcoord, None, None, None
-    return tf.identity(diff), lambda ddist: _grad(ddiff, coord, diff, ind)
-
-@tf.custom_gradient
-def _connect_dist_grad(diff, dist):
-    """Returns a new dist with its gradients connected to diff"""
-    def _grad(ddist, diff, dist):
-        return tf.expand_dims(ddist/dist, 1)*diff, None
-    return tf.identity(dist), lambda ddist: _grad(ddist, diff, dist)    
-    
 def _get_forces(energy, coord):
     import warnings
     index_warning = 'Converting sparse IndexedSlices'
