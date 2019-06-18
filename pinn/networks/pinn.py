@@ -95,7 +95,7 @@ def en_layer(ind, nodes, n_batch, n_nodes,
                                 name='dense-{}'.format(i))
 
     nodes = tf.layers.dense(nodes, 1, use_bias=False,
-                            activation=None, name='energy')
+                            activation=None, name='E_OUT')
     nodes = tf.unsorted_segment_sum(nodes, ind[:,0], n_batch)
     return tf.squeeze(nodes,-1)
 

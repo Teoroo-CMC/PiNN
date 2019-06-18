@@ -1,8 +1,75 @@
+import tempfile, os
 import tensorflow as tf
 import numpy as np
-import os
+from shutil import rmtree
 
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
+
+def test_potential_model():
+    """A simple example to test training and using a potential"""
+    from ase import Atoms    
+    from ase.calculators.lj import LennardJones
+    from pinn.io import load_numpy, sparse_batch
+    from pinn.models import potential_model
+    def three_body_sample(atoms, a, r):
+        x = a * np.pi / 180
+        pos = [[0, 0, 0],
+               [0, 2, 0],
+               [0, r*np.cos(x), r*np.sin(x)]]
+        atoms.set_positions(pos)
+        return atoms
+    
+    tmp = tempfile.mkdtemp(prefix='pinn_test')
+    atoms = Atoms('H3', calculator=LennardJones())
+    na, nr = 50, 50
+    arange = np.linspace(30,180,na)
+    rrange = np.linspace(1,3,nr)
+    # Truth
+    agrid, rgrid = np.meshgrid(arange, rrange)
+    egrid = np.zeros([na, nr])
+    for i in range(na):
+        for j in range(nr):
+            atoms = three_body_sample(atoms, arange[i], rrange[j])
+            egrid[i,j] = atoms.get_potential_energy()
+    # Samples
+    nsample = 50
+    asample, rsample = [], []
+    distsample = []
+    data = {'e_data':[], 'f_data':[], 'elems':[], 'coord':[]}
+    for i in range(nsample):
+        a, r = np.random.choice(arange), np.random.choice(rrange)
+        atoms = three_body_sample(atoms, a, r)
+        dist = atoms.get_all_distances()
+        dist = dist[np.nonzero(dist)]
+        data['e_data'].append(atoms.get_potential_energy())
+        data['f_data'].append(atoms.get_forces())
+        data['coord'].append(atoms.get_positions())
+        data['elems'].append(atoms.numbers)
+        asample.append(a)
+        rsample.append(r)
+        distsample.append(dist)
+    data = {k:np.array(v) for k,v in data.items()}
+    dataset = lambda: load_numpy(data)
+    train = lambda: dataset()['train'].shuffle(100).repeat().apply(sparse_batch(100))
+    test = lambda: dataset()['test'].repeat().apply(sparse_batch(100))
+    params={
+    'model_dir': tmp,
+    'network': 'pinn_network',
+    'network_params': {
+        'ii_nodes':[8,8],
+        'pi_nodes':[8,8],
+        'pp_nodes':[8,8],
+        'en_nodes':[8,8],
+        'rc': 3.0,
+        'atom_types':[1]},
+    'model_params':{
+        'use_force': True}
+    }
+    model = potential_model(params)
+    train_spec = tf.estimator.TrainSpec(input_fn=train, max_steps=200)
+    eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=10)
+    tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
+    rmtree(tmp, ignore_errors=True)    
 
 def test_jacob_pinn():
     """Check BPNN jacobian calculation"""
@@ -114,8 +181,8 @@ def test_derivitives():
     params = {
     'model_dir': '',
     'network':'lj',
-    'netparam': {'rc':3},
-    'train':{}}
+    'network_params': {'rc':3},
+    'model_params':{}}
     model = potential_model(params)
     pi_lj = PiNN_calc(model)
     test_set = [bulk('Cu').repeat([3,3,3]), bulk('Mg'), g2['H2O']]

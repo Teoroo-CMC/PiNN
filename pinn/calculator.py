@@ -7,7 +7,7 @@ from ase.calculators.calculator import Calculator
 
 
 class PiNN_calc(Calculator):
-    def __init__(self, model=None, atoms=None, unit=1):
+    def __init__(self, model=None, atoms=None):
         """
         Args:
             model: tf.Estimator object
@@ -16,7 +16,6 @@ class PiNN_calc(Calculator):
         self.implemented_properties = ['energy', 'forces', 'stress']
         self.model = model
         self.pbc = False
-        self.unit = unit
         self.atoms = atoms
         self.predictor = None
 
@@ -71,7 +70,6 @@ class PiNN_calc(Calculator):
             
         predictor = self.get_predictor()
         results = next(predictor)
-        results = {k: v*self.unit for k,v in results.items()}
         
         if 'stress' in properties:
             results['stress'] /= self._atoms_to_calc.get_volume()

@@ -376,7 +376,8 @@ def bpnn_network(tensors, sf_spec, nn_spec,
             nodes = fps[k]
             for n_node in v:
                 nodes = tf.layers.dense(nodes, n_node, activation=act)
-            atomic_en = tf.layers.dense(nodes, 1, activation=None, use_bias=False)
+            atomic_en = tf.layers.dense(nodes, 1, activation=None,
+                                        use_bias=False, name=f'E_OUT_{k}')
         en += tf.unsorted_segment_sum(
             atomic_en[:,0], tf.gather_nd(tensors['ind_1'], ind)[:,0], n_sample)
     return en

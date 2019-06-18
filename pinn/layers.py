@@ -138,9 +138,9 @@ def atomic_dress(tensors, dress, dtype=tf.float32):
         indices = tf.cast(tf.equal(elem, k), dtype)
         e_dress += indices * tf.cast(val, dtype)
     n_batch = tf.reduce_max(tensors['ind_1'])+1
-    dress = tf.unsorted_segment_sum(
-        dress, tensors['ind_1'][:,0], n_batch)
-    return dress
+    e_dress = tf.unsorted_segment_sum(
+        e_dress, tensors['ind_1'][:,0], n_batch)
+    return e_dress
 
 @pi_named('cutoff_func')
 def cutoff_func(dist, cutoff_type='f1', rc=5.0):
