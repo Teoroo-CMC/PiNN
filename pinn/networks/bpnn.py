@@ -3,14 +3,14 @@ from pinn.utils import pi_named, connect_dist_grad
 from pinn.layers import cell_list_nl, cutoff_func
         
 @pi_named('G2_symm_func')
-def G2_SF(tensors, Rs, etta, i, j):
+def G2_SF(tensors, Rs, eta, i, j):
     """ BP-style G2 symmetry functions.
   
     Args:
         i: central atom type, can be "ALL".
         j: neighbor atom type, can be "ALL".
         Rs: a list of Rs values.    
-        etta: a list of etta values, etta and Rs must have the same length.
+        eta: a list of eta values, eta and Rs must have the same length.
         
     Returns:
         fp: a (n_atom x n_fingerprint) tensor of fingerprints
@@ -52,8 +52,8 @@ def G2_SF(tensors, Rs, etta, i, j):
     R = tf.expand_dims(R, 1)
     fc = tf.expand_dims(fc, 1)
     Rs = tf.expand_dims(Rs, 0)
-    etta = tf.expand_dims(etta, 0)
-    sf = tf.exp(-etta*(R-Rs)**2)*fc
+    eta = tf.expand_dims(eta, 0)
+    sf = tf.exp(-eta*(R-Rs)**2)*fc
     fp = tf.scatter_nd(tf.expand_dims(i_rind,1),sf,
                        [tf.reduce_max(a_rind)+1, n_sf])
     jacob = tf.stack([tf.gradients(sf[:,i], tensors['diff'])[0]
@@ -63,7 +63,7 @@ def G2_SF(tensors, Rs, etta, i, j):
     return fp, jacob, jacob_ind
 
 @pi_named('G3_symm_func')
-def G3_SF(tensors, cutoff_type, rc, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
+def G3_SF(tensors, cutoff_type, rc, lambd, zeta, eta, i="ALL", j="ALL", k="ALL"):
     """BP-style G3 symmetry functions.
 
     NOTE(YS): here diff_jk is calculated through diff_ik - diff_ij instead of 
@@ -77,7 +77,7 @@ def G3_SF(tensors, cutoff_type, rc, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"
             (we need them again because diff_jk is re-calculated)
         lambd: a list of lambda values.
         zeta: a list of zeta values.
-        etta: a list of etta values.
+        eta: a list of eta values.
         i, j, k: atom types (as int32)
         
     Returns:
@@ -142,15 +142,15 @@ def G3_SF(tensors, cutoff_type, rc, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"
     fc_jk = tf.expand_dims(fc_jk, 1)
     diff_ij = tf.expand_dims(diff_ij, 1)
     diff_ik = tf.expand_dims(diff_ik, 1)
-    etta = tf.expand_dims(etta, 0)
+    eta = tf.expand_dims(eta, 0)
     zeta = tf.expand_dims(zeta, 0)
     lambd = tf.expand_dims(lambd, 0)
     # SF definition 
     sf = 2**(1-zeta)*\
          (1+lambd*tf.reduce_sum(diff_ij*diff_ik, axis=-1)/R_ij/R_ik)**zeta*\
-         tf.exp(-etta*(R_ij**2+R_ik**2+R_jk**2))*fc_ij*fc_ik*fc_jk
+         tf.exp(-eta*(R_ij**2+R_ik**2+R_jk**2))*fc_ij*fc_ik*fc_jk
     fp = tf.scatter_nd(tf.expand_dims(i_rind,1),sf,
-                       [tf.reduce_max(a_rind)+1,tf.shape(etta)[1]])
+                       [tf.reduce_max(a_rind)+1,tf.shape(eta)[1]])
     # Generate Jacobian
     n_sf = sf.shape[-1]
     p_ind, p_uniq_idx = tf.unique(tf.concat([ind_ij, ind_ik], axis=0))
@@ -164,16 +164,16 @@ def G3_SF(tensors, cutoff_type, rc, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"
 
 
 @pi_named('G4_symm_func')
-def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
+def G4_SF(tensors, lambd, zeta, eta, i="ALL", j="ALL", k="ALL"):
     """BP-style G4 symmetry functions.
 
-    lambd, etta should have the same length,
+    lambd, eta should have the same length,
     each element corresponds to a symmetry function.
 
     Args:
         lambd: a list of lambda values.
         zeta: a list of zeta values.
-        etta: a list of etta values.
+        eta: a list of eta values.
         i, j, k: atom types (as int32)
         
     Returns:
@@ -223,14 +223,14 @@ def G4_SF(tensors, lambd, zeta, etta, i="ALL", j="ALL", k="ALL"):
     fc_ik = tf.expand_dims(tf.gather(fc, ind_ik), 1)
     diff_ij = tf.expand_dims(tf.gather_nd(diff, tf.expand_dims(ind_ij,1)), 1)
     diff_ik = tf.expand_dims(tf.gather_nd(diff, tf.expand_dims(ind_ik,1)), 1)
-    etta = tf.expand_dims(etta, 0)
+    eta = tf.expand_dims(eta, 0)
     zeta = tf.expand_dims(zeta, 0)
     lambd = tf.expand_dims(lambd, 0)    
     sf = 2**(1-zeta)*\
          (1+lambd*tf.reduce_sum(diff_ij*diff_ik, axis=-1)/R_ij/R_ik)**zeta*\
-         tf.exp(-etta*(R_ij**2+R_ik**2))*fc_ij*fc_ik
+         tf.exp(-eta*(R_ij**2+R_ik**2))*fc_ij*fc_ik
     fp = tf.scatter_nd(tf.expand_dims(i_rind,1),sf,
-                       [tf.reduce_max(a_rind)+1,tf.shape(etta)[1]])
+                       [tf.reduce_max(a_rind)+1,tf.shape(eta)[1]])
 
     ## Jacobian generation (perhaps needs some clarification)
     ## In short, gradients(sf, diff) gives the non-zero parts of the 
@@ -322,9 +322,9 @@ def bpnn_network(tensors, sf_spec, nn_spec,
     """ Network function for Behler-Parrinello Neural Network
 
     Example of sf_spec:
-        [{'type':'G2', 'i': 1, 'j': 8, 'Rs': [1.,2.], 'etta': [0.1,0.2]},
-         {'type':'G2', 'i': 8, 'j': 1, 'Rs': [1.,2.], 'etta': [0.1,0.2]},
-         {'type':'G4', 'i': 8, 'j': 8, 'lambd':[0.5,1], 'zeta': [1.,2.], 'etta': [0.1,0.2]}]
+        [{'type':'G2', 'i': 1, 'j': 8, 'Rs': [1.,2.], 'eta': [0.1,0.2]},
+         {'type':'G2', 'i': 8, 'j': 1, 'Rs': [1.,2.], 'eta': [0.1,0.2]},
+         {'type':'G4', 'i': 8, 'j': 8, 'lambd':[0.5,1], 'zeta': [1.,2.], 'eta': [0.1,0.2]}]
 
     The symmetry functions are defined according to this paper:
         Behler, Jörg. “Constructing High-Dimensional Neural Network Potentials: A Tutorial Review.” 
