@@ -2,7 +2,7 @@
 import sys, yaml
 import tensorflow as tf
 
-def write_tfrecord(fname, dataset, log_every=100):
+def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     """Helper function to convert dataset object into tfrecord file.
     
     fname must end with .yml or .yaml.
@@ -15,18 +15,22 @@ def write_tfrecord(fname, dataset, log_every=100):
     def _bytes_feature(value):
         """Returns a bytes_list from a string / byte."""
         return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
-    # Sanity check
-    types = dataset.output_types
-    shapes = dataset.output_shapes
-    assert (type(types)==dict and all(type(v)!=dict for v in types.values())),\
-           "Only dataset of non-nested dictionary is supported."
-    assert fname.endswith('.yml'), "Filename must end with .yml."
-    # Writing Loop
+    # Preperation
     tfr = '.'.join(fname.split('.')[:-1]+['tfr'])
     writer = tf.python_io.TFRecordWriter(tfr)
     tensors = dataset.make_one_shot_iterator().get_next()
+    if pre_fn:
+        tensors = pre_fn(tensors)
+        dataset = dataset.map(pre_fn)
+    types = dataset.output_types
+    shapes = dataset.output_shapes
+    # Sanity check
+    assert (type(types)==dict and all(type(v)!=dict for v in types.values())),\
+        "Only dataset of non-nested dictionary is supported."
+    assert fname.endswith('.yml'), "Filename must end with .yml."
     serialized = {k: tf.serialize_tensor(v) for k, v in tensors.items()}
     sess = tf.Session()
+    # Writing Loop
     n_parsed = 0
     try:
         while True:
