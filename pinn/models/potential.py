@@ -193,7 +193,7 @@ def _get_loss(features, pred, model_params):
 
 @pi_named('METRICS')
 def _make_eval_metrics(metrics):
-    metrics = {
+    eval_metrics = {
         'METRICS/E_MAE': tf.metrics.mean_absolute_error(
             metrics['e_data'], metrics['e_pred']),
         'METRICS/E_RMSE': tf.metrics.root_mean_squared_error(
@@ -203,20 +203,20 @@ def _make_eval_metrics(metrics):
     }
 
     if 'e_data_per_atom' in metrics:
-        metrics['METRICS/E_PER_ATOM_MAE'] = tf.metrics.mean_absolute_error(
-            features['e_data_per_atom'], features['e_pred_per_atom'])
-        metrics['METRICS/E_PER_ATOM_RMSE'] = tf.metrics.root_mean_squared_error(
-            features['e_data_per_atom'], features['e_pred_per_atom'])
+        eval_metrics['METRICS/E_PER_ATOM_MAE'] = tf.metrics.mean_absolute_error(
+            metrics['e_data_per_atom'], metrics['e_pred_per_atom'])
+        eval_metrics['METRICS/E_PER_ATOM_RMSE'] = tf.metrics.root_mean_squared_error(
+            metrics['e_data_per_atom'], metrics['e_pred_per_atom'])
         
     if 'f_data' in metrics:
-        metrics['METRICS/F_MAE'] = tf.metrics.mean_absolute_error(
-            features['f_data'], features['f_pred'])
-        metrics['METRICS/F_RMSE'] = tf.metrics.root_mean_squared_error(
-            features['f_data'], features['f_pred'])
-        metrics['METRICS/F_LOSS'] = tf.metrics.mean(metrics['f_loss'])
+        eval_metrics['METRICS/F_MAE'] = tf.metrics.mean_absolute_error(
+            metrics['f_data'], metrics['f_pred'])
+        eval_metrics['METRICS/F_RMSE'] = tf.metrics.root_mean_squared_error(
+            metrics['f_data'], metrics['f_pred'])
+        eval_metrics['METRICS/F_LOSS'] = tf.metrics.mean(metrics['f_loss'])
     if 'l2_loss' in metrics:
-        metrics['METRICS/L2_LOSS'] = tf.metrics.mean(metrics['l2_loss'])
-    return metrics
+        eval_metrics['METRICS/L2_LOSS'] = tf.metrics.mean(metrics['l2_loss'])
+    return eval_metrics
 
 
 @pi_named('METRICS')
