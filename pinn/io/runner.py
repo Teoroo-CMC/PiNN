@@ -108,16 +108,17 @@ def _gen_frame_list(fname):
             i += len(l)
     return frame_list
 
-def load_runner(flist):
+def load_runner(flist, **kwargs):
     """
     Loads runner formatted trajectory
     
     Args: 
         flist (str): one or a list of runner formatted trajectory(s)
+        **kwargs: split options, see ``pinn.io.base.split_list``
     """
     if isinstance(flist, str):
         flist=[flist]
     frame_list = []
     for fname in flist:
         frame_list += _gen_frame_list(fname)
-    return _frame_loader(frame_list)
+    return _frame_loader(frame_list, **kwargs)
