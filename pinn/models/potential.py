@@ -27,6 +27,7 @@ default_params = {
     ### Loss function options
     'max_energy': False,     # if set to float, omit energies larger than it
     'use_e_per_atom': False, # use e_per_atom to calculate e_loss
+    'use_e_per_sqrt': False, # 
     'log_e_per_atom': False, # log e_per_atom and its distribution
                              # ^- this is forcely done if use_e_per_atom
     'use_e_weight': False,   # scales the loss according to e_weigtht    
@@ -153,6 +154,8 @@ def _get_loss(features, pred, model_params):
     # e_error is ajusted from here
     if model_params['use_e_per_atom']:
         e_error = e_error_per_atom
+        if model_params['use_e_per_sqrt']:
+            e_error = e_error_per_atom*tf.sqrt(atom_count)
     if model_params['use_e_weight']:
         # Add this to metrics so that one can get a weighed RMSE
         metrics['e_weight'] = features['e_weight']
