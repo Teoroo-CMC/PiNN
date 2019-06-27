@@ -131,22 +131,17 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         tensors.update(cell_list_nl(tensors, rc))
         connect_dist_grad(tensors)
         tensors['embed'] = atomic_onehot(tensors['elems'], atom_types)
-        cutoff = cutoff_func(tensors['dist'], cutoff_type, rc)
-        basis = polynomial_basis(cutoff)
-        jacob = make_basis_jacob(basis, tensors['diff'])
-        tensors['basis'] = basis
-        tensors['jacob'] = jacob
         if preprocess:
             return tensors        
     else:
-        connect_dist_grad(tensors)        
-    if use_jacobian:
-        connect_basis_jacob(tensors)
+        connect_dist_grad(tensors)
+    cutoff = cutoff_func(tensors['dist'], cutoff_type, rc)
+    basis = polynomial_basis(cutoff)        
     # Then Construct the model
     nodes = {1: tensors['embed']}
     ind_1 = tensors['ind_1']
     ind_2 = tensors['ind_2']
-    basis = tf.expand_dims(tensors['basis'], -2)
+    basis = tf.expand_dims(basis, -2)
     natom = tf.shape(tensors['ind_1'])[0]
     nbatch = tf.reduce_max(tensors['ind_1'])+1
     en = 0.0
