@@ -30,5 +30,6 @@ jobs:
           command: |
             . venv/bin/activate
             pip install -e .
-            pytest tests/unit_tests.py --cov=pinn
+            export CUDA_VISIBLE_DEVICES=''
+            pytest tests/ --cov=pinn
             codecov --token=ef4ee5ca-5df3-4535-8b9e-034fdf81495d
