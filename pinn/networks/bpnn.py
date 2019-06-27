@@ -127,7 +127,7 @@ def G3_SF(tensors, cutoff_type, rc, lambd, zeta, eta, i="ALL", j="ALL", k="ALL")
     R_jk = tf.norm(diff_jk, axis=1)
     t_ind = tf.where(R_jk<rc)[:,0]
     R_jk = tf.gather(R_jk, t_ind)
-    fc_jk = cutoff_func(R_jk, cutoff_type)
+    fc_jk = cutoff_func(R_jk, cutoff_type=cutoff_type, rc=rc)
     ind_ij = tf.gather(ind_ij, t_ind)
     ind_ik = tf.gather(ind_ik, t_ind)
     i_rind = tf.gather(i_rind, t_ind)
