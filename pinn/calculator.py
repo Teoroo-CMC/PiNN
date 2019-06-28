@@ -7,13 +7,18 @@ from ase.calculators.calculator import Calculator
 
 
 class PiNN_calc(Calculator):
-    def __init__(self, model=None, atoms=None):
+    def __init__(self, model=None, atoms=None,
+                 properties=['energy', 'forces', 'stress']):
         """
         Args:
             model: tf.Estimator object
+            atoms: optional, ase Atoms object
+            properties: properties to calculate.
+                the properties to calculate is fixed for each calculator,
+                to avoid resetting the predictor during get_* calls.
         """
         Calculator.__init__(self)
-        self.implemented_properties = ['energy', 'forces', 'stress']
+        self.implemented_properties = properties
         self.model = model
         self.pbc = False
         self.atoms = atoms
@@ -42,7 +47,7 @@ class PiNN_calc(Calculator):
 
         dtypes = {'coord': dtype, 'elems': tf.int32, 'ind_1': tf.int32}
         shapes = {'coord': [None, 3], 'elems': [None], 'ind_1': [None, 1]}
-        properties = ['energy', 'forces', 'stress']
+        properties = self.implemented_properties
 
         if self._atoms_to_calc.pbc.any():
             shapes['cell'] = [1,3,3]
@@ -64,7 +69,7 @@ class PiNN_calc(Calculator):
         else:
             self._atoms_to_calc = atoms
             
-        if self._atoms_to_calc.pbc.any() != self.pbc:
+        if self._atoms_to_calc.pbc.any() != self.pbc and self.predictor:
             print('PBC condition changed, reset the predictor.')
             self.predictor = None
             
