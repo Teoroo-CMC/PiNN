@@ -51,13 +51,42 @@ default_params = {
 def potential_model(params, config=None):
     """Shortcut for generating potential model from paramters
 
+    When creating the model, a params.yml is automatically created 
+    in model_dir containing network_params and model_params.
+
+    The potential model can also be initiated with the model_dir, 
+    in that case, params.yml must locate in model_dir from which
+    all parameters are loaded
+
     Args:
-        params: a dictionary specifing the model
+        params(str or dict): parameter dictionary or the model_dir
         config: tensorflow config for the estimator
     """
+    import os, yaml
+    from datetime import datetime
+    
+    if isinstance(params, str):
+        model_dir = params
+        assert os.path.isdir(model_dir)
+        with open(os.path.join(model_dir, 'params.yml')) as f:
+            params = yaml.safe_load(f)
+    else:
+        model_dir = params['model_dir']
+        yaml.SafeDumper.ignore_aliases = lambda *args : True
+        to_write = yaml.safe_dump(params)
+        params_path = os.path.join(model_dir, 'params.yml')
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
+        if os.path.isfile(params_path):
+            original = open(params_path).read()
+            if original != to_write:
+                os.rename(params_path, params_path+'.'+
+                          datetime.now().strftime('%y%m%d%H%M'))
+        open(params_path, 'w').write(to_write)
+        
     model = tf.estimator.Estimator(
         model_fn=_potential_model_fn, params=params,
-        model_dir=params['model_dir'], config=config)
+        model_dir=model_dir, config=config)
     return model
 
 

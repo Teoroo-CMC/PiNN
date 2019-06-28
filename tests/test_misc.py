@@ -82,7 +82,7 @@ def test_derivitives():
     from pinn.calculator import PiNN_calc
     import numpy as np
     params = {
-    'model_dir': '',
+    'model_dir': '/tmp/pinn_test/lj',
     'network':'lj',
     'network_params': {'rc':3},
     'model_params':{}}
