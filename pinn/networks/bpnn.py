@@ -372,7 +372,7 @@ def bpnn_network(tensors, sf_spec, nn_spec,
     n_sample = tf.reduce_max(tensors['ind_1'])+1
     for k, v in nn_spec.items():
         ind = tf.where(tf.equal(tensors['elems'], k))
-        with tf.name_scope("BP_DENSE_{}".format(k)):
+        with tf.variable_scope("BP_DENSE_{}".format(k)):
             nodes = fps[k]
             for n_node in v:
                 nodes = tf.layers.dense(nodes, n_node, activation=act)
