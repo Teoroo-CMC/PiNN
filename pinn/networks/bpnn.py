@@ -250,11 +250,12 @@ def G4_SF(tensors, lambd, zeta, eta, i="ALL", j="ALL", k="ALL"):
 def _form_triplet(tensors):
     """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
     p_iind = tensors['ind_2'][:,0]
+    n_atoms = tf.shape(tensors['ind_1'])[0]    
     n_pairs = tf.shape(tensors['ind_2'])[0]
     p_aind = tf.cumsum(tf.ones(n_pairs, tf.int32)) 
     p_rind = p_aind - tf.gather(tf.segment_min(p_aind, p_iind),p_iind)
     t_dense = tf.scatter_nd(tf.stack([p_iind, p_rind],axis=1), p_aind, 
-                            [n_pairs, tf.reduce_max(p_rind)+1])
+                            [n_atoms, tf.reduce_max(p_rind)+1])
     t_dense = tf.gather(t_dense, p_iind)
     t_index = tf.cast(tf.where(t_dense),tf.int32)
     t_ijind = t_index[:,0]
