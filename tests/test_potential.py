@@ -1,9 +1,14 @@
-import tempfile
+import tempfile, pytest
 import numpy as np
 import tensorflow as tf
+from pinn.io import load_numpy, sparse_batch
 from helpers import assert_almost_equal
 from shutil import rmtree
 from ase import Atoms
+
+
+
+
 
 def test_pinn_potential():
     testpath = tempfile.mkdtemp()    
@@ -53,6 +58,50 @@ def test_bpnn_potential():
     rmtree(testpath)
 
 
+def test_bpnn_potential_pre_cond():
+    from pinn.networks import bpnn_network
+    
+    testpath = tempfile.mkdtemp()
+    network_params = {
+        'sf_spec':[
+            {'type':'G2', 'i': 1, 'j': 1, 'eta': [0.1, 0.1, 0.1], 'Rs': [1., 2., 3.]},
+            {'type':'G3', 'i': 1, 'j': 1, 'k':1,
+             'eta': [0.1, 0.1, 0.1, 0.1], 'lambd': [1., 1., -1., -1.], 'zeta':[1., 1., 4., 4.]},
+            {'type':'G4', 'i': 1, 'j': 1, 'k':1,
+             'eta': [0.1, 0.1, 0.1, 0.1], 'lambd': [1., 1., -1., -1.], 'zeta':[1., 1., 4., 4.]}            
+        ],
+        'nn_spec':{1: [8, 8]},
+        'rc': 5.
+    }
+    
+    pre_fn = lambda tensors: bpnn_network(tensors, preprocess=True, **network_params)
+
+    #tf.keras.backend.clear_session()
+    tf.get_default_graph()._unsafe_unfinalize()
+    batch = load_numpy(_get_lj_data(), split=1)\
+        .apply(sparse_batch(10)).map(pre_fn).make_one_shot_iterator().get_next()
+    with tf.Session() as sess:
+        batches = [sess.run(batch) for i in range(100)]
+    fp_range = []
+    for i in range(len(network_params['sf_spec'])):
+        fp_max = max([b[f'fp_{i}'].max() for b in batches])
+        fp_min = max([b[f'fp_{i}'].min() for b in batches])
+        fp_range.append([float(fp_min), float(fp_max)])
+        
+    network_params['fp_scale'] = True
+    network_params['fp_range'] = fp_range
+    params = {
+        'model_dir': testpath,
+        'network': 'bpnn_network',
+        'network_params': network_params,
+        'model_params': {'use_force': True,
+                         'e_dress':{1:0.5}, 'e_scale':5.0, 'e_unit':2.0}
+    }
+    
+    _potential_tests(params)
+    rmtree(testpath)
+    
+
 def _get_lj_data():
     from ase.calculators.lj import LennardJones
     
@@ -77,7 +126,7 @@ def _get_lj_data():
 
 def _potential_tests(params):
     # Series of tasks that a potential should pass
-    from pinn.io import load_numpy, sparse_batch
+
     from pinn.models import potential_model
     from pinn.calculator import PiNN_calc    
 

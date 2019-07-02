@@ -292,7 +292,7 @@ def _fake_fp(diff, fp, jacob, jacob_ind, n_pairs):
         return ddiff, None, None, None, None
     return tf.identity(fp), lambda dfp: _grad(dfp, jacob, jacob_ind)
 
-def make_fps(tensors, sf_spec, nn_spec, use_jacobian):
+def make_fps(tensors, sf_spec, nn_spec, use_jacobian, fp_range, fp_scale):
     fps = {e: [] for e in nn_spec.keys()}
     fps['ALL'] = []
     n_pairs = tf.shape(tensors['diff'])[0]
@@ -304,7 +304,8 @@ def make_fps(tensors, sf_spec, nn_spec, use_jacobian):
                           tensors[f'jacob_{i}'], 
                           tensors[f'jacob_ind_{i}'],
                           n_pairs)
-            tensors[f'fp_{i}'] = fp
+        if fp_scale:
+            fp = (fp-fp_range[i][0])/(fp_range[i][1]-fp_range[i][0])*2-1
         fps[sf['i']].append(fp)
     # Deal with "ALL" fingerprints
     fps_all = fps.pop('ALL')
@@ -319,6 +320,7 @@ def make_fps(tensors, sf_spec, nn_spec, use_jacobian):
 
 def bpnn_network(tensors, sf_spec, nn_spec,
                  rc=5.0, act='tanh', cutoff_type='f1',
+                 fp_range=[], fp_scale=False,
                  preprocess=False, use_jacobian=True):
     """ Network function for Behler-Parrinello Neural Network
 
@@ -348,6 +350,9 @@ def bpnn_network(tensors, sf_spec, nn_spec,
         rc (float): cutoff radius.
         cutoff_type (string): cutoff function to use.
         act (str): activation function to use in dense layers.
+        fp_scale (bool): scale the fingeprints according to fp_range.
+        fp_range (list of [min, max]): the atomic fingerprint range for each SF
+            used to pre-condition the fingerprints.
         preprocess (bool): whether to return the preprocessed tensor.
         use_jacobian (bool): whether to reconnect the grads of fingerprints.
             note that one must use the jacobian if one want forces with preprocess,
@@ -368,7 +373,7 @@ def bpnn_network(tensors, sf_spec, nn_spec,
             return tensors
     else:
         connect_dist_grad(tensors)
-    fps = make_fps(tensors, sf_spec, nn_spec, use_jacobian)
+    fps = make_fps(tensors, sf_spec, nn_spec, use_jacobian, fp_range, fp_scale)
     en = 0.0
     n_sample = tf.reduce_max(tensors['ind_1'])+1
     for k, v in nn_spec.items():
