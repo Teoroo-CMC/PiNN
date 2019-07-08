@@ -2,7 +2,7 @@ import tensorflow as tf
 from pinn.utils import pi_named, connect_dist_grad, \
     make_basis_jacob, connect_basis_jacob
 from pinn.layers import cell_list_nl, cutoff_func, \
-    polynomial_basis, atomic_onehot
+    polynomial_basis, gaussian_basis, atomic_onehot
 
 @pi_named('pi_layer')
 def pi_layer(ind, nodes, basis,
@@ -102,9 +102,10 @@ def en_layer(ind, nodes, n_batch, n_nodes,
 
 def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
                  ii_nodes=[16, 16], en_nodes=[16, 16], depth=4,
-                 atom_types=[1, 6, 7, 8], rc=4.0, cutoff_type='f1',
-                 n_basis=4, act='tanh', preprocess=False,
-                 use_jacobian=True):
+                 atom_types=[1, 6, 7, 8],  act='tanh',
+                 rc=4.0, cutoff_type='f1',
+                 basis_type='polynomial', n_basis=4, gamma=3.0,
+                 preprocess=False):
     """Network function for the PiNN neural network
 
     Args:
@@ -116,13 +117,13 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         en_nodes (list): number of nodes for en layer.
         depth (int): number of interaction blocks.
         rc (float): cutoff radius.
+        basis_type (string): type of basis function to use,
+            can be "polynomial" or "gaussian".
+        gamma (float): controlles width of gaussian function for gaussian basis
         n_basis (int): number of polynomials to use with the basis.
         cutoff_type (string): cutoff function to use with the basis.
         act (string): activation function to use.
         preprocess (bool): whether to return the preprocessed tensor.
-        use_jacobian (bool): whether to reconnect the basis using the jacobian.
-            note that one must use the jacobian if one want forces with preprocess,
-            the option is here mainly for verifying the jacobian implementation.
 
     Returns:
         prediction or preprocessed tensor dictionary
@@ -135,8 +136,11 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
             return tensors        
     else:
         connect_dist_grad(tensors)
-    cutoff = cutoff_func(tensors['dist'], cutoff_type, rc)
-    basis = polynomial_basis(cutoff, n_basis)        
+    # Basis function
+    if basis_type == 'polynomial':
+        basis = polynomial_basis(tensors['dist'], cutoff_type, rc, n_basis)
+    elif basis_type == 'gaussian':
+        basis = gaussian_basis(tensors['dist'], cutoff_type, rc, n_basis, gamma)
     # Then Construct the model
     nodes = {1: tensors['embed']}
     ind_1 = tensors['ind_1']

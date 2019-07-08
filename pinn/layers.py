@@ -173,28 +173,30 @@ def gaussian_basis(dist, cutoff_type, rc, n_basis, gamma):
     Returns:
         a basis tensor with shape (shape_base x n_basis)
     """
-
     cutoff = cutoff_func(dist, cutoff_type, rc)
     centers = np.linspace(0, rc, n_basis)
-    basis = tf.stack([tf.exp(-gamma*(dist-center)**2)*cutoff for center in centers], axis=1)
+    basis = tf.stack([tf.exp(-gamma*(dist-center)**2)*cutoff
+                      for center in centers], axis=1)
     return basis
 
 @pi_named('polynomial_basis')
-def polynomial_basis(base, order=4):
+def polynomial_basis(dist, cutoff_type, rc, n_basis=4):
     """ Adds PiNN style basis function for interaction
 
     Args:
-        base (tensor): the base function to form the basis
-            typically the cutoff function
-        order (int): the max order of the polynomial expansion
+        dist (tensor):
+        cutoff_type:
+        rc: cutoff radius
+        n_basis (int): the max order of the polynomial expansion
             can be a list of int as well.
 
     Returns: 
         a basis tensor with shape (shape_base x n_basis)
     """
-    if type(order) != list:
-        order = [(i+1) for i in range(order)]
-    basis = tf.stack([base**(i) for i in order], axis=1)
+    cutoff = cutoff_func(dist, cutoff_type, rc)
+    if type(n_basis) != list:
+        n_basis = [(i+1) for i in range(n_basis)]
+    basis = tf.stack([cutoff**(i) for i in n_basis], axis=1)
     return basis
 
 @pi_named('atomic_onehot')
