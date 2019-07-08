@@ -155,6 +155,7 @@ def _get_dense_grad(energy, coord):
 @pi_named('LOSSES')
 def _get_loss(features, pred, model_params):
     metrics = {} # Not editting features here for safety, use a separate dict
+
     e_pred = pred
     e_data = features['e_data']
     if model_params['e_dress']:
@@ -192,9 +193,9 @@ def _get_loss(features, pred, model_params):
     if model_params['max_energy']:
         e_error = tf.where(e_mask, tf.zeros_like(e_error), e_error)
     # keep the per_sample loss so that it can be consumed by tf.metrics.mean
-    e_loss = e_error**2
+    e_loss = e_error**2 * model_params['e_loss_multiplier']
     metrics['e_loss'] = e_loss
-    loss =  tf.reduce_mean(e_loss) * model_params['e_loss_multiplier']
+    tot_loss = tf.reduce_mean(e_loss)
     
     if model_params['use_force']:
         f_pred = -_get_dense_grad(pred, features['coord'])
@@ -209,19 +210,20 @@ def _get_loss(features, pred, model_params):
             f_error = tf.where(tf.abs(f_data) > model_params['max_force'],
                                tf.zeros_like(f_error), f_error)
         # keep the per_component loss here
-        f_loss = f_error**2
+        f_loss = f_error**2 * model_params['f_loss_multiplier']
         metrics['f_loss'] = f_loss
-        loss += tf.reduce_mean(f_loss) * model_params['f_loss_multiplier']
+        tot_loss += tf.reduce_mean(f_loss)
         
     if model_params['use_l2']:
         tvars = tf.trainable_variables()
         l2_loss = tf.add_n([
             tf.nn.l2_loss(v) for v in tvars if
             ('bias' not in v.name and 'E_OUT' not in v.name)])
-        metrics['l2_loss'] = l2_loss
-        loss += l2_error * model_params['l2_loss_multiplier']
-    metrics['tot_loss'] = loss
-    return loss, metrics
+        metrics['l2_loss'] = l2_loss * model_params['l2_loss_multiplier']
+        tot_loss += l2_loss
+
+    metrics['tot_loss'] = tot_loss
+    return tot_loss, metrics
 
 @pi_named('METRICS')
 def _make_eval_metrics(metrics):

@@ -136,7 +136,7 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
     else:
         connect_dist_grad(tensors)
     cutoff = cutoff_func(tensors['dist'], cutoff_type, rc)
-    basis = polynomial_basis(cutoff)        
+    basis = polynomial_basis(cutoff, n_basis)        
     # Then Construct the model
     nodes = {1: tensors['embed']}
     ind_1 = tensors['ind_1']

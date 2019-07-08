@@ -159,9 +159,29 @@ def cutoff_func(dist, cutoff_type='f1', rc=5.0):
                  'hip': lambda x: tf.cos(np.pi*x/rc/2)**2}
     return cutoff_fn[cutoff_type](dist)
 
+@pi_named('gaussian_basis')
+def gaussian_basis(dist, cutoff_type, rc, n_basis, gamma):
+    """ Adds PiNN style basis function for interaction
+
+    Args:
+        dist (tensor):
+        cutoff_type:
+        rc: cutoff radius
+        n_basis: number of gaussian functions in the interval [0, rc)
+        gamma: controls width of gaussian functions
+
+    Returns:
+        a basis tensor with shape (shape_base x n_basis)
+    """
+
+    cutoff = cutoff_func(dist, cutoff_type, rc)
+    centers = np.linspace(0, rc, n_basis)
+    basis = tf.stack([tf.exp(-gamma*(dist-center)**2)*cutoff for center in centers], axis=1)
+    return basis
+
 @pi_named('polynomial_basis')
 def polynomial_basis(base, order=4):
-    """ Adds PiNN stype basis function for interation
+    """ Adds PiNN style basis function for interaction
 
     Args:
         base (tensor): the base function to form the basis
