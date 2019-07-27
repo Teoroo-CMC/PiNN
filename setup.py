@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='pinn',
       version='0.1',
@@ -7,9 +7,6 @@ setup(name='pinn',
       author='Yunqi Shao',
       author_email='yunqi_shao@yahoo.com',
       license='GPLv3',
-      packages=['pinn'],
-      install_requires=['ase', 'numpy'],
-      extras_require={'ani': ["h5py"],
-                      'cpu': ['tensorflow'],
-                      'gpu': ['tensorflow-gpu']}
+      packages=find_packages(),
+      install_requires=['ase', 'numpy', 'pyyaml']
 )

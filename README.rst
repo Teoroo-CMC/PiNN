@@ -39,11 +39,25 @@ Requirements
 
 Installation
 ============
-PiNN is currently under development and available via git repo::
+
+Install from source code::
 
   git clone git@github.com:Teoroo-CMC/PiNN_dev.git
   cd PiNN_dev && pip install -e .
 
+Or use our `docker
+image <https://cloud.docker.com/repository/docker/yqshao/pinn/tags>`_. If
+you use singularity, you can build a singularity image directly from
+the docker image::
+
+  singularity build pinn.sig docker://yqshao/pinn:dev (or dev-gpu)
+  ./pinn.sig # this starts a jupyter notebook server
+
+Extra dependencies are in:
+
+- ``requirements-dev.txt``: dependency for testing and documentation building.
+- ``requirements-extra.txt``: extra libraries for various purposes, included in the docker image.
+  
 Quick Start
 ===========
 A set of tutorial notebooks can be found in the documentation.
@@ -56,15 +70,13 @@ Implemented Models
 - Graph convolutional based
   
   - PiNN
-  - (TODO) SchNet/DTNN
-  - (TODO) HIPNN 
+
 - Symmtry function based
   
   - (TODO) Behler-Parrinello Neural Network
 
 Dataset Connectors
 ------------------
-- Organic Moleclues
 
   - ANI-1
   - QM9
