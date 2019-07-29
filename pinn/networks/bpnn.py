@@ -276,9 +276,9 @@ def bp_symm_func(tensors, sf_spec, rc, cutoff_type):
             options.update({'rc': rc, 'cutoff_type': cutoff_type})
         fp, jacob, jacob_ind = sf_func[sf['type']](
             tensors,  **options)
-        fps[f'fp_{i}'] = fp
-        fps[f'jacob_{i}'] = jacob
-        fps[f'jacob_ind_{i}'] = jacob_ind
+        fps['fp_{}'.format(i)] = fp
+        fps['jacob_{}'.format(i)] = jacob
+        fps['jacob_ind_{}'.format(i)] = jacob_ind
     return fps
 
 
@@ -297,12 +297,12 @@ def make_fps(tensors, sf_spec, nn_spec, use_jacobian, fp_range, fp_scale):
     fps['ALL'] = []
     n_pairs = tf.shape(tensors['diff'])[0]
     for i, sf in enumerate(sf_spec):
-        fp =  tensors[f'fp_{i}']
+        fp =  tensors['fp_{}'.format(i)]
         if use_jacobian:
             # connect the diff -> fingerprint gradient 
             fp = _fake_fp(tensors['diff'], fp,
-                          tensors[f'jacob_{i}'], 
-                          tensors[f'jacob_ind_{i}'],
+                          tensors['jacob_{}'.format(i)], 
+                          tensors['jacob_ind_{}'.format(i)],
                           n_pairs)
         if fp_scale:
             fp = (fp-fp_range[i][0])/(fp_range[i][1]-fp_range[i][0])*2-1
@@ -383,7 +383,7 @@ def bpnn_network(tensors, sf_spec, nn_spec,
             for n_node in v:
                 nodes = tf.layers.dense(nodes, n_node, activation=act)
             atomic_en = tf.layers.dense(nodes, 1, activation=None,
-                                        use_bias=False, name=f'E_OUT_{k}')
+                                        use_bias=False, name='E_OUT_{}'.format(k))
         en += tf.unsorted_segment_sum(
             atomic_en[:,0], tf.gather_nd(tensors['ind_1'], ind)[:,0], n_sample)
     return en

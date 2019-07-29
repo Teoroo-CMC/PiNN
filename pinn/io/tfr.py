@@ -42,10 +42,11 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
             writer.write(example.SerializeToString())
             n_parsed += 1
             if n_parsed % log_every==0:
-                sys.stdout.write(f'\r {n_parsed} samples written to {tfr} ...')
+                sys.stdout.write('\r {} samples written to {} ...'
+                                 .format(n_parsed, tfr))
                 sys.stdout.flush()
     except tf.errors.OutOfRangeError:
-        print(f'\r {n_parsed} samples written to {tfr}, done.')
+        print('\r {} samples written to {}, done.'.format(n_parsed, tfr))
         sess.close()
         writer.close()
     # Write metadata

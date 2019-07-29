@@ -151,17 +151,17 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
     en = 0.0
     for i in range(depth):
         if i > 0:
-            nodes[1] = fc_layer(nodes[1], pp_nodes, act=act, name=f'pp-{i}')
+            nodes[1] = fc_layer(nodes[1], pp_nodes, act=act, name='pp-{}'.format(i))
         nodes[2] = pi_layer(ind_2, nodes[1], basis, pi_nodes,
-                            act=act, name=f'pi-{i}')
+                            act=act, name='pi-{}'.format(i))
         nodes[2] = fc_layer(nodes[2], ii_nodes, use_bias=False,
-                            act=act, name=f'ii-{i}')
+                            act=act, name='ii-{}'.format(i))
         if nodes[1].shape[-1] != nodes[2].shape[-1]:
             nodes[1] = tf.layers.dense(nodes[1], nodes[2].shape[-1],
                                        use_bias=False, activation=None)
-        nodes[1] += ip_layer(ind_2, nodes[2], natom, name=f'ip_{i}')
+        nodes[1] += ip_layer(ind_2, nodes[2], natom, name='ip_{}'.format(i))
         en += en_layer(ind_1, nodes[1], nbatch, en_nodes,
-                               act=act, name=f'en_{i}')
+                               act=act, name='en_{}'.format(i))
     return en
 
 
