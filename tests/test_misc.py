@@ -53,7 +53,7 @@ def test_potential_model():
     test = lambda: dataset()['test'].repeat().apply(sparse_batch(100))
     params={
     'model_dir': tmp,
-    'network': 'pinn_network',
+    'network': 'pinet',
     'network_params': {
         'ii_nodes':[8,8],
         'pi_nodes':[8,8],

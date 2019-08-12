@@ -39,7 +39,7 @@ def test_sfs():
     # test the BP symmetry functions against manual calculations
     # units in the original runner format is Bohr
     from helpers import get_trivial_runner_ds
-    from pinn.networks import bpnn_network
+    from pinn.networks import bpnn
     from pinn.io import sparse_batch
     
     bohr2ang = 0.5291772109
@@ -54,7 +54,7 @@ def test_sfs():
     ]
     nn_spec = {8: [35, 35], 1: [35, 35]}
     tensors = dataset.make_one_shot_iterator().get_next()
-    tensors = bpnn_network(tensors,
+    tensors = bpnn(tensors,
                            sf_spec=sf_spec, nn_spec=nn_spec, rc=12*bohr2ang,
                            preprocess=True)
     with tf.Session() as sess:
@@ -69,7 +69,7 @@ def test_sfs():
 def test_jacob_bpnn():
     """Check BPNN jacobian calculation"""
     from ase.collections import g2
-    from pinn.networks import bpnn_network
+    from pinn.networks import bpnn
 
     # Define the test case
     sf_spec = [
@@ -97,7 +97,7 @@ def test_jacob_bpnn():
         "elems": tf.constant(water.numbers, tf.int32),
         "cell":  tf.constant(water.cell[np.newaxis,:,:], tf.float32)
     }
-    en = bpnn_network(tensors, sf_spec, nn_spec)
+    en = bpnn(tensors, sf_spec, nn_spec)
     frc = - tf.gradients(en, tensors['coord'])[0]
     saver = tf.train.Saver()    
     with tf.Session() as sess:
@@ -112,7 +112,7 @@ def test_jacob_bpnn():
         "elems": tf.constant(water.numbers, tf.int32),
         "cell":  tf.constant(water.cell[np.newaxis,:,:], tf.float32)
     }        
-    en = bpnn_network(tensors, sf_spec, nn_spec, use_jacobian=False)
+    en = bpnn(tensors, sf_spec, nn_spec, use_jacobian=False)
     frc = - tf.gradients(en, tensors['coord'])[0]
     saver = tf.train.Saver()  
     with tf.Session() as sess:

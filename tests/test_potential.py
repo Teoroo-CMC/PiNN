@@ -24,7 +24,7 @@ def test_pinn_potential():
     }
     params = {
         'model_dir': testpath,
-        'network': 'pinn_network',
+        'network': 'pinet',
         'network_params': network_params,
         'model_params': {'use_force': True,
                          'e_dress':{1:0.5}, 'e_scale':5.0, 'e_unit':2.0}
@@ -48,7 +48,7 @@ def test_bpnn_potential():
     
     params = {
         'model_dir': testpath,
-        'network': 'bpnn_network',
+        'network': 'bpnn',
         'network_params': network_params,
         'model_params': {'use_force': True,
                          'e_dress':{1:0.5}, 'e_scale':5.0, 'e_unit':2.0}
@@ -59,7 +59,7 @@ def test_bpnn_potential():
 
 
 def test_bpnn_potential_pre_cond():
-    from pinn.networks import bpnn_network
+    from pinn.networks import bpnn
     
     testpath = tempfile.mkdtemp()
     network_params = {
@@ -74,7 +74,7 @@ def test_bpnn_potential_pre_cond():
         'rc': 5.
     }
     
-    pre_fn = lambda tensors: bpnn_network(tensors, preprocess=True, **network_params)
+    pre_fn = lambda tensors: bpnn(tensors, preprocess=True, **network_params)
 
     #tf.keras.backend.clear_session()
     tf.get_default_graph()._unsafe_unfinalize()
@@ -92,7 +92,7 @@ def test_bpnn_potential_pre_cond():
     network_params['fp_range'] = fp_range
     params = {
         'model_dir': testpath,
-        'network': 'bpnn_network',
+        'network': 'bpnn',
         'network_params': network_params,
         'model_params': {'use_force': True,
                          'e_dress':{1:0.5}, 'e_scale':5.0, 'e_unit':2.0}

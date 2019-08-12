@@ -12,12 +12,14 @@ class _datalist(list):
 def sparse_batch(batch_size, drop_remainder=False, num_parallel_calls=8,
                  atomic_props=['f_data', 'q_data', 'f_weights']):
     """ This is returns a dataset operation that transform 
-    single samples into sparse batched samples 
+    single samples into sparse batched samples.
+    The atomic_props must be include all properties that are defined 
+    on an atomic basis beside 'coord' and 'elems'.
 
     Args:
         drop_remainder (bool): option for padded_batch
         num_parallel_calls (int): option for map
-        atomic_props (list): list of optional atomic properties
+        atomic_props (list): list of optional properties
     """
     def sparsify(tensors):
         atom_ind = tf.cast(tf.where(tensors['elems']), tf.int32)

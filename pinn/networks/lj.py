@@ -23,5 +23,4 @@ def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
     natom = tf.shape(tensors['ind_1'])[0]
     nbatch = tf.reduce_max(tensors['ind_1'])+1
     en = tf.unsorted_segment_sum(en, tensors['ind_2'][:,0], natom)
-    en = tf.unsorted_segment_sum(en, tensors['ind_1'][:,0], nbatch)
     return en/2.0

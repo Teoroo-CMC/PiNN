@@ -4,8 +4,8 @@ PiNN: Pairwise interaction Neural Network
    :maxdepth: 2
 
    introduction.rst
-   concepts.rst
    datasets.rst
    networks.rst
+   models.rst
    notebooks.rst
    reference.rst

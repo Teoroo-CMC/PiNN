@@ -6,6 +6,6 @@ a nested tensors gets updated as input.
 Networks should not define the goals/loss of the model, 
 to allows for the usage of same network structure for different tasks.
 """
-from pinn.networks.pinn import pinn_network
-from pinn.networks.bpnn import bpnn_network
+from pinn.networks.pinet import pinet
+from pinn.networks.bpnn import bpnn
 from pinn.networks.lj import lj

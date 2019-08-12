@@ -78,17 +78,15 @@ def fc_layer(nodes,
 
 
 @pi_named('en_layer')
-def en_layer(ind, nodes, n_batch, n_nodes,
-             act='tanh'):
+def en_layer(nodes, n_nodes, act='tanh'):
     """Just like ip layer, but allow for with fc_nodes and coefficients
 
     Args:
-        ind: indices of the interaction
         nodes: feature nodes of order n
-        n_batch: number of samples in a batch
         n_nodes: fc_layers before adding
-    Return:
-        Feature nodes of order n-1
+
+    Returns:
+        atomic prediction with shape (natoms)
     """
     for i,n_out in  enumerate(n_nodes):
         nodes = tf.layers.dense(nodes, n_out, activation=act,
@@ -96,17 +94,17 @@ def en_layer(ind, nodes, n_batch, n_nodes,
 
     nodes = tf.layers.dense(nodes, 1, use_bias=False,
                             activation=None, name='E_OUT')
-    nodes = tf.unsorted_segment_sum(nodes, ind[:,0], n_batch)
+
     return tf.squeeze(nodes,-1)
 
 
-def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
+def pinet(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
                  ii_nodes=[16, 16], en_nodes=[16, 16], depth=4,
                  atom_types=[1, 6, 7, 8],  act='tanh',
                  rc=4.0, cutoff_type='f1',
                  basis_type='polynomial', n_basis=4, gamma=3.0,
                  preprocess=False):
-    """Network function for the PiNN neural network
+    """Network function for the PiNet neural network
 
     Args:
         tensors: input data (nested tensor from dataset).
@@ -120,7 +118,7 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         basis_type (string): type of basis function to use,
             can be "polynomial" or "gaussian".
         gamma (float): controlles width of gaussian function for gaussian basis
-        n_basis (int): number of polynomials to use with the basis.
+        n_basis (int): number of basis functions to use.
         cutoff_type (string): cutoff function to use with the basis.
         act (string): activation function to use.
         preprocess (bool): whether to return the preprocessed tensor.
@@ -147,8 +145,8 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
     ind_2 = tensors['ind_2']
     basis = tf.expand_dims(basis, -2)
     natom = tf.shape(tensors['ind_1'])[0]
-    nbatch = tf.reduce_max(tensors['ind_1'])+1
-    en = 0.0
+    
+    output = 0.0
     for i in range(depth):
         if i > 0:
             nodes[1] = fc_layer(nodes[1], pp_nodes, act=act, name='pp-{}'.format(i))
@@ -160,8 +158,8 @@ def pinn_network(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
             nodes[1] = tf.layers.dense(nodes[1], nodes[2].shape[-1],
                                        use_bias=False, activation=None)
         nodes[1] += ip_layer(ind_2, nodes[2], natom, name='ip_{}'.format(i))
-        en += en_layer(ind_1, nodes[1], nbatch, en_nodes,
-                               act=act, name='en_{}'.format(i))
-    return en
+        output += en_layer(nodes[1], en_nodes, act=act, name='en_{}'.format(i))
+        
+    return output
 
 

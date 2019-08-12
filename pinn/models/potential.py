@@ -40,12 +40,12 @@ default_params = {
     'f_loss_multiplier': 1.0,
     'l2_loss_multiplier': 1.0,
     ### Optimizer related
-    'learning_rate': 3e-4,        # Learning rate
-    'use_norm_clip': True,        # see tf.clip_by_global_norm
-    'norm_clip': 0.01,            # see tf.clip_by_global_norm
-    'use_decay': True,            # Exponential decay
-    'decay_step':10000,           # every ? steps
-    'decay_rate':0.999,           # scale by ?
+    'learning_rate': 3e-4,   # Learning rate
+    'use_norm_clip': True,   # see tf.clip_by_global_norm
+    'norm_clip': 0.01,       # see tf.clip_by_global_norm
+    'use_decay': True,       # Exponential decay
+    'decay_step':10000,      # every ? steps
+    'decay_rate':0.999,      # scale by ?
 }
 
 def potential_model(params, config=None):
@@ -69,11 +69,11 @@ def potential_model(params, config=None):
         model_dir = params
         assert os.path.isdir(model_dir)
         with open(os.path.join(model_dir, 'params.yml')) as f:
-            params = yaml.safe_load(f)
+            params = yaml.load(f)
     else:
         model_dir = params['model_dir']
-        yaml.SafeDumper.ignore_aliases = lambda *args : True
-        to_write = yaml.safe_dump(params)
+        yaml.Dumper.ignore_aliases = lambda *args : True
+        to_write = yaml.dump(params)
         params_path = os.path.join(model_dir, 'params.yml')
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
@@ -101,6 +101,10 @@ def _potential_model_fn(features, labels, mode, params):
     model_params = default_params.copy()
     model_params.update(params['model_params'])
     pred = network_fn(features, **network_params)
+
+    ind = features['ind_1'] # ind_1 => id of molecule for each atom
+    nbatch = tf.reduce_max(ind)+1
+    pred = tf.unsorted_segment_sum(pred, ind[:,0], nbatch)
     
     if mode == tf.estimator.ModeKeys.TRAIN:
         n_trainable = np.sum([np.prod(v.shape) for v in tf.trainable_variables()])

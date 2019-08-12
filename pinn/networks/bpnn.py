@@ -318,18 +318,20 @@ def make_fps(tensors, sf_spec, nn_spec, use_jacobian, fp_range, fp_scale):
     fps = {k: tf.concat(v, axis=-1) for k,v in fps.items()}
     return fps
 
-def bpnn_network(tensors, sf_spec, nn_spec,
-                 rc=5.0, act='tanh', cutoff_type='f1',
-                 fp_range=[], fp_scale=False,
-                 preprocess=False, use_jacobian=True):
+def bpnn(tensors, sf_spec, nn_spec,
+         rc=5.0, act='tanh', cutoff_type='f1',
+         fp_range=[], fp_scale=False,
+         preprocess=False, use_jacobian=True):
     """ Network function for Behler-Parrinello Neural Network
 
-    Example of sf_spec:
+    Example of sf_spec::
+
         [{'type':'G2', 'i': 1, 'j': 8, 'Rs': [1.,2.], 'eta': [0.1,0.2]},
          {'type':'G2', 'i': 8, 'j': 1, 'Rs': [1.,2.], 'eta': [0.1,0.2]},
          {'type':'G4', 'i': 8, 'j': 8, 'lambd':[0.5,1], 'zeta': [1.,2.], 'eta': [0.1,0.2]}]
 
-    The symmetry functions are defined according to this paper:
+    The symmetry functions are defined according to the paper:
+
         Behler, Jörg. “Constructing High-Dimensional Neural Network Potentials: A Tutorial Review.” 
         International Journal of Quantum Chemistry 115, no. 16 (August 15, 2015): 103250. 
         https://doi.org/10.1002/qua.24890.
@@ -337,18 +339,19 @@ def bpnn_network(tensors, sf_spec, nn_spec,
 
     For more detials about symmetry functions, see the definitions of symmetry functions.
 
-    Example of nn_spec:
-        {8: [32, 32, 32],
-         1: [16, 16, 16]}
+    Example of nn_spec::
+
+        {8: [32, 32, 32], 1: [16, 16, 16]}
+
 
     Args:
         tensors: input data (nested tensor from dataset).
         sf_spec (dict): symmetry function specification
         nn_spec (dict): elementwise network specification
             each key points to a list specifying the
-            number of nodes in the fully-connected subnets.
+            number of nodes in the feed-forward subnets.
         rc (float): cutoff radius.
-        cutoff_type (string): cutoff function to use.
+        cutoff_type (string): cutoff function to use. 
         act (str): activation function to use in dense layers.
         fp_scale (bool): scale the fingeprints according to fp_range.
         fp_range (list of [min, max]): the atomic fingerprint range for each SF
@@ -358,7 +361,7 @@ def bpnn_network(tensors, sf_spec, nn_spec,
             note that one must use the jacobian if one want forces with preprocess,
             the option is here mainly for verifying the jacobian implementation.
 
-   Returns:
+    Returns:
         prediction or preprocessed tensor dictionary
     """    
     if 'ind_2' not in tensors:
@@ -374,8 +377,8 @@ def bpnn_network(tensors, sf_spec, nn_spec,
     else:
         connect_dist_grad(tensors)
     fps = make_fps(tensors, sf_spec, nn_spec, use_jacobian, fp_range, fp_scale)
-    en = 0.0
-    n_sample = tf.reduce_max(tensors['ind_1'])+1
+    output = 0.0
+    n_atoms = tf.shape(tensors['elems'])[0]
     for k, v in nn_spec.items():
         ind = tf.where(tf.equal(tensors['elems'], k))
         with tf.variable_scope("BP_DENSE_{}".format(k)):
@@ -384,6 +387,5 @@ def bpnn_network(tensors, sf_spec, nn_spec,
                 nodes = tf.layers.dense(nodes, n_node, activation=act)
             atomic_en = tf.layers.dense(nodes, 1, activation=None,
                                         use_bias=False, name='E_OUT_{}'.format(k))
-        en += tf.unsorted_segment_sum(
-            atomic_en[:,0], tf.gather_nd(tensors['ind_1'], ind)[:,0], n_sample)
-    return en
+        output += tf.unsorted_segment_sum(atomic_en[:,0], ind[:,0], n_atoms)
+    return output

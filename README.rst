@@ -1,11 +1,15 @@
 =========================================
 PiNN: Pairwise interaction Neural Network
 =========================================
+
 .. image:: https://img.shields.io/circleci/token/14f38a1cab4c2bef74b12be05854d3d62f9c04c3/project/github/Teoroo-CMC/PiNN_dev/dev.svg?style=flat-square
     :target: https://circleci.com/gh/Teoroo-CMC/PiNN_dev/tree/dev
 	     
 .. image:: https://img.shields.io/codecov/c/github/Teoroo-CMC/PiNN_dev/dev.svg?token=3ab2d943114443d99e92266516befc02&style=flat-square
   :target: https://codecov.io/gh/Teoroo-CMC/PiNN_dev/branch/dev
+
+.. image:: https://img.shields.io/docker/cloud/build/yqshao/pinn.svg?style=flat-square
+  :target: https://cloud.docker.com/repository/docker/yqshao/pinn
 	   
 PiNN is a neural network designed for modeling atomic potentials.
 The PiNN package also provides elemental layers and abstractions to implement
@@ -69,22 +73,18 @@ Implemented Models
 ------------------
 - Graph convolutional based
   
-  - PiNN
+  - PiNet
 
 - Symmtry function based
   
-  - (TODO) Behler-Parrinello Neural Network
+  - Behler-Parrinello Neural Network
 
 Dataset Connectors
 ------------------
 
-  - ANI-1
-  - QM9
-  
-- Bulk Materials
-  
-  - (TODO) Bulk solid: MP or NOMAD 
-  - (TODO) Bulk liquid: Liquid water 
+- RuNNer  
+- ANI-1
+- QM9
 
 References
 ==========
