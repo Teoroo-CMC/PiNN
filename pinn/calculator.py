@@ -79,10 +79,8 @@ class PiNN_calc(Calculator):
         # the below conversion works for energy, forces, and stress, 
         # but would fail for e.g. a dipole moment
         # it is assumed that the distance unit is angstrom
-        results = {k: v*self.to_eV for k,v in results.items()} 
-
-        
-        if 'stress' in properties:
+        results = {k: v*self.to_eV for k,v in results.items()}
+        if 'stress' in results and self._atoms_to_calc.pbc.all():
             results['stress'] /= self._atoms_to_calc.get_volume()
             results['stress'] = results['stress'].flat[[0, 4, 8, 5, 2, 1]]
         self.results = results

@@ -189,7 +189,7 @@ def _potential_tests(params):
         atoms.set_cell([l,l,l], scale_atoms=True)
         calc.calculate(atoms)
         e_pred.append(calc.get_potential_energy())
-        p_pred.append(np.sum(np.trace(calc.get_stress()))/3/l**3)
+        p_pred.append(np.sum(calc.get_stress()[:3])/3)
         
     de = e_pred[-1] - e_pred[0]
     int_p = np.trapz(p_pred,x=l_range**3)
