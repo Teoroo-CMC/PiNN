@@ -63,12 +63,20 @@ class PiNN_calc(Calculator):
             predict_keys=properties)
         return self.predictor
 
-    def calculate(self, atoms=None, properties=['energy'],
-                  system_changes=None):
-        if atoms is None:
-            self._atoms_to_calc = self.atoms
-        else:
-            self._atoms_to_calc = atoms
+    def calculate(self, atoms=None,
+                  properties=None, system_changes=None):
+        """Run a calculation. 
+
+        The properties and system_changes are ignored here since we do
+        not want to reset the predictor frequently. Whenever
+        calculator is executed, the predictor is run. The calculate
+        method will not be executed if atoms are not changed since
+        last run (this should be haneled by
+        ase.calculator.Calculator).
+        """
+        if atoms is not None:
+            self.atoms = atoms.copy()
+        self._atoms_to_calc = self.atoms
             
         if self._atoms_to_calc.pbc.any() != self.pbc and self.predictor:
             print('PBC condition changed, reset the predictor.')
