@@ -2,4 +2,7 @@ pytest
 pytest-cov
 codecov
 sphinx
+ipython
+nbsphinx
 sphinx_rtd_theme
+sphinxcontrib-bibtex

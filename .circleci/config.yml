@@ -3,6 +3,17 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - pytest:
+          requires:
+            - build
+      - deploy-doc:
+          requires:
+            - build
 jobs:
   build:
     docker:
@@ -12,19 +23,28 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - venv-{{ checksum "requirements-dev.txt" }}
+            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}
             - venv-
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install tensorflow==1.13.1            
+            pip install tensorflow==1.13.1
             pip install -r requirements-dev.txt
       - save_cache:
           paths:
             - ./venv
-          key: venv-{{ checksum "requirements-dev.txt" }}
+          key: venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}
+  pytest:
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: run tests
           command: |
@@ -33,3 +53,20 @@ jobs:
             export CUDA_VISIBLE_DEVICES=''
             pytest tests/ --cov=pinn
             codecov --token=ef4ee5ca-5df3-4535-8b9e-034fdf81495d
+  deploy-doc:
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}    
+      - run:
+          name: Deploy doc
+          command: |
+            . venv/bin/activate
+            sudo apt-get update
+            sudo apt-get install pandoc	    
+            pip install -e .
+            ./.circleci/build_doc.sh
