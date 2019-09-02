@@ -8,5 +8,8 @@ setup(name='pinn',
       author_email='yunqi_shao@yahoo.com',
       license='GPLv3',
       packages=find_packages(),
-      install_requires=['ase', 'numpy', 'pyyaml']
+      install_requires=['ase', 'numpy', 'pyyaml'],
+      entry_points = {
+          'console_scripts': ['pinn_train=pinn.trainner:main']
+      }
 )

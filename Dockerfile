@@ -11,4 +11,4 @@ RUN jupyter nbextension enable nglview --py --sys-prefix
 RUN jupyter tensorboard enable --sys-prefix
 
 # Setup
-CMD unset XDG_RUNTIME_DIR ; jupyter notebook
+ENTRYPOINT ["pinn_train"]

@@ -2,6 +2,7 @@
 
 import sys, yaml
 import tensorflow as tf
+from tensorflow.python.lib.io.file_io import FileIO
 
 def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     """Helper function to convert dataset object into tfrecord file.
@@ -54,7 +55,7 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     format_dict = {k: {'dtype': types[k].name, 'shape': shapes[k].as_list()}
                    for k in types.keys()}
     info_dict = {'n_sample': n_parsed}
-    with open(fname, 'w') as f:
+    with FileIO(fname, 'w') as f:
         yaml.safe_dump({'format': format_dict, 'info': info_dict}, f)
         
 def load_tfrecord(fname):
@@ -65,7 +66,7 @@ def load_tfrecord(fname):
        dtypes (dict): dtype of dataset.
     """
     # dataset
-    with open(fname) as f:
+    with FileIO(fname, 'r') as f:
         format_dict = (yaml.safe_load(f)['format'])
     dtypes = {k: format_dict[k]['dtype'] for k in format_dict.keys()}
     shapes = {k: format_dict[k]['shape'] for k in format_dict.keys()}
