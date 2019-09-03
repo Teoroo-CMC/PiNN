@@ -47,10 +47,10 @@ def pi_named(default_name='unnamed'):
         return named_layer
     return decorator
 
-def TuneTrainable(trainer_fn):
+def TuneTrainable(train_fn):
     """Helper function for geting a trainable to use with Tune
     
-    The function expectes a trainer_fn function which takes a config as input,
+    The function expectes a train_fn function which takes a config as input,
     and returns four items.
 
     - model: the tensorflow estimator.
@@ -72,7 +72,7 @@ def TuneTrainable(trainer_fn):
         def _setup(self, config):
             tf.logging.set_verbosity(tf.logging.ERROR)
             self.config = config
-            model, train_spec, eval_spec, reporter = trainer_fn(config)
+            model, train_spec, eval_spec, reporter = train_fn(config)
             self.model = model
             self.train_spec = train_spec
             self.eval_spec = eval_spec
@@ -103,7 +103,7 @@ def TuneTrainable(trainer_fn):
         def _restore(self, checkpoint_path):
             with open(checkpoint_path) as f:
                 chkpath = f.readline().strip()
-            self.model, _, _, _ = trainer_fn(self.config, chkpath)
+            self.model, _, _, _ = train_fn(self.config, chkpath)
     return TuneTrainable
 
 
