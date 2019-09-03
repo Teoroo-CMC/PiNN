@@ -1,33 +1,40 @@
-"""PiNN trainner is a cmmand line utility to train a model
-
-The program is meant to be used with the Google Cloud AI platform,
-but it should also work on local machines.
+"""``pinn_train`` is a command line utility to train a model.
+The program is meant to work with the Google Cloud AI platform,
+but it should also run well on local machines.
 
 The trainner effectively runs train_and_evaluate with the given
 dataset. To use the trainner, both training data and evaluation data
 must be prepared as a tfrecord format. Currently, only training
-potentials are supported. A few options are available to contrain the
-training and evaluation.
+potentials are supported. To see the avaiable options, run
+``pinn_train --help``
 
-To see the avaiable options, run `pinn_train --help`
+Example usage for local machine::
 
-Example usage for local machine:
+    pinn_trian --model-dir=my_model --params=params.yml \\
+               --train-data=train.yml --eval-data=test.yml \\
+               --max-steps=1e6 --eval-steps=100 \\
+               --cache-data=True
 
-    pinn_trian --model-dir=my_model --params=params.yml \
-      --train-data=train.yml --eval-data=test.yml \
-      --max-steps=1e6 --eval-steps=100 \
-      --cache-data=True
+Example usage for google cloud, it is recommand to use our docker
+image. Since we do not serve it on Google Container Registery, you'll
+need to build one yourself (suppose you have an active Gclound project)::
 
-Example usage for google cloud, it is recommand to use our docker image:
+    gcloud auth configure-docker
+    docker pull yqshao/pinn:dev
+    docker tag yqshao/pinn:dev gcr.io/my-proj/pinn:cpu
+    docker push gcr.io/my-proj/pinn:cpu 
 
-    gcloud ai-platform jobs submit trainning $JOB_NAME \
-      --region $REGION \
-      --master-image-uri docker://yqshao/pinn/master-gcloud \
-      -- \
-      --model-dir=gs://my_proj/my_model --params=gs://my_proj/params.yml \
-      --train-data=train.yml --eval-data=test.yml \
-      --train-steps=1e6 --eval-steps=100 \
-      --cache-data=True
+To submit a job on cloud::
+
+    gcloud ai-platform jobs submit training my_job_0 \\
+           --region europe-west1 --master-image-uri gcr.io/my-proj/pinn:cpu \\
+           -- \\
+           --model-dir=gs://my-bucket/models/my_model_0 \\
+           --train-data=gs://my-bucket/data/train_split1_run0.yml \\
+           --eval-data=gs://my-bucket/data/test_split1_run0.yml \\
+           --train-steps=1000 --params-file=gs://my-bucket/models/params.yml \\
+           --cache-data=True --gen-dress=True
+
 """
 
 def trainner(model_dir, params_file,
@@ -63,8 +70,11 @@ def trainner(model_dir, params_file,
     tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
 
 def main():
-    import argparse    
+    import argparse
+    class MyFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.MetavarTypeHelpFormatter):
+        pass
     parser = argparse.ArgumentParser(
+        formatter_class=MyFormatter,
         description='Command line tool for training potential model with PiNN.')
     parser.add_argument('--model-dir', type=str, required=True,
                         help='model directory')
@@ -83,7 +93,7 @@ def main():
     parser.add_argument('--params-file', type=str,
                         help='path to parameters (.yml file)', default=None)
     parser.add_argument('--regen-dress', type=bool,
-                        help='(re)generate atomic dress using the training set', default=True)
+                        help='regenerate atomic dress using the training set', default=True)
     
     args = parser.parse_args()
     trainner(args.model_dir, args.params_file,

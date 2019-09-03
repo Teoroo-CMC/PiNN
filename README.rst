@@ -54,8 +54,9 @@ image <https://cloud.docker.com/repository/docker/yqshao/pinn/tags>`_. If
 you use singularity, you can build a singularity image directly from
 the docker image::
 
-  singularity build pinn.sig docker://yqshao/pinn:dev (or dev-gpu)
-  ./pinn.sig # this starts a jupyter notebook server
+  singularity build pinn.sif docker://yqshao/pinn:dev (or dev-gpu)
+  singularity exec pinn.sif jupyter notebook # this starts a jupyter notebook server
+  ./pinn.sif -h # this invokes the pinn_train trainner
 
 Extra dependencies are in:
 
