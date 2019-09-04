@@ -1,10 +1,21 @@
-Example notebooks
-=================
+=========
+Notebooks
+=========
+
+Tutorials:
+
 .. toctree::
    :maxdepth: 1
 
-   notebooks/1_Quick_tour
-   notebooks/2_More_on_training
-   notebooks/3_Customized_dataset
-   notebooks/4_Toy_LJ_with_three_atoms
+   notebooks/Quick_tour
+   notebooks/More_on_training
+   notebooks/Customized_dataset
+
+Examples:
+
+.. toctree::
+   :maxdepth: 1
+
+   notebooks/Learn_LJ_potential
+   notebooks/Tune_visualize   
 

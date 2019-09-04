@@ -59,4 +59,4 @@ Numpy dataset
 
 Another easy way to generate you own dataset is to store the data as a
 dictionary of numpy arrays. See how it's done in the :doc:`toy problem
-<../notebooks/4_Toy_LJ_with_three_atoms>`.
+<../notebooks/Learn_LJ_potential>`.

@@ -113,4 +113,4 @@ trainings when it wants, which is required by of some of Tune's
 
 .. _schedulers: https://ray.readthedocs.io/en/latest/tune-schedulers.html
 
-.. _notebook example: notebooks/tune_visualize.ipynb
+.. _notebook example: notebooks/Tune_visualize.ipynb

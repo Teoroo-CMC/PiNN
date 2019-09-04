@@ -25,7 +25,7 @@ that transform a list of samples into a dataset. For example:
 	datum = {'coord': coord, 'elems':elems, 'e_data': e_data}
 	return datum
 
-An example :doc:`notebook<../notebooks/3_Customized_dataset>` with more
+An example :doc:`notebook<../notebooks/Customized_dataset>` with more
 details is also provided at on preparing datasets.
 
 Splitting the dataset
