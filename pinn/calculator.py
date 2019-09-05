@@ -30,7 +30,7 @@ class PiNN_calc(Calculator):
             if self._atoms_to_calc.pbc.any():
                 data = {
                     'cell': self._atoms_to_calc.cell[np.newaxis,:,:],
-                    'coord': self._atoms_to_calc.get_positions(wrap=True),
+                    'coord': self._atoms_to_calc.positions,
                     'ind_1': np.zeros([len(self._atoms_to_calc), 1]),
                     'elems': self._atoms_to_calc.numbers}
             else:

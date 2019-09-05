@@ -40,6 +40,17 @@ def _pbc_repeat(tensors, rc):
                                         tf.float32), repeat_r),1))
     return repeat_pos, repeat_s, repeat_a
 
+
+def _wrap_coord(tensors):
+    """wrap positions to unit cell"""
+    cell = tf.gather_nd(tensors['cell'], tensors['ind_1'])
+    coord = tf.expand_dims(tensors['coord'], -1)
+    frac_coord = tf.linalg.solve(tf.transpose(cell, perm=[0,2,1]), coord)
+    frac_coord %= 1
+    coord = tf.matmul(tf.transpose(cell, perm=[0,2,1]), frac_coord)
+    tensors['coord'] = tf.squeeze(coord,-1)
+    
+
 @pi_named('cell_list_nl')
 def cell_list_nl(tensors, rc=5.0):
     """ Compute neighbour list with celllist approach
@@ -56,6 +67,8 @@ def cell_list_nl(tensors, rc=5.0):
     atom_aind = atom_gind - 1
     to_collect = atom_aind
     if 'cell' in tensors:
+        _wrap_coord(tensors)
+        atom_apos = tensors['coord']        
         rep_apos, rep_sind, rep_aind = _pbc_repeat(tensors, rc)
         atom_sind = tf.concat([atom_sind, rep_sind], 0)
         atom_apos = tf.concat([atom_apos, rep_apos], 0)
