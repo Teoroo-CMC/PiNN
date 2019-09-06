@@ -39,31 +39,42 @@ To submit a job on cloud::
 
 def trainner(model_dir, params_file,
              train_data, eval_data, train_steps, eval_steps,
-             cache_data, shuffle_buffer, regen_dress):
+             batch_size, preprocess, cache_data,
+             shuffle_buffer, regen_dress):
     import yaml    
     import tensorflow as tf
     from tensorflow.python.lib.io.file_io import FileIO
+    from pinn import networks
     from pinn.models import potential_model
-    from pinn.utils import get_atomic_dress    
-    from pinn.io import load_tfrecord
+    from pinn.utils import get_atomic_dress
+    from pinn.io import load_tfrecord, sparse_batch
     # Prepare the params or load the model
-    if params_file is not None:
-        with FileIO(params_file, 'r') as f:
-            params = yaml.load(f)
-        params['model_dir'] = model_dir
-        if regen_dress and 'e_dress' in params['model_params']:
-            elems = list(params['model_params']['e_dress'].keys())
-            dress, _ = get_atomic_dress(load_tfrecord(train_data), elems)
-            params['model_params']['e_dress'] = dress
-        model = potential_model(params)
-    else:
-        model = potential_model('model_dir')
+    with FileIO(params_file, 'r') as f:
+        params = yaml.load(f)
+    params['model_dir'] = model_dir
+    if regen_dress and 'e_dress' in params['model_params']:
+        elems = list(params['model_params']['e_dress'].keys())
+        dress, _ = get_atomic_dress(load_tfrecord(train_data), elems)
+        params['model_params']['e_dress'] = dress
+    model = potential_model(params)
     # Training specs
-    if cache_data:
-        train_fn = lambda: load_tfrecord(train_data).cache().repeat().shuffle(shuffle_buffer)
-    else:
-        train_fn = lambda: load_tfrecord(train_data).repeat().shuffle(shuffle_buffer)        
-    eval_fn = lambda: load_tfrecord(eval_data)
+    def _dataset_fn(fname):
+        dataset = load_tfrecord(fname)
+        if batch_size is not None:
+            dataset = dataset.apply(sparse_batch(batch_size))
+        if preprocess:
+            if isinstance(params['network'], str):
+                network_fn = getattr(networks, params['network'])
+            else:
+                network_fn = params['network']            
+            pre_fn = lambda tensors: network_fn(tensors, preprocess=True,
+                                                **params['network_params'])
+            dataset = dataset.map(pre_fn)
+        if cache_data:
+            dataset = dataset.cache()
+        return dataset
+    train_fn = lambda: _dataset_fn(train_data).repeat().shuffle(shuffle_buffer)
+    eval_fn = lambda: _dataset_fn(eval_data)    
     train_spec = tf.estimator.TrainSpec(input_fn=train_fn, max_steps=train_steps)
     eval_spec  = tf.estimator.EvalSpec(input_fn=eval_fn, steps=eval_steps)
     # Run
@@ -78,6 +89,8 @@ def main():
         description='Command line tool for training potential model with PiNN.')
     parser.add_argument('--model-dir', type=str, required=True,
                         help='model directory')
+    parser.add_argument('--params-file', type=str, required=True,
+                        help='path to parameters (.yml file)')
     parser.add_argument('--train-data',  type=str, required=True,
                         help='path to training data (.yml file)')
     parser.add_argument('--eval-data',   type=str, required=True,
@@ -86,12 +99,15 @@ def main():
                         help='number of training steps')
     parser.add_argument('--eval-steps',  type=int, 
                         help='number of evaluation steps', default=100)
+    parser.add_argument('--batch-size',  type=int,
+                        help='Batch size to batch, default to None - data already batched',
+                        default=None)
+    parser.add_argument('--preprocess',  type=bool,
+                        help='Preprocess the data', default=False)    
     parser.add_argument('--cache-data',  type=bool,
                         help='cache the training data to memory', default=True)
     parser.add_argument('--shuffle-buffer',  type=int,
                         help='size of shuffle buffer', default=100)
-    parser.add_argument('--params-file', type=str,
-                        help='path to parameters (.yml file)', default=None)
     parser.add_argument('--regen-dress', type=bool,
                         help='regenerate atomic dress using the training set', default=True)
     
@@ -99,5 +115,6 @@ def main():
     trainner(args.model_dir, args.params_file,
              args.train_data, args.eval_data,
              args.train_steps, args.eval_steps,
+             args.batch_size, args.preprocess,
              args.cache_data, args.shuffle_buffer,
              args.regen_dress)
