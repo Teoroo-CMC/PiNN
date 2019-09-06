@@ -10,6 +10,6 @@ setup(name='pinn',
       packages=find_packages(),
       install_requires=['ase', 'numpy', 'pyyaml'],
       entry_points = {
-          'console_scripts': ['pinn_train=pinn.trainner:main']
+          'console_scripts': ['pinn_train=pinn.trainer:main']
       }
 )

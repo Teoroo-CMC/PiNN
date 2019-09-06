@@ -2,8 +2,8 @@
 The program is meant to work with the Google Cloud AI platform,
 but it should also run well on local machines.
 
-The trainner effectively runs train_and_evaluate with the given
-dataset. To use the trainner, both training data and evaluation data
+The trainer effectively runs train_and_evaluate with the given
+dataset. To use the trainer, both training data and evaluation data
 must be prepared as a tfrecord format. Currently, only training
 potentials are supported. To see the avaiable options, run
 ``pinn_train --help``
@@ -17,7 +17,8 @@ Example usage for local machine::
 
 Example usage for google cloud, it is recommand to use our docker
 image. Since we do not serve it on Google Container Registery, you'll
-need to build one yourself (suppose you have an active Gclound project)::
+need to build one yourself (suppose you have an active Gclound
+project)::
 
     gcloud auth configure-docker
     docker pull yqshao/pinn:dev
@@ -30,10 +31,10 @@ To submit a job on cloud::
            --region europe-west1 --master-image-uri gcr.io/my-proj/pinn:cpu \\
            -- \\
            --model-dir=gs://my-bucket/models/my_model_0 \\
-           --train-data=gs://my-bucket/data/train_split1_run0.yml \\
-           --eval-data=gs://my-bucket/data/test_split1_run0.yml \\
-           --train-steps=1000 --params-file=gs://my-bucket/models/params.yml \\
-           --cache-data=True --gen-dress=True
+           --params-file=gs://my-bucket/models/params.yml \\
+           --train-data=gs://my-bucket/data/train.yml \\
+           --eval-data=gs://my-bucket/data/test.yml \\
+           --train-steps=1000 --cache-data=True
 
 """
 

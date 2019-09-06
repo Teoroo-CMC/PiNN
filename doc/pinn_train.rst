@@ -1,5 +1,5 @@
 ==================
-Cloud/CLI trainner
+Cloud/CLI trainer
 ==================
 
-.. automodule:: pinn.trainner
+.. automodule:: pinn.trainer
