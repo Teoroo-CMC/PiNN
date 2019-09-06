@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from functools import wraps
 
-def get_atomic_dress(dataset, elems, max_iter=1000):
+def get_atomic_dress(dataset, elems, max_iter=None):
     """
     Fit the atomic energy with a element dependent atomic dress
     
@@ -24,7 +24,11 @@ def get_atomic_dress(dataset, elems, max_iter=1000):
     count = tf.segment_sum(count, tensors['ind_1'][:,0])
     sess = tf.Session()
     x, y = [],[]
-    for i in range(max_iter):
+    it = 0
+    while True:
+        it += 1
+        if max_iter is not None and it>max_iter:
+            break
         try:
             x_i, y_i = sess.run((count,tensors['e_data']))
             x.append(x_i)
