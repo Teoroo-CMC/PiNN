@@ -40,15 +40,16 @@ To submit a job on cloud::
 
 def trainner(model_dir, params_file,
              train_data, eval_data, train_steps, eval_steps,
-             batch_size, preprocess, cache_data,
+             batch_size, preprocess, scratch_dir, cache_data,
              shuffle_buffer, regen_dress):
-    import yaml    
+    import yaml, tempfile, os
     import tensorflow as tf
     from tensorflow.python.lib.io.file_io import FileIO
     from pinn import networks
     from pinn.models import potential_model
     from pinn.utils import get_atomic_dress
-    from pinn.io import load_tfrecord, sparse_batch
+    from pinn.io import load_tfrecord, write_tfrecord, sparse_batch
+
     # Prepare the params or load the model
     with FileIO(params_file, 'r') as f:
         params = yaml.load(f)
@@ -57,8 +58,9 @@ def trainner(model_dir, params_file,
         elems = list(params['model_params']['e_dress'].keys())
         dress, _ = get_atomic_dress(load_tfrecord(train_data), elems)
         params['model_params']['e_dress'] = dress
-    model = potential_model(params)
-    # Training specs
+
+    # Building the datasets
+    scratches = []
     def _dataset_fn(fname):
         dataset = load_tfrecord(fname)
         if batch_size is not None:
@@ -70,16 +72,34 @@ def trainner(model_dir, params_file,
                 network_fn = params['network']            
             pre_fn = lambda tensors: network_fn(tensors, preprocess=True,
                                                 **params['network_params'])
-            dataset = dataset.map(pre_fn)
-        if cache_data:
-            dataset = dataset.cache()
-        return dataset
-    train_fn = lambda: _dataset_fn(train_data).repeat().shuffle(shuffle_buffer)
+            if scratch_dir is None:
+                return dataset.map(pre_fn) 
+            else:
+                _, tmp = tempfile.mkstemp(dir=scratch_dir)
+                scratches.append(tmp)
+                write_tfrecord(tmp + '.yml', dataset, pre_fn=pre_fn)
+                return lambda: load_tfrecord(tmp + '.yml')
+    train_tmp = lambda: _dataset_fn(train_data)
     eval_fn = lambda: _dataset_fn(eval_data)    
+    if scratch_dir is not None:
+        train_tmp = train_tmp()
+        eval_fn = eval_fn()
+    if cache_data:
+        train_fn = lambda: train_tmp().cache().repeat().shuffle(shuffle_buffer)
+    else:
+        train_fn = lambda: train_tmp().repeat().shuffle(shuffle_buffer)
+        
+    # Run
     train_spec = tf.estimator.TrainSpec(input_fn=train_fn, max_steps=train_steps)
     eval_spec  = tf.estimator.EvalSpec(input_fn=eval_fn, steps=eval_steps)
-    # Run
+    model = potential_model(params)    
     tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
+    
+    # Clean up
+    for scratch in scratches:
+        os.remove(scratch)        
+        os.remove(scratch + '.yml')
+        os.remove(scratch + '.tfr')
 
 def main():
     import argparse
@@ -104,11 +124,14 @@ def main():
                         help='Batch size to batch, default to None - data already batched',
                         default=None)
     parser.add_argument('--preprocess',  type=bool,
-                        help='Preprocess the data', default=False)    
+                        help='Preprocess the data', default=False)
+    parser.add_argument('--scratch-dir',  type=str,
+                        help='If set in preprocess mode, save the processed dataset to \
+                              scratch folder', default=None)
     parser.add_argument('--cache-data',  type=bool,
                         help='cache the training data to memory', default=True)
     parser.add_argument('--shuffle-buffer',  type=int,
-                        help='size of shuffle buffer', default=100)
+                        help='size of shuffle buffer', default=100)    
     parser.add_argument('--regen-dress', type=bool,
                         help='regenerate atomic dress using the training set', default=True)
     
@@ -117,5 +140,5 @@ def main():
              args.train_data, args.eval_data,
              args.train_steps, args.eval_steps,
              args.batch_size, args.preprocess,
-             args.cache_data, args.shuffle_buffer,
-             args.regen_dress)
+             args.scratch_dir, args.cache_data, 
+             args.shuffle_buffer, args.regen_dress)
