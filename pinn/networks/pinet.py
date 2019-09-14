@@ -139,13 +139,17 @@ def pinet(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         basis = polynomial_basis(tensors['dist'], cutoff_type, rc, n_basis)
     elif basis_type == 'gaussian':
         basis = gaussian_basis(tensors['dist'], cutoff_type, rc, n_basis, gamma)
-    # Then Construct the model
-    nodes = {1: tensors['embed']}
-    ind_1 = tensors['ind_1']
-    ind_2 = tensors['ind_2']
+
+    # We name some tensors here
+    nodes = {1: tf.identity(tensors['embed'], name='embed')}
+    diff = tf.identity(tensors['diff'], name='diff')    
+    coord = tf.identity(tensors['coord'], name='coord')
+    elems = tf.identity(tensors['elems'], name='elems')  
+    ind_1 = tf.identity(tensors['ind_1'], name='ind_1')
+    ind_2 = tf.identity(tensors['ind_2'], name='ind_2')
     basis = tf.expand_dims(basis, -2)
     natom = tf.shape(tensors['ind_1'])[0]
-    
+    # Then Construct the model    
     output = 0.0
     for i in range(depth):
         if i > 0:
@@ -157,8 +161,12 @@ def pinet(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         if nodes[1].shape[-1] != nodes[2].shape[-1]:
             nodes[1] = tf.layers.dense(nodes[1], nodes[2].shape[-1],
                                        use_bias=False, activation=None)
-        nodes[1] += ip_layer(ind_2, nodes[2], natom, name='ip_{}'.format(i))
-        output += en_layer(nodes[1], en_nodes, act=act, name='en_{}'.format(i))
+        nodes[1] = tf.add(
+            nodes[1], ip_layer(ind_2, nodes[2], natom, name='ip_{}'.format(i)),
+            name='prop_{}'.format(i))
+        output = tf.add(
+            output, en_layer(nodes[1], en_nodes, act=act, name='en_{}'.format(i)),
+            name='out_{}'.format(i))
         
     return output
 
