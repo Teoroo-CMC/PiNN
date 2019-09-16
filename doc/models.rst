@@ -113,7 +113,7 @@ along with their default values.
 model_params
 ------------
 
-..code:: python
+.. code:: python
 
     ### Scaling and units
     # The loss function will be MSE((pred - label) * scale)
@@ -151,11 +151,12 @@ Dipole model as a ASE calculator
 A calculator can be created to use the dipole model to predict dipole moment and 
 atomic charges in the following manner:
 
-..code:: python
+.. code:: python
 
     from pinn.models import dipole_model
     from pinn.calculator import PiNN_cal
     calc = PiNN_calc(dipole_model('/path/to/model/'), properties=['dipole', 'charges'])
     dipole_moment = calc.get_dipole_moment(atoms)
     charges = calc.get_charges(atoms)
-
+    
+    
