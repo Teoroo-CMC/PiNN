@@ -15,11 +15,12 @@ while "model" defines the rest. The advantage of this approach is that
 a ``model_fn`` can be reused for any ``network_fn``, and vice versa.
 
 If you are interested in modifying the ``model_fn``, you might need to
-look into the source code of ``pinn.models``. So far, the only model
-implmented in PiNN is the potential model. It defines various metrics
-and loss functions used in potential training. It also interfaces with
-the ASE calculator, where the model predicts the forces and stresses
-using the analytical gradients of the potential energy.
+look into the source code of ``pinn.models``. So far, the only models
+implmented in PiNN are the potential model and the dipole model. They define various metrics
+and loss functions used in training. They also interface with
+the ASE calculator, where the potential model predicts the forces and stresses
+using the analytical gradients of the potential energy. The dipole model
+predicts dipole moment, and can also predict atomic charges.
 
 Potential model
 ===============
@@ -101,3 +102,35 @@ A calculator can be created from a model as simple as:
 Energy, forces and stress (with PBC) calculations are implemented for
 the ASE calculator.
 
+Dipole model
+============
+
+The dipole model requires the same dictionary as input as the potential model.
+The only difference is the ``model_params`` that can be set. They are listed below
+along with their default values.
+
+model_params
+------------
+
+..code:: python
+
+    ### Loss function options
+    
+
+Just like the ``potential_model``, ``dipole_model`` automatically saves ``params``
+in a ``params.yml`` file during the creation of the ``estimator``. The dipole model
+can then be invoked using ``dipole_model('/path/to/model/')``.
+
+Dipole model as a ASE calculator
+--------------------------------
+
+A calculator can be created to use the dipole model to predict dipole moment and 
+atomic charges in the following manner:
+
+..code:: python
+
+    from pinn.models import dipole_model
+    from pinn.calculator import PiNN_cal
+    calc = PiNN_calc(dipole_model('/path/to/model/'), properties=['dipole', 'charges'])
+    dipole_moment = calc.get_dipole_moment(atoms)
+    charges = calc.get_charges(atoms)
