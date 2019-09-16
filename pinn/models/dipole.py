@@ -16,19 +16,15 @@ default_params = {
     # For vector/tensor predictions
     # the error will be pre-component instead of per-atom
     # d_unit is the unit of dipole to report w.r.t the input labels
-    # no f_unit yet, f_unit is just e_unit/input coordinate unit
-    # e.g. if one have input in Hartree, scales it by 100 for training
-    #      and output eV when report error
-    #      then e_scale should be 100, and e_unit = hartree2evp
     'd_scale': 1.0, # dipole scale for prediction
     'd_unit': 1.0,  # output unit of dipole during prediction
     ### Loss function options
-    'max_dipole': False,     # if set to float, omit energies larger than it
-    'use_d_per_atom': False, # use e_per_atom to calculate e_loss
+    'max_dipole': False,     # if set to float, omit dipoles larger than it
+    'use_d_per_atom': False, # use d_per_atom to calculate d_loss
     'use_d_per_sqrt': False, # 
-    'log_d_per_atom': False, # log e_per_atom and its distribution
-                             # ^- this is forcely done if use_e_per_atom
-    'use_d_weight': False,   # scales the loss according to e_weigtht
+    'log_d_per_atom': False, # log d_per_atom and its distribution
+                             # ^- this is forcely done if use_d_per_atom
+    'use_d_weight': False,   # scales the loss according to d_weigtht
     'use_l2': False,         # L2 regularization
     ### Loss function multipliers
     'd_loss_multiplier': 1.0,
@@ -120,8 +116,8 @@ def _dipole_model_fn(features, labels, mode, params):
             mode, loss=loss, eval_metric_ops=metrics)
 
     if mode == tf.estimator.ModeKeys.PREDICT:
-        pred = pred / model_params['e_scale']
-        pred *= model_params['e_unit']
+        pred = pred / model_params['d_scale']
+        pred *= model_params['d_unit']
         
         predictions = {
             'dipole': dipole,
