@@ -71,7 +71,7 @@ def potential_model(params, config=None):
         assert tf.gfile.Exists('{}/params.yml'.format(model_dir)),\
             "Parameters files not found."
         with FileIO(os.path.join(model_dir, 'params.yml'), 'r') as f:
-            params = yaml.load(f)
+            params = yaml.load(f, Loader=yaml.Loader)
     else:
         model_dir = params['model_dir']
         yaml.Dumper.ignore_aliases = lambda *args : True
