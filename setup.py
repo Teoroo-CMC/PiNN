@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='pinn',
-      version='0.1',
+      version='dev',
       description='Pair interaction neural network',
       url='https://github.com/yqshao/pinn',
       author='Yunqi Shao',
