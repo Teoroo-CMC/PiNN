@@ -30,6 +30,15 @@ in Ha, and the force components in Ha/bohr
 
 .. autofunction:: pinn.io.load_runner
 
+
+The CP2K Format
+---------------
+
+Loads output from CP2K. This loader expects coordinates, forces, energy
+and cell outputs in respective output files.
+
+.. autofunction:: pinn.io.load_cp2k
+
 QM9 dataset
 -----------
 

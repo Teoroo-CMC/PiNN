@@ -86,6 +86,3 @@ Dataset Connectors
 - RuNNer  
 - ANI-1
 - QM9
-
-References
-==========
