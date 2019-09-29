@@ -24,7 +24,7 @@ default_params = {
     'use_d_per_sqrt': False,
     'log_d_per_atom': False,  # log d_per_atom and its distribution
                              # ^- this is forcely done if use_d_per_atom
-    'use_d_weight': False,   # scales the loss according to d_weigtht
+    'use_d_weight': False,   # scales the loss according to d_weight
     'use_l2': False,         # L2 regularization
     # Loss function multipliers
     'd_loss_multiplier': 1.0,

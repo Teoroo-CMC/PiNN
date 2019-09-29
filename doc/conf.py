@@ -24,9 +24,9 @@ copyright = '2018, Yunqi Shao'
 author = 'Yunqi Shao'
 
 # The short X.Y version
-version = ''
+version = 'dev'
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = ''
 
 
 # -- General configuration ---------------------------------------------------

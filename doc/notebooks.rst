@@ -9,7 +9,8 @@ Tutorials:
 
    notebooks/Quick_tour
    notebooks/More_on_training
-   notebooks/Customized_dataset
+   notebooks/Customizing_dataset
+   notebooks/Writing_a_network
 
 Examples:
 

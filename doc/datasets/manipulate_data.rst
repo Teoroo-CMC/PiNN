@@ -5,7 +5,7 @@ Manipulating datasets
 Batching the dataset
 --------------------
 
-Most tensorflow operations (caching, repeating, shuffuling) can be
+Most TensorFlow operations (caching, repeating, shuffling) can be
 directly applied to the dataset. However, to handle dataset with
 different number of atoms, which is often the case, we use a special
 ``sparse_batch`` operation to create the minibatches of the data in a

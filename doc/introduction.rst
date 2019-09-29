@@ -2,7 +2,7 @@ Introduction
 ============
 
 PiNN (standing for Pairwise-interaction Neural Network) is a python
-library built on top of Tensorflow for building atomic neural networks
+library built on top of TensorFlow for building atomic neural networks
 (ANN).  The primary usage of PiNN is to build and train ANN
 interatomic potentials, but PiNN is also capable of predicting
 physical and chemical properties of molecules and materials.
@@ -10,29 +10,30 @@ physical and chemical properties of molecules and materials.
 Flexibility
 ^^^^^^^^^^^
 
-.. figure:: images/implement.svg
-   :width: 500em
+.. figure:: images/implement.png
+   :width: 600
    :align: center
 
    Fig. Illustration of PiNN's modules.
 
 PiNN is built with modularized components and we try to make it as
-easy as possible to be cutomized. You do not have to rewrite
-everything if you just want to design a new network sturcture, or
+easy as possible to be customized. You do not have to rewrite
+everything if you just want to design a new network structure, or
 applying existing network to new datasets or new properties.
 
 
 Scalability
 ^^^^^^^^^^^
 
-PiNN fully adheres to Tensorflow's high-level Estimator and Dataset
+PiNN fully adheres to TensorFlow's high-level Estimator and Dataset
 API.  It is straightforward to train and predict on different
 computing platforms (CPU, multiple-GPU, cloud, etc) without explicit
-programing.
+programming.
 
-Example
-^^^^^^^
+Examples
+^^^^^^^^
 
 The quickest way to start with PiNN is to follow our tutorial
-:doc:`notebooks`.  The notebooks shall guide you from training a
-simple ANN potential with to customize PiNN for your own systems.
+:doc:`notebooks`. The notebooks provide guides to train a simple ANN
+potential with public dataset, import your own data or further
+customize the PiNN for your need.

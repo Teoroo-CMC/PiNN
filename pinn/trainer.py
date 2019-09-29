@@ -16,8 +16,8 @@ Example usage for local machine::
                --max-steps=1e6 --eval-steps=100 \\
                --cache-data=True
 
-Example usage for google cloud, it is recommand to use our docker
-image. Since we do not serve it on Google Container Registery, you'll
+Example usage for google cloud: It is recommand to use our docker
+image, since we do not serve it on Google Container Registery, you'll
 need to build one yourself (suppose you have an active Gclound
 project)::
 

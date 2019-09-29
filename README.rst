@@ -23,7 +23,7 @@ PiNN is a atomic neural network potential which:
 
 - Requires minimal feature-design
 - Is based on solely pairwise interactions
-- Preduces state-of-art accurary and speed
+- Produces state-of-art accurary and speed
   
 For more information, see our preprint.(**doesn't exist yet**)
 
@@ -31,7 +31,7 @@ PiNN is also a tool to:
 
 - Train and evaluate different atomic neural networks
 - Construct new neural networks with existing building blocks
-- Develope new building blocks for ANNs
+- Develop new building blocks for ANNs
   
 Read the documentation for more details.
 
@@ -70,19 +70,42 @@ A set of tutorial notebooks can be found in the documentation.
 Models and datasets
 ===================
 
-Implemented Models
+Dataset loaders
+---------------
+- CP2K format
+- RuNNer format
+- ANI-1 dataset
+- QM9 dataset
+
+Implemented Networks
+--------------------
+- PiNet
+- Behler-Parrinello Neural Network  
+
+Implemented models
 ------------------
-- Graph convolutional based
-  
-  - PiNet
+- Potential model
+- Dipole model  
 
-- Symmtry function based
-  
-  - Behler-Parrinello Neural Network
+Contributing
+============
 
-Dataset Connectors
-------------------
+We hope this code is useful to you and would love to hear your
+input. The following contributions are all welcomed.
 
-- RuNNer  
-- ANI-1
-- QM9
+- Reporting bugs
+- Proposing new features
+- Discussing the current version of the code
+- Submitting fixes
+
+We use Github to host code, track issues and feature requests, as well
+as accept pull requests. We tried to make contributing as easy as
+possible, but please do the following before you open an issue.
+
+- Check for duplicate issues.
+- If you are reporting a bug, include the system information
+  (platform, python and TensorFlow version).
+
+If you would like to add some new features via pull request, please
+discuss with the developer first whether it fits the scope and aims of
+the project.

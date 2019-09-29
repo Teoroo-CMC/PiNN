@@ -2,12 +2,12 @@
 Implemented loaders
 ===================
 
-For common QML datasets, we provide the function to directly load the
-dataset. The loaders might be limited by IO, but if you have enough
-memory, you can simply cache the dataset with ``dataset.cache()`` or
-convert them to tfrecords.
+For some commonly used datasets, we provide the function to directly
+load the dataset. The loaders might be limited by IO, but if you have
+enough memory, you can simply cache the dataset with
+``dataset.cache()`` or convert them to tfrecords.
 
-The RuNNer Format
+The RuNNer format
 -----------------
 
 RuNNer data (used by the RuNNer code:
@@ -31,7 +31,7 @@ in Ha, and the force components in Ha/bohr
 .. autofunction:: pinn.io.load_runner
 
 
-The CP2K Format
+The CP2K format
 ---------------
 
 Loads output from CP2K. This loader expects coordinates, forces, energy
@@ -57,7 +57,7 @@ ANI-1 dataset
 -------------
 
 The ANI-1 dataset consists of 20M off-equilibrium DFT energies for
-orginic molecules.  See ref. :cite:`smith_isayev_roitberg_2017` for
+organic molecules.  See ref. :cite:`smith_isayev_roitberg_2017` for
 more details
 
 .. autofunction:: pinn.io.load_ani

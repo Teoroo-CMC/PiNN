@@ -21,7 +21,7 @@ We need to first declare the space we would like to search, with Tune.
         'depth': tune.grid_search([4, 5, 6])}
 
 Then we need to define a ``train_fn``. Given a config it should return
-several obejcts, a model (as an estimator), the train_spec and
+several objects, a model (as an estimator), the train_spec and
 eval_spec, and a reporter function which reports the metrics to Tune.
 
 The reporter should take the evaluation output as input, and return a
@@ -64,7 +64,7 @@ instead of ``error``.
         reporter = lambda eval_out: {'accuracy': 1./eval_out['METRICS/ENG_MAE']}
         return model, train_spec, eval_spec, reporter
 
-Now you can use the TuneTrainable function to feed your ```train_fn``
+Now you can use the TuneTrainable function to feed your ``train_fn``
 to Tune as a trainable.
 
 .. code:: python
@@ -73,7 +73,7 @@ to Tune as a trainable.
     from pinn.utils import TuneTrainable	  
     # Define the trainable from train_fn
     trainable = TuneTrainable(train_fn)
-    # Start ray cluser, use all the GPUs on this machine
+    # Start ray cluster, use all the GPUs on this machine
     os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3,4,5'
     ray.shutdown()
     ray.init()
@@ -85,21 +85,21 @@ to Tune as a trainable.
     ray.tune.run(trainable, name='test_tunning', config=config,
                  resources_per_trial={'cpu':5, 'gpu':1},
                  search_alg=search_alg, scheduler=scheduler,
-                 local_dir="/home/yunqi/work/test_tuning",
+                 local_dir="/tmp/test_tuning",
                  resume=True, num_samples=2, verbose=1)
 
 		 
 Visualizing the result
 ======================
 
-We have a `notebook example`_ for visualizing the tuning result.
+We have a `notebook example`_ for visualizing tuning results from Tune.
    
 
 How this works
 ==============
 
 The ``TuneTrainable`` function is actually a general wrapper for
-estimators to work with PiNN. It runs the train and evaluate but stops
+estimators to work with Ray Tune. It runs the train and evaluate but stops
 the estimator whenever a checkpoint is saved and reports the metrics
 to Tune.
 
@@ -113,4 +113,4 @@ trainings when it wants, which is required by of some of Tune's
 
 .. _schedulers: https://ray.readthedocs.io/en/latest/tune-schedulers.html
 
-.. _notebook example: notebooks/Tune_visualize.ipynb
+.. _notebook example: ../notebooks/Tune_visualize.ipynb

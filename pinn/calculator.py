@@ -9,7 +9,8 @@ from ase.calculators.calculator import Calculator
 class PiNN_calc(Calculator):
     def __init__(self, model=None, atoms=None, to_eV=1.0,
                  properties=['energy', 'forces', 'stress']):
-        """
+        """PiNN interface with ASE as a calculator
+
         Args:
             model: tf.Estimator object
             atoms: optional, ase Atoms object
@@ -85,9 +86,10 @@ class PiNN_calc(Calculator):
         predictor = self.get_predictor()
         results = next(predictor)
         # the below conversion works for energy, forces, and stress,
-        # but would fail for e.g. a dipole moment
         # it is assumed that the distance unit is angstrom
-        results = {k: v*self.to_eV for k, v in results.items()}
+        results = {k: v*self.to_eV
+                   if k in ['energy', 'forces', 'stress'] else v
+                   for k, v in results.items()}
         if 'stress' in results and self._atoms_to_calc.pbc.all():
             results['stress'] /= self._atoms_to_calc.get_volume()
             results['stress'] = results['stress'].flat[[0, 4, 8, 5, 2, 1]]

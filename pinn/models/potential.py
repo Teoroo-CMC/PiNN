@@ -30,10 +30,10 @@ default_params = {
     'use_e_per_sqrt': False,
     'log_e_per_atom': False,  # log e_per_atom and its distribution
                              # ^- this is forcely done if use_e_per_atom
-    'use_e_weight': False,   # scales the loss according to e_weigtht
+    'use_e_weight': False,   # scales the loss according to e_weight
     'use_force': False,      # include force in Loss function
     'max_force': False,      # if set to float, omit forces larger than it
-    'use_f_weights': False,  # scales the loss according to f_weigthts
+    'use_f_weights': False,  # scales the loss according to f_weights
     'use_l2': False,         # L2 regularization
     # Loss function multipliers
     'e_loss_multiplier': 1.0,
