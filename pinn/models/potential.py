@@ -22,31 +22,32 @@ default_params = {
     #      and output eV when report error
     #      then e_scale should be 100, and e_unit = hartree2evp
     'e_dress': {},  # element-specific energy dress
-    'e_scale': 1.0, # energy scale for prediction
+    'e_scale': 1.0,  # energy scale for prediction
     'e_unit': 1.0,  # output unit of energy during prediction
-    ### Loss function options
+    # Loss function options
     'max_energy': False,     # if set to float, omit energies larger than it
-    'use_e_per_atom': False, # use e_per_atom to calculate e_loss
-    'use_e_per_sqrt': False, # 
-    'log_e_per_atom': False, # log e_per_atom and its distribution
+    'use_e_per_atom': False,  # use e_per_atom to calculate e_loss
+    'use_e_per_sqrt': False,
+    'log_e_per_atom': False,  # log e_per_atom and its distribution
                              # ^- this is forcely done if use_e_per_atom
-    'use_e_weight': False,   # scales the loss according to e_weigtht    
+    'use_e_weight': False,   # scales the loss according to e_weigtht
     'use_force': False,      # include force in Loss function
     'max_force': False,      # if set to float, omit forces larger than it
     'use_f_weights': False,  # scales the loss according to f_weigthts
     'use_l2': False,         # L2 regularization
-    ### Loss function multipliers
+    # Loss function multipliers
     'e_loss_multiplier': 1.0,
     'f_loss_multiplier': 1.0,
     'l2_loss_multiplier': 1.0,
-    ### Optimizer related
+    # Optimizer related
     'learning_rate': 3e-4,   # Learning rate
     'use_norm_clip': True,   # see tf.clip_by_global_norm
     'norm_clip': 0.01,       # see tf.clip_by_global_norm
     'use_decay': True,       # Exponential decay
-    'decay_step':10000,      # every ? steps
-    'decay_rate':0.999,      # scale by ?
+    'decay_step': 10000,      # every ? steps
+    'decay_rate': 0.999,      # scale by ?
 }
+
 
 def potential_model(params, config=None):
     """Shortcut for generating potential model from paramters
@@ -62,10 +63,11 @@ def potential_model(params, config=None):
         params(str or dict): parameter dictionary or the model_dir
         config: tensorflow config for the estimator
     """
-    import os, yaml
+    import os
+    import yaml
     from tensorflow.python.lib.io.file_io import FileIO
     from datetime import datetime
-    
+
     if isinstance(params, str):
         model_dir = params
         assert tf.gfile.Exists('{}/params.yml'.format(model_dir)),\
@@ -74,7 +76,7 @@ def potential_model(params, config=None):
             params = yaml.load(f, Loader=yaml.Loader)
     else:
         model_dir = params['model_dir']
-        yaml.Dumper.ignore_aliases = lambda *args : True
+        yaml.Dumper.ignore_aliases = lambda *args: True
         to_write = yaml.dump(params)
         params_path = os.path.join(model_dir, 'params.yml')
         if not tf.gfile.IsDirectory(model_dir):
@@ -82,10 +84,10 @@ def potential_model(params, config=None):
         if tf.gfile.Exists(params_path):
             original = FileIO(params_path, 'r').read()
             if original != to_write:
-                os.rename(params_path, params_path+'.'+
+                os.rename(params_path, params_path+'.' +
                           datetime.now().strftime('%y%m%d%H%M'))
         FileIO(params_path, 'w').write(to_write)
-        
+
     model = tf.estimator.Estimator(
         model_fn=_potential_model_fn, params=params,
         model_dir=model_dir, config=config)
@@ -98,20 +100,21 @@ def _potential_model_fn(features, labels, mode, params):
         network_fn = getattr(pinn.networks, params['network'])
     else:
         network_fn = params['network']
-        
+
     network_params = params['network_params']
     model_params = default_params.copy()
     model_params.update(params['model_params'])
     pred = network_fn(features, **network_params)
 
-    ind = features['ind_1'] # ind_1 => id of molecule for each atom
+    ind = features['ind_1']  # ind_1 => id of molecule for each atom
     nbatch = tf.reduce_max(ind)+1
-    pred = tf.unsorted_segment_sum(pred, ind[:,0], nbatch)
-    
+    pred = tf.unsorted_segment_sum(pred, ind[:, 0], nbatch)
+
     if mode == tf.estimator.ModeKeys.TRAIN:
-        n_trainable = np.sum([np.prod(v.shape) for v in tf.trainable_variables()])
+        n_trainable = np.sum([np.prod(v.shape)
+                              for v in tf.trainable_variables()])
         print("Total number of trainable variables: {}".format(n_trainable))
-        
+
         loss, metrics = _get_loss(features, pred, model_params)
         _make_train_summary(metrics)
         train_op = _get_train_op(loss,  model_params)
@@ -129,13 +132,13 @@ def _potential_model_fn(features, labels, mode, params):
         if model_params['e_dress']:
             pred += atomic_dress(features, model_params['e_dress'])
         pred *= model_params['e_unit']
-        
+
         forces = -_get_dense_grad(pred, features['coord'])
         forces = tf.expand_dims(forces, 0)
         stress = _get_dense_grad(pred, features['diff'])
         stress = tf.reduce_sum(
-            tf.expand_dims(stress,1)*
-            tf.expand_dims(features['diff'],2),
+            tf.expand_dims(stress, 1) *
+            tf.expand_dims(features['diff'], 2),
             axis=0, keepdims=True)
 
         predictions = {
@@ -145,6 +148,7 @@ def _potential_model_fn(features, labels, mode, params):
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
+
 
 def _get_dense_grad(energy, coord):
     """get a gradient and convert to dense form"""
@@ -158,9 +162,10 @@ def _get_dense_grad(energy, coord):
                              tf.cast(grad.dense_shape, tf.int32))
     return grad
 
+
 @pi_named('LOSSES')
 def _get_loss(features, pred, model_params):
-    metrics = {} # Not editting features here for safety, use a separate dict
+    metrics = {}  # Not editting features here for safety, use a separate dict
 
     e_pred = pred
     e_data = features['e_data']
@@ -172,7 +177,7 @@ def _get_loss(features, pred, model_params):
         e_mask = tf.abs(e_data) > model_params['max_energy']
 
     e_error = pred - e_data
-    metrics['e_data'] = e_data    
+    metrics['e_data'] = e_data
     metrics['e_pred'] = e_pred
     metrics['e_error'] = e_error
 
@@ -202,7 +207,7 @@ def _get_loss(features, pred, model_params):
     e_loss = e_error**2 * model_params['e_loss_multiplier']
     metrics['e_loss'] = e_loss
     tot_loss = tf.reduce_mean(e_loss)
-    
+
     if model_params['use_force']:
         f_pred = -_get_dense_grad(pred, features['coord'])
         f_data = features['f_data']*model_params['e_scale']
@@ -219,7 +224,7 @@ def _get_loss(features, pred, model_params):
         f_loss = f_error**2 * model_params['f_loss_multiplier']
         metrics['f_loss'] = f_loss
         tot_loss += tf.reduce_mean(f_loss)
-        
+
     if model_params['use_l2']:
         tvars = tf.trainable_variables()
         l2_loss = tf.add_n([
@@ -230,6 +235,7 @@ def _get_loss(features, pred, model_params):
 
     metrics['tot_loss'] = tot_loss
     return tot_loss, metrics
+
 
 @pi_named('METRICS')
 def _make_eval_metrics(metrics):
@@ -247,7 +253,7 @@ def _make_eval_metrics(metrics):
             metrics['e_data_per_atom'], metrics['e_pred_per_atom'])
         eval_metrics['METRICS/E_PER_ATOM_RMSE'] = tf.metrics.root_mean_squared_error(
             metrics['e_data_per_atom'], metrics['e_pred_per_atom'])
-        
+
     if 'f_data' in metrics:
         eval_metrics['METRICS/F_MAE'] = tf.metrics.mean_absolute_error(
             metrics['f_data'], metrics['f_pred'])
@@ -264,7 +270,7 @@ def _make_train_summary(metrics):
     tf.summary.scalar('E_RMSE', tf.sqrt(tf.reduce_mean(metrics['e_error']**2)))
     tf.summary.scalar('E_MAE', tf.reduce_mean(tf.abs(metrics['e_error'])))
     tf.summary.scalar('E_LOSS', tf.reduce_mean(metrics['e_loss']))
-    tf.summary.scalar('TOT_LOSS', metrics['tot_loss'])    
+    tf.summary.scalar('TOT_LOSS', metrics['tot_loss'])
     tf.summary.histogram('E_DATA', metrics['e_data'])
     tf.summary.histogram('E_PRED', metrics['e_pred'])
     tf.summary.histogram('E_ERROR', metrics['e_error'])
@@ -272,17 +278,18 @@ def _make_train_summary(metrics):
     if 'e_data_per_atom' in metrics:
         tf.summary.scalar(
             'E_PER_ATOM_MAE',
-            tf.reduce_mean(tf.abs(metrics['e_error_per_atom'])))        
+            tf.reduce_mean(tf.abs(metrics['e_error_per_atom'])))
         tf.summary.scalar(
             'E_PER_ATOM_RMSE',
             tf.sqrt(tf.reduce_mean(metrics['e_error_per_atom']**2)))
         tf.summary.histogram('E_PER_ATOM_DATA', metrics['e_data_per_atom'])
         tf.summary.histogram('E_PER_ATOM_PRED', metrics['e_pred_per_atom'])
         tf.summary.histogram('E_PER_ATOM_ERROR', metrics['e_error_per_atom'])
-        
+
     if 'f_data' in metrics:
-        tf.summary.scalar('F_MAE', tf.reduce_mean(tf.abs(metrics['f_error'])))                
-        tf.summary.scalar('F_RMSE', tf.sqrt(tf.reduce_mean(metrics['f_error']**2)))
+        tf.summary.scalar('F_MAE', tf.reduce_mean(tf.abs(metrics['f_error'])))
+        tf.summary.scalar('F_RMSE', tf.sqrt(
+            tf.reduce_mean(metrics['f_error']**2)))
         tf.summary.scalar('F_LOSS', tf.reduce_mean(metrics['f_loss']))
         tf.summary.histogram('F_DATA', metrics['f_data'])
         tf.summary.histogram('F_PRED', metrics['f_pred'])
@@ -294,14 +301,14 @@ def _make_train_summary(metrics):
 @pi_named('TRAIN_OP')
 def _get_train_op(loss, model_params):
     # Get the optimizer
-    global_step = tf.train.get_global_step()    
+    global_step = tf.train.get_global_step()
     learning_rate = model_params['learning_rate']
     if model_params['use_decay']:
         learning_rate = tf.train.exponential_decay(
             learning_rate, global_step,
-            model_params['decay_step'], model_params['decay_rate'], 
+            model_params['decay_step'], model_params['decay_rate'],
             staircase=True)
-    optimizer = tf.train.AdamOptimizer(learning_rate)        
+    optimizer = tf.train.AdamOptimizer(learning_rate)
     # Get the gradients
     tvars = tf.trainable_variables()
     grads = tf.gradients(loss, tvars)

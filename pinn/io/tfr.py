@@ -1,15 +1,18 @@
+# -*- coding: utf-8 -*-
 """Helper functions to save/load datasets into tfrecords"""
 
-import sys, yaml
+import sys
+import yaml
 import tensorflow as tf
 from tensorflow.python.lib.io.file_io import FileIO
 
+
 def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     """Helper function to convert dataset object into tfrecord file.
-    
+
     fname must end with .yml or .yaml.
     the data will be written .tfr file with the same surfix.
-    
+
     Args:
         dataset (Dataset): input dataset.
         fname (str): filename of the dataset to save.
@@ -27,7 +30,7 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     types = dataset.output_types
     shapes = dataset.output_shapes
     # Sanity check
-    assert (type(types)==dict and all(type(v)!=dict for v in types.values())),\
+    assert (type(types) == dict and all(type(v) != dict for v in types.values())),\
         "Only dataset of non-nested dictionary is supported."
     assert fname.endswith('.yml'), "Filename must end with .yml."
     serialized = {k: tf.serialize_tensor(v) for k, v in tensors.items()}
@@ -38,12 +41,12 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
         while True:
             features = {}
             example = tf.train.Example(
-                features = tf.train.Features(
-                    feature = {key: _bytes_feature(val)
-                               for key, val in sess.run(serialized).items()}))
+                features=tf.train.Features(
+                    feature={key: _bytes_feature(val)
+                             for key, val in sess.run(serialized).items()}))
             writer.write(example.SerializeToString())
             n_parsed += 1
-            if n_parsed % log_every==0:
+            if n_parsed % log_every == 0:
                 sys.stdout.write('\r {} samples written to {} ...'
                                  .format(n_parsed, tfr))
                 sys.stdout.flush()
@@ -57,7 +60,8 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     info_dict = {'n_sample': n_parsed}
     with FileIO(fname, 'w') as f:
         yaml.safe_dump({'format': format_dict, 'info': info_dict}, f)
-        
+
+
 def load_tfrecord(fname):
     """Load tfrecord dataset.
 
@@ -70,11 +74,14 @@ def load_tfrecord(fname):
         format_dict = (yaml.safe_load(f)['format'])
     dtypes = {k: format_dict[k]['dtype'] for k in format_dict.keys()}
     shapes = {k: format_dict[k]['shape'] for k in format_dict.keys()}
-    
+
     feature_dict = {k: tf.FixedLenFeature([], tf.string) for k in dtypes}
-    parser = lambda example: tf.parse_single_example(example, feature_dict)
+
+    def parser(example): return tf.parse_single_example(example, feature_dict)
+
     def converter(tensors):
-        tensors = {k: tf.parse_tensor(v, dtypes[k]) for k, v in tensors.items()}
+        tensors = {k: tf.parse_tensor(v, dtypes[k])
+                   for k, v in tensors.items()}
         [v.set_shape(shapes[k]) for k, v in tensors.items()]
         return tensors
     tfr = '.'.join(fname.split('.')[:-1]+['tfr'])

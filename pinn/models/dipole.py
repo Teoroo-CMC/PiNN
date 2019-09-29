@@ -16,27 +16,28 @@ default_params = {
     # For vector/tensor predictions
     # the error will be pre-component instead of per-atom
     # d_unit is the unit of dipole to report w.r.t the input labels
-    'd_scale': 1.0, # dipole scale for prediction
+    'd_scale': 1.0,  # dipole scale for prediction
     'd_unit': 1.0,  # output unit of dipole during prediction
-    ### Loss function options
+    # Loss function options
     'max_dipole': False,     # if set to float, omit dipoles larger than it
-    'use_d_per_atom': False, # use d_per_atom to calculate d_loss
-    'use_d_per_sqrt': False, # 
-    'log_d_per_atom': False, # log d_per_atom and its distribution
+    'use_d_per_atom': False,  # use d_per_atom to calculate d_loss
+    'use_d_per_sqrt': False,
+    'log_d_per_atom': False,  # log d_per_atom and its distribution
                              # ^- this is forcely done if use_d_per_atom
     'use_d_weight': False,   # scales the loss according to d_weigtht
     'use_l2': False,         # L2 regularization
-    ### Loss function multipliers
+    # Loss function multipliers
     'd_loss_multiplier': 1.0,
     'l2_loss_multiplier': 1.0,
-    ### Optimizer related
+    # Optimizer related
     'learning_rate': 3e-4,   # Learning rate
     'use_norm_clip': True,   # see tf.clip_by_global_norm
     'norm_clip': 0.01,       # see tf.clip_by_global_norm
     'use_decay': True,       # Exponential decay
-    'decay_step':10000,      # every ? steps
-    'decay_rate':0.999,      # scale by ?
+    'decay_step': 10000,      # every ? steps
+    'decay_rate': 0.999,      # scale by ?
 }
+
 
 def dipole_model(params, config=None):
     """Shortcut for generating dipole model from paramters
@@ -49,9 +50,10 @@ def dipole_model(params, config=None):
         params(str or dict): parameter dictionary or the model_dir
         config: tensorflow config for the estimator
     """
-    import os, yaml
+    import os
+    import yaml
     from datetime import datetime
-    
+
     if isinstance(params, str):
         model_dir = params
         assert os.path.isdir(model_dir)
@@ -59,7 +61,7 @@ def dipole_model(params, config=None):
             params = yaml.load(f)
     else:
         model_dir = params['model_dir']
-        yaml.Dumper.ignore_aliases = lambda *args : True
+        yaml.Dumper.ignore_aliases = lambda *args: True
         to_write = yaml.dump(params)
         params_path = os.path.join(model_dir, 'params.yml')
         if not os.path.exists(model_dir):
@@ -67,10 +69,10 @@ def dipole_model(params, config=None):
         if os.path.isfile(params_path):
             original = open(params_path).read()
             if original != to_write:
-                os.rename(params_path, params_path+'.'+
+                os.rename(params_path, params_path+'.' +
                           datetime.now().strftime('%y%m%d%H%M'))
         open(params_path, 'w').write(to_write)
-        
+
     model = tf.estimator.Estimator(
         model_fn=_dipole_model_fn, params=params,
         model_dir=model_dir, config=config)
@@ -83,26 +85,27 @@ def _dipole_model_fn(features, labels, mode, params):
         network_fn = getattr(pinn.networks, params['network'])
     else:
         network_fn = params['network']
-        
+
     network_params = params['network_params']
     model_params = default_params.copy()
     model_params.update(params['model_params'])
     pred = network_fn(features, **network_params)
     pred = tf.expand_dims(pred, axis=1)
-    
-    ind = features['ind_1'] # ind_1 => id of molecule for each atom
+
+    ind = features['ind_1']  # ind_1 => id of molecule for each atom
     nbatch = tf.reduce_max(ind)+1
-    charge = tf.unsorted_segment_sum(pred, ind[:,0], nbatch)
-    
+    charge = tf.unsorted_segment_sum(pred, ind[:, 0], nbatch)
+
     dipole = pred * features['coord']
-    dipole = tf.unsorted_segment_sum(dipole, ind[:,0], nbatch)
+    dipole = tf.unsorted_segment_sum(dipole, ind[:, 0], nbatch)
     dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
     #charge = charge[:,0]
-    
+
     if mode == tf.estimator.ModeKeys.TRAIN:
-        n_trainable = np.sum([np.prod(v.shape) for v in tf.trainable_variables()])
+        n_trainable = np.sum([np.prod(v.shape)
+                              for v in tf.trainable_variables()])
         print("Total number of trainable variables: {}".format(n_trainable))
-        
+
         loss, metrics = _get_loss(features, dipole, charge, model_params)
         _make_train_summary(metrics)
         train_op = _get_train_op(loss,  model_params)
@@ -118,13 +121,14 @@ def _dipole_model_fn(features, labels, mode, params):
     if mode == tf.estimator.ModeKeys.PREDICT:
         pred = pred / model_params['d_scale']
         pred *= model_params['d_unit']
-        
+
         predictions = {
             'dipole': dipole,
-            'charges': tf.expand_dims(pred,0)
+            'charges': tf.expand_dims(pred, 0)
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
+
 
 def _get_dense_grad(dipole, coord):
     """get a gradient and convert to dense form"""
@@ -138,9 +142,10 @@ def _get_dense_grad(dipole, coord):
                              tf.cast(grad.dense_shape, tf.int32))
     return grad
 
+
 @pi_named('LOSSES')
 def _get_loss(features, dipole, charge, model_params):
-    metrics = {} # Not editting features here for safety, use a separate dict
+    metrics = {}  # Not editting features here for safety, use a separate dict
 
     d_pred = dipole
     d_data = features['d_data']
@@ -150,7 +155,7 @@ def _get_loss(features, dipole, charge, model_params):
         d_mask = tf.abs(d_data) > model_params['max_dipole']
 
     d_error = dipole - d_data
-    metrics['d_data'] = d_data    
+    metrics['d_data'] = d_data
     metrics['d_pred'] = d_pred
     metrics['d_error'] = d_error
     metrics['q_data'] = tf.zeros_like(charge)
@@ -184,8 +189,7 @@ def _get_loss(features, dipole, charge, model_params):
     q_loss = charge**2
     metrics['d_loss'] = d_loss
     tot_loss = tf.reduce_mean(d_loss) + tf.reduce_mean(q_loss)
-    
-        
+
     if model_params['use_l2']:
         tvars = tf.trainable_variables()
         l2_loss = tf.add_n([
@@ -196,6 +200,7 @@ def _get_loss(features, dipole, charge, model_params):
 
     metrics['tot_loss'] = tot_loss
     return tot_loss, metrics
+
 
 @pi_named('METRICS')
 def _make_eval_metrics(metrics):
@@ -217,7 +222,7 @@ def _make_eval_metrics(metrics):
             metrics['d_data_per_atom'], metrics['d_pred_per_atom'])
         eval_metrics['METRICS/D_PER_ATOM_RMSE'] = tf.metrics.root_mean_squared_error(
             metrics['d_data_per_atom'], metrics['d_pred_per_atom'])
-        
+
     if 'l2_loss' in metrics:
         eval_metrics['METRICS/L2_LOSS'] = tf.metrics.mean(metrics['l2_loss'])
     return eval_metrics
@@ -230,7 +235,7 @@ def _make_train_summary(metrics):
     tf.summary.scalar('D_LOSS', tf.reduce_mean(metrics['d_loss']))
     tf.summary.scalar('Q_RMSE', tf.sqrt(tf.reduce_mean(metrics['q_error']**2)))
     tf.summary.scalar('Q_MAE', tf.reduce_mean(tf.abs(metrics['q_error'])))
-    tf.summary.scalar('TOT_LOSS', metrics['tot_loss'])    
+    tf.summary.scalar('TOT_LOSS', metrics['tot_loss'])
     tf.summary.histogram('D_DATA', metrics['d_data'])
     tf.summary.histogram('D_PRED', metrics['d_pred'])
     tf.summary.histogram('D_ERROR', metrics['d_error'])
@@ -238,14 +243,14 @@ def _make_train_summary(metrics):
     if 'd_data_per_atom' in metrics:
         tf.summary.scalar(
             'D_PER_ATOM_MAE',
-            tf.reduce_mean(tf.abs(metrics['d_error_per_atom'])))        
+            tf.reduce_mean(tf.abs(metrics['d_error_per_atom'])))
         tf.summary.scalar(
             'D_PER_ATOM_RMSE',
             tf.sqrt(tf.reduce_mean(metrics['d_error_per_atom']**2)))
         tf.summary.histogram('D_PER_ATOM_DATA', metrics['d_data_per_atom'])
         tf.summary.histogram('D_PER_ATOM_PRED', metrics['d_pred_per_atom'])
         tf.summary.histogram('D_PER_ATOM_ERROR', metrics['d_error_per_atom'])
-        
+
     if 'l2_loss' in metrics:
         tf.summary.scalar('L2_LOSS', metrics['l2_loss'])
 
@@ -253,14 +258,14 @@ def _make_train_summary(metrics):
 @pi_named('TRAIN_OP')
 def _get_train_op(loss, model_params):
     # Get the optimizer
-    global_step = tf.train.get_global_step()    
+    global_step = tf.train.get_global_step()
     learning_rate = model_params['learning_rate']
     if model_params['use_decay']:
         learning_rate = tf.train.exponential_decay(
             learning_rate, global_step,
-            model_params['decay_step'], model_params['decay_rate'], 
+            model_params['decay_step'], model_params['decay_rate'],
             staircase=True)
-    optimizer = tf.train.AdamOptimizer(learning_rate)        
+    optimizer = tf.train.AdamOptimizer(learning_rate)
     # Get the gradients
     tvars = tf.trainable_variables()
     grads = tf.gradients(loss, tvars)

@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 import tensorflow as tf
 from pinn.layers import cell_list_nl
 from pinn.utils import connect_dist_grad
+
 
 def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
     """Lennard-Jones Potential
@@ -22,5 +24,5 @@ def lj(tensors, rc=3.0, sigma=1.0, epsilon=1.0):
     en = 4*epsilon*(c12-c6)-e0
     natom = tf.shape(tensors['ind_1'])[0]
     nbatch = tf.reduce_max(tensors['ind_1'])+1
-    en = tf.unsorted_segment_sum(en, tensors['ind_2'][:,0], natom)
+    en = tf.unsorted_segment_sum(en, tensors['ind_2'][:, 0], natom)
     return en/2.0

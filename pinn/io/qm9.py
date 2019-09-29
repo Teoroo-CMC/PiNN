@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
 from ase.data import atomic_numbers
 from pinn.io.base import list_loader
+
 
 def _qm9_format(label_map):
     """Returns format dict for the QM9 dataset"""
@@ -35,8 +37,9 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, **kwargs):
         **kwargs: split options, see ``pinn.io.base.split_list``
     """
     _labels = ['tag', 'index', 'A', 'B', 'C', 'mu', 'alpha', 'homo', 'lumo', 'gap',
-           'r2', 'zpve', 'U0', 'U', 'H', 'G', 'Cv']
-    _label_ind = {k:i for i, k in enumerate(_labels)}
+               'r2', 'zpve', 'U0', 'U', 'H', 'G', 'Cv']
+    _label_ind = {k: i for i, k in enumerate(_labels)}
+
     @list_loader(format_dict=_qm9_format(label_map))
     def _qm9_loader(fname):
         with open(fname) as f:
@@ -47,7 +50,7 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, **kwargs):
         elems = np.array(elems, np.int32)
         coord = np.array(coord, np.float32)
         data = {'elems': elems, 'coord': coord}
-        for k,v in label_map.items():
+        for k, v in label_map.items():
             data[k] = float(lines[1].split()[_label_ind[v]])
         return data
     return _qm9_loader(flist, **kwargs)

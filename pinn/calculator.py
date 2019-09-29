@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""ASE calcualtor for to use with PiNN
-"""
+"""ASE calcualtor for to use with PiNN"""
+
 import numpy as np
 import tensorflow as tf
 from ase.calculators.calculator import Calculator
@@ -29,7 +29,7 @@ class PiNN_calc(Calculator):
         while True:
             if self._atoms_to_calc.pbc.any():
                 data = {
-                    'cell': self._atoms_to_calc.cell[np.newaxis,:,:],
+                    'cell': self._atoms_to_calc.cell[np.newaxis, :, :],
                     'coord': self._atoms_to_calc.positions,
                     'ind_1': np.zeros([len(self._atoms_to_calc), 1]),
                     'elems': self._atoms_to_calc.numbers}
@@ -51,11 +51,11 @@ class PiNN_calc(Calculator):
         properties = self.implemented_properties
 
         if self._atoms_to_calc.pbc.any():
-            shapes['cell'] = [1,3,3]
+            shapes['cell'] = [1, 3, 3]
             dtypes['cell'] = dtype
-            self.pbc=True
+            self.pbc = True
         else:
-            self.pbc=False
+            self.pbc = False
 
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
@@ -77,19 +77,18 @@ class PiNN_calc(Calculator):
         if atoms is not None:
             self.atoms = atoms.copy()
         self._atoms_to_calc = self.atoms
-            
+
         if self._atoms_to_calc.pbc.any() != self.pbc and self.predictor:
             print('PBC condition changed, reset the predictor.')
             self.predictor = None
-            
+
         predictor = self.get_predictor()
         results = next(predictor)
-        # the below conversion works for energy, forces, and stress, 
+        # the below conversion works for energy, forces, and stress,
         # but would fail for e.g. a dipole moment
         # it is assumed that the distance unit is angstrom
-        results = {k: v*self.to_eV for k,v in results.items()}
+        results = {k: v*self.to_eV for k, v in results.items()}
         if 'stress' in results and self._atoms_to_calc.pbc.all():
             results['stress'] /= self._atoms_to_calc.get_volume()
             results['stress'] = results['stress'].flat[[0, 4, 8, 5, 2, 1]]
         self.results = results
-

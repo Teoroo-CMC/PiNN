@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pinn.io.base import list_loader, sparse_batch
 from pinn.io.tfr import load_tfrecord, write_tfrecord
 from pinn.io.qm9 import load_qm9

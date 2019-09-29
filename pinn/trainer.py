@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """``pinn_train`` is a command line utility to train a model.
 The program is meant to work with the Google Cloud AI platform,
 but it should also run well on local machines.

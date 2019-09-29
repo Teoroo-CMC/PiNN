@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+"""Some simple test that dataset can be loaded"""
+
 import pytest
 import tensorflow as tf
 import numpy as np
 from tensorflow.errors import OutOfRangeError
 from helpers import *
 
-# Some simple test that dataset can be loaded
 
 def test_numpy():
     dataset = get_trivial_numpy_ds()
@@ -17,6 +19,7 @@ def test_numpy():
         with pytest.raises(OutOfRangeError):
             out = sess.run(item)
 
+
 def test_qm9():
     dataset = get_trivial_qm9_ds()
     data = get_trivial_numpy()
@@ -28,6 +31,7 @@ def test_qm9():
         with pytest.raises(OutOfRangeError):
             out = sess.run(item)
 
+
 def test_runner():
     dataset = get_trivial_runner_ds()
     bohr2ang = 0.5291772109
@@ -38,19 +42,20 @@ def test_runner():
     with tf.Session() as sess:
         out = sess.run(item)
         for k in out.keys():
-            if k in data: # runner has many labels
+            if k in data:  # runner has many labels
                 assert_almost_equal(out[k], data[k])
         with pytest.raises(OutOfRangeError):
             out = sess.run(item)
-    
+
+
 def test_split():
     # Test that dataset is splitted according to the given ratio
     from pinn.io import load_numpy
     data = get_trivial_numpy()
-    data = {k: np.stack([[v]]*10, axis=0) for k,v in data.items()}
-    dataset = load_numpy(data, split={'train': 8, 'test':2})
+    data = {k: np.stack([[v]]*10, axis=0) for k, v in data.items()}
+    dataset = load_numpy(data, split={'train': 8, 'test': 2})
     train = dataset['train'].make_one_shot_iterator().get_next()
-    test = dataset['test'].make_one_shot_iterator().get_next()    
+    test = dataset['test'].make_one_shot_iterator().get_next()
     with tf.Session() as sess:
         for i in range(8):
             out = sess.run(train)
@@ -59,9 +64,9 @@ def test_split():
         for i in range(2):
             out = sess.run(test)
         with pytest.raises(OutOfRangeError):
-            out = sess.run(test)            
+            out = sess.run(test)
 
-    
+
 def test_write():
     from pinn.io import load_tfrecord, write_tfrecord, sparse_batch
     ds = get_trivial_runner_ds().repeat(20)
@@ -81,8 +86,4 @@ def test_write():
         label = sess.run(ds_batch.make_one_shot_iterator().get_next())
         out = sess.run(ds_batch_tfr.make_one_shot_iterator().get_next())
         for k in out.keys():
-            assert_almost_equal(label[k], out[k])        
-
-
-    
-    
+            assert_almost_equal(label[k], out[k])

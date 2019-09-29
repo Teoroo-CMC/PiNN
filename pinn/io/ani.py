@@ -15,6 +15,7 @@ import numpy as np
 import tensorflow as tf
 from pinn.io.base import map_nested, split_list
 
+
 def _ani_generator(sample_list):
     from ase.data import atomic_numbers as atomic_num
     for sample in sample_list:
@@ -22,9 +23,10 @@ def _ani_generator(sample_list):
         coord = data['coordinates'].value
         elems = data['species'].value
         elems = np.array([atomic_num[e.decode()] for e in elems])
-        elems = np.tile(elems[np.newaxis,:], [coord.shape[0],1])
+        elems = np.tile(elems[np.newaxis, :], [coord.shape[0], 1])
         e_data = data['energies'].value
         yield {'coord': coord, 'elems': elems, 'e_data': e_data}
+
 
 def load_ani(filelist, cycle_length=4, **kwargs):
     """Loads the ANI-1 dataset
@@ -38,8 +40,8 @@ def load_ani(filelist, cycle_length=4, **kwargs):
         'elems': {'dtype':  tf.int32,   'shape': [None]},
         'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
         'e_data': {'dtype': tf.float32, 'shape': []}}
-    dtypes = {k: v['dtype'] for k,v in format_dict.items()}
-    shapes = {k: [None] + v['shape'] for k,v in format_dict.items()}
+    dtypes = {k: v['dtype'] for k, v in format_dict.items()}
+    shapes = {k: [None] + v['shape'] for k, v in format_dict.items()}
     # Load the list of samples
     sample_list = []
     for fname in filelist:
@@ -49,12 +51,12 @@ def load_ani(filelist, cycle_length=4, **kwargs):
         for k2 in samples.keys():
             sample_list.append((fname, '{}/{}'.format(k1, k2)))
     # Generate dataset from sample list
-    generator_fn = lambda samplelist: tf.data.Dataset.from_generator(
+
+    def generator_fn(samplelist): return tf.data.Dataset.from_generator(
         lambda: _ani_generator(samplelist), dtypes, shapes).interleave(
             lambda x: tf.data.Dataset.from_tensor_slices(x),
             cycle_length=cycle_length)
     # Generate nested dataset
     subsets = split_list(sample_list, **kwargs)
     splitted = map_nested(generator_fn, subsets)
-    return splitted    
-
+    return splitted

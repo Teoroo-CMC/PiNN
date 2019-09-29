@@ -27,15 +27,15 @@ from pinn.io import list_loader
 from ase.data import atomic_numbers
 
 runner_format = {
-    'cell': {'dtype':  tf.float32, 'shape': [3,3]},
+    'cell': {'dtype':  tf.float32, 'shape': [3, 3]},
     'elems': {'dtype':  tf.int32,   'shape': [None]},
     'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
     'e_data': {'dtype': tf.float32, 'shape': []},
     'f_data': {'dtype':  tf.float32, 'shape': [None, 3]},
     'q_data': {'dtype':  tf.float32, 'shape': [None]},
     'e_weight': {'dtype': tf.float32, 'shape': []},
-    'f_weights' : {'dtype':  tf.float32, 'shape': [None, 3]},
-    }
+    'f_weights': {'dtype':  tf.float32, 'shape': [None, 3]},
+}
 
 
 @list_loader(format_dict=runner_format)
@@ -57,17 +57,17 @@ def _frame_loader(frame):
             if splitline[0] == "atom":
                 elems.append(atomic_numbers[splitline[4]])
                 coord.append([float(splitline[1])*bohr2ang,
-                             float(splitline[2])*bohr2ang,
+                              float(splitline[2])*bohr2ang,
                               float(splitline[3])*bohr2ang])
                 q_data.append(float(splitline[5]))
                 f_data.append([float(splitline[7])/bohr2ang,
-                              float(splitline[8])/bohr2ang,
-                              float(splitline[9])/bohr2ang])
+                               float(splitline[8])/bohr2ang,
+                               float(splitline[9])/bohr2ang])
                 temp_f_weights = [1.0, 1.0, 1.0]
                 if len(splitline) >= 13:
                     temp_f_weights = [float(splitline[10]),
-                                   float(splitline[11]),
-                                   float(splitline[12])]
+                                      float(splitline[11]),
+                                      float(splitline[12])]
                 f_weights.append(temp_f_weights)
             elif splitline[0] == "energy":
                 e_data = float(splitline[1])
@@ -77,7 +77,7 @@ def _frame_loader(frame):
                 cell.append([float(splitline[1])*bohr2ang,
                              float(splitline[2])*bohr2ang,
                              float(splitline[3])*bohr2ang])
-            elif line == "end" :
+            elif line == "end":
                 break
             line = f.readline().strip()
         elems = np.array(elems, np.int32)
@@ -85,7 +85,7 @@ def _frame_loader(frame):
         f_data = np.array(f_data, np.float32)
         f_weights = np.array(f_weights, np.float32)
         cell = np.array(cell)
-        q_data = np.array(q_data, np.float32)        
+        q_data = np.array(q_data, np.float32)
         data = {
             'elems': elems,
             'coord': coord,
@@ -98,6 +98,7 @@ def _frame_loader(frame):
         }
         return data
 
+
 def _gen_frame_list(fname):
     i = 0
     frame_list = []
@@ -108,16 +109,17 @@ def _gen_frame_list(fname):
             i += len(l)
     return frame_list
 
+
 def load_runner(flist, **kwargs):
     """
     Loads runner formatted trajectory
-    
+
     Args: 
         flist (str): one or a list of runner formatted trajectory(s)
         **kwargs: split options, see ``pinn.io.base.split_list``
     """
     if isinstance(flist, str):
-        flist=[flist]
+        flist = [flist]
     frame_list = []
     for fname in flist:
         frame_list += _gen_frame_list(fname)
