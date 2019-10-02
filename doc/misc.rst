@@ -31,7 +31,7 @@ for NPT simulations. The barostat can be patched as follows:
         # Alternatively, the scaling factor can be calculated using
         # the below equivalent fomular, which is used in LAMMPS.
 	# Both are benchmarked for comparison, the above formular is 
-	# noted as patch 1 and the below version as patch 2.
+	# noted as patch 1 and the version below as patch 2.
         # 
         # scl_pressure = (1.0 - taupscl * self.compressibility *
         #                (self.pressure - old_pressure)) ** (1./3.)
@@ -46,7 +46,7 @@ for NPT simulations. The barostat can be patched as follows:
 The patch is benchmarked against LAMMPS at a known density of
 Lennard-Jones fluids. As shown below, the patched barostat agrees well
 with the LAMMPS implementation, while the original ASE barostat
-overestimates the equlibrium density.  Similar issue may exist in
+overestimates the equilibrium density. Similar issues may exist in
 other ASE barostats.
 
 .. figure:: images/barostat_benchmark.png
@@ -61,7 +61,7 @@ other ASE barostats.
 Detailed parameters for the benchmark
 -------------------------------------
 
-The Lennard-Jons parameters proposed by Rahman :cite:`rahman1964` for
+The Lennard-Jones parameters proposed by Rahman :cite:`rahman1964` for
 Argon is used. The simulations were carried out at 78 K and 0.2933
 bar. For each barostat, a cubic simulation box was build as a 10x10x10
 simple cubic lattice of argon atoms, with a box size of 35 Å. Cutoff
@@ -74,7 +74,7 @@ chosen to be 10 fs, the thermostat and barostat time constants were
 chosen to be 10 ps and 100 ps respectively, while the compressibility
 was chosen to be 0.01 bar :sup:`-1`. For the sake of cross-check, the
 corresponding density given at the `NIST standard reference simulation
-website`_ is also shown, which is 1.454 g/mL after converted from
+website`_ is also shown, which is 1.454 g/mL after conversion from
 reduced unit.
 
 .. _issue: https://gitlab.com/ase/ase/issues/356

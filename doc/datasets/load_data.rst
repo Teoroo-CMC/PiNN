@@ -32,10 +32,10 @@ Splitting the dataset
 ---------------------
 
 It is a common practice to split the dataset into subsets for
-validation in ML tasks. Our dataset loaders support a ``split`` option
-to do this. The ``split`` can be a nested dictionary of relative
-ratios of subsets. The dataset loader will return a nested structure
-of datasets with corresponding ratios. For example:
+validation in machine learning tasks. Our dataset loaders support a
+``split`` option to do this. The ``split`` can be a nested dictionary
+of relative ratios of subsets. The dataset loader will return a nested
+structure of datasets with corresponding ratios. For example:
 
 .. code:: python
 	  

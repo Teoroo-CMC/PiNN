@@ -121,7 +121,7 @@ def pinet(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         rc (float): cutoff radius.
         basis_type (string): type of basis function to use,
             can be "polynomial" or "gaussian".
-        gamma (float): controlles width of gaussian function for gaussian basis
+        gamma (float): controls width of gaussian function for gaussian basis.
         n_basis (int): number of basis functions to use.
         cutoff_type (string): cutoff function to use with the basis.
         act (string): activation function to use.

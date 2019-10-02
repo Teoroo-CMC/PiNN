@@ -6,10 +6,10 @@ Batching the dataset
 --------------------
 
 Most TensorFlow operations (caching, repeating, shuffling) can be
-directly applied to the dataset. However, to handle dataset with
-different number of atoms, which is often the case, we use a special
-``sparse_batch`` operation to create the minibatches of the data in a
-sparse form. For example:
+directly applied to the dataset. However, to handle datasets with
+different numbers of atoms in each structure, which is often the case,
+we use a special ``sparse_batch`` operation to create minibatches of
+the data in a sparse form. For example:
 
 .. code-block:: python
 
@@ -28,9 +28,9 @@ TFRecord
 
 The tfrecord format is a serialized format for efficient data reading
 in TensorFlow. The format is especially useful for streaming the data
-over a network. It can also be used for caching pre-processed data.
+over a network. It can also be used for caching preprocessed data.
 
-The tfrecord writer/loader also supports batched and pre-processed
+The tfrecord writer/loader also supports batched and preprocessed
 datasets. When writing the dataset, a .yml file records the data
 structure of the dataset, and a .tfr file holds the data. For example:
 

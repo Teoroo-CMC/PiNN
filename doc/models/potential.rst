@@ -2,7 +2,7 @@ Potential model
 ===============
 
 ``pinn.models.potential_model`` requires one dictionary as input
-``params``.  The dictionary typically like this:
+``params``.  The dictionary typically looks like this:
 
 .. code:: python
 
@@ -26,12 +26,12 @@ the network and training setups.
 
 - ``model_dir`` is the directory of the estimator, where the training
   log and trained parameters are saved.
-- ``network`` could be string: the name a implemented network, or a
-  self-defined network function.
-- ``network_params`` are parameters which will be feed into the
+- ``network`` could be string: the name an implemented network, or a
+  defined network function.
+- ``network_params`` are the parameters which will be fed into the
   network function
-- ``model_params`` are the parameters that controls the potential model.
-  Below is a list of those used parameter and their default values.
+- ``model_params`` are the parameters that control the potential model.
+  Below is a list of those parameters and their default values.
 
 
 .. code:: python

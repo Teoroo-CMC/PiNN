@@ -9,7 +9,7 @@ We have some helpers to tune the hyperparameters with the Tune library.
 A working example
 =================
 
-Suppose we would like to tune the hyperparameters for a say, learning
+Suppose we would like to tune the hyperparameters for say, learning
 rate, number of Pi blocks and the cutoff radius for a PiNet potential.
 We need to first declare the space we would like to search, with Tune.
 

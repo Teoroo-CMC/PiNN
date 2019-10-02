@@ -18,23 +18,24 @@ def _qm9_format(label_map):
 def load_qm9(flist, label_map={'e_data': 'U0'}, **kwargs):
     """Loads the QM9 dataset
 
-    QM9 provides a variety of labels, but in a typical usage we 
-    are only training on one target, e.g. U0.
-    Therefore, a label_map option is offered to choose the output
-    dataset structure, by default, it only takes "U0" and maps that
-    to "e_data", i.e. label_map={'e_data': 'U0'}.
+    QM9 provides a variety of labels, but typically we are only
+    training on one target, e.g. U0. A ``label_map`` option is
+    offered to choose the output dataset structure, by default, it
+    only takes "U0" and maps that to "e_data",
+    i.e. label_map={'e_data': 'U0'}.
 
-    Other avaiable labels are::
+    Other available labels are::
 
         ['tag', 'index', 'A', 'B', 'C', 'mu', 'alpha', 'homo', 'lumo',
          'gap', 'r2', 'zpve', 'U0', 'U', 'H', 'G', 'Cv']
 
-    Desciptions about those tags can be found in QM9's description file.
+    Desciptions of those tags can be found in QM9's description file.
 
     Args:
         flist (list): list of QM9-formatted data files.
         label_map (dict): dictiionary
         **kwargs: split options, see ``pinn.io.base.split_list``
+
     """
     _labels = ['tag', 'index', 'A', 'B', 'C', 'mu', 'alpha', 'homo', 'lumo', 'gap',
                'r2', 'zpve', 'U0', 'U', 'H', 'G', 'Cv']

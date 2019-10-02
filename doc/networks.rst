@@ -42,10 +42,10 @@ is used to index the pair. The pairwise interaction and interaction
 pooling are then done with TensorFlow's ``gather_nd`` and
 ``unsorted_segment_sum`` operations. Notably, PiNN provides a neighbor
 list layer to get ``ind_2``, the ``pinn.layers.cell_list_nl`` layer
-implements a cell lists algorithm which produces ``ind_2`` tensor as
-well as the pairwise distances and displacements tensors.
+implements a cell lists algorithm which produces the ``ind_2`` tensor
+as well as the pairwise distances and displacements tensors.
 
-Similarly, a ``(n_atoms, 1)`` tensor named as ``ind_1`` n is used to
+Similarly, a ``(n_atoms, 1)`` tensor named as ``ind_1`` is used to
 index each atom's position in a batch. And as is done in BPNN, a
 ``(n_triplet, 2)`` tensor named as ``ind_3`` is used to index each
 triplet with two pairs sharing the same central atom.

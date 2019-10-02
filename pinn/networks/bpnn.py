@@ -345,7 +345,7 @@ def bpnn(tensors, sf_spec, nn_spec,
         Behler, Jörg. “Constructing High-Dimensional Neural Network Potentials: A Tutorial Review.” 
         International Journal of Quantum Chemistry 115, no. 16 (August 15, 2015): 103250. 
         https://doi.org/10.1002/qua.24890.
-        (Note the naming of symmetry functiosn are different from http://dx.doi.org/10.1063/1.3553717)
+        (Note the naming of symmetry functions is different from http://dx.doi.org/10.1063/1.3553717)
 
     For more detials about symmetry functions, see the definitions of symmetry functions.
 
@@ -356,20 +356,21 @@ def bpnn(tensors, sf_spec, nn_spec,
 
     Args:
         tensors: input data (nested tensor from dataset).
-        sf_spec (dict): symmetry function specification
-        nn_spec (dict): elementwise network specification
+        sf_spec (dict): symmetry function specification.
+        nn_spec (dict): elementwise network specification,
             each key points to a list specifying the
             number of nodes in the feed-forward subnets.
         rc (float): cutoff radius.
         cutoff_type (string): cutoff function to use. 
         act (str): activation function to use in dense layers.
-        fp_scale (bool): scale the fingeprints according to fp_range.
+        fp_scale (bool): scale the fingerprints according to fp_range.
         fp_range (list of [min, max]): the atomic fingerprint range for each SF
             used to pre-condition the fingerprints.
         preprocess (bool): whether to return the preprocessed tensor.
         use_jacobian (bool): whether to reconnect the grads of fingerprints.
-            note that one must use the jacobian if one want forces with preprocess,
-            the option is here mainly for verifying the jacobian implementation.
+            note that one must use the jacobian if one want forces with 
+            preprocessing, the option is here mainly for verifying the 
+            jacobian implementation.
 
     Returns:
         prediction or preprocessed tensor dictionary

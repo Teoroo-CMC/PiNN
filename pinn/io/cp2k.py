@@ -46,7 +46,7 @@ def load_cp2k(coord_file, force_file, ener_file, cell_file, **kwargs):
     """Loads CP2K formatted trajectories
 
     CP2K outputs the coord, force, energy and cell in separate files.
-    It is assumed that different files comes in consistent units (no
+    It is assumed that different files come in consistent units (no
     unit conversion is done in the loader).
 
     Args:
@@ -55,6 +55,7 @@ def load_cp2k(coord_file, force_file, ener_file, cell_file, **kwargs):
         ener_file: one or a list of CP2K .ener files
         cell_file: one or a list of CP2K .cell files
         **kwargs: split options, see ``pinn.io.base.split_list``
+
     """
 
     if isinstance(coord_file, str):

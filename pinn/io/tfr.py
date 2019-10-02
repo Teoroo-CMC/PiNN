@@ -11,7 +11,7 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     """Helper function to convert dataset object into tfrecord file.
 
     fname must end with .yml or .yaml.
-    the data will be written in a .tfr file with the same suffix.
+    The data will be written in a .tfr file with the same suffix.
 
     Args:
         dataset (Dataset): input dataset.

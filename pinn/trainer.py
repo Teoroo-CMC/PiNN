@@ -6,7 +6,7 @@ but it should also run well on local machines.
 The trainer effectively runs train_and_evaluate with the given
 dataset. To use the trainer, both training data and evaluation data
 must be prepared as a tfrecord format. Currently, only training
-potentials are supported. To see the avaiable options, run
+potentials is supported. To see the available options, run 
 ``pinn_train --help``
 
 Example usage of ``pinn_train`` on a local machine::
@@ -18,7 +18,7 @@ Example usage of ``pinn_train`` on a local machine::
 
 Example usage of ``pinn_train`` on Google Cloud: 
 
-It is recommanded to use our docker image, since we do not serve it on
+It is recommanded to use our docker image. Since we do not serve it on
 Google Container Registery, you'll need to build one yourself (suppose
 you have an active Gclound project)::
 
@@ -27,7 +27,7 @@ you have an active Gclound project)::
     docker tag yqshao/pinn:dev gcr.io/my-proj/pinn:cpu
     docker push gcr.io/my-proj/pinn:cpu 
 
-To submit a job on cloud::
+To submit a job on Gcloud::
 
     gcloud ai-platform jobs submit training my_job_0 \\
            --region europe-west1 --master-image-uri gcr.io/my-proj/pinn:cpu \\

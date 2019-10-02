@@ -41,10 +41,10 @@ and cell outputs in respective output files.
 QM9 dataset
 -----------
 
-The QM9 dataset includes many computed properties for 134 stable
+The QM9 dataset includes many computed properties for 134K stable
 organic molecules.  See
 ref. :cite:`ramakrishnan_dral_dral_rupp_anatole_von_lilienfeld_2017`
-for more details
+for more details.
 
 The default behavior here is to label the internal energy "U0" as
 "e_data".  This behavior can be tweaked with the :code:`label_map`
@@ -57,7 +57,7 @@ ANI-1 dataset
 
 The ANI-1 dataset consists of 20M off-equilibrium DFT energies for
 organic molecules.  See ref. :cite:`smith_isayev_roitberg_2017` for
-more details
+more details.
 
 .. autofunction:: pinn.io.load_ani
 
@@ -65,6 +65,6 @@ more details
 Numpy dataset
 -------------
 
-Another easy way to generate you own dataset is to store the data as a
+Another easy way to generate your own dataset is to store the data as a
 dictionary of numpy arrays. See how it's done in the :doc:`toy problem
 <../notebooks/Learn_LJ_potential>`.
