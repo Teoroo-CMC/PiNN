@@ -25,5 +25,5 @@ predictor (a generator given by ``estimator.predict``) whenever
 possible, so as to avoid the expensive reconstruction of the compute
 graph. However, the graph will be reconstructed if the pbc condition
 of the input ``Atoms`` changed.  Also, the predictor must be reset if
-it is interupted for some reason.
+it is interupted for some reasons.
 

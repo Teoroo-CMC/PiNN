@@ -5,8 +5,8 @@ PiNNboard
 `PiNNboard`_ is a Tensorboard plugin to visualize atomic neural
 networks by showing activations for atoms and pairs. PiNNboard
 currently provides visualization of the PiNet neural network, but it
-is also provide tools to create the visualization for different
-network structures.
+also provides tools to create the visualization for different network
+architectures.
 
 .. figure::  ../images/pinnboard.gif
    :width: 800	     

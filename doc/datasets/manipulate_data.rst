@@ -26,14 +26,13 @@ API reference
 TFRecord
 --------
 
-For larger datasets which do not fit in the memory, caching a dataset
-or training over the cloud , it's more efficient to store the data in
-the tfrecord format.
+The tfrecord format is a serialized format for efficient data reading
+in TensorFlow. The format is especially useful for streaming the data
+over a network. It can also be used for caching pre-processed data.
 
-The tfrecord writer/loader also supports batched datasets, and
-preprocessed datasets. When writing the dataset, a .yml file records
-the data structure of the dataset, and a .tfr file is holds the
-data. For example:
+The tfrecord writer/loader also supports batched and pre-processed
+datasets. When writing the dataset, a .yml file records the data
+structure of the dataset, and a .tfr file holds the data. For example:
 
 .. code-block:: python
 		

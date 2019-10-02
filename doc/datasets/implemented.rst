@@ -24,9 +24,8 @@ http://www.uni-goettingen.de/en/560580.html) has the format::
     comment arbitrary string
     end
 
-The order of the lines within the begin/end block are arbitrary The
-coordinates are given in bohr, the charges in atomic units, the energy
-in Ha, and the force components in Ha/bohr
+The order of the lines within the begin/end block are arbitrary.
+Coordinates, charges, energies and forces are all in atomic units.
 
 .. autofunction:: pinn.io.load_runner
 

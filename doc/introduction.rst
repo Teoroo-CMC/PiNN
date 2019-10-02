@@ -17,9 +17,9 @@ Flexibility
    Fig. Illustration of PiNN's modules.
 
 PiNN is built with modularized components and we try to make it as
-easy as possible to be customized. You do not have to rewrite
-everything if you just want to design a new network structure, or
-applying existing network to new datasets or new properties.
+easy as possible. You do not have to rewrite everything if you just
+want to design a new network structure, or applying existing network
+to new datasets or new properties.
 
 
 Scalability

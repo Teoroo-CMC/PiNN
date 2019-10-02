@@ -22,7 +22,7 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, **kwargs):
     are only training on one target, e.g. U0.
     Therefore, a label_map option is offered to choose the output
     dataset structure, by default, it only takes "U0" and maps that
-    to "e_data", e.g. label_map={'e_data': 'U0'}.
+    to "e_data", i.e. label_map={'e_data': 'U0'}.
 
     Other avaiable labels are::
 

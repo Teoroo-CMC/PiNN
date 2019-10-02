@@ -47,7 +47,7 @@ The patch is benchmarked against LAMMPS at a known density of
 Lennard-Jones fluids. As shown below, the patched barostat agrees well
 with the LAMMPS implementation, while the original ASE barostat
 overestimates the equlibrium density.  Similar issue may exist in
-other ASE barostats, but was not tested.
+other ASE barostats.
 
 .. figure:: images/barostat_benchmark.png
    :width: 600

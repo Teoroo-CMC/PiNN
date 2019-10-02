@@ -14,12 +14,13 @@ RuNNer data has the format
     comment arbitrary string
     end
 
-The order of the lines within the begin/end block are arbitrary
-The coordinates are given in bohr, the charges in atomic units, the energy in Ha, and the force components in Ha/bohr
+The order of the lines within the begin/end block are arbitrary.
+Coordinates, charges, energies and forces are all in atomic units.
 
 Originally written by: Matti Hellström
 Modified by: Yunqi Shao [yunqi.shao@kemi.uu.se]    
 """
+
 import re
 import tensorflow as tf
 import numpy as np

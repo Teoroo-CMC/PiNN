@@ -5,17 +5,18 @@
 Write a model
 =============
 
-A model in PiNN refers to an ``estimator`` in TensorFlow. In fact,
-the ``pinn.models.potential_model`` function is just a shortcut to use
-tf.estimtor.Estimator. The ``estimator`` is specified with a
-``model_fn`` function, which, given a set of parameters, defines the
-loss function, the training algorithm, metrics and predictions of the
-neural network.
+A model in PiNN refers to an ``estimator`` in TensorFlow. In fact, the
+``pinn.models.potential_model`` function is just a shortcut to use
+tf.estimtor.Estimator.  The ``estimator`` is specified with a
+``model_fn`` function. The ``model_fn`` takes the tensors from the
+dataset as input, and should return the training, evaluation or
+prediction ``EstimatorSpec`` according to the ``mode`` option.
 
 As in the PiNN code, ``model_fn`` is decoupled from ``network_fn``:
 the "network" cares only about making a prediction for each atom,
-while "model" defines the rest. The advantage of this approach is that
-a ``model_fn`` can be reused for any ``network_fn``, and vice versa.
+while the "model" defines the rest. The advantage of this approach is
+that a ``model_fn`` can be reused for any ``network_fn``, and vice
+versa.
 
 If you are interested in modifying the ``model_fn``, you might need to
 look into the source code of ``pinn.models``. So far, the only models

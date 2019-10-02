@@ -23,13 +23,13 @@ Structures of ANN
    Fig. Schematic illustration of different ANN structures
 
 
-As shown in the illustration, most operations of the atomic neural networks
-are arithmetic operations or feed-forward neural networks for atomic
-properties or interactions. Those operations can be easily represented
-using TensorFlow operations. However, the pairwise(or triple-wise)
-interactions and the interaction pooling operations involve the
-communication between atoms and their neighbors, which required
-special treatments.
+As shown in the illustration, most operations of the atomic neural
+networks are arithmetic operations or feed-forward neural networks for
+atomic properties or interactions. Those operations can be easily
+represented using TensorFlow operations. However, the pairwise(or
+triple-wise) interactions and the interaction pooling operations
+involve the communication between atoms and their neighbors, which
+required special treatments.
 
 
 PiNN's representation of ANNs
@@ -46,12 +46,12 @@ implements a cell lists algorithm which produces ``ind_2`` tensor as
 well as the pairwise distances and displacements tensors.
 
 Similarly, a ``(n_atoms, 1)`` tensor named as ``ind_1`` n is used to
-index each atom's position in a batch. And as is done in the BPNN
-network, a ``(n_triplet, 2)`` tensor named as ``ind_3`` is used to
-index each triplet as with two pairs sharing the same central atom.
+index each atom's position in a batch. And as is done in BPNN, a
+``(n_triplet, 2)`` tensor named as ``ind_3`` is used to index each
+triplet with two pairs sharing the same central atom.
 
 You can find a demonstration about building an atomic neural network
-with PiNN in the :doc:`notebook<../notebooks/Writing_a_network>`.
+with PiNN in this :doc:`notebook<../notebooks/Writing_a_network>`.
 
 Implemented networks
 --------------------

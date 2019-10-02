@@ -11,11 +11,11 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     """Helper function to convert dataset object into tfrecord file.
 
     fname must end with .yml or .yaml.
-    the data will be written .tfr file with the same surfix.
+    the data will be written in a .tfr file with the same suffix.
 
     Args:
         dataset (Dataset): input dataset.
-        fname (str): filename of the dataset to save.
+        fname (str): filename of the dataset to be saved.
     """
     def _bytes_feature(value):
         """Returns a bytes_list from a string / byte."""
@@ -66,7 +66,7 @@ def load_tfrecord(fname):
     """Load tfrecord dataset.
 
     Args:
-       fname (str): filename of the .yml metadata file to load.
+       fname (str): filename of the .yml metadata file to be loaded.
        dtypes (dict): dtype of dataset.
     """
     # dataset

@@ -9,17 +9,18 @@ must be prepared as a tfrecord format. Currently, only training
 potentials are supported. To see the avaiable options, run
 ``pinn_train --help``
 
-Example usage for local machine::
+Example usage of ``pinn_train`` on a local machine::
 
     pinn_trian --model-dir=my_model --params=params.yml \\
                --train-data=train.yml --eval-data=test.yml \\
                --max-steps=1e6 --eval-steps=100 \\
                --cache-data=True
 
-Example usage for google cloud: It is recommand to use our docker
-image, since we do not serve it on Google Container Registery, you'll
-need to build one yourself (suppose you have an active Gclound
-project)::
+Example usage of ``pinn_train`` on Google Cloud: 
+
+It is recommanded to use our docker image, since we do not serve it on
+Google Container Registery, you'll need to build one yourself (suppose
+you have an active Gclound project)::
 
     gcloud auth configure-docker
     docker pull yqshao/pinn:dev
