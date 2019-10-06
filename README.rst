@@ -11,29 +11,15 @@ PiNN: Pairwise interaction Neural Network
 .. image:: https://img.shields.io/docker/cloud/build/yqshao/pinn.svg?style=flat-square
   :target: https://cloud.docker.com/repository/docker/yqshao/pinn
 	   
-PiNN is a neural network designed for modeling atomic potentials.
-The PiNN package also provides elemental layers and abstractions to implement
-various atomic neural networks.
+PiNN is a neural network library designed for modeling atomic
+potentials. The PiNN library also provides elemental layers and
+abstractions to implement various atomic neural networks.
 
 The code is currenly developed by Yunqi Shao at Uppsala Unversiy.
 
 Introduction
 ============
-PiNN is a atomic neural network potential which:
-
-- Requires minimal feature-design
-- Is based on solely pairwise interactions
-- Produces state-of-art accurary and speed
-  
-For more information, see our preprint.(**doesn't exist yet**)
-
-PiNN is also a tool to:
-
-- Train and evaluate different atomic neural networks
-- Construct new neural networks with existing building blocks
-- Develop new building blocks for ANNs
-  
-Read the documentation for more details.
+The preprint associated with PiNN:
 
 Requirements
 ============
@@ -89,23 +75,22 @@ Implemented models
 
 Contributing
 ============
-
-We hope this code is useful to you and would love to hear your
-input. The following contributions are all welcomed.
+As an open-source project, the following contributions are highly welcome:
 
 - Reporting bugs
 - Proposing new features
 - Discussing the current version of the code
 - Submitting fixes
 
-We use Github to host code, track issues and feature requests, as well
-as accept pull requests. We tried to make contributing as easy as
-possible, but please do the following before you open an issue.
+We use Github to host code, to track issues and feature requests, as well
+as to accept pull requests. 
 
-- Check for duplicate issues.
+Please follow the procedure below before you open a new issue.
+
+- Check for duplicate issues first.
 - If you are reporting a bug, include the system information
-  (platform, python and TensorFlow version).
+  (platform, Python and TensorFlow version etc.).
 
 If you would like to add some new features via pull request, please
-discuss with the developer first whether it fits the scope and aims of
-the project.
+discuss with the main developer (Yunqi Shao) first to see whether it
+fits the scope and aims of this project.
