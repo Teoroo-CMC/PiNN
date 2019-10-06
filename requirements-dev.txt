@@ -1,0 +1,7 @@
+pytest
+pytest-cov
+codecov
+sphinx
+ipython
+nbsphinx
+sphinxcontrib-bibtex

@@ -1,0 +1,10 @@
+*/__pycache__
+.pytest_cache
+pinn.egg-info/
+tmp/
+*.pyc
+*~
+_build/
+.ipynb_checkpoints/
+/.coverage
+/coverage.xml
