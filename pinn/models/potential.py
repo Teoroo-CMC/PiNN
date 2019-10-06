@@ -49,7 +49,7 @@ default_params = {
 }
 
 
-def potential_model(params, config=None):
+def potential_model(params, **kwargs):
     """Shortcut for generating potential model from paramters
 
     When creating the model, a params.yml is automatically created 
@@ -61,7 +61,7 @@ def potential_model(params, config=None):
 
     Args:
         params(str or dict): parameter dictionary or the model_dir
-        config: tensorflow config for the estimator
+        **kwargs: additional options for the estimator, e.g. config
     """
     import os
     import yaml
@@ -90,7 +90,7 @@ def potential_model(params, config=None):
 
     model = tf.estimator.Estimator(
         model_fn=_potential_model_fn, params=params,
-        model_dir=model_dir, config=config)
+        model_dir=model_dir, **kwargs)
     return model
 
 

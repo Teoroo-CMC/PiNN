@@ -39,7 +39,7 @@ default_params = {
 }
 
 
-def dipole_model(params, config=None):
+def dipole_model(params, **kwargs):
     """Shortcut for generating dipole model from paramters
     When creating the model, a params.yml is automatically created 
     in model_dir containing network_params and model_params.
@@ -48,7 +48,7 @@ def dipole_model(params, config=None):
     all parameters are loaded
     Args:
         params(str or dict): parameter dictionary or the model_dir
-        config: tensorflow config for the estimator
+        **kwargs: additional options for the estimator, e.g. config
     """
     import os
     import yaml
@@ -75,7 +75,7 @@ def dipole_model(params, config=None):
 
     model = tf.estimator.Estimator(
         model_fn=_dipole_model_fn, params=params,
-        model_dir=model_dir, config=config)
+        model_dir=model_dir, **kwargs)
     return model
 
 

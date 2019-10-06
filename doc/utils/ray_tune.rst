@@ -14,7 +14,8 @@ rate, number of Pi blocks and the cutoff radius for a PiNet potential.
 We need to first declare the space we would like to search, with Tune.
 
 .. code:: python
-
+	  
+    from ray import tune
     config = {
 	'lr': tune.grid_search([3e-4, 1e-4, 3e-5]),
 	'rc': tune.grid_search([3.5, 4.5, 5.0, 5.5]),
@@ -31,7 +32,7 @@ discriminate models, so you should define things like ``accuracy``
 instead of ``error``.
 	
 .. code:: python
-
+	  
     def train_fn(c, ckpt=None):
         import yaml, os
         import tensorflow as tf
@@ -56,12 +57,12 @@ instead of ``error``.
             keep_checkpoint_max=None, 
             keep_checkpoint_every_n_hours=None)
         # Returning things
-        model = potential_model(params, config, warm_start_from=ckpt)
-	train_fn = lambda: load_tfrecord('train.yml')
-	test_fn = lambda: load_tfrecord('test.yml')	
+        model = potential_model(params, config=config, warm_start_from=ckpt)
+	train_fn = lambda: load_tfrecord('/path/to/train.yml')
+	test_fn = lambda: load_tfrecord('/path/to/test.yml')	
         train_spec = tf.estimator.TrainSpec(input_fn=train_fn, max_steps=1e6)
         eval_spec = tf.estimator.EvalSpec(input_fn=test_fn)
-        reporter = lambda eval_out: {'accuracy': 1./eval_out['METRICS/ENG_MAE']}
+        reporter = lambda eval_out: {'accuracy': 1./eval_out['METRICS/E_MAE']}
         return model, train_spec, eval_spec, reporter
 
 Now you can use the TuneTrainable function to feed your ``train_fn``
@@ -78,15 +79,15 @@ to Tune as a trainable.
     ray.shutdown()
     ray.init()
     # Searching strategy of Ray Tune	  
-    search_alg = BasicVariantGenerator(shuffle=True)
-    scheduler = ray.tune.schedulers.HyperBandScheduler(
+    search_alg = tune.suggest.BasicVariantGenerator(shuffle=True)
+    scheduler = tune.schedulers.HyperBandScheduler(
         time_attr='time_total_s', reward_attr='accuracy', max_t=3600)
     # Run jobs with Ray tune
-    ray.tune.run(trainable, name='test_tunning', config=config,
+    tune.run(trainable, name='test_tunning', config=config,
                  resources_per_trial={'cpu':5, 'gpu':1},
                  search_alg=search_alg, scheduler=scheduler,
                  local_dir="/tmp/test_tuning",
-                 resume=True, num_samples=2, verbose=1)
+                 num_samples=2, verbose=1)
 
 		 
 Visualizing the result
