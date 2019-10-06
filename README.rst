@@ -1,21 +1,25 @@
-=========================================
-PiNN: Pairwise interaction Neural Network
-=========================================
+==========================================================
+PiNN: a Python library for building atomic neural networks
+==========================================================
 
-.. image:: https://img.shields.io/circleci/token/14f38a1cab4c2bef74b12be05854d3d62f9c04c3/project/github/Teoroo-CMC/PiNN_dev/dev.svg?style=flat-square
-    :target: https://circleci.com/gh/Teoroo-CMC/PiNN_dev/tree/dev
+.. image:: https://img.shields.io/circleci/build/github/Teoroo-CMC/PiNN/master.svg?style=flat-square&token=dd8894015481e2f87675a340fbfa712c94d69e8f
+   :target: https://circleci.com/gh/Teoroo-CMC/PiNN/tree/master
 	     
-.. image:: https://img.shields.io/codecov/c/github/Teoroo-CMC/PiNN_dev/dev.svg?token=3ab2d943114443d99e92266516befc02&style=flat-square
-  :target: https://codecov.io/gh/Teoroo-CMC/PiNN_dev/branch/dev
+.. image:: https://img.shields.io/codecov/c/github/Teoroo-CMC/PiNN/master.svg?style=flat-square
+   :target: https://codecov.io/gh/Teoroo-CMC/PiNN/branch/master
 
 .. image:: https://img.shields.io/docker/cloud/build/yqshao/pinn.svg?style=flat-square
-  :target: https://cloud.docker.com/repository/docker/yqshao/pinn
-	   
-PiNN is a neural network library designed for modeling atomic
-potentials. The PiNN library also provides elemental layers and
-abstractions to implement various atomic neural networks.
+   :target: https://cloud.docker.com/repository/docker/yqshao/pinn
 
-The code is currenly developed by Yunqi Shao at Uppsala Unversiy.
+.. image:: https://readthedocs.org/projects/teoroo-pinn/badge/?version=latest&style=flat-square
+   :target: https://teoroo-pinn.readthedocs.io/en/latest/?badge=latest
+      
+PiNN is a Python library built on top of TensorFlow for building
+atomic neural network potentials. The PiNN library also provides
+elemental layers and abstractions to implement various atomic neural
+networks.
+
+The code is currenly maintained by Yunqi Shao at Uppsala Unversiy.
 
 Introduction
 ============
@@ -24,23 +28,23 @@ The preprint associated with PiNN:
 Requirements
 ============
 - Python 3
-- Tensorflow, ASE
-- h5py (optional, for reading ANI-1 dataset)
+- TensorFlow (tested with 1.13.1)
+- ASE
 
 Installation
 ============
 
 Install from source code::
 
-  git clone git@github.com:Teoroo-CMC/PiNN_dev.git
-  cd PiNN_dev && pip install -e .
+  git clone https://github.com/Teoroo-CMC/PiNN.git
+  cd PiNN && pip install -e .
 
 Or use our `docker
 image <https://cloud.docker.com/repository/docker/yqshao/pinn/tags>`_. If
 you use singularity, you can build a singularity image directly from
 the docker image::
 
-  singularity build pinn.sif docker://yqshao/pinn:dev (or dev-gpu)
+  singularity build pinn.sif docker://yqshao/pinn:latest (or latest-gpu)
   singularity exec pinn.sif jupyter notebook # this starts a jupyter notebook server
   ./pinn.sif -h # this invokes the pinn_train trainner
 
@@ -51,7 +55,7 @@ Extra dependencies are in:
   
 Quick Start
 ===========
-A set of tutorial notebooks can be found in the documentation.
+A set of tutorial notebooks can be found in the `documentation <https://teoroo-pinn.readthedocs.io/en/latest>`_.
 
 Models and datasets
 ===================
@@ -73,8 +77,8 @@ Implemented models
 - Potential model
 - Dipole model  
 
-Contributing
-============
+Community
+=========
 As an open-source project, the following contributions are highly welcome:
 
 - Reporting bugs

@@ -19,7 +19,7 @@ git config --global user.email "$GH_EMAIL" > /dev/null 2>&1
 git config --global user.name "$GH_NAME" > /dev/null 2>&1
 touch .nojekyll
 
-if [[ "$CIRCLE_BRANCH" =~ ^dev$|^[0-9]+\.[0-9]+\.X$ ]]; then
+if [[ "$CIRCLE_BRANCH" =~ ^master$|^[0-9]+\.[0-9]+\.X$ ]]; then
     cp -r html/* ./
 else
     mkdir -p "$CIRCLE_BRANCH"
@@ -30,5 +30,5 @@ rm -r html/
 git add --all
 git commit --allow-empty  -m "[ci skip] Publishing updated documentation..."
 git remote rm origin
-git remote add origin https://"$GH_NAME":"$GH_TOKEN"@github.com/teoroo-cmc/PiNN_dev.git
+git remote add origin https://"$GH_NAME":"$GH_TOKEN"@github.com/teoroo-cmc/PiNN.git
 git push --force origin gh-pages-tmp:gh-pages

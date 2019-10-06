@@ -52,7 +52,7 @@ jobs:
             pip install -e .
             export CUDA_VISIBLE_DEVICES=''
             pytest tests/ --cov=pinn
-            codecov --token=ef4ee5ca-5df3-4535-8b9e-034fdf81495d
+            codecov --token=$CODECOV_TOKEN
   deploy-doc:
     docker:
       - image: circleci/python:3.6.1

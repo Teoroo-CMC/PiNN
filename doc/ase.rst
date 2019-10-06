@@ -21,8 +21,8 @@ charge and dipole calculations are implemented for the dipole model.
 The calculator can then be used in ASE optimizers and molecular
 dynamics engines. Note that the calculator will try to use the same
 predictor (a generator given by ``estimator.predict``) whenever
-possible, so as to avoid the expensive reconstruction of the compute
-graph. However, the graph will be reconstructed if the pbc condition
-of the input ``Atoms`` is changed.  Also, the predictor must be reset
-if it is interupted for some reasons.
+possible, so as to avoid the expensive reconstruction of the
+computation graph. However, the graph will be reconstructed if the pbc
+condition of the input ``Atoms`` is changed.  Also, the predictor must
+be reset if it is interupted for some reasons.
 

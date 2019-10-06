@@ -1,5 +1,6 @@
-PiNN: Pairwise interaction Neural Network
-=========================================
+===========================================================
+PiNN: a Python library for building atomic neural networks
+===========================================================
 .. toctree::
    :maxdepth: 2
 
