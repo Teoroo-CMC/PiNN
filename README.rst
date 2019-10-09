@@ -21,9 +21,12 @@ networks.
 
 The code is currenly maintained by Yunqi Shao at Uppsala Unversiy.
 
-Introduction
-============
-The preprint associated with PiNN:
+Reference
+=========
+- Shao, Y.; Hellström, M.; Mitev, P. D.; Knijff, L.; Zhang, C. PiNN: A
+  Python Library for Building Atomic Neural Networks of Molecules and
+  Materials. arXiv:1910.03376 [cond-mat, physics:physics] 2019. `link
+  <http://arxiv.org/abs/1910.03376>`_
 
 Requirements
 ============
