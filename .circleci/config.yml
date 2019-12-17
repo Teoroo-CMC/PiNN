@@ -23,19 +23,24 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}
+            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum "setup.py" }}-{{ checksum ".circleci/config.yml" }}
             - venv-
       - run:
           name: Install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install tensorflow==1.13.1
+            # pip need to be upgraded for TF 1.15
+            pip install --upgrade pip
+            # Install the requirements but remove PiNN            
+            pip install -e .
+            pip uninstall -y pinn
+            # Install requirements for testing
             pip install -r requirements-dev.txt
       - save_cache:
           paths:
             - ./venv
-          key: venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}
+          key: venv-{{ checksum "requirements-dev.txt" }}-{{ checksum "setup.py" }}-{{ checksum ".circleci/config.yml" }}
   pytest:
     docker:
       - image: circleci/python:3.6.1
@@ -44,7 +49,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}
+            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum "setup.py" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: run tests
           command: |
@@ -61,12 +66,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum ".circleci/config.yml" }}    
+            - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum "setup.py" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: Deploy doc
           command: |
-            . venv/bin/activate
             sudo apt-get update
-            sudo apt-get install pandoc	    
+            sudo apt-get install pandoc            
+            . venv/bin/activate
             pip install -e .
             ./.circleci/build_doc.sh
