@@ -11,6 +11,5 @@ formats: []
 python:
   version: 3.7
   install:
-    - requirements: doc/requirements.txt    
     - requirements: requirements-dev.txt
     - path: .
