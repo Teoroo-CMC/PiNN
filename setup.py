@@ -8,7 +8,7 @@ setup(name='pinn',
       author_email='yunqi_shao@yahoo.com',
       license='BSD',
       packages=find_packages(),
-      install_requires=['ase', 'numpy', 'pyyaml'],
+      install_requires=['ase', 'numpy', 'pyyaml', 'tensorflow==1.15'],
       entry_points={
           'console_scripts': ['pinn_train=pinn.trainer:main']
       }
