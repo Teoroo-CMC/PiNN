@@ -31,7 +31,7 @@ Reference
 Requirements
 ============
 - Python 3
-- TensorFlow (tested with 1.13.1)
+- TensorFlow 1.15
 - ASE
 
 Installation
