@@ -30,5 +30,5 @@ rm -r html/
 git add --all
 git commit --allow-empty  -m "[ci skip] Publishing updated documentation..."
 git remote rm origin
-git remote add origin https://"$GH_NAME":"$GH_TOKEN"@github.com/teoroo-cmc/PiNN.git
+git remote add origin https://"$GH_NAME":"$GH_TOKEN"@github.com/"$GH_REPO"
 git push --force origin gh-pages-tmp:gh-pages
