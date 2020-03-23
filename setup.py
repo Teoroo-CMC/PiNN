@@ -1,12 +1,6 @@
 import os
 from setuptools import setup, find_packages
 
-on_rtd = os.environ.get('READTHEDOCS') == 'True'
-if on_rtd:
-    INSTALL_REQUIRES = ['ase', 'numpy', 'pyyaml', 'tensorflow-cpu==1.15']
-else:
-    INSTALL_REQUIRES = ['ase', 'numpy', 'pyyaml', 'tensorflow==1.15']
-
 setup(name='pinn',
       version='dev',
       description='Pair interaction neural network',
@@ -15,7 +9,7 @@ setup(name='pinn',
       author_email='yunqi_shao@yahoo.com',
       license='BSD',
       packages=find_packages(),
-      install_requires=INSTALL_REQUIRES,
+      install_requires=['ase', 'numpy', 'pyyaml', 'tensorflow==1.15.2'],
       entry_points={
           'console_scripts': ['pinn_train=pinn.trainer:main']
       }
