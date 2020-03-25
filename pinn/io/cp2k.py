@@ -5,83 +5,160 @@ import tensorflow as tf
 from ase.data import atomic_numbers
 from pinn.io import list_loader
 
-
-def _gen_frame_list(fname):
-    import mmap
-    i = 0
-    frame_list = []
-    steps = []
-    f = open(fname, 'r')
-    m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
-    for match in re.finditer(b' i =\s*(\d+),', m):
-        frame_list.append((fname, match.span()[0]))
-        steps.append(int(match.group(1)))
-    return steps, frame_list
-
-
-@list_loader(pbc=True, force=True)
-def _frame_loader(frame):
-    def _read(frame):
-        elems = []
-        coord = []
-        f = open(frame[0], 'r')
-        f.seek(frame[1])
-        f.readline()
-        while True:
-            line = f.readline().split()
-            if len(line) <= 1:
-                break
-            elems.append(atomic_numbers[line[0]])
-            coord.append(line[1:4])
-        return elems, coord
-    pos_frame, frc_frame, e_data, cell = frame
-    elems, coord = _read(pos_frame)
-    _, f_data = _read(frc_frame)
-    data = {'coord': coord, 'cell': cell, 'elems': elems,
-            'e_data': e_data, 'f_data': np.array(f_data, np.float32)}
-    return data
-
-
-def load_cp2k(coord_file, force_file, ener_file, cell_file, **kwargs):
-    """Loads CP2K formatted trajectories
-
-    CP2K outputs the coord, force, energy and cell in separate files.
-    It is assumed that different files come in consistent units (no
-    unit conversion is done in the loader).
-
-    Args:
-        coord_file: one or a list of CP2K .xyz files for coordinates
-        force_file: one or a list of CP2K .xyz files for forces
-        ener_file: one or a list of CP2K .ener files
-        cell_file: one or a list of CP2K .cell files
-        **kwargs: split options, see ``pinn.io.base.split_list``
-
-    """
-
-    if isinstance(coord_file, str):
-        flist = [(coord_file, force_file, ener_file, cell_file)]
+def _cell_dat_indexer(files):
+    if isinstance(files['cell_dat'], str):
+        return [files['cell_dat']]
     else:
-        flist = zip(coord_file, force_file, ener_file, cell_file)
+        return files['cell_dat']
 
-    frame_list = []
-    for fname in flist:
-        # coord and force files are large, we just skim through them
-        # to get a list of locations where frame starts, the energy
-        # and cell we can just load into memory.
-        coord_file, force_file, ener_file, cell_file = fname
-        step_c, frame_c = _gen_frame_list(coord_file)
-        step_f, frame_f = _gen_frame_list(force_file)
-        ener = np.loadtxt(ener_file)[:, 4]
-        cell = np.loadtxt(cell_file)[:, 2:-1]
-        cell = cell.reshape(cell.shape[0], 3, 3)
-        # do some minimal size checks
-        assert step_c == step_f,\
-            "Mismatching {} and {}".format(coord_file, force_file)
-        assert cell.shape[0] == len(step_c),\
-            "Mismatching {} and {}".format(coord_file, cell_file)
-        assert ener.shape[0] == len(step_c),\
-            "Mismatching {} and {}".format(coord_file, ener_file)
-        # update the frame list
-        frame_list += list(zip(frame_c, frame_f, ener, cell))
+def _cell_dat_loader(index):
+    import numpy as np
+    return {'cell': np.loadtxt(index, usecols=(1,2,3))}
 
-    return _frame_loader(frame_list, **kwargs)
+def _stress_indexer(files):
+    import mmap
+    f = open(files['out'], 'r')
+    m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+    locs = [match.span()[0] for match in
+            re.finditer(b'STRESS TENSOR \[GPa\]', m)]
+    indexes = list(zip([files['out']]*len(locs), locs))
+    f.close()
+    return indexes
+
+def _stress_loader(index):
+    fname, loc = index
+    f = open(fname, 'r')
+    data = []
+    f.seek(loc)
+    [f.readline() for i in range(3)]
+    for i in range(3):
+        l = f.readline().strip()
+        data.append(l.split()[1:])
+    unit = -1e9*2.2937e17*1e-30 # GPa -> Hartree/Ang^3
+    f.close()
+    return {'s_data': np.array(data, np.float)*unit}
+
+def _energy_indexer(files):
+    import mmap
+    f = open(files['out'], 'r')
+    regex = r'ENERGY\|\ Total FORCE_EVAL.*:\s*([-+]?\d*\.?\d*)'
+    energies = [float(e) for e in re.findall(regex, f.read())]
+    f.close()
+    return energies
+
+def _energy_loader(energy):
+    return {'e_data': energy}
+
+def _force_indexer(files):
+    import mmap
+    f = open(files['out'], 'r')
+    m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+    locs = [match.span()[0] for match in
+            re.finditer(b'ATOMIC FORCES in', m)]
+    indexes = list(zip([files['out']]*len(locs), locs))
+    f.close()
+    return indexes
+
+def _force_loader(index):
+    bohr2ang = 0.5291772109
+    fname, loc = index
+    f = open(fname, 'r')
+    data = []
+    f.seek(loc)
+    [f.readline() for i in range(3)]
+    l = f.readline().strip()
+    while not l.startswith('SUM OF'):
+        data.append(l.split()[3:])
+        l = f.readline().strip()
+    f.close()
+    return {'f_data': np.array(data, np.float)/bohr2ang}
+
+def _coord_indexer(files):
+    import mmap
+    f = open(files['coord'], 'r')
+    first_line = f.readline(); f.seek(0);
+    regex = str.encode('(^|\n)'+first_line[:-1]+'(\r\n|\n)')
+    m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+    locs = [match.span()[-1] for match in
+            re.finditer(regex, m)]
+    indexes = list(zip([files['coord']]*len(locs), locs))
+    f.close()
+    return indexes
+
+def _coord_loader(index):
+    fname, loc = index
+    elems = []
+    coord = []
+    f = open(fname, 'r')
+    f.seek(loc)
+    f.readline()
+    while True:
+        line = f.readline().split()
+        if len(line) <= 1:
+            break
+        elems.append(atomic_numbers[line[0]])
+        coord.append(line[1:4])
+    f.close()
+    return {'elems': np.array(elems, np.float),
+            'coord': np.array(coord, np.float)}
+
+
+indexers = {'force': _force_indexer,
+            'energy': _energy_indexer,
+            'stress': _stress_indexer,
+            'coord': _coord_indexer,
+            'cell_dat': _cell_dat_indexer}
+
+loaders = {'force': _force_loader,
+           'energy': _energy_loader,
+           'stress': _stress_loader,
+           'coord': _coord_loader,
+           'cell_dat': _cell_dat_loader}
+
+formats = {
+    'elems': {'dtype':  tf.int32,   'shape': [None]},
+    'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
+    'cell': {'dtype': tf.float32, 'shape': [3, 3]},
+    'e_data': {'dtype': tf.float32, 'shape': []},
+    'f_data': {'dtype': tf.float32, 'shape': [None, 3]},
+    's_data': {'dtype': tf.float32, 'shape': [3, 3]},
+}
+
+provides = {
+    'force': ['f_data'],
+    'energy': ['e_data'],
+    'stress': ['s_data'],
+    'coord':  ['coord', 'elems'],
+    'cell_dat': ['cell']
+}
+
+def _gen_list(files, keys):
+    all_list = {k: [] for k in keys}
+    for i, file in enumerate(files):
+        new_list = {}
+        for key in keys:
+            new_list[key] = indexers[key](file)
+        # Check each set of data have the same size
+        assert len(set([len(v) for v in new_list.values()]))<=1
+        print(f'\rIndexing: {i+1}/{len(files)}', end='')
+        for k in keys:
+            all_list[k] += new_list[k]
+    print()
+    return all_list
+
+def load_cp2k(files, keys, **kwargs):
+    format_dict = {}
+    for key in keys:
+        for name in provides[key]:
+            format_dict.update({name:formats[name]})
+
+    all_list = _gen_list(files, keys)
+
+    @list_loader(format_dict=format_dict)
+    def _frame_loader(i):
+        results = {}
+        for k,v in all_list.items():
+            results.update(loaders[k](v[i]))
+        return results
+
+    return _frame_loader(list(range(len(all_list['coord']))), **kwargs)
