@@ -1,35 +1,32 @@
 # -*- coding: utf-8 -*-
 """Some simple test that dataset can be loaded"""
 
-import pytest
+import pytest, tempfile
 import tensorflow as tf
 import numpy as np
-from tensorflow.errors import OutOfRangeError
 from helpers import *
 
 
 def test_numpy():
     dataset = get_trivial_numpy_ds()
     data = get_trivial_numpy()
-    item = dataset.make_one_shot_iterator().get_next()
-    with tf.Session() as sess:
-        out = sess.run(item)
-        for k in out.keys():
-            assert_almost_equal(out[k], data[k])
-        with pytest.raises(OutOfRangeError):
-            out = sess.run(item)
+    iterator = iter(dataset)
+    out = next(iterator)
+    for k in out.keys():
+        assert np.allclose(out[k], data[k])
+        with pytest.raises(StopIteration):
+            out = next(iterator)
 
 
 def test_qm9():
     dataset = get_trivial_qm9_ds()
     data = get_trivial_numpy()
-    item = dataset.make_one_shot_iterator().get_next()
-    with tf.Session() as sess:
-        out = sess.run(item)
-        for k in out.keys():
-            assert_almost_equal(out[k], data[k])
-        with pytest.raises(OutOfRangeError):
-            out = sess.run(item)
+    iterator = iter(dataset)
+    out = next(iterator)
+    for k in out.keys():
+        assert np.allclose(out[k], data[k])
+        with pytest.raises(StopIteration):
+            out = next(iterator)
 
 
 def test_runner():
@@ -38,14 +35,12 @@ def test_runner():
     data = get_trivial_numpy()
     data['coord'] *= bohr2ang
     data['cell'] *= bohr2ang
-    item = dataset.make_one_shot_iterator().get_next()
-    with tf.Session() as sess:
-        out = sess.run(item)
-        for k in out.keys():
-            if k in data:  # runner has many labels
-                assert_almost_equal(out[k], data[k])
-        with pytest.raises(OutOfRangeError):
-            out = sess.run(item)
+    iterator = iter(dataset)
+    out = next(iterator)
+    for k in data.keys(): # RuNNer has many labels, we do not test all of them
+        assert np.allclose(out[k], data[k])
+        with pytest.raises(StopIteration):
+            out = next(iterator)
 
 
 def test_split():
@@ -54,36 +49,38 @@ def test_split():
     data = get_trivial_numpy()
     data = {k: np.stack([[v]]*10, axis=0) for k, v in data.items()}
     dataset = load_numpy(data, split={'train': 8, 'test': 2})
-    train = dataset['train'].make_one_shot_iterator().get_next()
-    test = dataset['test'].make_one_shot_iterator().get_next()
-    with tf.Session() as sess:
-        for i in range(8):
-            out = sess.run(train)
-        with pytest.raises(OutOfRangeError):
-            out = sess.run(train)
-        for i in range(2):
-            out = sess.run(test)
-        with pytest.raises(OutOfRangeError):
-            out = sess.run(test)
+    train = iter(dataset['train'])
+    test = iter(dataset['test'])
+    for i in range(8):
+        out = next(train)
+    with pytest.raises(StopIteration):
+        out = next(train)
+    for i in range(2):
+        out = next(test)
+    with pytest.raises(StopIteration):
+        out = next(test)
 
 
 def test_write():
+    import os
     from pinn.io import load_tfrecord, write_tfrecord, sparse_batch
+    from shutil import rmtree
+    tmp = tempfile.mkdtemp(prefix='pinn_test')
     ds = get_trivial_runner_ds().repeat(20)
-    write_tfrecord('test.yml', ds)
-    ds_tfr = load_tfrecord('test.yml')
+    write_tfrecord('{}/test.yml'.format(tmp), ds)
+    ds_tfr = load_tfrecord('{}/test.yml'.format(tmp))
 
     ds_batch = ds.apply(sparse_batch(20))
-    write_tfrecord('test_batch.yml', ds_batch)
-    ds_batch_tfr = load_tfrecord('test_batch.yml')
+    write_tfrecord('{}/test_batch.yml'.format(tmp), ds_batch)
+    ds_batch_tfr = load_tfrecord('{}/test_batch.yml'.format(tmp))
 
-    with tf.Session() as sess:
-        label = sess.run(ds.make_one_shot_iterator().get_next())
-        out = sess.run(ds_tfr.make_one_shot_iterator().get_next())
-        for k in out.keys():
-            assert_almost_equal(label[k], out[k])
+    label = next(iter(ds))
+    out = next(iter(ds_tfr))
+    for k in out.keys():
+        assert np.allclose(label[k], out[k])
 
-        label = sess.run(ds_batch.make_one_shot_iterator().get_next())
-        out = sess.run(ds_batch_tfr.make_one_shot_iterator().get_next())
-        for k in out.keys():
-            assert_almost_equal(label[k], out[k])
+    label = next(iter(ds_batch))
+    out = next(iter(ds_batch_tfr))
+    for k in out.keys():
+        assert np.allclose(label[k], out[k])
+    rmtree(tmp, ignore_errors=True)

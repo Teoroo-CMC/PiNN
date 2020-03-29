@@ -37,10 +37,12 @@ def sparse_batch(batch_size, drop_remainder=False, num_parallel_calls=8,
             if name in tensors:
                 tensors[name] = tf.gather_nd(tensors[name], atom_ind)
         return tensors
-    return lambda dataset: \
-        dataset.padded_batch(batch_size, dataset.output_shapes,
+    def sparse_batch_op(dataset):
+        shapes = {k:v.shape for k,v in dataset.element_spec.items()}
+        return dataset.padded_batch(batch_size, shapes,
                              drop_remainder=drop_remainder).map(
                                  sparsify, num_parallel_calls)
+    return sparse_batch_op
 
 
 def map_nested(fn, nested):

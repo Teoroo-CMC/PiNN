@@ -13,7 +13,7 @@ Example usage of ``pinn_train`` on a local machine::
 
     pinn_trian --model-dir=my_model --params=params.yml \\
                --train-data=train.yml --eval-data=test.yml \\
-               --max-steps=1e6 --eval-steps=100 \\
+               --train-steps=1e6 --eval-steps=100 \\
                --cache-data=True
 
 Example usage of ``pinn_train`` on Google Cloud: 
@@ -69,20 +69,18 @@ def trainner(model_dir, params_file,
             dataset = dataset.apply(sparse_batch(batch_size))
         if preprocess:
             if isinstance(params['network'], str):
-                network_fn = getattr(networks, params['network'])
+                network = getattr(networks, params['network'])
             else:
-                network_fn = params['network']            
-            pre_fn = lambda tensors: network_fn(tensors, preprocess=True,
-                                                **params['network_params'])
-            if scratch_dir is None:
-                return dataset.map(pre_fn) 
-            else:
-                _, tmp = tempfile.mkstemp(dir=scratch_dir)
-                scratches.append(tmp)
-                write_tfrecord(tmp + '.yml', dataset, pre_fn=pre_fn)
-                return lambda: load_tfrecord(tmp + '.yml')
+                network = params['network']
+            dataset = dataseet.map(network.preprocess)
+        if scratch_dir is not None:
+            _, tmp = tempfile.mkstemp(dir=scratch_dir)
+            scratches.append(tmp)
+            write_tfrecord(tmp + '.yml', dataset, pre_fn=pre_fn)
+            return lambda: load_tfrecord(tmp + '.yml')
         else:
             return dataset
+
     train_tmp = lambda: _dataset_fn(train_data)
     eval_fn = lambda: _dataset_fn(eval_data)    
     if scratch_dir is not None and preprocess:

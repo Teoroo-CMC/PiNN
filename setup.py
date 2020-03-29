@@ -16,8 +16,8 @@ setup(name='pinn',
                         'ase>=3.19.0',
                         'pyyaml>=3.01'],
       python_requires='>=3.6',
-      extras_require={'cpu': ['tensorflow==1.15.2'],
-                      'gpu': ['tensorflow-gpu==1.15.2']},
+      extras_require={'cpu': ['tensorflow-cpu>=2.1'],
+                      'gpu': ['tensorflow>=2.1']},
       entry_points={'console_scripts':
                     ['pinn_train=pinn.trainer:main']}
 )

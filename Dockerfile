@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:1.15.2-py3-jupyter
+FROM tensorflow/tensorflow:2.2.0-jupyter
 
 # Install PiNN
 COPY . /opt/src/pinn

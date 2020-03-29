@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 """unit tests for bpnn implementation"""
-
+import pytest
 import numpy as np
 import tensorflow as tf
-from helpers import assert_almost_equal
-
 
 def _manual_sfs():
     lambd = 1.0
@@ -40,11 +38,12 @@ def _manual_sfs():
     return g2_a, g3_a, g4_a
 
 
+@pytest.mark.forked
 def test_sfs():
     # test the BP symmetry functions against manual calculations
     # units in the original runner format is Bohr
     from helpers import get_trivial_runner_ds
-    from pinn.networks import bpnn
+    from pinn.networks.bpnn import BPNN
     from pinn.io import sparse_batch
 
     bohr2ang = 0.5291772109
@@ -58,23 +57,19 @@ def test_sfs():
          'eta': [0.01/(bohr2ang**2)], 'lambd': [1.0], 'zeta': [1.0]}
     ]
     nn_spec = {8: [35, 35], 1: [35, 35]}
-    tensors = dataset.make_one_shot_iterator().get_next()
-    tensors = bpnn(tensors,
-                   sf_spec=sf_spec, nn_spec=nn_spec, rc=12*bohr2ang,
-                   preprocess=True)
-    with tf.Session() as sess:
-        out = sess.run(tensors)
-    print(out)
+    tensors = next(iter(dataset))
+    bpnn = BPNN(sf_spec=sf_spec, nn_spec=nn_spec, rc=12*bohr2ang)
+    tensors = bpnn.preprocess(tensors)
     g2_a, g3_a, g4_a = _manual_sfs()
-    assert_almost_equal(out['fp_0'][0], g2_a)
-    assert_almost_equal(out['fp_1'][0], g3_a)
-    assert_almost_equal(out['fp_2'][0], g4_a)
+    assert np.allclose(tensors['fp_0'][0], g2_a, rtol=5e-3)
+    assert np.allclose(tensors['fp_1'][0], g3_a, rtol=5e-3)
+    assert np.allclose(tensors['fp_2'][0], g4_a, rtol=5e-3)
 
-
+@pytest.mark.forked
 def test_jacob_bpnn():
     """Check BPNN jacobian calculation"""
     from ase.collections import g2
-    from pinn.networks import bpnn
+    from pinn.networks.bpnn import BPNN
 
     # Define the test case
     sf_spec = [
@@ -100,32 +95,32 @@ def test_jacob_bpnn():
     pos = water.get_positions()
     water.set_positions(pos+np.random.uniform(0, 0.2, pos.shape))
 
-    tf.reset_default_graph()
     tensors = {
         "coord": tf.constant(water.positions, tf.float32),
         "ind_1": tf.zeros_like(water.numbers[:, np.newaxis], tf.int32),
         "elems": tf.constant(water.numbers, tf.int32),
         "cell":  tf.constant(water.cell[np.newaxis, :, :], tf.float32)
     }
-    en = bpnn(tensors, sf_spec, nn_spec)
-    frc = - tf.gradients(en, tensors['coord'])[0]
-    saver = tf.train.Saver()
-    with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
-        frc_jacob = sess.run(frc)
-        saver.save(sess, '/tmp/test_jacob_bpnn.ckpt')
 
-    tf.reset_default_graph()
+    bpnn = BPNN(sf_spec, nn_spec)
+    with tf.GradientTape() as g:
+        g.watch(tensors['coord'])
+        tf.random.set_seed(0)
+        en = bpnn(tensors)
+        frc_jacob = - g.gradient(en, tensors['coord'])
+
     tensors = {
         "coord": tf.constant(water.positions, tf.float32),
         "ind_1": tf.zeros_like(water.numbers[:, np.newaxis], tf.int32),
         "elems": tf.constant(water.numbers, tf.int32),
         "cell":  tf.constant(water.cell[np.newaxis, :, :], tf.float32)
     }
-    en = bpnn(tensors, sf_spec, nn_spec, use_jacobian=False)
-    frc = - tf.gradients(en, tensors['coord'])[0]
-    saver = tf.train.Saver()
-    with tf.Session() as sess:
-        saver.restore(sess, '/tmp/test_jacob_bpnn.ckpt')
-        frc_no_jacob = sess.run(frc)
-    assert np.all(np.abs(frc_jacob - frc_no_jacob) < 1e-3)
+
+    bpnn = BPNN(sf_spec, nn_spec, use_jacobian=False)
+    with tf.GradientTape() as g:
+        g.watch(tensors['coord'])
+        tf.random.set_seed(0)
+        en = bpnn(tensors)
+        frc_no_jacob = - g.gradient(en, tensors['coord'])
+
+    assert np.allclose(frc_jacob, frc_no_jacob, rtol=5e-3)

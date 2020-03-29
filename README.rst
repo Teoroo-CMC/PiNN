@@ -32,7 +32,7 @@ Requirements
 ============
 - Python 3
 - ASE, Numpy, Pyyaml
-- TensorFlow >= 1.15.2 [#tf_version]_
+- TensorFlow >= 2.1 [#tf_version]_
 
 Installation
 ============
@@ -105,7 +105,10 @@ fits the scope and aims of this project.
 Notes
 =====
 
-.. [#tf_version] TensorFlow is not installed automatically by default. This
-                 dependency can be included by appending the ``[gpu]`` option
-                 when installing PiNN with pip. Otherwise, you can install PiNN
-                 with CPU-only tensorflow using the ``[cpu]`` option.
+.. [#tf_version] TensorFlow is not installed automatically by default. Since TF
+                 2.0 the GPU support is included in the stable release, ``pip
+                 install tensorflow>=2.1`` should be suitable for most user.
+                 This dependency can be included by appending the ``[gpu]``
+                 option when installing PiNN with pip. Otherwise, you can
+                 install PiNN with CPU-only tensorflow using the ``[cpu]``
+                 option.

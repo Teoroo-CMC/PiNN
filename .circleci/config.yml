@@ -17,7 +17,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.6.10-stretch
     working_directory: ~/repo
     steps:
       - checkout
@@ -42,7 +42,7 @@ jobs:
           key: venv-{{ checksum "requirements-dev.txt" }}-{{ checksum "setup.py" }}-{{ checksum ".circleci/config.yml" }}
   pytest:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.6.10-stretch
     working_directory: ~/repo
     steps:
       - checkout
@@ -55,11 +55,11 @@ jobs:
             . venv/bin/activate
             pip install -e .
             export CUDA_VISIBLE_DEVICES=''
-            pytest tests/ --cov=pinn
+            pytest --forked tests/ --cov=pinn
             codecov --token=$CODECOV_TOKEN
   deploy-doc:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.6.10-stretch
     working_directory: ~/repo
     steps:
       - checkout

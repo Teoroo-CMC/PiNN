@@ -38,7 +38,7 @@ def get_trivial_numpy():
             [[100.0, 0.0, 0.0],
              [0.0, 100.0, 0.0],
              [0.0, 0.0, 100.0]], np.float32),
-        'e_data': np.array(0.0)
+        'e_data': np.array(11.0)
     }
     return trivial_data
 
@@ -51,13 +51,3 @@ def get_trivial_numpy_ds():
     dataset = load_numpy(data, split=1)
     return dataset
 
-
-# Helper function for "fuzzy" comparing of results
-# If the error does not exceed 1% of the absolute value
-# for distances/forces/stress/fingerprints etc.,
-# we think it's OK.
-
-def assert_almost_equal(output, label):
-    output = output[label != 0]
-    label = label[label != 0]
-    assert (np.abs((output-label)/label) < 0.01).all()

@@ -16,27 +16,21 @@ def get_atomic_dress(dataset, elems, max_iter=None):
         atomic_dress: a dictionary comprising the atomic energy of each element
         error: residue error of the atomic dress
     """
-    tensors = dataset.make_one_shot_iterator().get_next()
-    if 'ind_1' not in tensors:
-        tensors['ind_1'] = tf.expand_dims(tf.zeros_like(tensors['elems']), 1)
-        tensors['e_data'] = tf.expand_dims(tensors['e_data'], 0)
-    count = tf.equal(tf.expand_dims(
-        tensors['elems'], 1), tf.expand_dims(elems, 0))
-    count = tf.cast(count, tf.int32)
-    count = tf.segment_sum(count, tensors['ind_1'][:, 0])
-    sess = tf.Session()
+    def count_elems(tensors):
+        if 'ind_1' not in tensors:
+            tensors['ind_1'] = tf.expand_dims(tf.zeros_like(tensors['elems']), 1)
+            tensors['e_data'] = tf.expand_dims(tensors['e_data'], 0)
+        count = tf.equal(tf.expand_dims(
+            tensors['elems'], 1), tf.expand_dims(elems, 0))
+        count = tf.cast(count, tf.int32)
+        count = tf.math.segment_sum(count, tensors['ind_1'][:, 0])
+        return count, tensors['e_data']
+
     x, y = [], []
-    it = 0
-    while True:
-        it += 1
-        if max_iter is not None and it > max_iter:
-            break
-        try:
-            x_i, y_i = sess.run((count, tensors['e_data']))
-            x.append(x_i)
-            y.append(y_i)
-        except tf.errors.OutOfRangeError:
-            break
+    for x_i, y_i in dataset.map(count_elems).as_numpy_iterator():
+        x.append(x_i)
+        y.append(y_i)
+
     x, y = np.concatenate(x, 0), np.concatenate(y, 0)
     beta = np.dot(np.dot(np.linalg.pinv(np.dot(x.T, x)), x.T), np.array(y))
     dress = {e: float(beta[i]) for (i, e) in enumerate(elems)}
@@ -49,7 +43,7 @@ def pi_named(default_name='unnamed'):
     def decorator(func):
         @wraps(func)
         def named_layer(*args, name=default_name, **kwargs):
-            with tf.variable_scope(name):
+            with tf.name_scope(name):
                 return func(*args, **kwargs)
         return named_layer
     return decorator
@@ -139,8 +133,8 @@ def _connect_diff_grad(coord, diff, ind):
             # handle sparse gradient inputs
             ind = tf.gather_nd(ind, tf.expand_dims(ddiff.indices, 1))
             ddiff = ddiff.values
-        dcoord = tf.unsorted_segment_sum(ddiff, ind[:, 1], natoms)
-        dcoord -= tf.unsorted_segment_sum(ddiff, ind[:, 0], natoms)
+        dcoord = tf.math.unsorted_segment_sum(ddiff, ind[:, 1], natoms)
+        dcoord -= tf.math.unsorted_segment_sum(ddiff, ind[:, 0], natoms)
         return dcoord, None, None
     return tf.identity(diff), lambda ddiff: _grad(ddiff, coord, diff, ind)
 

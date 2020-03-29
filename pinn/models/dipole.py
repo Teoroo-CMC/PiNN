@@ -3,7 +3,6 @@
 Models transfer a network to a model function to use with the tf estimator api.
 A model defines the goal/loss of the model, as well as training paramters.
 """
-from pinn.networks import pinet
 import pinn.networks
 import tensorflow as tf
 import numpy as np
@@ -95,10 +94,10 @@ def _dipole_model_fn(features, labels, mode, params):
 
     ind = features['ind_1']  # ind_1 => id of molecule for each atom
     nbatch = tf.reduce_max(ind)+1
-    charge = tf.unsorted_segment_sum(pred, ind[:, 0], nbatch)
+    charge = tf.math.unsorted_segment_sum(pred, ind[:, 0], nbatch)
 
     dipole = pred * features['coord']
-    dipole = tf.unsorted_segment_sum(dipole, ind[:, 0], nbatch)
+    dipole = tf.math.unsorted_segment_sum(dipole, ind[:, 0], nbatch)
     dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
     #charge = charge[:,0]
 
@@ -185,14 +184,14 @@ def _get_loss(features, dipole, charge, model_params):
         d_error *= features['d_weight']
     if model_params['max_dipole']:
         d_error = tf.where(d_mask, tf.zeros_like(d_error), d_error)
-    # keep the per_sample loss so that it can be consumed by tf.metrics.mean
+    # keep the per_sample loss so that it can be consumed by tf.compat.v1.metrics.mean
     d_loss = d_error**2 * model_params['d_loss_multiplier']
     q_loss = charge**2
     metrics['d_loss'] = d_loss
     tot_loss = tf.reduce_mean(d_loss) + tf.reduce_mean(q_loss)
 
     if model_params['use_l2']:
-        tvars = tf.trainable_variables()
+        tvars = tf.compat.v1.trainable_variables()
         l2_loss = tf.add_n([
             tf.nn.l2_loss(v) for v in tvars if
             ('bias' not in v.name and 'D_OUT' not in v.name)])
@@ -207,69 +206,69 @@ def _get_loss(features, dipole, charge, model_params):
 @pi_named('METRICS')
 def _make_eval_metrics(metrics):
     eval_metrics = {
-        'METRICS/D_MAE': tf.metrics.mean_absolute_error(
+        'METRICS/D_MAE': tf.compat.v1.metrics.mean_absolute_error(
             metrics['d_data'], metrics['d_pred']),
-        'METRICS/D_RMSE': tf.metrics.root_mean_squared_error(
+        'METRICS/D_RMSE': tf.compat.v1.metrics.root_mean_squared_error(
             metrics['d_data'], metrics['d_pred']),
-        'METRICS/D_LOSS': tf.metrics.mean(metrics['d_loss']),
-        'METRICS/Q_MAE': tf.metrics.mean_absolute_error(
+        'METRICS/D_LOSS': tf.compat.v1.metrics.mean(metrics['d_loss']),
+        'METRICS/Q_MAE': tf.compat.v1.metrics.mean_absolute_error(
             metrics['q_data'], metrics['q_pred']),
-        'METRICS/Q_RMSE': tf.metrics.root_mean_squared_error(
+        'METRICS/Q_RMSE': tf.compat.v1.metrics.root_mean_squared_error(
             metrics['q_data'], metrics['q_pred']),
-        'METRICS/TOT_LOSS': tf.metrics.mean(metrics['tot_loss'])
+        'METRICS/TOT_LOSS': tf.compat.v1.metrics.mean(metrics['tot_loss'])
     }
 
     if 'd_data_per_atom' in metrics:
-        eval_metrics['METRICS/D_PER_ATOM_MAE'] = tf.metrics.mean_absolute_error(
+        eval_metrics['METRICS/D_PER_ATOM_MAE'] = tf.compat.v1.metrics.mean_absolute_error(
             metrics['d_data_per_atom'], metrics['d_pred_per_atom'])
-        eval_metrics['METRICS/D_PER_ATOM_RMSE'] = tf.metrics.root_mean_squared_error(
+        eval_metrics['METRICS/D_PER_ATOM_RMSE'] = tf.compat.v1.metrics.root_mean_squared_error(
             metrics['d_data_per_atom'], metrics['d_pred_per_atom'])
 
     if 'l2_loss' in metrics:
-        eval_metrics['METRICS/L2_LOSS'] = tf.metrics.mean(metrics['l2_loss'])
+        eval_metrics['METRICS/L2_LOSS'] = tf.compat.v1.metrics.mean(metrics['l2_loss'])
     return eval_metrics
 
 
 @pi_named('METRICS')
 def _make_train_summary(metrics):
-    tf.summary.scalar('D_RMSE', tf.sqrt(tf.reduce_mean(metrics['d_error']**2)))
-    tf.summary.scalar('D_MAE', tf.reduce_mean(tf.abs(metrics['d_error'])))
-    tf.summary.scalar('D_LOSS', tf.reduce_mean(metrics['d_loss']))
-    tf.summary.scalar('Q_RMSE', tf.sqrt(tf.reduce_mean(metrics['q_error']**2)))
-    tf.summary.scalar('Q_MAE', tf.reduce_mean(tf.abs(metrics['q_error'])))
-    tf.summary.scalar('TOT_LOSS', metrics['tot_loss'])
-    tf.summary.histogram('D_DATA', metrics['d_data'])
-    tf.summary.histogram('D_PRED', metrics['d_pred'])
-    tf.summary.histogram('D_ERROR', metrics['d_error'])
+    tf.compat.v1.summary.scalar('D_RMSE', tf.sqrt(tf.reduce_mean(metrics['d_error']**2)))
+    tf.compat.v1.summary.scalar('D_MAE', tf.reduce_mean(tf.abs(metrics['d_error'])))
+    tf.compat.v1.summary.scalar('D_LOSS', tf.reduce_mean(metrics['d_loss']))
+    tf.compat.v1.summary.scalar('Q_RMSE', tf.sqrt(tf.reduce_mean(metrics['q_error']**2)))
+    tf.compat.v1.summary.scalar('Q_MAE', tf.reduce_mean(tf.abs(metrics['q_error'])))
+    tf.compat.v1.summary.scalar('TOT_LOSS', metrics['tot_loss'])
+    tf.compat.v1.summary.histogram('D_DATA', metrics['d_data'])
+    tf.compat.v1.summary.histogram('D_PRED', metrics['d_pred'])
+    tf.compat.v1.summary.histogram('D_ERROR', metrics['d_error'])
 
     if 'd_data_per_atom' in metrics:
-        tf.summary.scalar(
+        tf.compat.v1.summary.scalar(
             'D_PER_ATOM_MAE',
             tf.reduce_mean(tf.abs(metrics['d_error_per_atom'])))
-        tf.summary.scalar(
+        tf.compat.v1.summary.scalar(
             'D_PER_ATOM_RMSE',
             tf.sqrt(tf.reduce_mean(metrics['d_error_per_atom']**2)))
-        tf.summary.histogram('D_PER_ATOM_DATA', metrics['d_data_per_atom'])
-        tf.summary.histogram('D_PER_ATOM_PRED', metrics['d_pred_per_atom'])
-        tf.summary.histogram('D_PER_ATOM_ERROR', metrics['d_error_per_atom'])
+        tf.compat.v1.summary.histogram('D_PER_ATOM_DATA', metrics['d_data_per_atom'])
+        tf.compat.v1.summary.histogram('D_PER_ATOM_PRED', metrics['d_pred_per_atom'])
+        tf.compat.v1.summary.histogram('D_PER_ATOM_ERROR', metrics['d_error_per_atom'])
 
     if 'l2_loss' in metrics:
-        tf.summary.scalar('L2_LOSS', metrics['l2_loss'])
+        tf.compat.v1.summary.scalar('L2_LOSS', metrics['l2_loss'])
 
 
 @pi_named('TRAIN_OP')
 def _get_train_op(loss, model_params):
     # Get the optimizer
-    global_step = tf.train.get_global_step()
+    global_step = tf.compat.v1.train.get_global_step()
     learning_rate = model_params['learning_rate']
     if model_params['use_decay']:
-        learning_rate = tf.train.exponential_decay(
+        learning_rate = tf.compat.v1.train.exponential_decay(
             learning_rate, global_step,
             model_params['decay_step'], model_params['decay_rate'],
             staircase=True)
-    optimizer = tf.train.AdamOptimizer(learning_rate)
+    optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate)
     # Get the gradients
-    tvars = tf.trainable_variables()
+    tvars = tf.compat.v1.trainable_variables()
     grads = tf.gradients(loss, tvars)
     if model_params['use_norm_clip']:
         grads, _ = tf.clip_by_global_norm(grads, model_params['norm_clip'])
