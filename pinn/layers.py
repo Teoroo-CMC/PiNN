@@ -255,7 +255,10 @@ class ANNOutput(tf.keras.layers.Layer):
 
         if self.out_pool:
             out_pool = {'sum': tf.math.unsorted_segment_sum,
-                        'max': tf.math.unsorted_segment_max}[self.out_pool]
+                        'max': tf.math.unsorted_segment_max,
+                        'min': tf.math.unsorted_segment_min,
+                        'avg': tf.math.unsorted_segment_mean,
+            }[self.out_pool]
             output =  out_pool(output, ind_1[:,0],
                                tf.reduce_max(ind_1)+1)
         output = tf.squeeze(output, axis=1)
