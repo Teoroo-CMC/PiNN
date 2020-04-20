@@ -91,6 +91,5 @@ class PiNN_calc(Calculator):
                    if k in ['energy', 'forces', 'stress'] else v
                    for k, v in results.items()}
         if 'stress' in results and self._atoms_to_calc.pbc.all():
-            results['stress'] /= self._atoms_to_calc.get_volume()
             results['stress'] = results['stress'].flat[[0, 4, 8, 5, 2, 1]]
         self.results = results

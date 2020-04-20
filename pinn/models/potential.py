@@ -25,19 +25,25 @@ default_params = {
     'e_scale': 1.0,  # energy scale for prediction
     'e_unit': 1.0,  # output unit of energy during prediction
     # Loss function options
+    ## Energy
     'max_energy': False,     # if set to float, omit energies larger than it
     'use_e_per_atom': False,  # use e_per_atom to calculate e_loss
     'use_e_per_sqrt': False,
     'log_e_per_atom': False,  # log e_per_atom and its distribution
                              # ^- this is forcely done if use_e_per_atom
     'use_e_weight': False,   # scales the loss according to e_weight
+    ## Force
     'use_force': False,      # include force in Loss function
     'max_force': False,      # if set to float, omit forces larger than it
     'use_f_weights': False,  # scales the loss according to f_weights
+    ## Stress
+    'use_stress': False,      # include stress in Loss function
+    ## L2
     'use_l2': False,         # L2 regularization
     # Loss function multipliers
     'e_loss_multiplier': 1.0,
     'f_loss_multiplier': 1.0,
+    's_loss_multiplier': 1.0,
     'l2_loss_multiplier': 1.0,
     # Optimizer related
     'learning_rate': 3e-4,   # Learning rate
@@ -144,6 +150,7 @@ def _potential_model_fn(features, labels, mode, params):
             tf.expand_dims(stress, 1) *
             tf.expand_dims(features['diff'], 2),
             axis=0, keepdims=True)
+        stress /= tf.linalg.det(features['cell'])
 
         predictions = {
             'energy': pred,
@@ -229,6 +236,22 @@ def _get_loss(features, pred, model_params):
         metrics['f_loss'] = f_loss
         tot_loss += tf.reduce_mean(f_loss)
 
+    if model_params['use_stress']:
+        s_pred = _get_dense_grad(pred, features['diff'])
+        s_pred = tf.reduce_sum(
+            tf.expand_dims(s_pred, 1) *
+            tf.expand_dims(features['diff'], 2),
+            axis=0, keepdims=True)
+        s_pred /= tf.linalg.det(features['cell'])
+        s_data = features['s_data']*model_params['e_scale']
+        s_error = s_pred - s_data
+        metrics['s_data'] = s_data
+        metrics['s_pred'] = s_pred
+        metrics['s_error'] = s_error
+        s_loss = s_error**2 * model_params['s_loss_multiplier']
+        metrics['s_loss'] = s_loss
+        tot_loss += tf.reduce_mean(s_loss)
+
     if model_params['use_l2']:
         tvars = tf.compat.v1.trainable_variables()
         l2_loss = tf.add_n([
@@ -265,6 +288,14 @@ def _make_eval_metrics(metrics):
         eval_metrics['METRICS/F_RMSE'] = tf.compat.v1.metrics.root_mean_squared_error(
             metrics['f_data'], metrics['f_pred'])
         eval_metrics['METRICS/F_LOSS'] = tf.compat.v1.metrics.mean(metrics['f_loss'])
+
+    if 's_data' in metrics:
+        eval_metrics['METRICS/S_MAE'] = tf.compat.v1.metrics.mean_absolute_error(
+            metrics['s_data'], metrics['s_pred'])
+        eval_metrics['METRICS/S_RMSE'] = tf.compat.v1.metrics.root_mean_squared_error(
+            metrics['s_data'], metrics['s_pred'])
+        eval_metrics['METRICS/S_LOSS'] = tf.compat.v1.metrics.mean(metrics['s_loss'])
+
     if 'l2_loss' in metrics:
         eval_metrics['METRICS/L2_LOSS'] = tf.compat.v1.metrics.mean(metrics['l2_loss'])
     return eval_metrics
@@ -299,6 +330,16 @@ def _make_train_summary(metrics):
         tf.compat.v1.summary.histogram('F_DATA', metrics['f_data'])
         tf.compat.v1.summary.histogram('F_PRED', metrics['f_pred'])
         tf.compat.v1.summary.histogram('F_ERROR', metrics['f_error'])
+
+    if 's_data' in metrics:
+        tf.compat.v1.summary.scalar('S_MAE', tf.reduce_mean(tf.abs(metrics['s_error'])))
+        tf.compat.v1.summary.scalar('S_RMSE', tf.sqrt(
+            tf.reduce_mean(metrics['s_error']**2)))
+        tf.compat.v1.summary.scalar('S_LOSS', tf.reduce_mean(metrics['s_loss']))
+        tf.compat.v1.summary.histogram('S_DATA', metrics['s_data'])
+        tf.compat.v1.summary.histogram('S_PRED', metrics['s_pred'])
+        tf.compat.v1.summary.histogram('S_ERROR', metrics['s_error'])
+
     if 'l2_loss' in metrics:
         tf.compat.v1.summary.scalar('L2_LOSS', metrics['l2_loss'])
 
