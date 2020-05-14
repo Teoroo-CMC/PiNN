@@ -145,18 +145,20 @@ def _potential_model_fn(features, labels, mode, params):
 
         forces = -_get_dense_grad(pred, features['coord'])
         forces = tf.expand_dims(forces, 0)
-        stress = _get_dense_grad(pred, features['diff'])
-        stress = tf.reduce_sum(
-            tf.expand_dims(stress, 1) *
-            tf.expand_dims(features['diff'], 2),
-            axis=0, keepdims=True)
-        stress /= tf.linalg.det(features['cell'])
 
         predictions = {
             'energy': pred,
             'forces': forces,
-            'stress': stress
         }
+
+        if 'cell' in features:
+            stress = _get_dense_grad(pred, features['diff'])
+            stress = tf.reduce_sum(
+                tf.expand_dims(stress, 1) *
+                tf.expand_dims(features['diff'], 2),
+                axis=0, keepdims=True)
+            stress /= tf.linalg.det(features['cell'])
+            predictions['stress'] = stress
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
 

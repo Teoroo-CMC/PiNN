@@ -23,7 +23,7 @@ def _displace_matrix(max_repeat):
 
 def _pbc_repeat(coord, cell, ind_1, rc):
     """This is a helper function for cell_list_nl"""
-    n_repeat = rc * tf.norm(tf.linalg.inv(tensors['cell']), axis=1)
+    n_repeat = rc * tf.norm(tf.linalg.inv(cell), axis=1)
     n_repeat = tf.cast(tf.math.ceil(n_repeat), tf.int32)
     max_repeat = tf.reduce_max(n_repeat, axis=0)
     disp_mat = _displace_matrix(max_repeat)
