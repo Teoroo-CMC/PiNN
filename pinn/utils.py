@@ -6,12 +6,13 @@ import numpy as np
 from functools import wraps
 
 
-def get_atomic_dress(dataset, elems, max_iter=None):
+def get_atomic_dress(dataset, elems, key='e_data'):
     """Fit the atomic energy with a element dependent atomic dress
 
     Args:
         dataset: dataset to fit
         elems: a list of element numbers
+        key: key of the property to fit
     Returns:
         atomic_dress: a dictionary comprising the atomic energy of each element
         error: residue error of the atomic dress
@@ -19,12 +20,12 @@ def get_atomic_dress(dataset, elems, max_iter=None):
     def count_elems(tensors):
         if 'ind_1' not in tensors:
             tensors['ind_1'] = tf.expand_dims(tf.zeros_like(tensors['elems']), 1)
-            tensors['e_data'] = tf.expand_dims(tensors['e_data'], 0)
+            tensors[key] = tf.expand_dims(tensors[key], 0)
         count = tf.equal(tf.expand_dims(
             tensors['elems'], 1), tf.expand_dims(elems, 0))
         count = tf.cast(count, tf.int32)
         count = tf.math.segment_sum(count, tensors['ind_1'][:, 0])
-        return count, tensors['e_data']
+        return count, tensors[key]
 
     x, y = [], []
     for x_i, y_i in dataset.map(count_elems).as_numpy_iterator():
