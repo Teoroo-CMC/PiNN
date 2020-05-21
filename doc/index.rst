@@ -1,6 +1,6 @@
-===========================================================
-PiNN: a Python library for building atomic neural networks
-===========================================================
+=================
+Table of contents
+=================
 .. toctree::
    :maxdepth: 2
 
@@ -13,4 +13,3 @@ PiNN: a Python library for building atomic neural networks
    utils.rst
    notebooks.rst
    reference.rst
-   misc.rst

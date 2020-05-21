@@ -81,15 +81,25 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-
-html_theme = 'bizstyle'
-html_logo = ''
+html_show_sourcelink = False
+html_theme = 'sphinx_material'
+html_logo = 'images/logo.svg'
+html_favicon = 'images/favicon.png'
+pygments_style = 'friendly'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {}
+html_theme_options = {
+    'color_primary': 'grey',
+    'color_accent': 'red',
+    'repo_url': 'https://github.com/Teoroo-CMC/PiNN',
+    'repo_name': 'PiNN',
+    'master_doc': False,
+    'nav_title': 'Pairwise-interaction Neural Network',
+    'globaltoc_depth': 3,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -104,7 +114,7 @@ html_static_path = []
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-html_sidebars = {'**': ['globaltoc.html', 'searchbox.html']}
+html_sidebars = {'**': ['globaltoc.html', 'searchbox.html', 'localtoc.html']}
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
@@ -137,7 +147,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'PiNN.tex', 'PiNN Documentation',
+    (master_doc, 'PiNN.tex', 'Documentation',
      'Yunqi Shao', 'manual'),
 ]
 
@@ -147,7 +157,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pinn', 'PiNN Documentation',
+    (master_doc, 'pinn', 'Documentation',
      [author], 1)
 ]
 
@@ -158,7 +168,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'PiNN', 'PiNN Documentation',
+    (master_doc, 'PiNN', 'Documentation',
      author, 'PiNN', 'One line description of project.',
      'Miscellaneous'),
 ]

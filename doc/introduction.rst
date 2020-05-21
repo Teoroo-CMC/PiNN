@@ -7,8 +7,7 @@ and train ANN interatomic potentials, but PiNN is also capable of
 predicting physical and chemical properties of molecules and
 materials.
 
-Flexibility
-^^^^^^^^^^^
+.. rubric:: Flexibility
 
 .. figure:: images/implement.png
    :width: 600
@@ -22,16 +21,14 @@ want to design a new network structure, or apply an existing network
 to new datasets or new properties.
 
 
-Scalability
-^^^^^^^^^^^
+.. rubric:: Scalability
 
 PiNN fully adheres to TensorFlow's high-level Estimator and Dataset
 API.  It is straightforward to train and predict on different
 computing platforms (CPU, multiple-GPU, cloud, etc) without explicit
 programming.
 
-Examples
-^^^^^^^^
+.. rubric:: Examples
 
 The quickest way to start with PiNN is to follow our tutorial
 :doc:`notebooks`. The notebooks provide guides to train a simple ANN

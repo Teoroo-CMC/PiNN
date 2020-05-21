@@ -2,7 +2,8 @@ pytest
 pytest-xdist
 pytest-cov
 codecov
-sphinx
 ipython
+sphinx
+sphinx-material
 nbsphinx
 sphinxcontrib-bibtex
