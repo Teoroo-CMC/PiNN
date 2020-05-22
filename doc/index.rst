@@ -5,6 +5,7 @@ PiNN: a Python library for building atomic neural networks
    :maxdepth: 2
 
    introduction.rst
+   data.rst
    datasets.rst
    networks.rst
    models.rst
