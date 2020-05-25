@@ -230,7 +230,8 @@ def _get_loss(features, pred, model_params):
         l2_loss = tf.add_n([
             tf.nn.l2_loss(v) for v in tvars if
             ('bias' not in v.name and 'E_OUT' not in v.name)])
-        metrics['l2_loss'] = l2_loss * model_params['l2_loss_multiplier']
+        l2_loss = l2_loss * model_params['l2_loss_multiplier']
+        metrics['l2_loss'] = l2_loss
         tot_loss += l2_loss
 
     metrics['tot_loss'] = tot_loss
