@@ -21,23 +21,23 @@ def _displace_matrix(max_repeat):
     return d
 
 
-def _pbc_repeat(tensors, rc):
+def _pbc_repeat(coord, cell, ind_1, rc):
     """This is a helper function for cell_list_nl"""
-    n_repeat = rc * tf.norm(tf.matrix_inverse(tensors['cell']), axis=1)
+    n_repeat = rc * tf.norm(tf.matrix_inverse(cell), axis=1)
     n_repeat = tf.cast(tf.ceil(n_repeat), tf.int32)
     max_repeat = tf.reduce_max(n_repeat, axis=0)
     disp_mat = _displace_matrix(max_repeat)
 
     repeat_mask = tf.reduce_all(
         tf.expand_dims(n_repeat, 1) >= tf.abs(disp_mat), axis=2)
-    atom_mask = tf.gather(repeat_mask, tensors['ind_1'])
+    atom_mask = tf.gather(repeat_mask, ind_1)
     repeat_ar = tf.cast(tf.where(atom_mask), tf.int32)
     repeat_a = repeat_ar[:, :1]
     repeat_r = repeat_ar[:, 2]
-    repeat_s = tf.gather_nd(tensors['ind_1'], repeat_a)
-    repeat_pos = (tf.gather_nd(tensors['coord'], repeat_a) +
+    repeat_s = tf.gather_nd(ind_1, repeat_a)
+    repeat_pos = (tf.gather_nd(coord, repeat_a) +
                   tf.reduce_sum(
-                      tf.gather_nd(tensors['cell'], repeat_s) *
+                      tf.gather_nd(cell, repeat_s) *
                       tf.gather(tf.cast(tf.expand_dims(disp_mat, 2),
                                         tf.float32), repeat_r), 1))
     return repeat_pos, repeat_s, repeat_a
@@ -50,7 +50,7 @@ def _wrap_coord(tensors):
     frac_coord = tf.linalg.solve(tf.transpose(cell, perm=[0, 2, 1]), coord)
     frac_coord %= 1
     coord = tf.matmul(tf.transpose(cell, perm=[0, 2, 1]), frac_coord)
-    tensors['coord'] = tf.squeeze(coord, -1)
+    return tf.squeeze(coord, -1)
 
 
 @pi_named('cell_list_nl')
@@ -69,9 +69,10 @@ def cell_list_nl(tensors, rc=5.0):
     atom_aind = atom_gind - 1
     to_collect = atom_aind
     if 'cell' in tensors:
-        _wrap_coord(tensors)
-        atom_apos = tensors['coord']
-        rep_apos, rep_sind, rep_aind = _pbc_repeat(tensors, rc)
+        coord_wrap = _wrap_coord(tensors)
+        atom_apos =  coord_wrap
+        rep_apos, rep_sind, rep_aind = _pbc_repeat(
+            coord_wrap, tensors['cell'], tensors['ind_1'], rc)
         atom_sind = tf.concat([atom_sind, rep_sind], 0)
         atom_apos = tf.concat([atom_apos, rep_apos], 0)
         atom_aind = tf.concat([atom_aind, rep_aind], 0)
