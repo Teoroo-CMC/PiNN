@@ -33,7 +33,7 @@ jobs:
             # pip need to be upgraded for TF 1.15
             pip install --upgrade pip
             # Install the requirements but remove PiNN            
-            pip install -e .
+            pip install .[cpu]
             pip uninstall -y pinn
             # Install requirements for testing
             pip install -r requirements-dev.txt

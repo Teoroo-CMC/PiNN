@@ -12,8 +12,12 @@ setup(name='pinn',
       author_email='yunqi_shao@yahoo.com',
       license='BSD',
       packages=find_packages(),
-      install_requires=['ase', 'numpy', 'pyyaml', 'tensorflow==1.15.2'],
-      entry_points={
-          'console_scripts': ['pinn_train=pinn.trainer:main']
-      }
+      install_requires=['numpy>1.3.0',
+                        'ase>=3.19.0',
+                        'pyyaml>=3.01'],
+      python_requires='>=3.6',
+      extras_require={'cpu': ['tensorflow==1.15.2'],
+                      'gpu': ['tensorflow-gpu==1.15.2']},
+      entry_points={'console_scripts':
+                    ['pinn_train=pinn.trainer:main']}
 )

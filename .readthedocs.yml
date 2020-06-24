@@ -11,5 +11,5 @@ formats: []
 python:
   version: 3.7
   install:
+    - path: .[cpu]
     - requirements: requirements-dev.txt
-    - path: .
