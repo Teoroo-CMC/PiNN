@@ -24,7 +24,6 @@ jobs:
       - restore_cache:
           keys:
             - venv-{{ checksum "requirements-dev.txt" }}-{{ checksum "setup.py" }}-{{ checksum ".circleci/config.yml" }}
-            - venv-
       - run:
           name: Install dependencies
           command: |
