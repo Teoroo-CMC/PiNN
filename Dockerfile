@@ -1,7 +1,8 @@
-FROM tensorflow/tensorflow:1.15.0-py3-jupyter
+FROM tensorflow/tensorflow:1.15.2-py3-jupyter
 
 # Install PiNN
 COPY . /opt/src/pinn
+RUN ls /opt/src/pinn
 RUN pip install /opt/src/pinn && \
     pip install -r /opt/src/pinn/requirements-dev.txt && \
     pip install -r /opt/src/pinn/requirements-extra.txt && \
