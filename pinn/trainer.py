@@ -81,9 +81,11 @@ def trainner(model_dir, params_file,
                 scratches.append(tmp)
                 write_tfrecord(tmp + '.yml', dataset, pre_fn=pre_fn)
                 return lambda: load_tfrecord(tmp + '.yml')
+        else:
+            return dataset
     train_tmp = lambda: _dataset_fn(train_data)
     eval_fn = lambda: _dataset_fn(eval_data)    
-    if scratch_dir is not None:
+    if scratch_dir is not None and preprocess:
         train_tmp = train_tmp()
         eval_fn = eval_fn()
     if cache_data:
