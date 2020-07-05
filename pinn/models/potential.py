@@ -84,7 +84,7 @@ def potential_model(params, **kwargs):
         if tf.gfile.Exists(params_path):
             original = FileIO(params_path, 'r').read()
             if original != to_write:
-                os.rename(params_path, params_path+'.' +
+                tf.gfile.Rename(params_path, params_path+'.' +
                           datetime.now().strftime('%y%m%d%H%M'))
         FileIO(params_path, 'w').write(to_write)
 

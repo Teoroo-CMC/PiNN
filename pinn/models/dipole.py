@@ -56,22 +56,23 @@ def dipole_model(params, **kwargs):
 
     if isinstance(params, str):
         model_dir = params
-        assert os.path.isdir(model_dir)
-        with open(os.path.join(model_dir, 'params.yml')) as f:
-            params = yaml.load(f)
+        assert tf.gfile.Exists('{}/params.yml'.format(model_dir)),\
+            "Parameters files not found."
+        with FileIO(os.path.join(model_dir, 'params.yml'), 'r') as f:
+            params = yaml.load(f, Loader=yaml.Loader)
     else:
         model_dir = params['model_dir']
         yaml.Dumper.ignore_aliases = lambda *args: True
         to_write = yaml.dump(params)
         params_path = os.path.join(model_dir, 'params.yml')
-        if not os.path.exists(model_dir):
-            os.makedirs(model_dir)
-        if os.path.isfile(params_path):
-            original = open(params_path).read()
+        if not tf.gfile.IsDirectory(model_dir):
+            tf.gfile.MakeDirs(model_dir)
+        if tf.gfile.Exists(params_path):
+            original = FileIO(params_path, 'r').read()
             if original != to_write:
-                os.rename(params_path, params_path+'.' +
+                tf.gfile.Rename(params_path, params_path+'.' +
                           datetime.now().strftime('%y%m%d%H%M'))
-        open(params_path, 'w').write(to_write)
+        FileIO(params_path, 'w').write(to_write)
 
     model = tf.estimator.Estimator(
         model_fn=_dipole_model_fn, params=params,
