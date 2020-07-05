@@ -134,10 +134,10 @@ def pinet(tensors, pp_nodes=[16, 16], pi_nodes=[16, 16],
         tensors.update(cell_list_nl(tensors, rc))
         connect_dist_grad(tensors)
         tensors['embed'] = atomic_onehot(tensors['elems'], atom_types)
-        if preprocess:
-            return tensors
     else:
         connect_dist_grad(tensors)
+    if preprocess:
+        return tensors
     # Basis function
     if basis_type == 'polynomial':
         basis = polynomial_basis(tensors['dist'], cutoff_type, rc, n_basis)

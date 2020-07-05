@@ -380,13 +380,13 @@ def bpnn(tensors, sf_spec, nn_spec,
         connect_dist_grad(tensors)
         tensors['cutoff_func'] = cutoff_func(tensors['dist'], cutoff_type, rc)
         tensors.update(bp_symm_func(tensors, sf_spec, rc, cutoff_type))
-        if preprocess:
-            tensors.pop('dist')
-            tensors.pop('cutoff_func')
-            tensors.pop('ind_3', None)
-            return tensors
+        tensors.pop('dist')
+        tensors.pop('cutoff_func')
+        tensors.pop('ind_3', None)
     else:
         connect_dist_grad(tensors)
+    if preprocess:
+        return tensors
     fps = make_fps(tensors, sf_spec, nn_spec, use_jacobian, fp_range, fp_scale)
     output = 0.0
     n_atoms = tf.shape(tensors['elems'])[0]
