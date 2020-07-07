@@ -1,0 +1,58 @@
+site_name: PiNN Documentation
+nav:
+  - Home:
+    - Introduction: index.md
+    - Cite PiNN: cite.md
+  - Usage:
+    - Overview: usage/overview.md
+    - Datasests: usage/datasets.md
+    - Networks:
+      - Overview: usage/networks.md
+      - Implemented Networks:
+        - PiNet: usage/pinet.md
+        - BPNN: usage/bpnn.md
+    - Models:
+      - Overview: usage/models.md
+      - Implemented Models:
+        - Potential Model: usage/potential.md
+        - Dipole Model: usage/dipole.md
+      - Custom Mdoel: usage/custom_model.md
+    - Command-line interface: usage/cmd.md
+    - Hyperparameter Tuning: usage/tune.md
+  - Visualize: usage/visualize.md
+  - Notebooks:
+    - Overview: notebooks/overview.md
+    - Tutorials:
+      - Quick Start: notebooks/Quick_tour.ipynb
+      - Training Tips: notebooks/More_on_training.ipynb
+    - Examples:
+      - Custom Dataset: notebooks/Customizing_dataset.ipynb
+      - LJ potential: notebooks/Learn_LJ_potential.ipynb
+      - Hyperparameter Tuning: notebooks/Tune_visualize.ipynb
+  - API Reference:
+    - pinn.layers: empty.md
+    - pinn.networks: empty.md
+    - pinn.models: empty.md
+plugins:
+  - search
+  - bibtex:
+      bib_file: "docs/references.bib"
+      cite_style: "pandoc"
+  - mkdocs-jupyter
+theme:
+  name: material
+  logo: images/logo.svg
+  favicon: images/favicon.png
+  features:
+    - tabs
+markdown_extensions:
+  - admonition
+  - footnotes
+  - codehilite
+  - pymdownx.arithmatex
+  - pymdownx.tasklist
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - js/extra.js
+extra_css:
+  - css/extra.css

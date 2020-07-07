@@ -3,7 +3,8 @@ pytest-xdist
 pytest-cov
 codecov
 ipython
-sphinx
-sphinx-material
-nbsphinx
-sphinxcontrib-bibtex
+mkdocs
+mkdocs-material
+mkdocs-jupyter
+mkdocs-bibtex
+mkdocstrings

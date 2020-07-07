@@ -6,12 +6,9 @@
 set -e
 shopt -s extglob
 
-cd doc
-make clean html
-cd ..
+mkdocs build
 
-mv doc/_build/html ./
-rm -r !(".git"|"html"|".."|".")
+rm -r !(".git"|"site"|".."|".")
 
 git checkout gh-pages
 git checkout --orphan gh-pages-tmp
@@ -20,13 +17,13 @@ git config --global user.name "$GH_NAME" > /dev/null 2>&1
 touch .nojekyll
 
 if [[ "$CIRCLE_BRANCH" =~ ^master$|^[0-9]+\.[0-9]+\.X$ ]]; then
-    cp -r html/* ./
+    cp -r site/* ./
 else
     mkdir -p "$CIRCLE_BRANCH"
-    cp -r html/* ./"$CIRCLE_BRANCH"
+    cp -r site/* ./"$CIRCLE_BRANCH"
 fi
 
-rm -r html/    
+rm -r site/
 git add --all
 git commit --allow-empty  -m "[ci skip] Publishing updated documentation..."
 git remote rm origin
