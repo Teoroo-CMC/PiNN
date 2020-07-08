@@ -5,6 +5,10 @@ import tensorflow as tf
 import numpy as np
 from functools import wraps
 
+def count_atoms(ind_1):
+    return tf.math.unsorted_segment_sum(
+        tf.ones_like(ind_1, tf.float32), ind_1, tf.reduce_max(ind_1)+1)
+
 
 def get_atomic_dress(dataset, elems, key='e_data'):
     """Fit the atomic energy with a element dependent atomic dress
