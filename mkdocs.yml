@@ -17,6 +17,7 @@ nav:
         - Potential Model: usage/potential.md
         - Dipole Model: usage/dipole.md
       - Custom Mdoel: usage/custom_model.md
+    - Optimizers: usage/optimizers.md
     - Command-line interface: usage/cmd.md
     - Hyperparameter Tuning: usage/tune.md
   - Visualize: usage/visualize.md

@@ -102,11 +102,14 @@ def get_train_op(optimizer, loss, error, network):
         error: a list of error vectors (reserved for EKF).
         network: a PiNN network instance.
     """
-    from tensorflow.keras.optimizers import get
+    from pinn.optimizers import get, EKF
 
     optimizer = get(optimizer)
     optimizer.iterations = tf.compat.v1.train.get_or_create_global_step()
     tvars = network.trainable_variables
-    grads = tf.gradients(loss, tvars)
 
-    return optimizer.apply_gradients(zip(grads, tvars))
+    if not isinstance(optimizer, EKF):
+        grads = tf.gradients(loss, tvars)
+        return optimizer.apply_gradients(zip(grads, tvars))
+    else:
+        return optimizer.get_train_op(error, tvars)
