@@ -1,54 +1,61 @@
 # Models in PiNN
 
-## Saving and restoring a model
+For regression problems for an atomic for molecular property, it's often
+sufficient to use an `network`. However, atomic machine learning tasks it's
+often desired to train on properties derived from the atomic predictions, such
+as forces, stress tensors for dipole moments. `pinn.models` are created for
+defining these tasks in a `network`-agnostic way. 
 
-The parameters model is defined by serializable dictionary and saved to a
-`params.yml` file whenever a model is created. The `params.yml` file contains
-information about the network architecture, hyperparameters and training
-algorithm. The `params.yml` file must contain following keys:
+Two models are implemented in PiNN at this point, their respective options can
+be found in the "Implemented models" section.
 
-- `network`: string specifying a PiNN network or a Keras model
-- `network_params`: parameters to initalize the network
-- `model_dir`: model directory
-- `model_params`: model specific parameters
+## Configuring a model
 
-To restore a model, one only need to initialize the model with the directory:
+Models implemented in PiNN used a serialized format for their parameters. The
+parameter file specifies the network architecture, hyperparameters and training
+algorithm. A typical parameter file include the following sections:
 
-```Python
-from pinn.models import potential_model
-model = potential_model('/tmp/pinet_potential')
+```yaml
+model_dir: /tmp/test_pinet_pot
+model:
+  name: potential_model
+  params:
+    use_force: true
+network:
+  name: PiNet
+  params:
+    atom_types: [1, 6, 7, 8, 9]
+optimizer:
+  class_name: EKF
+  config:
+    learning_rate: 0.03
 ```
 
-## Common parameters of model
+Among those, and `optimizer` follows the format of a Keras optimizer. The
+`model` and `network` section constitutes the name and parameters of initialize
+a PiNN model and network, respectively. A model can be initialized by a
+parameter file or a nested python dictionary.
 
-The available options of `model_params` depends on the model, below is a table
-of parameters that are present in all models.
+```Python
+model = pinn.get_model('pinet.yml')
+```
 
-| Parameter           | Default           | Description                                              |
-|---------------------|-------------------|----------------------------------------------------------|
-| `optimizer`         | `AdamOptimizer`   | String specifying optimizer  or a Keras optimizer object |
-| `use_l2`            | `False`           | Use the L2 regularization                                |
-| `l2_loss_muliplier` | 1.0               | Weight of the L2 loss function in the loss function      |
+PiNN automatically saves a `params.yml` file in the model directory. With an
+trained model, the model can be loaded with its directory as well.
+
+```Python
+model = pinn.get_model('/tmp/test_pinet_pot')
+```
 
 ## ASE interface
 PiNN provides a ``PiNN_calc`` class to interface models with ASE. A calculator
 can be created from a model as simple as:
 
 ```Python
-from pinn.models import potential_model
-from pinn.calculator import PiNN_calc
-calc = PiNN_calc(potential_modle('/path/to/model/'))
+calc = pinn.get_calc_from_model('/tmp/test_pinet_pot')
 calc.calculate(atoms)
 ```
 
-The implemented properties of the calculator depend on the prediciton returns of
-``model_fn``. For example: energy, forces and stress (with PBC) calculations are
-implemented for the potential model; partial charge and dipole calculations are
-implemented for the dipole model.
-
-The calculator can then be used in ASE optimizers and molecular dynamics
-engines. Note that the calculator will try to use the same predictor (a
-generator given by ``estimator.predict``) whenever possible, so as to avoid the
-expensive reconstruction of the computation graph. However, the graph will be
-reconstructed if the pbc condition of the input ``Atoms`` is changed. Also, the
-predictor must be reset if it is interupted for some reasons.
+The implemented properties of the calculator depend on the model. For example:
+the potential model implements energy, forces and stress (with PBC) calculations
+and the dipole model implements partial charge and dipole calculations.

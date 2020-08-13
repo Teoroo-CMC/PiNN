@@ -3,10 +3,10 @@
 Models transfer a network to a model function to use with the tf estimator api.
 A model defines the goal/loss of the model, as well as training paramters.
 """
-import pinn.networks
 import tensorflow as tf
 import numpy as np
 
+from pinn import get_network
 from pinn.utils import pi_named
 from pinn.models.base import export_model
 
@@ -31,9 +31,9 @@ default_params = {
 @export_model
 def dipole_model(features, labels, mode, params):
     """Model function for neural network dipoles"""
-    network = get_network(params['network'], **params['network_params'])
+    network = get_network(params['network'])
     model_params = default_params
-    model_params.update(params['model_params'])
+    model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
     connect_dist_grad(features)

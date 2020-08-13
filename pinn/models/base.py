@@ -7,38 +7,13 @@ def export_model(model_fn):
     # default parameters for all models
     from pinn.optimizers import default_adam
     default_params = {'optimizer': default_adam}
-
     def pinn_model(params, **kwargs):
-        import yaml, os
-        import numpy as np
-        from tensorflow.python.lib.io.file_io import FileIO
-        from datetime import datetime
-
-        if isinstance(params, str):
-            model_dir = params
-            assert tf.io.gfile.exists('{}/params.yml'.format(model_dir)),\
-                "Parameters files not found."
-            with FileIO(os.path.join(model_dir, 'params.yml'), 'r') as f:
-                params = yaml.load(f, Loader=yaml.Loader)
-        else:
-            model_dir = params['model_dir']
-            yaml.Dumper.ignore_aliases = lambda *args: True
-            to_write = yaml.dump(params)
-            params_path = os.path.join(model_dir, 'params.yml')
-            if not tf.io.gfile.isdir(model_dir):
-                tf.io.gfile.makedirs(model_dir)
-            if tf.io.gfile.exists(params_path):
-                original = FileIO(params_path, 'r').read()
-                if original != to_write:
-                    tf.io.gfile.rename(params_path, params_path+'.' +
-                              datetime.now().strftime('%y%m%d%H%M'))
-            FileIO(params_path, 'w').write(to_write)
-
+        model_dir = params['model_dir']
         params_tmp = default_params.copy()
         params_tmp.update(params)
         params = params_tmp
-        model = tf.estimator.Estimator(model_fn=model_fn, params=params,
-                                       model_dir=model_dir, **kwargs)
+        model = tf.estimator.Estimator(
+            model_fn=model_fn, params=params, model_dir=model_dir, **kwargs)
         return model
     return pinn_model
 

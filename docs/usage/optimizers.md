@@ -52,4 +52,4 @@ Note that the EKF implemented in PiNN is not a standard TensorFlow Optimizer
 object, therefore, you can not use it directly as a regular optimizer, e.g.
 `opt.minimize(loss)` in combination with the Keras models. This is mainly due to
 the fact that `EFK` uses the error Jacobian rather than a scalar loss function
-as input. Further updates might improve the API in a more coherent way.
+as input. Further updates might improve the API for better consistency.

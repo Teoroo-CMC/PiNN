@@ -7,11 +7,10 @@ A model defines the goal/loss of the model, as well as training paramters.
 import tensorflow as tf
 import numpy as np
 
-from pinn.models.base import export_model, get_train_op, MetricsCollector
-from pinn.networks import get_network
+from pinn import get_network
 from pinn.layers import atomic_dress
 from pinn.utils import pi_named, connect_dist_grad
-
+from pinn.models.base import export_model, get_train_op, MetricsCollector
 
 default_params = {
     ### Scaling and units
@@ -50,9 +49,9 @@ default_params = {
 @export_model
 def potential_model(features, labels, mode, params):
     """Model function for neural network potentials"""
-    network = get_network(params['network'], **params['network_params'])
+    network = get_network(params['network'])
     model_params = default_params.copy()
-    model_params.update(params['model_params'])
+    model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
     connect_dist_grad(features)

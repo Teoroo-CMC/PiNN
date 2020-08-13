@@ -3,6 +3,7 @@
 import tempfile, os, pytest
 import tensorflow as tf
 import numpy as np
+import pinn
 from shutil import rmtree
 
 
@@ -12,7 +13,6 @@ def test_potential_model():
     from ase import Atoms    
     from ase.calculators.lj import LennardJones
     from pinn.io import load_numpy, sparse_batch
-    from pinn.models import potential_model
     def three_body_sample(atoms, a, r):
         x = a * np.pi / 180
         pos = [[0, 0, 0],
@@ -56,18 +56,19 @@ def test_potential_model():
     test = lambda: dataset()['test'].repeat().apply(sparse_batch(100))
     params={
     'model_dir': tmp,
-    'network': 'PiNet',
-    'network_params': {
-        'ii_nodes':[8,8],
-        'pi_nodes':[8,8],
-        'pp_nodes':[8,8],
-        'out_nodes':[8,8],
-        'rc': 3.0,
-        'atom_types':[1]},
-    'model_params':{
-        'use_force': True}
-    }
-    model = potential_model(params)
+    'network': {
+        'name': 'PiNet',
+        'params': {
+            'ii_nodes':[8,8],
+            'pi_nodes':[8,8],
+            'pp_nodes':[8,8],
+            'out_nodes':[8,8],
+            'rc': 3.0,
+            'atom_types':[1]}},
+    'model':{
+        'name': 'potential_model',
+        'params': {'use_force': True}}}
+    model = pinn.get_model(params)
     train_spec = tf.estimator.TrainSpec(input_fn=train, max_steps=200)
     eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=10)
     tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
@@ -86,12 +87,14 @@ def test_derivitives():
     from pinn.calculator import PiNN_calc
     import numpy as np
     params = {
-    'model_dir': '/tmp/pinn_test/lj',
-    'network':'LJ',
-    'network_params': {'rc':3},
-    'model_params':{}}
-    model = potential_model(params)
-    pi_lj = PiNN_calc(model)
+        'model_dir': '/tmp/pinn_test/lj',
+        'network':{
+            'name': 'LJ',
+            'params': {'rc': 3}},
+        'model':{
+            'name': 'potential_model',
+            'params': {}}}
+    pi_lj = pinn.get_calc(params)
     test_set = [bulk('Cu').repeat([3,3,3]), bulk('Mg'), g2['H2O']]
     for atoms in test_set:
         pos = atoms.get_positions()

@@ -5,6 +5,14 @@ import numpy as np
 import tensorflow as tf
 from ase.calculators.calculator import Calculator
 
+def get(model_spec, **kwargs):
+    """Get a calculator from a trained model.
+
+    The positional argument will be passed to `pinn.get_model`, keyword
+    arguments will be passed to the calculator.
+    """
+    from pinn import get_model
+    return  PiNN_calc(get_model(model_spec), **kwargs)
 
 class PiNN_calc(Calculator):
     def __init__(self, model=None, atoms=None, to_eV=1.0,

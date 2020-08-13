@@ -23,11 +23,16 @@ def test_pinn_potential():
     }
     params = {
         'model_dir': testpath,
-        'network': 'PiNet',
-        'network_params': network_params,
-        'model_params': {'use_force': True,
-                         'e_dress': {1: 0.5}, 'e_scale': 5.0, 'e_unit': 2.0}
-    }
+        'network': {
+            'name': 'PiNet',
+            'params': network_params},
+        'model': {
+            'name': 'potential_model',
+            'params': {
+                'use_force': True,
+                'e_dress': {1: 0.5},
+                'e_scale': 5.0,
+                'e_unit': 2.0}}}
     _potential_tests(params)
     rmtree(testpath)
 
@@ -47,15 +52,18 @@ def test_bpnn_potential():
         'nn_spec': {1: [8, 8]},
         'rc': 5.,
     }
-
     params = {
         'model_dir': testpath,
-        'network': 'BPNN',
-        'network_params': network_params,
-        'model_params': {'use_force': True,
-                         'e_dress': {1: 0.5}, 'e_scale': 5.0, 'e_unit': 2.0}
-    }
-
+        'network': {
+            'name': 'BPNN',
+            'params': network_params},
+        'model': {
+            'name': 'potential_model',
+            'params': {
+                'use_force': True,
+                'e_dress': {1: 0.5},
+                'e_scale': 5.0,
+                'e_unit': 2.0}}}
     _potential_tests(params)
     rmtree(testpath)
 
@@ -78,7 +86,6 @@ def test_bpnn_potential_pre_cond():
         'rc': 5.
     }
     bpnn =  BPNN(**network_params)
-
     dataset = load_numpy(_get_lj_data(), split=1)\
         .apply(sparse_batch(10)).map(bpnn.preprocess)
 
@@ -93,12 +100,16 @@ def test_bpnn_potential_pre_cond():
     network_params['fp_range'] = fp_range
     params = {
         'model_dir': testpath,
-        'network': 'BPNN',
-        'network_params': network_params,
-        'model_params': {'use_force': True,
-                         'e_dress': {1: 0.5}, 'e_scale': 5.0, 'e_unit': 2.0}
-    }
-
+        'network': {
+            'name': 'BPNN',
+            'params': network_params},
+        'model': {
+            'name': 'potential_model',
+            'params': {
+                'use_force': True,
+                'e_dress': {1: 0.5},
+                'e_scale': 5.0,
+                'e_unit': 2.0}}}
     _potential_tests(params)
     rmtree(testpath)
 
@@ -127,8 +138,7 @@ def _get_lj_data():
 
 def _potential_tests(params):
     # Series of tasks that a potential should pass
-
-    from pinn.models import potential_model
+    import pinn
     from pinn.calculator import PiNN_calc
 
     data = _get_lj_data()
@@ -140,13 +150,12 @@ def _potential_tests(params):
     train_spec = tf.estimator.TrainSpec(input_fn=train, max_steps=1e3)
     eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=100)
 
-    model = potential_model(params)
+    model = pinn.get_model(params)
     results, _ = tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
 
     # The calculator should be accessable with model_dir
     atoms = Atoms('H3', positions=[[0, 0, 0], [0, 1, 0], [1, 1, 0]])
-    calc = PiNN_calc(potential_model(params['model_dir']),
-                     properties=['energy', 'forces', 'stress'])
+    calc = pinn.get_calc(params, properties=['energy', 'forces', 'stress'])
 
     # Test energy dress and scaling
     # Make sure we have the correct error reports
@@ -160,11 +169,11 @@ def _potential_tests(params):
     f_pred = np.array(f_pred)
     e_pred = np.array(e_pred)
 
-    assert np.allclose(results['METRICS/F_RMSE']/params['model_params']['e_scale'],
-                        np.sqrt(np.mean((f_pred/params['model_params']['e_unit']
+    assert np.allclose(results['METRICS/F_RMSE']/params['model']['params']['e_scale'],
+                        np.sqrt(np.mean((f_pred/params['model']['params']['e_unit']
                                          - data['f_data'])**2)), rtol=5e-3)
-    assert np.allclose(results['METRICS/E_RMSE']/params['model_params']['e_scale'],
-                       np.sqrt(np.mean((e_pred/params['model_params']['e_unit']
+    assert np.allclose(results['METRICS/E_RMSE']/params['model']['params']['e_scale'],
+                       np.sqrt(np.mean((e_pred/params['model']['params']['e_unit']
                                         - data['e_data'])**2)), rtol=5e-3)
 
     # Test energy conservation
