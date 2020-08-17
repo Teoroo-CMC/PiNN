@@ -35,17 +35,24 @@ class EKF():
         q_tau: time constant for noise
         q_min: minimal noisee
     """
-    def __init__(self, learning_rate, q_0=0.01, q_min=1e-6, q_tau=3000.0):
+    def __init__(self, learning_rate, separate_errors=True,
+                 q_0=0.01, q_min=1e-6, q_tau=3000.0):
         self.iterations = None
         self.learning_rate = learning_rate
+        self.separate_errors = separate_errors
         self.q_0 = q_0
         self.q_min = q_min
         self.q_tau = q_tau
 
-    def get_train_op(self, error, tvars):
+    def get_train_op(self, error_list, tvars):
         from tensorflow.python.ops.parallel_for.gradients import jacobian
         from tensorflow.keras.optimizers.schedules import deserialize
-        error = tf.concat([tf.reshape(e, [-1]) for e in error], 0)
+        error = tf.concat([tf.reshape(e, [-1]) for e in error_list], 0)
+        if self.separate_errors:
+            selection = tf.random.uniform([], maxval= len(error_list), dtype=tf.int32)
+            mask = tf.concat([tf.fill([tf.size(e)], tf.equal(selection,i))
+                              for i,e in enumerate(error_list)], 0)
+            error = tf.boolean_mask(error, mask)
         jacob = jacobian(error, tvars)
         n = tf.reduce_sum(
             [tf.reduce_prod(var.shape) for var in tvars])
