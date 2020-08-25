@@ -32,7 +32,7 @@ class MetricsCollector():
             tag (str): name of the error.
             data (tensor): data label tensor.
             pred (tensor): prediction tensor.
-            mask (tensor): default to None (no mask).
+            mask (tensor): default to None (no mask, not implemented yet).
             weight (tensor): default to None (no weight).
             mode: ModeKeys.TRAIN or ModeKeys.EVAL.
             return_error (bool): return error vector (for usage with Kalman Filter).
@@ -55,7 +55,7 @@ class MetricsCollector():
                 tf.compat.v1.summary.scalar(f'{tag}_RMSE', rmse)
             if use_error:
                 tf.compat.v1.summary.scalar(f'{tag}_LOSS', loss)
-                self.ERROR.append(error)
+                self.ERROR.append(error*tf.math.sqrt(weight))
                 self.LOSS += loss
 
         if self.mode == tf.estimator.ModeKeys.EVAL:

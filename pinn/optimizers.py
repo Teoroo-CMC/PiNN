@@ -66,19 +66,18 @@ class EKF():
         except:
             lr = self.learning_rate
         A =  tf.linalg.inv(
-            tf.tensordot(tf.transpose(H), tf.tensordot(P, H, 1), 1) +
-            tf.random.normal([m, m], 0.0, tf.reduce_max( # random noise
-                [tf.exp(-t/self.q_tau)*self.q_0, self.q_min]), tf.float32) +
-            tf.eye(tf.shape(H)[1])/lr)
+            tf.eye(m)/lr+
+            tf.tensordot(tf.transpose(H), tf.tensordot(P, H, 1), 1))
         K = tf.tensordot(P, tf.tensordot(H, A, 1), 1)
         grads = tf.tensordot(K, error, 1)
         lengths = [tf.reduce_prod(var.shape) for var in tvars]
         idx = tf.cumsum([0]+lengths)
+        Q = tf.eye(n)*tf.math.maximum(tf.exp(-t/self.q_tau)*self.q_0, self.q_min)
         grads = [tf.reshape(grads[idx[i]:idx[i+1]], var.shape)
                  for i,  var in enumerate(tvars)]
         grads_and_vars = zip(grads, tvars)
         ops = [self.iterations.assign_add(1, read_value=False)]
-        ops += [P.assign_add(-tf.tensordot(K, tf.tensordot(tf.transpose(H), P, 1),1), read_value=False)]
+        ops += [P.assign_add(Q-tf.tensordot(K, tf.tensordot(tf.transpose(H), P, 1),1), read_value=False)]
         ops += [var.assign_add(-grad, read_value=False) for grad, var in grads_and_vars]
         train_op = tf.group(ops)
         return train_op
