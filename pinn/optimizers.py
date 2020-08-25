@@ -36,9 +36,10 @@ class EKF():
         q_min: minimal noisee
     """
     def __init__(self, learning_rate, separate_errors=True,
-                 q_0=0.01, q_min=1e-6, q_tau=3000.0):
+                 max_learning_rate=1, q_0=0.01, q_min=1e-6, q_tau=3000.0):
         self.iterations = None
         self.learning_rate = learning_rate
+        self.max_learning_rate = max_learning_rate
         self.separate_errors = separate_errors
         self.q_0 = q_0
         self.q_min = q_min
@@ -65,6 +66,7 @@ class EKF():
             lr = deserialize(self.learning_rate)(t)
         except:
             lr = self.learning_rate
+        lr = tf.math.minimum(lr, self.max_learning_rate)
         A =  tf.linalg.inv(
             tf.eye(m)/lr+
             tf.tensordot(tf.transpose(H), tf.tensordot(P, H, 1), 1))
