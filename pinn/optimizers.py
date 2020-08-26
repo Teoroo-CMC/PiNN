@@ -67,7 +67,7 @@ class EKF():
         except:
             lr = self.learning_rate
         lr = tf.math.minimum(lr, self.max_learning_rate)
-        A =  tf.linalg.inv(
+        A =  tf.linalg.pinv(
             tf.eye(m)/lr+
             tf.tensordot(tf.transpose(H), tf.tensordot(P, H, 1), 1))
         K = tf.tensordot(P, tf.tensordot(H, A, 1), 1)
