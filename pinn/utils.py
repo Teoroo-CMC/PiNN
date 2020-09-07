@@ -5,6 +5,24 @@ import tensorflow as tf
 import numpy as np
 from functools import wraps
 
+
+def atomic_dress(tensors, dress, dtype=tf.float32):
+    """Assign an energy to each specified elems
+
+    Args:
+        dress (dict): dictionary consisting the atomic energies
+    """
+    elem = tensors['elems']
+    e_dress = tf.zeros_like(elem, dtype)
+    for k, val in dress.items():
+        indices = tf.cast(tf.equal(elem, k), dtype)
+        e_dress += indices * tf.cast(val, dtype)
+    n_batch = tf.reduce_max(tensors['ind_1'])+1
+    e_dress = tf.math.unsorted_segment_sum(
+        e_dress, tensors['ind_1'][:, 0], n_batch)
+    return e_dress
+
+
 def count_atoms(ind_1, dtype):
     return tf.math.unsorted_segment_sum(
         tf.ones_like(ind_1, dtype), ind_1, tf.reduce_max(ind_1)+1)
