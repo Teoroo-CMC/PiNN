@@ -83,7 +83,7 @@ def make_metrics(features, d_pred, q_pred, params, mode):
                       use_error=(not params['use_d_per_atom']))
 
     if params['use_d_per_atom'] or params['log_d_per_atom']:
-        n_atoms = count_atoms(features['ind_1'])
+        n_atoms = count_atoms(features['ind_1'], dtype=d_data.dtype)
         metrics.add_error('D_PER_ATOM', d_data/n_atoms, d_pred/n_atoms, mask=d_mask,
                           weight=d_weight, use_error=params['use_d_per_atom'],
                           log_error=params['log_d_per_atom'])

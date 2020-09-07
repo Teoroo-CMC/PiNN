@@ -39,7 +39,7 @@ def _pbc_repeat(coord, cell, ind_1, rc):
                   tf.reduce_sum(
                       tf.gather_nd(cell, repeat_s) *
                       tf.gather(tf.cast(tf.expand_dims(disp_mat, 2),
-                                        tf.float32), repeat_r), 1))
+                                        coord.dtype), repeat_r), 1))
     return repeat_pos, repeat_s, repeat_a
 
 
@@ -147,24 +147,6 @@ class CellListNL(tf.keras.layers.Layer):
         return output
 
 
-@pi_named('atomic_dress')
-def atomic_dress(tensors, dress, dtype=tf.float32):
-    """Assign an energy to each specified elems
-
-    Args:
-        dress (dict): dictionary consisting the atomic energies
-    """
-    elem = tensors['elems']
-    e_dress = tf.zeros_like(elem, dtype)
-    for k, val in dress.items():
-        indices = tf.cast(tf.equal(elem, k), dtype)
-        e_dress += indices * tf.cast(val, dtype)
-    n_batch = tf.reduce_max(tensors['ind_1'])+1
-    e_dress = tf.math.unsorted_segment_sum(
-        e_dress, tensors['ind_1'][:, 0], n_batch)
-    return e_dress
-
-
 class CutoffFunc(tf.keras.layers.Layer):
     """returns the cutoff function of given type
 
@@ -230,15 +212,13 @@ class AtomicOnehot(tf.keras.layers.Layer):
 
     perform one-hot encoding for elements
     """
-    def __init__(self, atom_types=[1, 6, 7, 8, 9], dtype=tf.float32):
+    def __init__(self, atom_types=[1, 6, 7, 8, 9]):
         super(AtomicOnehot, self).__init__()
-        self.cast_dtype = dtype
         self.atom_types = atom_types
 
     def call(self, elems):
         output = tf.equal(tf.expand_dims(elems, 1),
                           tf.expand_dims(self.atom_types, 0))
-        output = tf.cast(output, self.cast_dtype)
         return output
 
 class ANNOutput(tf.keras.layers.Layer):

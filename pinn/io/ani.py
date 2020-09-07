@@ -34,12 +34,13 @@ def load_ani(filelist, cycle_length=4, **kwargs):
     Args:
         filelist (list): filenames of ANI-1 h5 files.
         cycle_length (int): number of parallel threads to read h5 file
+        dtype (str): 'float32' or 'float64'
         **kwargs: split options, see ``pinn.io.base.split_list``
     """
     format_dict = {
         'elems': {'dtype':  tf.int32,   'shape': [None]},
-        'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
-        'e_data': {'dtype': tf.float32, 'shape': []}}
+        'coord': {'dtype':  tf.keras.backend.floatx(), 'shape': [None, 3]},
+        'e_data': {'dtype': tf.keras.backend.floatx(), 'shape': []}}
     dtypes = {k: v['dtype'] for k, v in format_dict.items()}
     shapes = {k: [None] + v['shape'] for k, v in format_dict.items()}
     # Load the list of samples

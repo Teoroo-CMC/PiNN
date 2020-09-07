@@ -140,7 +140,8 @@ class PreprocessLayer(tf.keras.layers.Layer):
                 tensors[k] = tf.reshape(tensors[k], tf.shape(tensors[k])[:1])
         if 'ind_2' not in tensors:
             tensors.update(self.nl_layer(tensors))
-            tensors['prop'] = self.embed(tensors['elems'])
+            tensors['prop'] = tf.cast(
+                self.embed(tensors['elems']), tensors['coord'].dtype)
         return tensors
 
 class PiNet(tf.keras.Model):

@@ -17,10 +17,11 @@ def load_numpy(data_dict, **kwargs):
 
     Args:
         data_dict: a dictionary of numpy arrays
+        dtype (str): 'float32' or 'float64'
         **kwargs: split options, see ``pinn.io.base.split_list``
     """
     dtypes = {
-        k: (tf.int32 if v.dtype.kind in ('u', 'i') else tf.float32)
+        k: (tf.int32 if v.dtype.kind in ('u', 'i') else tf.keras.backend.floatx())
         for k, v in data_dict.items()}
     shapes = {k: v.shape[1:] for k, v in data_dict.items()}
 

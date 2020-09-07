@@ -24,6 +24,8 @@ def G2_SF(tensors, Rs, eta, i="All", j="ALL"):
             p_ind => the relative position of this pair within all pairs
             i_rind => the index of the central atom for this pair
     """
+    Rs = tf.cast(Rs, tf.keras.backend.floatx())
+    eta = tf.cast(eta, tf.keras.backend.floatx())
     R = tensors['dist']
     fc = tensors['fc']
     # Compute p_filter => boolean mask of relavent pairwise interactions
@@ -90,6 +92,9 @@ def G3_SF(tensors, cutoff_type, rc, lambd, zeta, eta, i="ALL", j="ALL", k="ALL")
             p_ind => the relative position of this pair within all pairs
             i_rind => the index of the central atom for this pair    
     """
+    lambd = tf.cast(lambd, tf.keras.backend.floatx())
+    zeta = tf.cast(zeta, tf.keras.backend.floatx())
+    eta = tf.cast(eta, tf.keras.backend.floatx())
     R = tensors['dist']
     fc = tensors['fc']
     diff = tensors['diff']
@@ -180,6 +185,9 @@ def G4_SF(tensors, lambd, zeta, eta, i="ALL", j="ALL", k="ALL"):
             p_ind => the relative position of this pair within all pairs
             i_rind => the index of the central atom for this pair
     """
+    lambd = tf.cast(lambd, tf.keras.backend.floatx())
+    zeta = tf.cast(zeta, tf.keras.backend.floatx())
+    eta = tf.cast(eta, tf.keras.backend.floatx())
     R = tensors['dist']
     fc = tensors['fc']
     diff = tensors['diff']
@@ -347,7 +355,9 @@ class BPFingerprint(tf.keras.layers.Layer):
                               tensors['jacob_ind_{}'.format(i)],
                               n_pairs)
             if fp_scale:
-                fp = (fp-fp_range[i][0])/(fp_range[i][1]-fp_range[i][0])*2-1
+                fp_min = tf.expand_dims(tf.cast(fp_range[i][0], fp.dtype), axis=0)
+                fp_max = tf.expand_dims(tf.cast(fp_range[i][1], fp.dtype), axis=0)
+                fp = (fp-fp_min)/(fp_max-fp_min)*2-1
             fps[sf['i']].append(fp)
         # Deal with "ALL" fingerprints
         fps_all = fps.pop('ALL')

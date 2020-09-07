@@ -117,11 +117,11 @@ loaders = {'force': _force_loader,
 
 formats = {
     'elems': {'dtype':  tf.int32,   'shape': [None]},
-    'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
-    'cell': {'dtype': tf.float32, 'shape': [3, 3]},
-    'e_data': {'dtype': tf.float32, 'shape': []},
-    'f_data': {'dtype': tf.float32, 'shape': [None, 3]},
-    's_data': {'dtype': tf.float32, 'shape': [3, 3]},
+    'cell': {'dtype': 'float', 'shape': [3, 3]},
+    'coord': {'dtype':  'float', 'shape': [None, 3]},
+    'e_data': {'dtype': 'float', 'shape': []},
+    'f_data': {'dtype': 'float', 'shape': [None, 3]},
+    's_data': {'dtype': 'float', 'shape': [3, 3]},
 }
 
 provides = {

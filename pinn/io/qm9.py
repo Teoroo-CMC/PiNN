@@ -9,9 +9,9 @@ def _qm9_format(label_map):
     """Returns format dict for the QM9 dataset"""
     format_dict = {
         'elems': {'dtype':  tf.int32,   'shape': [None]},
-        'coord': {'dtype':  tf.float32, 'shape': [None, 3]}}
+        'coord': {'dtype':  'float', 'shape': [None, 3]}}
     for k, v in label_map.items():
-        format_dict[k] = {'dtype':  tf.float32, 'shape': []}
+        format_dict[k] = {'dtype':  'float', 'shape': []}
     return format_dict
 
 
@@ -49,7 +49,7 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, **kwargs):
         coord = [[i.replace('*^', 'E') for i in l.split()[1:4]]
                  for l in lines[2:-3]]
         elems = np.array(elems, np.int32)
-        coord = np.array(coord, np.float32)
+        coord = np.array(coord, np.float)
         data = {'elems': elems, 'coord': coord}
         for k, v in label_map.items():
             data[k] = float(lines[1].split()[_label_ind[v]])

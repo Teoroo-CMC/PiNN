@@ -25,15 +25,15 @@ from pinn.io import list_loader
 from ase.data import atomic_numbers
 
 runner_format = {
-    'cell': {'dtype':  tf.float32, 'shape': [3, 3]},
-    'elems': {'dtype':  tf.int32,   'shape': [None]},
-    'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
-    'e_data': {'dtype': tf.float32, 'shape': []},
-    'f_data': {'dtype':  tf.float32, 'shape': [None, 3]},
-    'q_data': {'dtype':  tf.float32, 'shape': [None]},
-    's_data': {'dtype':  tf.float32, 'shape': [3, 3]},
-    'e_weight': {'dtype': tf.float32, 'shape': []},
-    'f_weights': {'dtype':  tf.float32, 'shape': [None, 3]},
+    'elems':     {'dtype': tf.int32,   'shape': [None]},
+    'cell':      {'dtype': 'float', 'shape': [3, 3]},
+    'coord':     {'dtype': 'float', 'shape': [None, 3]},
+    'e_data':    {'dtype': 'float', 'shape': []},
+    'f_data':    {'dtype': 'float', 'shape': [None, 3]},
+    'q_data':    {'dtype': 'float', 'shape': [None]},
+    's_data':    {'dtype': 'float', 'shape': [3, 3]},
+    'e_weight':  {'dtype': 'float', 'shape': []},
+    'f_weights': {'dtype': 'float', 'shape': [None, 3]},
 }
 
 
@@ -86,15 +86,15 @@ def _frame_loader(frame):
             line = f.readline().strip()
 
         if s_data == []:
-            s_data = np.zeros([3,3], np.float32)
+            s_data = np.zeros([3,3], np.float)
         else:
-            s_data = np.array(s_data, np.float32)
+            s_data = np.array(s_data, np.float)
         elems = np.array(elems, np.int32)
-        coord = np.array(coord, np.float32)
-        f_data = np.array(f_data, np.float32)
-        f_weights = np.array(f_weights, np.float32)
-        cell = np.array(cell, np.float32)
-        q_data = np.array(q_data, np.float32)
+        coord = np.array(coord, np.float)
+        f_data = np.array(f_data, np.float)
+        f_weights = np.array(f_weights, np.float)
+        cell = np.array(cell, np.float)
+        q_data = np.array(q_data, np.float)
         data = {
             'elems': elems,
             'coord': coord,

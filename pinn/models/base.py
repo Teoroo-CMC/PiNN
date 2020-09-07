@@ -24,7 +24,7 @@ class MetricsCollector():
         self.ERROR = []
         self.METRICS = {}
 
-    def add_error(self, tag, data, pred, mask=None, weight=None,
+    def add_error(self, tag, data, pred, mask=None, weight=1.0,
                   use_error=True, log_error=True, log_hist=True):
         """Add the error
 
@@ -33,7 +33,7 @@ class MetricsCollector():
             data (tensor): data label tensor.
             pred (tensor): prediction tensor.
             mask (tensor): default to None (no mask, not implemented yet).
-            weight (tensor): default to None (no weight).
+            weight (tensor): default to 1.0.
             mode: ModeKeys.TRAIN or ModeKeys.EVAL.
             return_error (bool): return error vector (for usage with Kalman Filter).
             log_loss (bool): log the error and loss function.
@@ -42,6 +42,7 @@ class MetricsCollector():
             log_rmse (bool): add the root mean squared error to log.
         """
         error = data - pred
+        weight = tf.cast(weight, data.dtype)
         loss = tf.reduce_mean(error**2 * weight)
         if self.mode == tf.estimator.ModeKeys.TRAIN:
             if log_hist:
@@ -78,10 +79,13 @@ def get_train_op(optimizer, loss, error, network):
         network: a PiNN network instance.
     """
     from pinn.optimizers import get, EKF
+    import numpy as np
 
     optimizer = get(optimizer)
     optimizer.iterations = tf.compat.v1.train.get_or_create_global_step()
     tvars = network.trainable_variables
+    nvars = np.sum([np.prod(var.shape) for var in tvars])
+    print(f'{nvars} trainable vaiabless, training with {loss.dtype.name} precision.')
 
     if not isinstance(optimizer, EKF):
         grads = tf.gradients(loss, tvars)

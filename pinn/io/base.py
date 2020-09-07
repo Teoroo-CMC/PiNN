@@ -104,22 +104,24 @@ def list_loader(pbc=False, force=False, format_dict=None):
     if format_dict is None:
         format_dict = {
             'elems': {'dtype':  tf.int32,   'shape': [None]},
-            'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
-            'e_data': {'dtype': tf.float32, 'shape': []},
+            'coord': {'dtype':  'float', 'shape': [None, 3]},
+            'e_data': {'dtype': 'float', 'shape': []},
         }
         if pbc:
-            format_dict['cell'] = {'dtype':  tf.float32, 'shape': [3, 3]}
+            format_dict['cell'] = {'dtype':  'float', 'shape': [3, 3]}
         if force:
-            format_dict['f_data'] = {'dtype':  tf.float32, 'shape': [None, 3]}
+            format_dict['f_data'] = {'dtype':  'float', 'shape': [None, 3]}
 
     def decorator(func):
         @wraps(func)
         def data_loader(data_list, split={'train': 8, 'vali': 1, 'test': 1},
                         shuffle=True, seed=0):
+            dtype = tf.keras.backend.floatx()
             def _data_generator(data_list):
                 for data in data_list:
                     yield func(data)
-            dtypes = {k: v['dtype'] for k, v in format_dict.items()}
+            dtypes = {k: v['dtype'] if v['dtype']!='float' else dtype
+                      for k, v in format_dict.items() }
             shapes = {k: v['shape'] for k, v in format_dict.items()}
 
             def generator_fn(data_list): return tf.data.Dataset.from_generator(

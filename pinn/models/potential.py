@@ -8,8 +8,7 @@ import tensorflow as tf
 import numpy as np
 
 from pinn import get_network
-from pinn.layers import atomic_dress
-from pinn.utils import pi_named, connect_dist_grad
+from pinn.utils import pi_named, connect_dist_grad, atomic_dress
 from pinn.models.base import export_model, get_train_op, MetricsCollector
 
 default_params = {
@@ -73,7 +72,7 @@ def potential_model(features, labels, mode, params):
     if mode == tf.estimator.ModeKeys.PREDICT:
         pred = pred / model_params['e_scale']
         if model_params['e_dress']:
-            pred += atomic_dress(features, model_params['e_dress'])
+            pred += atomic_dress(features, model_params['e_dress'], dtype=pred.dtype)
         pred *= model_params['e_unit']
         forces = -_get_dense_grad(pred, features['coord'])
         forces = tf.expand_dims(forces, 0)
@@ -92,7 +91,7 @@ def make_metrics(features, pred, params, mode):
     e_pred = pred
     e_data = features['e_data']
     if params['e_dress']:
-        e_data -= atomic_dress(features, params['e_dress'])
+        e_data -= atomic_dress(features, params['e_dress'], dtype=pred.dtype)
     e_data *= params['e_scale']
 
     # should get the mask here since max_energy refers to total energy
@@ -103,7 +102,7 @@ def make_metrics(features, pred, params, mode):
                       use_error=(not params['use_e_per_atom']))
 
     if params['use_e_per_atom'] or params['log_e_per_atom']:
-        n_atoms = count_atoms(features['ind_1'])
+        n_atoms = count_atoms(features['ind_1'], dtype=e_data.dtype)
         metrics.add_error('E_PER_ATOM', e_data/n_atoms, e_pred/n_atoms, mask=e_mask,
                           weight=e_weight, use_error=params['use_e_per_atom'],
                           log_error=params['log_e_per_atom'])
