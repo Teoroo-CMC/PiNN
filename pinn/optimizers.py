@@ -58,8 +58,8 @@ class EKF():
         n = tf.reduce_sum(
             [tf.reduce_prod(var.shape) for var in tvars])
         P = tf.Variable(tf.eye(n)*100, trainable=False)
-        H = tf.concat([tf.reshape(j, [tf.shape(j)[0], -1]) for j in jacob], axis=1)
-        H = tf.transpose(H)
+        HT = tf.concat([tf.reshape(j, [tf.shape(j)[0], -1]) for j in jacob], axis=1)
+        H = tf.transpose(HT)
         m = tf.shape(H)[1]
         t = tf.cast(tf.compat.v1.train.get_global_step(), tf.float32)
         try:
@@ -67,10 +67,12 @@ class EKF():
         except:
             lr = self.learning_rate
         lr = tf.math.minimum(lr, self.max_learning_rate)
-        A =  tf.linalg.pinv(
-            tf.eye(m)/lr+
-            tf.tensordot(tf.transpose(H), tf.tensordot(P, H, 1), 1))
-        K = tf.tensordot(P, tf.tensordot(H, A, 1), 1)
+        # Computing Kalman Gain (avoid inversion, solve as linear equations)
+        PH = tf.tensordot(P, H, 1)
+        A_inv = tf.eye(m)/lr + tf.tensordot(HT, PH, 1)
+        K = tf.linalg.solve(tf.cast(A_inv,tf.float64),
+                            tf.cast(tf.transpose(PH), tf.float64))
+        K = tf.transpose(tf.cast(K, tf.float32))
         grads = tf.tensordot(K, error, 1)
         lengths = [tf.reduce_prod(var.shape) for var in tvars]
         idx = tf.cumsum([0]+lengths)
