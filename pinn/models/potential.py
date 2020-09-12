@@ -34,8 +34,8 @@ default_params = {
     'use_e_weight': False,      # scales the loss according to e_weight
     ## Force
     'use_force': False,         # include force in loss function
-    'use_single_force': False,  # use single force during weight updates
     'max_force': False,         # if set to float, omit forces larger than it
+    'max_no_force': False,      # if set to int, use at maximum this number of force
     'use_f_weight': False,      # scales the loss according to f_weights
     ## Stress
     'use_stress': False,        # include stress in Loss function
@@ -110,12 +110,18 @@ def make_metrics(features, pred, params, mode):
     if params['use_force']:
         f_pred = -_get_dense_grad(pred, features['coord'])
         f_data = features['f_data']*params['e_scale']
-        if params['use_single_force']:
-            all_ind = tf.shape(features['ind_1'])[0]
-            use_ind = tf.random.uniform([], maxval= all_ind, dtype=tf.int32)
-            f_pred = f_pred[use_ind, :]
-            f_data = f_data[use_ind, :]
-        f_mask = tf.abs(f_data) > params['max_force'] if params['max_force'] else None
+        f_mask = tf.fill([tf.shape(f_pred)[0]], True)
+
+        if params['max_force']:
+            f_mask = tf.reduce_any(tf.abs(f_data)<params['max_force'], axis=1)
+            f_pred = tf.boolean_mask(f_pred, use_ind)
+            f_data = tf.boolean_mask(f_data, use_ind)
+
+        if params['max_no_force']:
+            # randomly select force label from f_mask=True
+            use_ind = tf.cast(tf.random.shuffle(tf.where(f_mask))[:params['max_no_force']], tf.int32)
+            f_mask = tf.scatter_nd(use_ind, tf.fill(tf.shape(use_ind)[:1],True), tf.shape(f_mask))
+
         f_weight = params['f_loss_multiplier']
         f_weight *= features['f_weight'] if params['use_f_weight'] else 1
         metrics.add_error('F', f_data, f_pred, mask=f_mask, weight=f_weight,

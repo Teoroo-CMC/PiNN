@@ -43,7 +43,6 @@ class MetricsCollector():
         """
         error = data - pred
         weight = tf.cast(weight, data.dtype)
-        loss = tf.reduce_mean(error**2 * weight)
         if self.mode == tf.estimator.ModeKeys.TRAIN:
             if log_hist:
                 tf.compat.v1.summary.histogram(f'{tag}_DATA', data)
@@ -54,16 +53,21 @@ class MetricsCollector():
                 rmse = tf.sqrt(tf.reduce_mean(error**2))
                 tf.compat.v1.summary.scalar(f'{tag}_MAE', mae)
                 tf.compat.v1.summary.scalar(f'{tag}_RMSE', rmse)
+            if mask is not None:
+                error = tf.boolean_mask(error, mask)
             if use_error:
+                loss = tf.reduce_mean(error**2 * weight)
                 tf.compat.v1.summary.scalar(f'{tag}_LOSS', loss)
                 self.ERROR.append(error*tf.math.sqrt(weight))
                 self.LOSS += loss
-
         if self.mode == tf.estimator.ModeKeys.EVAL:
             if log_error:
                 self.METRICS[f'METRICS/{tag}_MAE'] = tf.compat.v1.metrics.mean_absolute_error(data, pred)
                 self.METRICS[f'METRICS/{tag}_RMSE'] = tf.compat.v1.metrics.root_mean_squared_error(data, pred)
+            if mask is not None:
+                error = tf.boolean_mask(error, mask)
             if use_error:
+                loss = tf.reduce_mean(error**2 * weight)
                 self.METRICS[f'METRICS/{tag}_LOSS'] = tf.compat.v1.metrics.mean(loss)
                 self.LOSS += loss
 
