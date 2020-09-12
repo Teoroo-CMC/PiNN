@@ -36,7 +36,7 @@ class EKF():
         q_tau: time constant for noise
         q_min: minimal noisee
     """
-    def __init__(self, learning_rate, separate_errors=True, inv_dtype='float64',
+    def __init__(self, learning_rate, separate_errors=False, inv_dtype='float64',
                  max_learning_rate=1, q_0=0.01, q_min=1e-6, q_tau=3000.0):
         self.iterations = None
         self.learning_rate = learning_rate
@@ -62,7 +62,9 @@ class EKF():
         m = tf.shape(H)[1]
         n = tf.reduce_sum(
             [tf.reduce_prod(var.shape) for var in tvars])
-        P = tf.Variable(tf.eye(n, dtype=H.dtype)*100,  trainable=False)
+        tf.compat.v1.summary.scalar(f'KalmanFilter/m', m)
+        tf.compat.v1.summary.scalar(f'KalmanFilter/n', n)
+        P = tf.Variable(tf.eye(n, dtype=H.dtype),  trainable=False)
         t = tf.cast(tf.compat.v1.train.get_global_step(), H.dtype)
         try:
             lr = deserialize(self.learning_rate)(t)
@@ -83,7 +85,9 @@ class EKF():
                  for i,  var in enumerate(tvars)]
         grads_and_vars = zip(grads, tvars)
         ops = [self.iterations.assign_add(1, read_value=False)]
-        ops += [P.assign_add(Q-tf.tensordot(K, tf.tensordot(tf.transpose(H), P, 1),1), read_value=False)]
+        ops += [P.assign_add(Q-tf.tensordot(K, tf.transpose(PH),1), read_value=False)]
         ops += [var.assign_add(-grad, read_value=False) for grad, var in grads_and_vars]
+        tf.compat.v1.summary.histogram(f'KalmanFilter/P_diag', tf.linalg.diag_part(P))
+        tf.compat.v1.summary.histogram(f'KalmanFilter/P', P)
         train_op = tf.group(ops)
         return train_op
