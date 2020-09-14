@@ -52,12 +52,12 @@ def G2_SF(tensors, Rs, eta, i="All", j="ALL"):
     else:
         p_ind = tf.cumsum(tf.ones_like(i_rind))-1
     # Symmetry function
-    n_sf = len(Rs)
     R = tf.expand_dims(R, 1)
     fc = tf.expand_dims(fc, 1)
     Rs = tf.expand_dims(Rs, 0)
     eta = tf.expand_dims(eta, 0)
     sf = tf.exp(-eta*(R-Rs)**2)*fc
+    n_sf = sf.shape[-1]
     fp = tf.scatter_nd(tf.expand_dims(i_rind, 1), sf,
                        [tf.reduce_max(a_rind)+1, n_sf])
     jacob_ind = tf.stack([p_ind, i_rind], axis=1)
