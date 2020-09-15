@@ -74,8 +74,9 @@ class EKF():
         # Computing Kalman Gain (avoid inversion, solve as linear equations)
         PH = tf.tensordot(P, H, 1)
         A_inv = tf.eye(m, dtype=H.dtype)/lr + tf.tensordot(HT, PH, 1)
-        K = tf.linalg.solve(tf.cast(A_inv, self.inv_dtype),
-                            tf.cast(tf.transpose(PH), self.inv_dtype))
+        K = tf.linalg.lstsq(tf.cast(A_inv, self.inv_dtype),
+                            tf.cast(tf.transpose(PH), self.inv_dtype),
+                            fast=False)
         K = tf.transpose(tf.cast(K, H.dtype))
         grads = tf.tensordot(K, error, 1)
         lengths = [tf.reduce_prod(var.shape) for var in tvars]
