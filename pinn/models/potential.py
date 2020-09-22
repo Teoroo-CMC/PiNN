@@ -43,6 +43,7 @@ default_params = {
     'e_loss_multiplier': 1.0,
     'f_loss_multiplier': 1.0,
     's_loss_multiplier': 1.0,
+    'separate_errors': False    # workaround at this point
 }
 
 @export_model
@@ -62,13 +63,16 @@ def potential_model(features, labels, mode, params):
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         metrics = make_metrics(features, pred, model_params, mode)
-        train_op = get_train_op(params['optimizer'],
-                                metrics.LOSS, metrics.ERROR, network)
-        return tf.estimator.EstimatorSpec(mode, loss=metrics.LOSS, train_op=train_op)
+        train_op = get_train_op(params['optimizer'], metrics, network,
+                                separate_errors=model_params['separate_errors'])
+        return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
+                                          train_op=train_op)
+
     if mode == tf.estimator.ModeKeys.EVAL:
         metrics = make_metrics(features, pred, model_params, mode)
-        return tf.estimator.EstimatorSpec(mode, loss=metrics.LOSS,
+        return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
+
     if mode == tf.estimator.ModeKeys.PREDICT:
         pred = pred / model_params['e_scale']
         if model_params['e_dress']:

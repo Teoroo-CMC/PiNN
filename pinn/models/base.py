@@ -20,7 +20,7 @@ def export_model(model_fn):
 class MetricsCollector():
     def __init__(self, mode):
         self.mode = mode
-        self.LOSS = 0
+        self.LOSS = []
         self.ERROR = []
         self.METRICS = {}
 
@@ -59,7 +59,7 @@ class MetricsCollector():
                 loss = tf.reduce_mean(error**2 * weight)
                 tf.compat.v1.summary.scalar(f'{tag}_LOSS', loss)
                 self.ERROR.append(error*tf.math.sqrt(weight))
-                self.LOSS += loss
+                self.LOSS.append(loss)
         if self.mode == tf.estimator.ModeKeys.EVAL:
             if log_error:
                 self.METRICS[f'METRICS/{tag}_MAE'] = tf.compat.v1.metrics.mean_absolute_error(data, pred)
@@ -69,11 +69,11 @@ class MetricsCollector():
             if use_error:
                 loss = tf.reduce_mean(error**2 * weight)
                 self.METRICS[f'METRICS/{tag}_LOSS'] = tf.compat.v1.metrics.mean(loss)
-                self.LOSS += loss
+                self.LOSS.append(loss)
 
 
 @pi_named('TRAIN_OP')
-def get_train_op(optimizer, loss, error, network):
+def get_train_op(optimizer, metrics, network, separate_errors=False):
     """
     Args:
         optimizer: a PiNN optimizer config.
@@ -81,18 +81,35 @@ def get_train_op(optimizer, loss, error, network):
         loss: scalar loss function.
         error: a list of error vectors (reserved for EKF).
         network: a PiNN network instance.
+        sperate_errors (bool): separately update elements in the metrics
     """
     from pinn.optimizers import get, EKF
     import numpy as np
+
 
     optimizer = get(optimizer)
     optimizer.iterations = tf.compat.v1.train.get_or_create_global_step()
     tvars = network.trainable_variables
     nvars = np.sum([np.prod(var.shape) for var in tvars])
-    print(f'{nvars} trainable vaiabless, training with {loss.dtype.name} precision.')
+    print(f'{nvars} trainable vaiabless, training with {tvars[0].dtype.name} precision.')
+
 
     if not isinstance(optimizer, EKF):
+        loss_list =  metrics.LOSS
+        if separate_errors:
+            selection = tf.random.uniform([], maxval= len(loss_list), dtype=tf.int32)
+            loss = tf.stack(loss_list)[selection]
+        else:
+            loss = tf.reduce_sum(loss_list)
         grads = tf.gradients(loss, tvars)
         return optimizer.apply_gradients(zip(grads, tvars))
     else:
+        error_list =  metrics.ERROR
+        error = tf.concat([tf.reshape(e, [-1])/tf.math.sqrt(tf.cast(tf.size(e), e.dtype))
+                           for e in error_list], 0)
+        if separate_errors:
+            selection = tf.random.uniform([], maxval= len(error_list), dtype=tf.int32)
+            mask = tf.concat([tf.fill([tf.size(e)], tf.equal(selection,i))
+                              for i,e in enumerate(error_list)], 0)
+            error = tf.boolean_mask(error, mask)
         return optimizer.get_train_op(error, tvars)

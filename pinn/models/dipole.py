@@ -48,13 +48,15 @@ def dipole_model(features, labels, mode, params):
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         metrics = make_metrics(features, dipole, charge, model_params, mode)
-        train_op = get_train_op(params['optimizer'],
-                                metrics.LOSS, metrics.ERROR, network)
-        return tf.estimator.EstimatorSpec(mode, loss=metrics.LOSS, train_op=train_op)
+        train_op = get_train_op(params['optimizer'], metrics, network)
+        return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
+                                          train_op=train_op)
+
     if mode == tf.estimator.ModeKeys.EVAL:
         metrics = make_metrics(features, dipole, charge, model_params, mode)
-        return tf.estimator.EstimatorSpec(mode, loss=metrics.LOSS,
+        return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
+
     else:
         pred = pred / model_params['d_scale']
         pred *= model_params['d_unit']
