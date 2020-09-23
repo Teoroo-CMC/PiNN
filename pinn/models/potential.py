@@ -34,8 +34,8 @@ default_params = {
     'use_e_weight': False,      # scales the loss according to e_weight
     ## Force
     'use_force': False,         # include force in loss function
-    'max_force': False,         # if set to float, omit forces larger than it
-    'max_no_force': False,      # if set to int, use at maximum this number of force
+    'max_force_comp': False,    # if set to float, omit forces components larger than it
+    'no_force_comp': False,     # if set to int, use as maximum number of force components for a update
     'use_f_weight': False,      # scales the loss according to f_weights
     ## Stress
     'use_stress': False,        # include stress in Loss function
@@ -43,7 +43,7 @@ default_params = {
     'e_loss_multiplier': 1.0,
     'f_loss_multiplier': 1.0,
     's_loss_multiplier': 1.0,
-    'separate_errors': False    # workaround at this point
+    'separate_errors': False,   # workaround at this point
 }
 
 @export_model
@@ -54,6 +54,7 @@ def potential_model(features, labels, mode, params):
     model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
+
     connect_dist_grad(features)
     pred = network(features)
 
@@ -114,16 +115,15 @@ def make_metrics(features, pred, params, mode):
     if params['use_force']:
         f_pred = -_get_dense_grad(pred, features['coord'])
         f_data = features['f_data']*params['e_scale']
-        f_mask = tf.fill([tf.shape(f_pred)[0]], True)
+        f_mask = tf.fill(tf.shape(f_pred), True)
 
-        if params['max_force']:
-            f_mask = tf.reduce_any(tf.abs(f_data)<params['max_force'], axis=1)
+        if params['max_force_comp']:
+            f_mask = tf.abs(f_data)<params['max_force']
             f_pred = tf.boolean_mask(f_pred, use_ind)
             f_data = tf.boolean_mask(f_data, use_ind)
 
-        if params['max_no_force']:
-            # randomly select force label from f_mask=True
-            use_ind = tf.cast(tf.random.shuffle(tf.where(f_mask))[:params['max_no_force']], tf.int32)
+        if params['no_force_comp']:
+            use_ind = tf.cast(tf.random.shuffle(tf.where(f_mask))[:params['no_force_comp']], tf.int32)
             f_mask = tf.scatter_nd(use_ind, tf.fill(tf.shape(use_ind)[:1],True), tf.shape(f_mask))
 
         f_weight = params['f_loss_multiplier']
