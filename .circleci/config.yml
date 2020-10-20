@@ -17,7 +17,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.10-stretch
+      - image: circleci/python:3.7.9-stretch
     working_directory: ~/repo
     steps:
       - checkout
@@ -42,7 +42,7 @@ jobs:
           key: venv-{{ checksum "requirements-dev.txt" }}-{{ checksum "setup.py" }}-{{ checksum ".circleci/config.yml" }}
   pytest:
     docker:
-      - image: circleci/python:3.6.10-stretch
+      - image: circleci/python:3.7.9-stretch
     working_directory: ~/repo
     steps:
       - checkout
@@ -59,7 +59,7 @@ jobs:
             codecov --token=$CODECOV_TOKEN
   deploy-doc:
     docker:
-      - image: circleci/python:3.6.10-stretch
+      - image: circleci/python:3.7.9-stretch
     working_directory: ~/repo
     steps:
       - checkout
