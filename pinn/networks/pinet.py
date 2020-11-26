@@ -158,14 +158,15 @@ class PiNet(tf.keras.Model):
         rc (float): cutoff radius.
         basis_type (string): type of basis function to use,
             can be "polynomial" or "gaussian".
-        gamma (float): controls width of gaussian function for gaussian basis.
         n_basis (int): number of basis functions to use.
+        gamma (float or array): width of gaussian function for gaussian basis.
+        center (float or array): center of gaussian function for gaussian basis.
         cutoff_type (string): cutoff function to use with the basis.
         act (string): activation function to use.
         preprocess (bool): whether to return the preprocessed tensor.
     """
     def __init__(self, atom_types=[1, 6, 7, 8],  rc=4.0, cutoff_type='f1',
-                 basis_type='polynomial', n_basis=4, gamma=3.0,
+                 basis_type='polynomial', n_basis=4, gamma=3.0, center=None,
                  pp_nodes=[16, 16], pi_nodes=[16, 16], ii_nodes=[16, 16],
                  out_nodes=[16, 16], out_units=1, out_pool=False,
                  act='tanh', depth=4):
@@ -178,7 +179,7 @@ class PiNet(tf.keras.Model):
         if basis_type == 'polynomial':
             self.basis_fn = PolynomialBasis(cutoff_type, rc, n_basis)
         elif basis_type == 'gaussian':
-            self.basis_fn = GaussianBasis(cutoff_type, rc, n_basis, gamma)
+            self.basis_fn = GaussianBasis(cutoff_type, rc, n_basis, gamma, center)
 
         self.res_update = [ResUpdate() for i in range(depth)]
         self.gc_blocks = [GCBlock([], pi_nodes, ii_nodes, activation=act)]

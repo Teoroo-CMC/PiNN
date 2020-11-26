@@ -176,16 +176,20 @@ class GaussianBasis(tf.keras.layers.Layer):
 
     Transforms distances to a set of gaussian basis
     """
-    def __init__(self, cutoff_type, rc, n_basis, gamma):
+    def __init__(self, cutoff_type, rc, n_basis, gamma, center=None):
         super(GaussianBasis, self).__init__()
         self.cutoff_func = CutoffFunc(rc, cutoff_type)
-        self.centers = np.linspace(0, rc, n_basis)
-        self.gamma = gamma
+        if center is None:
+            self.center = np.linspace(0, rc, n_basis)
+        else:
+            self.center = np.array(center)
+        self.gamma = np.broadcast_to(gamma, self.center.shape)
 
     def call(self, dist):
         fc = self.cutoff_func(dist)
-        basis = tf.stack([tf.exp(-self.gamma*(dist-center)**2)*fc
-                          for center in self.centers], axis=1)
+        basis = tf.stack([tf.exp(-gamma*(dist-center)**2)*fc
+                          for (center, gamma) in zip(self.center, self.gamma)],
+                         axis=1)
         return basis
 
 
