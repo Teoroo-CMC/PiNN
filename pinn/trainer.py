@@ -44,11 +44,10 @@ def trainner(model_dir, params_file,
              train_data, eval_data, train_steps, eval_steps,
              batch_size, preprocess, scratch_dir, cache_data,
              shuffle_buffer, regen_dress):
-    import yaml, tempfile, os
+    import yaml, tempfile, os, pinn
     import tensorflow as tf
     from tensorflow.python.lib.io.file_io import FileIO
     from pinn import networks
-    from pinn.models import potential_model
     from pinn.utils import get_atomic_dress
     from pinn.io import load_tfrecord, write_tfrecord, sparse_batch
 
@@ -94,7 +93,7 @@ def trainner(model_dir, params_file,
     # Run
     train_spec = tf.estimator.TrainSpec(input_fn=train_fn, max_steps=train_steps)
     eval_spec  = tf.estimator.EvalSpec(input_fn=eval_fn, steps=eval_steps)
-    model = potential_model(params)    
+    model = pinn.get_model(params)
     tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
     
     # Clean up
@@ -121,7 +120,7 @@ def main():
     parser.add_argument('--train-steps', type=int, required=True,
                         help='number of training steps')
     parser.add_argument('--eval-steps',  type=int, 
-                        help='number of evaluation steps', default=100)
+                        help='number of evaluation steps', default=None)
     parser.add_argument('--batch-size',  type=int,
                         help='Batch size to batch, default to None - data already batched',
                         default=None)
