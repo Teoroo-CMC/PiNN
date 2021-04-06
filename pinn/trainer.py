@@ -56,10 +56,10 @@ def trainner(model_dir, params_file,
     with FileIO(params_file, 'r') as f:
         params = yaml.load(f)
     params['model_dir'] = model_dir
-    if regen_dress and 'e_dress' in params['model_params']:
-        elems = list(params['model_params']['e_dress'].keys())
+    if regen_dress and 'e_dress' in params['model']['params']:
+        elems = list(params['model']['params']['e_dress'].keys())
         dress, _ = get_atomic_dress(load_tfrecord(train_data), elems)
-        params['model_params']['e_dress'] = dress
+        params['model']['params']['e_dress'] = dress
 
     # Building the datasets
     scratches = []
