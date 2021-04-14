@@ -133,8 +133,8 @@ def main():
                         help='cache the training data to memory', default=True)
     parser.add_argument('--shuffle-buffer',  type=int,
                         help='size of shuffle buffer', default=100)    
-    parser.add_argument('--regen-dress', type=bool,
-                        help='regenerate atomic dress using the training set', default=True)
+    parser.add_argument('--regen-dress', type=bool, action='store_true',
+                        help='regenerate atomic dress using the training set')
     
     args = parser.parse_args()
     trainner(args.model_dir, args.params_file,
