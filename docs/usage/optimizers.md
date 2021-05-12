@@ -5,7 +5,7 @@ networks are Keras models they can be optimized like any other Keras models, a
 list of optimizers and their usage can be found in the TensorFlow
 (documentation)[https://www.tensorflow.org/api_docs/python/tf/keras/optimizers]
 
-## Using a optimizer in a PiNN model
+## Usage
 
 All optimizers implemented in TensorFlow can be specified by the serialized
 config. For instance, the default optimizer in PiNN can be specified with the
@@ -25,7 +25,7 @@ optimizer:
 ```
 
 
-## extended Kalman Filter
+## EKF
 
 The extended Kalman filter (EKF) is an alternative way to estimate the optimal
 weights in neural networks. The EKF has long been used in combination with

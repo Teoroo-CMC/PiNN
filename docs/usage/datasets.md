@@ -23,9 +23,8 @@ test: 10%, vali: 10%). Note that the loaders also requires a seed parameter for
 the split to be consistent, and its default value is 0.
 
 
-## Manipulating datasets
 
-### Batching the dataset
+## Batching the dataset
 
 Most TensorFlow operations (caching, repeating, shuffling) can be
 directly applied to the dataset. However, to handle datasets with
@@ -40,7 +39,7 @@ batched = dataset.apply(sparse_batch(100))
 ```
    
 
-### TFRecord
+## TFRecord
 
 The tfrecord format is a serialized format for efficient data reading in
 TensorFlow. The format is especially useful for streaming the data over a
@@ -67,7 +66,7 @@ format. This means it can store batched or preprocessed dataset. This can be
 useful when one needs to reuse the dataset or the preprcessing is slow.
 
 
-## Reading  custom data formats
+## Custom format
 
 To be able to shuffle and split the dataset, PiNN require the dataset to be
 represented as a list of datums. In the simplest case, the dataset could be a
@@ -92,7 +91,7 @@ def load_file_list(filename):
 An example notebook on preparing datasets can be found
 [here](../notebooks/Customizing_dataset.ipynb).
 
-## Available data formats
+## Available formats
 
 | Format | Loader      | Description                                                                |
 |--------|-------------|----------------------------------------------------------------------------|

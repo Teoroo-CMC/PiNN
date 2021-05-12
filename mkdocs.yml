@@ -8,19 +8,19 @@ nav:
     - Datasests: usage/datasets.md
     - Networks:
       - Overview: usage/networks.md
-      - Implemented Networks:
+      - Implemented:
         - PiNet: usage/pinet.md
         - BPNN: usage/bpnn.md
     - Models:
       - Overview: usage/models.md
-      - Implemented Models:
+      - Implemented:
         - Potential Model: usage/potential.md
         - Dipole Model: usage/dipole.md
       - Custom Mdoel: usage/custom_model.md
-    - Optimizers: usage/optimizers.md
-    - Command-line interface: usage/cmd.md
-    - Hyperparameter Tuning: usage/tune.md
-  - Visualize: usage/visualize.md
+      - Optimizers: usage/optimizers.md
+    - CLI: usage/cmd.md
+    - Ray Tune: usage/tune.md
+    - Visualize: usage/visualize.md
   - Notebooks:
     - Overview: notebooks/overview.md
     - Tutorials:
@@ -30,12 +30,11 @@ nav:
       - Custom Dataset: notebooks/Customizing_dataset.ipynb
       - LJ potential: notebooks/Learn_LJ_potential.ipynb
       - Hyperparameter Tuning: notebooks/Tune_visualize.ipynb
-  - API Reference:
-    - pinn.layers: empty.md
-    - pinn.networks: empty.md
-    - pinn.models: empty.md
+  # - API Reference:
+  #   - pinn.layers: empty.md
+  #   - pinn.networks: empty.md
+  #   - pinn.models: empty.md
 plugins:
-  - search
   - bibtex:
       bib_file: "docs/references.bib"
       cite_style: "pandoc"
@@ -45,15 +44,18 @@ theme:
   logo: images/logo.svg
   favicon: images/favicon.png
   features:
-    - tabs
+    - navigation.sections
+    - toc.integrate
 markdown_extensions:
+  - toc:
+      toc_depth: 1
   - admonition
   - footnotes
-  - codehilite
+  - pymdownx.highlight
   - pymdownx.arithmatex
   - pymdownx.tasklist
+  - pymdownx.superfences
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
-  - js/extra.js
 extra_css:
   - css/extra.css

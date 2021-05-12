@@ -13,7 +13,7 @@ shifted to zero. Such an atomic dress can be generated with
 The loss function in potential model is defined as following:
 
 $$
-L = w_e \cdot MSE(e) + w_f \cdot MSE(f) + w_s \cdot MSE (s) + \textrm{regularization terms}
+L = w_e \cdot \mathrm{MSE}(e) + w_f \cdot \mathrm{MSE}(f) + w_s \cdot \mathrm{MSE} (s) + \mathrm{regularization terms}
 $$
 
 Loss terms are mean squared errors of:
@@ -59,12 +59,10 @@ calc.get_forces()
 
 ### Units
 
-$\require{mediawiki-texvc}$ 
-
-Following the convention of ASE, the output unit is $eV$ for energy, $eV/\AA$
-for forces and $eV/\AA^3$ for stress tensor. Since PiNN does not know about the
+Following the convention of ASE, the output unit is eV for energy, eV/Å
+for forces and eV/Å³ for stress tensor. Since PiNN does not know about the
 unit in the dataset, a `to_eV` parameter is given to convert from the dataset
-unit to $eV$.
+unit to eV.
 
 ###  Available results
 

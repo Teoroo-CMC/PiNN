@@ -1,33 +1,51 @@
-div.doc-contents:not(.first) {
-  padding-left: 25px;
-  border-left: 4px solid rgba(230, 230, 230);
-  margin-bottom: 80px;
+:root {
+  --md-primary-fg-color:         #be2435;
+  --md-accent-fg-color:          #be2433;
 }
 
-h5.doc-heading {
-  text-transform: none !important;
+body {
+  background-image:url('https://live.webb.uu.se/digitalAssets/207/c_207717-l_3-k_bg-city.svg');
+  background-position: bottom left;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: rgba(255, 255, 255, 0.5);
+  background-blend-mode: lighten;
 }
 
-h6.hidden-toc {
-  margin: 0 !important;
-  position: relative;
-  top: -70px;
-}
-
-h6.hidden-toc::before {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-h6.hidden-toc a.headerlink {
+.prompt {
   display: none;
 }
 
-td code {
-  word-break: normal !important;
+.center {
+    display: block;
+    margin: 0 auto;
 }
 
-td p {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+.md-sidebar{
+  max-width: 180px;
+}
+
+.md-content {
+  max-width: 750px;
+}
+
+.md-grid {
+  max-width: 950px;
+  margin-left: 0px;
+}
+
+.md-typeset__table {
+    min-width: 100%;
+}
+
+.md-typeset table:not([class]) {
+    display: table;
+    font-size: 90%;
+}
+
+.md-typeset table:not([class]) td{
+    padding: 10px 20px;
+}
+.md-typeset table:not([class]) th{
+    padding: 10px 20px;
 }
