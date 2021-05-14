@@ -43,7 +43,8 @@ To submit a job on Gcloud::
 def trainner(model_dir, params_file,
              train_data, eval_data, train_steps, eval_steps,
              batch_size, preprocess, scratch_dir, cache_data,
-             shuffle_buffer, regen_dress):
+             shuffle_buffer, regen_dress,
+             max_ckpts, log_steps, ckpt_steps):
     import yaml, tempfile, os, pinn
     import tensorflow as tf
     from tensorflow.python.lib.io.file_io import FileIO
@@ -89,16 +90,20 @@ def trainner(model_dir, params_file,
         train_fn = lambda: train_tmp().cache().repeat().shuffle(shuffle_buffer)
     else:
         train_fn = lambda: train_tmp().repeat().shuffle(shuffle_buffer)
-        
-    # Run
+
+
+    config = tf.estimator.RunConfig(keep_checkpoint_max=max_ckpts,
+                                    log_step_count_steps=log_steps,
+                                    save_summary_steps=log_steps,
+                                    save_checkpoints_steps=ckpt_steps)
     train_spec = tf.estimator.TrainSpec(input_fn=train_fn, max_steps=train_steps)
     eval_spec  = tf.estimator.EvalSpec(input_fn=eval_fn, steps=eval_steps)
-    model = pinn.get_model(params)
+    model = pinn.get_model(params, config=config)
     tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
     
     # Clean up
     for scratch in scratches:
-        os.remove(scratch)        
+
         os.remove(scratch + '.yml')
         os.remove(scratch + '.tfr')
 
@@ -135,6 +140,12 @@ def main():
                         help='size of shuffle buffer', default=100)    
     parser.add_argument('--regen-dress', action='store_true',
                         help='regenerate atomic dress using the training set')
+    parser.add_argument('--max-ckpts', type=int,
+                        help='max checkpoints to keep', default=1)
+    parser.add_argument('--log-steps', type=int,
+                        help='save log every x steps', default=None)
+    parser.add_argument('--ckpt-steps', type=int,
+                        help='save checkpoint every x steps', default=None)
     
     args = parser.parse_args()
     trainner(args.model_dir, args.params_file,
@@ -142,4 +153,5 @@ def main():
              args.train_steps, args.eval_steps,
              args.batch_size, args.preprocess,
              args.scratch_dir, args.cache_data, 
-             args.shuffle_buffer, args.regen_dress)
+             args.shuffle_buffer, args.regen_dress,
+             args.max_ckpts, args.log_steps, args.ckpt_steps)
