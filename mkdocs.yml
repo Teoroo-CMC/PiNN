@@ -19,7 +19,7 @@ nav:
       - Custom Mdoel: usage/custom_model.md
       - Optimizers: usage/optimizers.md
     - CLI: usage/cmd.md
-    - Ray Tune: usage/tune.md
+    # - Ray Tune: usage/tune.md
     - Visualize: usage/visualize.md
   - Notebooks:
     - Overview: notebooks/overview.md
@@ -29,7 +29,7 @@ nav:
     - Examples:
       - Custom Dataset: notebooks/Customizing_dataset.ipynb
       - LJ potential: notebooks/Learn_LJ_potential.ipynb
-      - Hyperparameter Tuning: notebooks/Tune_visualize.ipynb
+      # - Hyperparameter Tuning: notebooks/Tune_visualize.ipynb
   # - API Reference:
   #   - pinn.layers: empty.md
   #   - pinn.networks: empty.md

@@ -4,5 +4,4 @@ phonopy
 nglview
 jupyter
 jupyter-tensorboard
-ray
 plotly
