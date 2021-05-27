@@ -25,11 +25,12 @@ simulations.
 
 ## What to read
 
-See the [notebook](notebooks/overview.md) examples to get started.
+Checkout [quick start](quick_start.md) to get started. See the
+[notebook](notebooks/overview.md) examples for more examples.
 
-If you want to use PiNN for fitting a machine-learned potential, read the
-available options of the [potential model](potential.md) and whatever network
-(likely [PiNet](pinet.md)) you'd like to use. 
+If you are interested in an specific application, e.g. fitting a machine-learned
+potential, read the available options of the [potential model](potential.md) and
+network (likely [PiNet](pinet.md)) you'd like to use.
 
 If you are interested in developing novel ANN architectures using PiNN, you
 might want to read about the structures of our implemented networks, and

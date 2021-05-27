@@ -1,7 +1,5 @@
 # Writing a PiNN model
 
-## An Example 
-
 Below is an simplified version of the potential model as a template to implement
 new models. See also the API Documentation of the helper functions.
 

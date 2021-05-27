@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Models interfaces neural networks with the estimator api
-Models transfer a network to a model function to use with the tf estimator api.
-A model defines the goal/loss of the model, as well as training paramters.
+"""This file implements the dipole model
+
+Atomic predictions from the network are interpreted as atomic charges. This
+model fits the total dipole of the inputs and predicts both the charges and
+the total dipole.
 """
 import tensorflow as tf
 import numpy as np

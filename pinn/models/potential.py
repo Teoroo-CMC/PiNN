@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Models interfaces neural networks with the estimator api
+"""This file implements the potential model
 
-Models transfer a network to a model function to use with the tf estimator api.
-A model defines the goal/loss of the model, as well as training paramters.
+Atomic predictions from the network are interpreted as atomic energies. This
+model is also capable of fitting and predicting forces and stresses.
 """
 import tensorflow as tf
 import numpy as np

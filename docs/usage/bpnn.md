@@ -13,6 +13,22 @@ and the usage of element specific neural network for atomic energies.
     that the naming of symmetry functions is different in the original paper.
     [@2007_BehlerParrinello]
 
+## Parameters 
+
+| Parameter    | Default  | Description                                                            |
+|--------------|----------|------------------------------------------------------------------------|
+| sf_spec      |          | symmetry function specification                                        |
+| nn_spec      |          | neural network specification                                           |
+| rc           |          | cutoff radius                                                          |
+| act          | `'tanh'` | actication function                                                    |
+| cutoff_type  | `'f1'`   | 'f1' or 'f2'                                                           |
+| fp_range     | `[]`     | speficies the range of atomic fingerprints, see below                  |
+| fp_scale     | `False`  | scales the atomic fingerprints according to fp_range                   |
+| preprocess   | `False`  | run in preprocess mode                                                 |
+| use_jacobian | `True`   | compute Jacobians of fps w.r.t coordiniates to speed up force training |
+| out_units    | 1        | dimension of outputs                                                   |
+| out_pool     | `False`  | `min`, `max` or `sum`, pool atomic outputs to give global predictions  |
+
 ## Example `sf_spec`
 
 ```Python

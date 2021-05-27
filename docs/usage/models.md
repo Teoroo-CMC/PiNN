@@ -44,7 +44,7 @@ PiNN automatically saves a `params.yml` file in the model directory. With an
 trained model, the model can be loaded with its directory as well.
 
 ```Python
-model = pinn.get_model('/tmp/test_pinet_pot')
+model = pinn.get_model('pinet_potential')
 ```
 
 ## ASE interface
@@ -52,7 +52,7 @@ PiNN provides a ``PiNN_calc`` class to interface models with ASE. A calculator
 can be created from a model as simple as:
 
 ```Python
-calc = pinn.get_calc_from_model('/tmp/test_pinet_pot')
+calc = pinn.get_calc('pinet_potential')
 calc.calculate(atoms)
 ```
 

@@ -2,9 +2,11 @@ site_name: PiNN Documentation
 nav:
   - Home:
     - Introduction: index.md
+    - Migration: migration.md
     - Cite PiNN: cite.md
   - Usage:
     - Overview: usage/overview.md
+    - Quick Start: usage/quick_start.md
     - Datasests: usage/datasets.md
     - Networks:
       - Overview: usage/networks.md
@@ -17,9 +19,11 @@ nav:
         - Potential Model: usage/potential.md
         - Dipole Model: usage/dipole.md
       - Custom Mdoel: usage/custom_model.md
-      - Optimizers: usage/optimizers.md
-    - CLI: usage/cmd.md
-    # - Ray Tune: usage/tune.md
+    - Optimizers: usage/optimizers.md
+    - CLI:
+      - train: usage/cli/train.md
+      - convert: usage/cli/convert.md
+      - inspect: usage/cli/inspect.md
     - Visualize: usage/visualize.md
   - Notebooks:
     - Overview: notebooks/overview.md
@@ -29,11 +33,6 @@ nav:
     - Examples:
       - Custom Dataset: notebooks/Customizing_dataset.ipynb
       - LJ potential: notebooks/Learn_LJ_potential.ipynb
-      # - Hyperparameter Tuning: notebooks/Tune_visualize.ipynb
-  # - API Reference:
-  #   - pinn.layers: empty.md
-  #   - pinn.networks: empty.md
-  #   - pinn.models: empty.md
 plugins:
   - bibtex:
       bib_file: "docs/references.bib"
@@ -52,7 +51,7 @@ extra:
     provider: mike
 markdown_extensions:
   - toc:
-      toc_depth: 1
+      toc_depth: 2
   - admonition
   - footnotes
   - pymdownx.highlight

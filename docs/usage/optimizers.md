@@ -3,7 +3,7 @@
 The optimizer is an essential component in training neural networks. Since PiNN
 networks are Keras models they can be optimized like any other Keras models, a
 list of optimizers and their usage can be found in the TensorFlow
-(documentation)[https://www.tensorflow.org/api_docs/python/tf/keras/optimizers]
+[documentation](https://www.tensorflow.org/api_docs/python/tf/keras/optimizers).
 
 ## Usage
 
@@ -13,7 +13,7 @@ following block in the `params.yml` file.
 
 ```yaml
 optimizer:
-  class_name: Adam,
+  class_name: Adam
   config:
     learning_rate:
       class_name: ExponentialDecay,
@@ -38,7 +38,7 @@ also available as `pinn.optimizers.default_kalman`
 
 ```yaml
 optimizer:
-  class_name: EKF,
+  class_name: EKF
   config:
     learning_rate:
       class_name: ExponentialDecay,

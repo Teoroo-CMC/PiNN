@@ -12,6 +12,10 @@ body {
   background-blend-mode: lighten;
 }
 
+.prompt {
+  display: none !important;
+}
+
 .jp-InputPrompt {
   display: none !important;
 }
@@ -39,17 +43,23 @@ body {
 }
 
 .md-typeset__table {
-    min-width: 100%;
+  min-width: 100%;
 }
 
 .md-typeset table:not([class]) {
-    display: table;
-    font-size: 90%;
+  display: table;
+  font-size: 90%;
+}
+
+.md-typeset table:not([class]) td:last-of-type{
+  width: 100%;
 }
 
 .md-typeset table:not([class]) td{
-    padding: 10px 20px;
+  padding: 10px 20px;
+  white-space:nowrap;
 }
 .md-typeset table:not([class]) th{
-    padding: 10px 20px;
+  padding: 10px 20px;
+  white-space:nowrap;
 }
