@@ -39,6 +39,7 @@ plugins:
       bib_file: "docs/references.bib"
       cite_style: "pandoc"
   - mkdocs-jupyter
+  - mike
 theme:
   name: material
   logo: images/logo.svg
@@ -46,6 +47,9 @@ theme:
   features:
     - navigation.sections
     - toc.integrate
+extra:
+  version:
+    provider: mike
 markdown_extensions:
   - toc:
       toc_depth: 1

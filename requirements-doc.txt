@@ -1,0 +1,5 @@
+mike
+mkdocs
+mkdocs-jupyter
+mkdocs-bibtex
+mkdocstrings

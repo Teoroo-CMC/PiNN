@@ -1,0 +1,21 @@
+name: Deploy docs
+on:
+  push:
+    branches:
+      - TF2
+
+jobs:
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+
+      - name: Deploy docs
+        uses: yqshao/mkdocs-material@y7.1.4
+        env:
+          # from https://github.com/raspberryvalley/docker-mkdocs
+          EXTRA_PACKAGES: libc-dev linux-headers zeromq-dev gcc g++
+          REQUIREMENTS: requirements-doc.txt
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
