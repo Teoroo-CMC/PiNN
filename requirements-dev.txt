@@ -2,9 +2,3 @@ pytest
 pytest-xdist
 pytest-cov
 codecov
-ipython
-mkdocs
-git+https://github.com/yqshao/mkdocs-material@y7.1.4
-mkdocs-jupyter
-mkdocs-bibtex
-mkdocstrings
