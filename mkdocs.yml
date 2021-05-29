@@ -21,9 +21,9 @@ nav:
       - Custom Mdoel: usage/custom_model.md
     - Optimizers: usage/optimizers.md
     - CLI:
-      - train: usage/cli/train.md
       - convert: usage/cli/convert.md
-      - inspect: usage/cli/inspect.md
+      - train: usage/cli/train.md
+      - log: usage/cli/log.md
     - Visualize: usage/visualize.md
   - Notebooks:
     - Overview: notebooks/overview.md

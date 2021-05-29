@@ -6,6 +6,60 @@ import numpy as np
 from functools import wraps
 
 
+def init_params(params, dataset):
+    """Initlaize the parameters with a dataset
+
+    For potential models, generate the atomic dress from the dataset.
+
+    For BPNN, generate the range of fingerprints (to be used with `fp_scale`)
+
+    Args:
+       params (dict): the parameter dictionary
+       dataset (dataset): a tensorflow dataset
+
+    """
+    if params['model']['name']=='potential_model':
+        if 'e_dress' not in params['model']['params']:
+            elems = []
+            for e in dataset.map(lambda x: x['elems']).as_numpy_iterator():
+                elems = np.unique(np.concatenate([elems,e]))
+        else:
+            elems = list(params['model']['params']['e_dress'].keys())
+        elems = np.array(elems, dtype=np.int32)
+        e_dress, _ = get_atomic_dress(dataset, elems)
+        params['model']['params']['e_dress'] = e_dress
+
+    if params['network']['name']=='BPNN':
+        fp_range = get_fp_range(params, dataset)
+        params['network']['params']['fp_range'] = fp_range
+
+
+def get_fp_range(params, dataset):
+    """Generate the range of fingerprints for BPNN
+
+    Args:
+       params (dict): the parameter dictionary
+       dataset (dataset): a tensorflow dataset
+
+    Returns
+       a list of ranges, one for each fp specification
+    """
+    from pinn import get_network
+    from pinn.io import sparse_batch
+    network = get_network(params['network'])
+    if 'ind_1' in next(iter(dataset)):
+        dataset = dataset.apply(sparse_batch(1))
+    dataset = dataset.map(network.preprocess)
+    fp_range = {int(k[3:]):  [v.min(axis=0), v.max(axis=0)] for k,v in
+                next(dataset).items() if  k.startswith('fp')}
+    for tensors in dataset:
+        for k, v in fp_range.items():
+            v[0] = np.min([v[0], tensors[f'fp_{k}'].min(axis=0)], axis=0).tolist()
+            v[1] = np.max([v[1], tensors[f'fp_{k}'].max(axis=0)], axis=0).tolist()
+    fp_range = [fp_range[i] for i in range(9)]
+    return fp_range
+
+
 def atomic_dress(tensors, dress, dtype=tf.float32):
     """Assign an energy to each specified elems
 
@@ -35,11 +89,13 @@ def get_atomic_dress(dataset, elems, key='e_data'):
         dataset: dataset to fit
         elems: a list of element numbers
         key: key of the property to fit
+
     Returns:
         atomic_dress: a dictionary comprising the atomic energy of each element
         error: residue error of the atomic dress
     """
     def count_elems(tensors):
+        tensors = tensors.copy()
         if 'ind_1' not in tensors:
             tensors['ind_1'] = tf.expand_dims(tf.zeros_like(tensors['elems']), 1)
             tensors[key] = tf.expand_dims(tensors[key], 0)

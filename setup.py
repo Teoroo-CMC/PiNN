@@ -14,10 +14,11 @@ setup(name='pinn',
       packages=find_packages(),
       install_requires=['numpy>1.3.0',
                         'ase>=3.19.0',
+                        'click>=7.0',
                         'pyyaml>=3.01'],
       python_requires='>=3.6',
       extras_require={'cpu': ['tensorflow-cpu>=2.1'],
                       'gpu': ['tensorflow>=2.1']},
       entry_points={'console_scripts':
-                    ['pinn_train=pinn.trainer:main']}
+                    ['pinn=pinn.cli:main']}
 )

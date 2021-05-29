@@ -5,7 +5,7 @@ Convert datasets into PiNN formated TFrecord.
 ## Usage
 
 ```
-$ pinn convert dsfile1 [dsfile2 ...] [options]
+$ pinn convert [options] filename
 ```
 
 ## Options
@@ -14,7 +14,7 @@ $ pinn convert dsfile1 [dsfile2 ...] [options]
 |--------------------|-------------|----------------------------------|
 | `--output [-o]`    | `'dataset'` | name of the output dataset       |
 | `--format [-f]`    | `'auto'`    | format of input dataset          |
-| `--(no)shuffle`    | `False`     | shuffle dataset before splitting |
+| `--(no-)shuffle`   | `False`     | shuffle dataset before splitting |
 | `--batch`          | `False`     | convert dataset into minibatches |
 | `--seed`           | `0`         | random seed if shufffle is used  |
 
