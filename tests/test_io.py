@@ -48,7 +48,7 @@ def test_split():
     from pinn.io import load_numpy
     data = get_trivial_numpy()
     data = {k: np.stack([[v]]*10, axis=0) for k, v in data.items()}
-    dataset = load_numpy(data, split={'train': 8, 'test': 2})
+    dataset = load_numpy(data, splits={'train': 8, 'test': 2})
     train = iter(dataset['train'])
     test = iter(dataset['test'])
     for i in range(8):

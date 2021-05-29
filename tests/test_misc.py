@@ -51,7 +51,7 @@ def test_potential_model():
         rsample.append(r)
         distsample.append(dist)
     data = {k:np.array(v) for k,v in data.items()}
-    dataset = lambda: load_numpy(data)
+    dataset = lambda: load_numpy(data, splits={'train':8, 'test':2})
     train = lambda: dataset()['train'].shuffle(100).repeat().apply(sparse_batch(100))
     test = lambda: dataset()['test'].repeat().apply(sparse_batch(100))
     params={
@@ -80,11 +80,9 @@ def test_derivitives():
     """ Test the calcualted derivitives: forces and stress
     with a LJ calculator against ASE's implementation
     """
+    from ase.calculators.lj import LennardJones
     from ase.collections import g2
     from ase.build import bulk
-    from ase.calculators.lj import LennardJones
-    from pinn.models import potential_model
-    from pinn.calculator import PiNN_calc
     import numpy as np
     params = {
         'model_dir': '/tmp/pinn_test/lj',

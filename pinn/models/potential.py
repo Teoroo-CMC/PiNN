@@ -4,16 +4,14 @@
 Atomic predictions from the network are interpreted as atomic energies. This
 model is also capable of fitting and predicting forces and stresses.
 """
-import tensorflow as tf
 import numpy as np
-
+import tensorflow as tf
 from pinn import get_network
-from pinn.utils import pi_named, connect_dist_grad, atomic_dress
+from pinn.utils import pi_named, atomic_dress, connect_dist_grad
 from pinn.models.base import export_model, get_train_op, MetricsCollector
 
 default_params = {
-    ### Scaling and units
-    # The loss function will be MSE((pred - label) * scale)
+    ### Scaling and units # The loss function will be MSE((pred - label) * scale)
     # For vector/tensor predictions
     # the error will be pre-component instead of per-atom
     # e_unit is the unit of energy to report w.r.t the input labels
@@ -28,7 +26,6 @@ default_params = {
     ## Energy
     'max_energy': False,        # if set to float, omit energies larger than it
     'use_e_per_atom': False,    # use e_per_atom to calculate e_loss
-    'use_e_per_sqrt': False,
     'log_e_per_atom': False,    # log e_per_atom and its distribution
                                 # ^- this is forcely done if use_e_per_atom
     'use_e_weight': False,      # scales the loss according to e_weight
@@ -54,7 +51,6 @@ def potential_model(features, labels, mode, params):
     model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
-
     connect_dist_grad(features)
     pred = network(features)
 
@@ -136,6 +132,7 @@ def make_metrics(features, pred, params, mode):
         s_data = features['s_data']*params['e_scale']
         metrics.add_error('S', s_data, s_pred, weight=params['s_loss_multiplier'],
                           use_error=params['use_stress'], log_error=params['use_stress'])
+
     return metrics
 
 

@@ -4,15 +4,17 @@
 
 ```bash
 git clone https://github.com/yqshao/PiNN.git -b TF2
-pip install -e PiNN
+pip install -e PiNN[gpu]
 pinn -h
 ```
 
 Extra dependencies are avaiable:
 
-- `[dev]`: development requirements (testing suit)
-- `[doc]`: developemnt requirements (documentation builder)
+- `[gpu]` and `[cpu]`: cpu and gpu version of Tensorflow
+- `[dev]`: development requirements for testing
+- `[doc]`: documentation requirements
 - `[extra]`: extra requirements (Jupyter, pymatgen, etc) 
+
 
 **using container** 
 
@@ -77,6 +79,6 @@ tensorboard --model-dir model --port 6006
 
 Or with the log inspector of PiNN:
 ```bash
-pinn inspect model
+pinn log model
 ```
 

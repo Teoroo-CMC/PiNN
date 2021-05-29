@@ -1,15 +1,6 @@
 # -*- coding: utf-8 -*-
 """Basic functions for dataset loaders"""
 
-import random
-import tensorflow as tf
-
-
-class _datalist(list):
-    """The same thing as list, but don't count in nested structure
-    """
-    pass
-
 
 def sparse_batch(batch_size, drop_remainder=False, num_parallel_calls=8,
                  atomic_props=['f_data', 'q_data', 'f_weights']):
@@ -24,6 +15,7 @@ def sparse_batch(batch_size, drop_remainder=False, num_parallel_calls=8,
         atomic_props (list): list of atomic properties
     """
     def sparsify(tensors):
+        import tensorflow as tf
         atom_ind = tf.cast(tf.where(tensors['elems']), tf.int32)
         ind_1 = atom_ind[:, :1]
         ind_sp = tf.cumsum(tf.ones(tf.shape(ind_1), tf.int32))-1
@@ -45,89 +37,66 @@ def sparse_batch(batch_size, drop_remainder=False, num_parallel_calls=8,
     return sparse_batch_op
 
 
-def map_nested(fn, nested):
-    """Map fn to the nested structure
-    """
-    if isinstance(nested, dict):
-        return {k: map_nested(fn, v) for k, v in nested.items()}
-    if isinstance(nested, list) and type(nested) != _datalist:
-        return [map_nested(fn, v) for v in nested]
-    else:
-        return fn(nested)
-
-
-def flatten_nested(nested):
-    """Retun a list of the nested elements
-    """
-    if isinstance(nested, dict):
-        return sum([flatten_nested(v) for v in nested.values()], [])
-    if isinstance(nested, list) and type(nested) != _datalist:
-        return sum([flatten_nested(v) for v in nested], [])
-    else:
-        return [nested]
-
-
-def split_list(data_list, split={'train': 8, 'vali': 1, 'test': 1},
-               shuffle=True, seed=None):
+def split_list(data, splits={'train': 8, 'test': 2}, shuffle=True, seed=0):
     """
     Split the list according to a given ratio
 
     Args:
-        to_split (list): a list to split
-        split_ratio: a nested (list and dict) of split ratio
+        data (list): a list of data to split
+        splits (dict): a dictionary specifying the ratio of splits
+        shuffle (bool): shuffle the list before
+        seed (int): random seed used for shuffling
 
     Returns:
-        A nest structure of splitted data list
+        a dictionary of the splitted list
     """
-    import math
-    dummy = _datalist(data_list)
+    import math, random
+    data = data.copy() # work on a copy of the oridinal list
+    n_tot = len(data)
+    split_tot = float(sum([v for v in splits.values()]))
+    n_split = {k:math.ceil(n_tot*v/split_tot) for k,v in splits.items()}
     if shuffle:
         random.seed(seed)
-        random.shuffle(dummy)
-    data_tot = len(dummy)
-    split_tot = float(sum(flatten_nested(split)))
-
-    def get_split_num(x): return math.ceil(data_tot*x/split_tot)
-    split_num = map_nested(get_split_num, split)
-
-    def _pop_data(n):
-        to_pop = dummy[:n]
-        del dummy[:n]
-        return _datalist(to_pop)
-    splitted = map_nested(_pop_data, split_num)
+        random.shuffle(data)
+    splitted = {}
+    cnt = 0
+    for k, v in n_split.items():
+        splitted[k] = data[cnt:cnt+v]
+        cnt += v
     return splitted
 
 
-def list_loader(pbc=False, force=False, format_dict=None):
+def list_loader(pbc=False, force=False, ds_spec=None):
     """Decorator for building dataset loaders"""
     from functools import wraps
-    if format_dict is None:
-        format_dict = {
-            'elems': {'dtype':  tf.int32,   'shape': [None]},
+    import tensorflow as tf
+    if ds_spec is None:
+        ds_spec = {
+            'elems': {'dtype':  'int32',   'shape': [None]},
             'coord': {'dtype':  'float', 'shape': [None, 3]},
             'e_data': {'dtype': 'float', 'shape': []},
         }
         if pbc:
-            format_dict['cell'] = {'dtype':  'float', 'shape': [3, 3]}
+            ds_spec['cell'] = {'dtype':  'float', 'shape': [3, 3]}
         if force:
-            format_dict['f_data'] = {'dtype':  'float', 'shape': [None, 3]}
-
+            ds_spec['f_data'] = {'dtype':  'float', 'shape': [None, 3]}
+    ds_spec = {k: tf.TensorSpec(**v) for k,v in ds_spec.items()}
     def decorator(func):
         @wraps(func)
-        def data_loader(data_list, split={'train': 8, 'vali': 1, 'test': 1},
-                        shuffle=True, seed=0):
+        def data_loader(dataset, splits=None, shuffle=True, seed=0):
+            """ Real data loader to use, with """
             dtype = tf.keras.backend.floatx()
-            def _data_generator(data_list):
-                for data in data_list:
+            def _data_generator(dataset):
+                for data in dataset:
                     yield func(data)
-            dtypes = {k: v['dtype'] if v['dtype']!='float' else dtype
-                      for k, v in format_dict.items() }
-            shapes = {k: v['shape'] for k, v in format_dict.items()}
-
-            def generator_fn(data_list): return tf.data.Dataset.from_generator(
-                lambda: _data_generator(data_list), dtypes, shapes)
-            subsets = split_list(data_list, split, shuffle, seed)
-            splitted = map_nested(generator_fn, subsets)
-            return splitted
+            def generator_fn(dataset): return tf.data.Dataset.from_generator(
+                    lambda: _data_generator(dataset), output_signature=ds_spec)
+            if splits is None:
+                return generator_fn(dataset)
+            else:
+                subsets = split_list(dataset, splits=splits, shuffle=shuffle, seed=seed)
+                splitted = {k: generator_fn(v) for k,v in subsets.items()}
+                return splitted
         return data_loader
     return decorator
+

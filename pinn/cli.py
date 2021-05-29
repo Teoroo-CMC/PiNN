@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import click
-import pinn
+import click, pinn, os
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 @click.group()
@@ -16,26 +16,27 @@ def version():
 @click.command(name='convert', context_settings=CONTEXT_SETTINGS,
                options_metavar='[options]', short_help='convert datasets')
 @click.argument('filename', metavar='filename', nargs=1)
-@click.option('-f', '--format', metavar='', default='auto', show_default=True)
+@click.option('-f', '--fmt', metavar='', default='auto', show_default=True)
 @click.option('-o', '--output', metavar='', default='dataset', show_default=True)
-@click.option('--shuffle/--no-shuffle', metavar='', default=False, show_default=True)
+@click.option('--shuffle/--no-shuffle', metavar='', default=True, show_default=True)
 @click.option('--seed', metavar='', default='0',  type=int, show_default=True)
-def convert(filename, format, output, shuffle, seed):
+def convert(filename, fmt, output, shuffle, seed):
     """Convert or split dataset to PiNN formatted tfrecord files
 
     See the documentation for more detailed descriptions of the options
     https://Teoroo-CMC.github.io/PiNN/latest/usage/cli/convert/
     """
-    from pinn.io import load_ds, split_ds, write_tfrecord
-    ds = load_ds(filename, format)
+    from pinn.io import load_ds, write_tfrecord
     if ':' not in output: # single output
-        write_tfrecord(output, ds)
+        ds = load_ds(filename, fmt=fmt)
+        write_tfrecord(f'output.yml', ds)
     else:
         splits = {
             s.split(':')[0]: float(s.split(':')[1])
             for s in output.split(',')}
-        for k, v in split_ds(ds, splits, shuffle=shuffle, seed=seed):
-            write_tfrecord(k, v)
+        ds = load_ds(filename, fmt=fmt, splits=splits, shuffle=shuffle, seed=seed)
+        for k, v in ds.items():
+            write_tfrecord(f'{k}.yml', v)
 
 @click.command(name='train', context_settings=CONTEXT_SETTINGS,
                options_metavar='[options]', short_help='train model')

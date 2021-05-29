@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Layers are operations on the tensors.
+"""Common Layers (Keras Layers) for ANNs"""
 
-Layers here should be pure functions (do not change the inputs).
-"""
 import numpy as np
 import tensorflow as tf
-from pinn.utils import pi_named
-
 
 def _displace_matrix(max_repeat):
     """This is a helper function for cell_list_nl"""

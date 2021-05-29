@@ -5,12 +5,11 @@ Atomic predictions from the network are interpreted as atomic charges. This
 model fits the total dipole of the inputs and predicts both the charges and
 the total dipole.
 """
-import tensorflow as tf
 import numpy as np
-
+import tensorflow as tf
 from pinn import get_network
 from pinn.utils import pi_named
-from pinn.models.base import export_model
+from pinn.models.base import export_model, get_train_op, MetricsCollector
 
 default_params = {
     ### Scaling and units
@@ -38,9 +37,9 @@ def dipole_model(features, labels, mode, params):
     model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
-    connect_dist_grad(features)
     pred = network(features)
     pred = tf.expand_dims(pred, axis=1)
+
     ind = features['ind_1']  # ind_1 => id of molecule for each atom
     nbatch = tf.reduce_max(ind)+1
     charge = tf.math.unsorted_segment_sum(pred, ind[:, 0], nbatch)
@@ -73,7 +72,7 @@ def dipole_model(features, labels, mode, params):
 
 @pi_named("METRICS")
 def make_metrics(features, d_pred, q_pred, params, mode):
-    from pinn.models.base import MetricsCollector, get_train_op
+    metrics = MetricsCollector(mode)
 
     d_data = features['d_data']
     q_data = tf.zeros_like(q_pred)

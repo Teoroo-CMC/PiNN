@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
-import numpy as np
-import tensorflow as tf
-from ase.data import atomic_numbers
-from pinn.io import list_loader
 
 def _cell_dat_indexer(files):
     if isinstance(files['cell_dat'], str):
@@ -16,7 +11,7 @@ def _cell_dat_loader(index):
     return {'cell': np.loadtxt(index, usecols=(1,2,3))}
 
 def _stress_indexer(files):
-    import mmap
+    import mmap, re
     f = open(files['out'], 'r')
     m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
     locs = [match.span()[0] for match in
@@ -26,6 +21,7 @@ def _stress_indexer(files):
     return indexes
 
 def _stress_loader(index):
+    import numpy as np
     fname, loc = index
     f = open(fname, 'r')
     data = []
@@ -39,7 +35,7 @@ def _stress_loader(index):
     return {'s_data': np.array(data, np.float)*unit}
 
 def _energy_indexer(files):
-    import mmap
+    import mmap, re
     f = open(files['out'], 'r')
     regex = r'ENERGY\|\ Total FORCE_EVAL.*:\s*([-+]?\d*\.?\d*)'
     energies = [float(e) for e in re.findall(regex, f.read())]
@@ -50,7 +46,7 @@ def _energy_loader(energy):
     return {'e_data': energy}
 
 def _force_indexer(files):
-    import mmap
+    import mmap, re
     f = open(files['out'], 'r')
     m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
     locs = [match.span()[0] for match in
@@ -60,6 +56,7 @@ def _force_indexer(files):
     return indexes
 
 def _force_loader(index):
+    import numpy as np
     bohr2ang = 0.5291772109
     fname, loc = index
     f = open(fname, 'r')
@@ -86,6 +83,7 @@ def _coord_indexer(files):
     return indexes
 
 def _coord_loader(index):
+    from ase.data import atomic_numbers
     fname, loc = index
     elems = []
     coord = []
@@ -116,9 +114,9 @@ loaders = {'force': _force_loader,
            'cell_dat': _cell_dat_loader}
 
 formats = {
-    'elems': {'dtype':  tf.int32,   'shape': [None]},
-    'cell': {'dtype': 'float', 'shape': [3, 3]},
-    'coord': {'dtype':  'float', 'shape': [None, 3]},
+    'elems':  {'dtype':  'int32','shape': [None]},
+    'cell':   {'dtype': 'float', 'shape': [3, 3]},
+    'coord':  {'dtype':  'float','shape': [None, 3]},
     'e_data': {'dtype': 'float', 'shape': []},
     'f_data': {'dtype': 'float', 'shape': [None, 3]},
     's_data': {'dtype': 'float', 'shape': [3, 3]},
@@ -147,18 +145,40 @@ def _gen_list(files, keys):
     return all_list
 
 def load_cp2k(files, keys, **kwargs):
-    format_dict = {}
+    """This is a experimental loader for CP2K data
+
+    It takes data from different sources, the CP2K output file and dat files,
+    which will be specified in the files dictionary. A list of "keys" is used to
+    specify the data to read and where it is red from.
+
+    | key        | data source         | provides         |
+    |------------|---------------------|------------------|
+    | `force`    | `files['out']`      | `f_data`         |
+    | `energy`   | `files['out']`      | `e_data`         |
+    | `stress`   | `files['out']`      | `coord`, `elems` |
+    | `cell_dat` | `files['cell_dat']` | `cell`           |
+
+    Args:
+        files (dict): input files
+        keys (list): data to read
+        splits (dict): key-val pairs specifying the ratio of subsets
+        shuffle (bool): shuffle the dataset (only used when splitting)
+        seed (int): random seed for shuffling
+    """
+    from pinn.io import list_loader
+    ds_spec = {}
     for key in keys:
         for name in provides[key]:
-            format_dict.update({name:formats[name]})
+            ds_spec.update({name:formats[name]})
 
     all_list = _gen_list(files, keys)
 
-    @list_loader(format_dict=format_dict)
+    @list_loader(ds_spec=ds_spec)
     def _frame_loader(i):
         results = {}
         for k,v in all_list.items():
             results.update(loaders[k](v[i]))
         return results
 
-    return _frame_loader(list(range(len(all_list['coord']))), **kwargs)
+    return _frame_loader(list(range(len(all_list['coord']))),
+                         splits=splits, shuffle=shuffle, seed=seed)

@@ -70,8 +70,7 @@ def test_bpnn_potential():
 
 @pytest.mark.forked
 def test_bpnn_potential_pre_cond():
-    from pinn.networks import BPNN
-
+    from pinn.networks.bpnn import BPNN
     testpath = tempfile.mkdtemp()
     network_params = {
         'sf_spec': [
@@ -86,7 +85,7 @@ def test_bpnn_potential_pre_cond():
         'rc': 5.
     }
     bpnn =  BPNN(**network_params)
-    dataset = load_numpy(_get_lj_data(), split=1)\
+    dataset = load_numpy(_get_lj_data())\
         .apply(sparse_batch(10)).map(bpnn.preprocess)
 
     batches = [tensors for tensors in dataset]
@@ -143,10 +142,10 @@ def _potential_tests(params):
 
     data = _get_lj_data()
 
-    def train(): return load_numpy(data, split=1).repeat().shuffle(
+    def train(): return load_numpy(data).repeat().shuffle(
         500).apply(sparse_batch(50))
 
-    def test(): return load_numpy(data, split=1).apply(sparse_batch(10))
+    def test(): return load_numpy(data).apply(sparse_batch(10))
     train_spec = tf.estimator.TrainSpec(input_fn=train, max_steps=1e3)
     eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=100)
 

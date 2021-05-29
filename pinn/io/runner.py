@@ -18,14 +18,10 @@ Modified by: Yunqi Shao [yunqi.shao@kemi.uu.se]
 [yqshao@2020-06-06]: Added stress (not a standard RuNNer keyword)
 """
 
-import re
-import tensorflow as tf
-import numpy as np
 from pinn.io import list_loader
-from ase.data import atomic_numbers
 
-runner_format = {
-    'elems':     {'dtype': tf.int32,   'shape': [None]},
+runner_spec = {
+    'elems':     {'dtype': 'int32',   'shape': [None]},
     'cell':      {'dtype': 'float', 'shape': [3, 3]},
     'coord':     {'dtype': 'float', 'shape': [None, 3]},
     'e_data':    {'dtype': 'float', 'shape': []},
@@ -37,8 +33,10 @@ runner_format = {
 }
 
 
-@list_loader(format_dict=runner_format)
+@list_loader(ds_spec=runner_spec)
 def _frame_loader(frame):
+    import numpy as np
+    from ase.data import atomic_numbers
     fname, pos = frame
     bohr2ang = 0.5291772109
     with open(fname) as f:
@@ -86,15 +84,15 @@ def _frame_loader(frame):
             line = f.readline().strip()
 
         if s_data == []:
-            s_data = np.zeros([3,3], np.float)
+            s_data = np.zeros([3,3], float)
         else:
-            s_data = np.array(s_data, np.float)
+            s_data = np.array(s_data, float)
         elems = np.array(elems, np.int32)
-        coord = np.array(coord, np.float)
-        f_data = np.array(f_data, np.float)
-        f_weights = np.array(f_weights, np.float)
-        cell = np.array(cell, np.float)
-        q_data = np.array(q_data, np.float)
+        coord = np.array(coord, float)
+        f_data = np.array(f_data, float)
+        f_weights = np.array(f_weights, float)
+        cell = np.array(cell, float)
+        q_data = np.array(q_data, float)
         data = {
             'elems': elems,
             'coord': coord,
@@ -110,6 +108,7 @@ def _frame_loader(frame):
 
 
 def _gen_frame_list(fname):
+    import re
     i = 0
     frame_list = []
     with open(fname) as f:

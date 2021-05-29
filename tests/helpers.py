@@ -16,14 +16,14 @@ def get_trivial_qm9_ds():
     from glob import glob
     from pinn.io import load_qm9
     flist = glob('{}/examples/*.xyz'.format(this_dir))
-    dataset = load_qm9(flist, split=1)
+    dataset = load_qm9(flist)
     return dataset
 
 
 def get_trivial_runner_ds():
     from pinn.io import load_runner
     fname = '{}/examples/trivial.data'.format(this_dir)
-    dataset = load_runner(fname, split=1)
+    dataset = load_runner(fname)
     return dataset
 
 
@@ -48,6 +48,6 @@ def get_trivial_numpy_ds():
     from pinn.io import load_numpy
     data = get_trivial_numpy()
     data = {k: np.expand_dims(v, axis=0) for k, v in data.items()}
-    dataset = load_numpy(data, split=1)
+    dataset = load_numpy(data)
     return dataset
 

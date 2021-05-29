@@ -10,10 +10,6 @@ note that this scheme is not identical to the original ANI-1 paper.
 """
 
 
-import h5py
-import numpy as np
-import tensorflow as tf
-from pinn.io.base import map_nested, split_list
 
 
 def _ani_generator(sample_list):
@@ -28,21 +24,24 @@ def _ani_generator(sample_list):
         yield {'coord': coord, 'elems': elems, 'e_data': e_data}
 
 
-def load_ani(filelist, cycle_length=4, **kwargs):
+def load_ani(filelist, split=False, shuffle=True, seed=0, cycle_length=4):
     """Loads the ANI-1 dataset
 
     Args:
         filelist (list): filenames of ANI-1 h5 files.
+        split (dict): key-val pairs specifying the ratio of subsets
+        shuffle (bool): shuffle the dataset (only used when splitting)
+        seed (int): random seed for shuffling
         cycle_length (int): number of parallel threads to read h5 file
-        dtype (str): 'float32' or 'float64'
-        **kwargs: split options, see ``pinn.io.base.split_list``
     """
-    format_dict = {
+    import h5py
+    import numpy as np
+    import tensorflow as tf
+    from pinn.io.base import split_list
+    ds_spec = {
         'elems': {'dtype':  tf.int32,   'shape': [None]},
         'coord': {'dtype':  tf.keras.backend.floatx(), 'shape': [None, 3]},
         'e_data': {'dtype': tf.keras.backend.floatx(), 'shape': []}}
-    dtypes = {k: v['dtype'] for k, v in format_dict.items()}
-    shapes = {k: [None] + v['shape'] for k, v in format_dict.items()}
     # Load the list of samples
     sample_list = []
     for fname in filelist:
@@ -54,10 +53,10 @@ def load_ani(filelist, cycle_length=4, **kwargs):
     # Generate dataset from sample list
 
     def generator_fn(samplelist): return tf.data.Dataset.from_generator(
-        lambda: _ani_generator(samplelist), dtypes, shapes).interleave(
+            lambda: _ani_generator(samplelist), output_signature=ds_spec).interleave(
             lambda x: tf.data.Dataset.from_tensor_slices(x),
             cycle_length=cycle_length)
     # Generate nested dataset
-    subsets = split_list(sample_list, **kwargs)
+    subsets = split_list(sample_list, split=split, shuffle=shuffle, seed=0)
     splitted = map_nested(generator_fn, subsets)
     return splitted

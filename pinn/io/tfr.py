@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper functions to save/load datasets into tfrecords"""
 
-import sys
-import yaml
-import tensorflow as tf
-from tensorflow.python.lib.io.file_io import FileIO
-
 
 def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
     """Helper function to convert dataset object into tfrecord file.
@@ -17,6 +12,9 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
         dataset (Dataset): input dataset.
         fname (str): filename of the dataset to be saved.
     """
+    import sys, yaml
+    import tensorflow as tf
+    from tensorflow.python.lib.io.file_io import FileIO
     def _bytes_feature(value):
         """Returns a bytes_list from a string / byte."""
         return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
@@ -57,28 +55,54 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
         yaml.safe_dump({'format': format_dict, 'info': info_dict}, f)
 
 
-def load_tfrecord(fname):
+def load_tfrecord(dataset, splits=None, shuffle=True, seed=0):
     """Load tfrecord dataset.
 
+    Note that the splits given by load_tfrecord should be consistent with other
+    loaders, but the orders of data points will not be shuffled. Make sure to
+    use a large shuffling buffer when splits given by `load_tfrecord` is used in
+    training.
+
     Args:
-       fname (str): filename of the .yml metadata file to be loaded.
-       dtypes (dict): dtype of dataset.
+       dataset (str): filename of the .yml metadata file to be loaded.
+       splits (dict): key-val pairs specifying the ratio of subsets
+       shuffle (bool): shuffle the dataset (only used when splitting)
+       seed (int): random seed for shuffling
+
     """
+    import sys, yaml
+    import numpy as np
+    import tensorflow as tf
+    from pinn.io.base import split_list
+    from tensorflow.python.lib.io.file_io import FileIO
     # dataset
-    with FileIO(fname, 'r') as f:
-        format_dict = (yaml.safe_load(f)['format'])
+    with FileIO(dataset, 'r') as f:
+        ds_spec = yaml.safe_load(f)
+        format_dict = ds_spec['format']
+
     dtypes = {k: format_dict[k]['dtype'] for k in format_dict.keys()}
     shapes = {k: format_dict[k]['shape'] for k in format_dict.keys()}
-
     feature_dict = {k: tf.io.FixedLenFeature([], tf.string) for k in dtypes}
 
-    def parser(example): return tf.io.parse_single_example(example, feature_dict)
-
+    def parser(example):
+        return tf.io.parse_single_example(example, feature_dict)
     def converter(tensors):
         tensors = {k: tf.io.parse_tensor(v, dtypes[k])
                    for k, v in tensors.items()}
         [v.set_shape(shapes[k]) for k, v in tensors.items()]
         return tensors
-    tfr = '.'.join(fname.split('.')[:-1]+['tfr'])
+    tfr = '.'.join(dataset.split('.')[:-1]+['tfr'])
     dataset = tf.data.TFRecordDataset(tfr).map(parser).map(converter)
-    return dataset
+    # tfr splitter
+    if splits is None:
+        return dataset
+    else:
+        n_sample = ds_spec['info']['n_sample']
+        splits = split_list(np.int64(list(range(n_sample))),
+                            splits=splits, shuffle=shuffle, seed=seed)
+        splitted = {k: tf.data.Dataset.zip((
+            dataset, tf.data.Dataset.range(n_sample))).filter(
+                lambda d, i: tf.reduce_any(tf.equal(v,i))).map(
+                    lambda d, i: d)
+                    for k,v in splits.items()}
+        return splitted

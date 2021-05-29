@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-import tensorflow as tf
-from pinn.models.potential import potential_model
-from pinn.models.dipole import dipole_model
 
 def get(model_spec, **kwargs):
     import yaml, os
     import numpy as np
+    import tensorflow as tf
     from tensorflow.python.lib.io.file_io import FileIO
     from datetime import datetime
+    from pinn.models.potential import potential_model
+    from pinn.models.dipole import dipole_model
     implemented_models = {
         'potential_model': potential_model,
         'dipole_model': dipole_model}
