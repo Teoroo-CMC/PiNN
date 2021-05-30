@@ -91,4 +91,13 @@ def make_metrics(features, d_pred, q_pred, params, mode):
                           weight=d_weight, use_error=params['use_d_per_atom'],
                           log_error=params['log_d_per_atom'])
 
+    if params['use_l2']:
+        tvars = tf.compat.v1.trainable_variables()
+        l2_loss = tf.add_n([
+            tf.nn.l2_loss(v) for v in tvars if
+            ('bias' not in v.name and 'noact' not in v.name)])
+        l2_loss = l2_loss * params['l2_loss_multiplier']
+        metrics.METRICS['METRICS/L2_LOSS'] = l2_loss
+        metrics.LOSS.append(l2_loss)
+
     return metrics

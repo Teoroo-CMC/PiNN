@@ -385,7 +385,7 @@ class BPFeedForward(tf.keras.layers.Layer):
                 for units in v]
             self.ff_layers[k].append(
                 tf.keras.layers.Dense(out_units, activation=None,
-                                      use_bias=False))
+                                      use_bias=False, name='noact'))
 
     def call(self, tensors):
         output = []

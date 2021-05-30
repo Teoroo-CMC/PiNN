@@ -36,10 +36,13 @@ default_params = {
     'use_f_weight': False,      # scales the loss according to f_weights
     ## Stress
     'use_stress': False,        # include stress in Loss function
-    # Loss function multipliers
+    ## L2
+    'use_l2': False,
+    ## Loss function multipliers
     'e_loss_multiplier': 1.0,
     'f_loss_multiplier': 1.0,
     's_loss_multiplier': 1.0,
+    'l2_loss_multiplier': 1.0,
     'separate_errors': False,   # workaround at this point
 }
 
@@ -132,6 +135,15 @@ def make_metrics(features, pred, params, mode):
         s_data = features['s_data']*params['e_scale']
         metrics.add_error('S', s_data, s_pred, weight=params['s_loss_multiplier'],
                           use_error=params['use_stress'], log_error=params['use_stress'])
+
+    if params['use_l2']:
+        tvars = tf.compat.v1.trainable_variables()
+        l2_loss = tf.add_n([
+            tf.nn.l2_loss(v) for v in tvars if
+            ('bias' not in v.name and 'noact' not in v.name)])
+        l2_loss = l2_loss * params['l2_loss_multiplier']
+        metrics.METRICS['METRICS/L2_LOSS'] = l2_loss
+        metrics.LOSS.append(l2_loss)
 
     return metrics
 

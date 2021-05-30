@@ -19,7 +19,7 @@ from glob import glob
 from pinn.io import load_ds, write_tfrecord
 from pinn.io import write_tfrecord
 filelist = glob('/home/yunqi/datasets/QM9/dsgdb9nsd/*.xyz')
-dataset = load_ds(filelist, fmt='qm9', split={'train':8, 'test':2})
+dataset = load_ds(filelist, fmt='qm9', split={'train':8, 'test':2})['train']
 write_tfrecord('train.yml', train_set)
 train_ds = load_ds('train.yml')
 ```
@@ -105,6 +105,9 @@ An example notebook on preparing a custom dataset is
 ### pinn.io.load_tfrecord
 ::: pinn.io.load_tfrecord
 
+### pinn.io.load_ase
+::: pinn.io.load_ase
+
 ### pinn.io.load_runner
 ::: pinn.io.load_runner
 
@@ -116,7 +119,5 @@ An example notebook on preparing a custom dataset is
 
 ### pinn.io.load_cp2k
 ::: pinn.io.load_cp2k
-
-
 
 \bibliography

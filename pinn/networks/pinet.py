@@ -85,7 +85,7 @@ class OutLayer(tf.keras.layers.Layer):
         self.out_units = out_units
         self.ff_layer = FFLayer(n_nodes, **kwargs)
         self.out_units = tf.keras.layers.Dense(
-            out_units, activation=None, use_bias=False)
+            out_units, activation=None, use_bias=False, name='noact')
 
     def call(self, tensors):
         ind_1, prop, prev_output = tensors
