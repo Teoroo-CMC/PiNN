@@ -3,4 +3,3 @@ pymatgen
 phonopy
 nglview
 jupyter
-jupyter-tensorboard

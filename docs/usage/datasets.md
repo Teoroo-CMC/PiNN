@@ -100,24 +100,24 @@ An example notebook on preparing a custom dataset is
 ## API documentation
 
 ### pinn.io.load_ds
-::: pinn.io.load_ds
+::: pinn.io:load_ds
 
 ### pinn.io.load_tfrecord
-::: pinn.io.load_tfrecord
+::: pinn.io:load_tfrecord
 
 ### pinn.io.load_ase
-::: pinn.io.load_ase
+::: pinn.io:load_ase
 
 ### pinn.io.load_runner
-::: pinn.io.load_runner
+::: pinn.io:load_runner
 
 ### pinn.io.load_qm9
-::: pinn.io.load_qm9
+::: pinn.io:load_qm9
 
 ### pinn.io.load_ani
-::: pinn.io.load_ani
+::: pinn.io:load_ani
 
 ### pinn.io.load_cp2k
-::: pinn.io.load_cp2k
+::: pinn.io:load_cp2k
 
 \bibliography

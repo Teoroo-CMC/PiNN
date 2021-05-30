@@ -3,3 +3,5 @@ mkdocs
 mkdocs-jupyter
 mkdocs-bibtex
 mkdocstrings
+jupyter_contrib_nbextensions
+git+https://github.com/yqshao/mkdocs-material.git@yqshao
