@@ -38,6 +38,7 @@ def test_potential_model():
     asample, rsample = [], []
     distsample = []
     data = {'e_data':[], 'f_data':[], 'elems':[], 'coord':[]}
+    np.random.seed(0)
     for i in range(nsample):
         a, r = np.random.choice(arange), np.random.choice(rrange)
         atoms = three_body_sample(atoms, a, r)
@@ -94,6 +95,7 @@ def test_derivitives():
             'params': {}}}
     pi_lj = pinn.get_calc(params)
     test_set = [bulk('Cu').repeat([3,3,3]), bulk('Mg'), g2['H2O']]
+    np.random.seed(0)
     for atoms in test_set:
         pos = atoms.get_positions()
         atoms.set_positions(pos+np.random.uniform(0,0.2,pos.shape))
@@ -139,4 +141,4 @@ def test_clist_nl():
     for a in to_test:
         dist_ase.append(neighbor_list('d', a, 10))
     dist_ase = np.concatenate(dist_ase,0)
-    assert np.allclose(np.sort(dist_ase), np.sort(dist_pinn), rtol=5e-3)
+    assert np.allclose(np.sort(dist_ase), np.sort(dist_pinn), rtol=1e-2)

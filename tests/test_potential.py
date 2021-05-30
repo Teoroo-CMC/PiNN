@@ -170,10 +170,10 @@ def _potential_tests(params):
 
     assert np.allclose(results['METRICS/F_RMSE']/params['model']['params']['e_scale'],
                         np.sqrt(np.mean((f_pred/params['model']['params']['e_unit']
-                                         - data['f_data'])**2)), rtol=5e-3)
+                                         - data['f_data'])**2)), rtol=1e-2)
     assert np.allclose(results['METRICS/E_RMSE']/params['model']['params']['e_scale'],
                        np.sqrt(np.mean((e_pred/params['model']['params']['e_unit']
-                                        - data['e_data'])**2)), rtol=5e-3)
+                                        - data['e_data'])**2)), rtol=1e-2)
 
     # Test energy conservation
     e_pred, f_pred = [], []
@@ -189,7 +189,7 @@ def _potential_tests(params):
     de = e_pred[-1] - e_pred[0]
     int_f = np.trapz(f_pred[:, 0, 0], x=x_a_range)
     print(f_pred)
-    assert np.allclose(de, -int_f, rtol=5e-3)
+    assert np.allclose(de, -int_f, rtol=1e-2)
 
     # Test virial pressure
     e_pred, p_pred = [], []
@@ -205,4 +205,4 @@ def _potential_tests(params):
 
     de = e_pred[-1] - e_pred[0]
     int_p = np.trapz(p_pred, x=l_range**3)
-    assert np.allclose(de, int_p, rtol=5e-3)
+    assert np.allclose(de, int_p, rtol=1e-2)
