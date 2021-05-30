@@ -3,7 +3,7 @@
 **using pip**
 
 ```bash
-git clone https://github.com/yqshao/PiNN.git -b TF2
+git clone https://github.com/Teoroo-CMC/PiNN.git -b TF2
 pip install -e PiNN[gpu]
 pinn -h
 ```
@@ -22,15 +22,20 @@ PiNN provides three built docker images, which can be converted to
 singularity images without much effort:
 
 ```bash
-singularity build pinn.sif docker://yqshao/pinn:tf2
+singularity build pinn.sif docker://teoroo/pinn:latest-gpu
 ./pinn.sif -h
 ```
 
-Three images are provided:
+Two images are provided:
 
-- `:tf2` is the most compact, it comes without GPU support
-- `:tf2-gpu` is the version with GPU support
-- `:tf2-full` contains all extra requirements as well as GPU support 
+- `:latest-cpu` is much smaller, it comes without GPU support
+- `:latest-gpu` is the version with GPU support
+
+Extra dependencies like `Jupyter` is included in the image, for a quick 
+development envrionment:
+```bash
+singularity run pinn.sif jupyter notebook
+```
 
 ## Configuration
 In PiNN, a model consists two essential parts, the network and the model. The

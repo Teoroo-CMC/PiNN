@@ -1,6 +1,6 @@
 # Data loaders
 
-In PiNN, the dataset is represented with the TensorFlow [`dataset`
+In PiNN, the dataset is represented with the TensorFlow [`Dataset`
 class](https://www.tensorflow.org/api_docs/python/tf/data/Dataset). Several
 dataset loaders are implemented in PiNN to load data from common formats.
 Starting from v1.0, PiNN provides a canonical data loader `pinn.io.load_ds`
@@ -19,7 +19,7 @@ from glob import glob
 from pinn.io import load_ds, write_tfrecord
 from pinn.io import write_tfrecord
 filelist = glob('/home/yunqi/datasets/QM9/dsgdb9nsd/*.xyz')
-dataset = load_ds(filelist, fmt='qm9', split={'train':8, 'test':2})['train']
+dataset = load_ds(filelist, fmt='qm9', splits={'train':8, 'test':2})['train']
 write_tfrecord('train.yml', train_set)
 train_ds = load_ds('train.yml')
 ```
@@ -38,14 +38,14 @@ corresponding ratios. For example:
 
 ```Python
 from pinn.io import load_ds
-dataset = load_ds(files, fmt='qm9', split={'train':8, 'test':2})
+dataset = load_ds(files, fmt='qm9', splits={'train':8, 'test':2})
 train = dataset['train']
 test = dataset['test']
 ```
 
-Here `train` and `test` will become tf.dataset objects which can be consumed by
-our models. The loaders also aceepts a seed parameter for the split to be
-consistent, and its default value is `0`.
+Here `train` and `test` will be `tf.data.Dataset` objects which to be consumed
+by our models. The loaders also aceepts a seed parameter for the split to be
+reproducible, and the default seed is `0`.
 
 ## Batching the dataset
 

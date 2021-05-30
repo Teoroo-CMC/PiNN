@@ -1,6 +1,6 @@
 # Using PiNN
 
-## Architecture: layers and network
+## Architecture
 
 Components of PiNN are written in the language of Keras Layers and Models, those
 are referred to as PiNN `layers` and `networks` respectively.
@@ -26,7 +26,7 @@ simulations.
 ## What to read
 
 Checkout [quick start](quick_start.md) to get started. See the
-[notebook](notebooks/overview.md) examples for more examples.
+[notebook](../notebooks/overview.md) examples for more examples.
 
 If you are interested in an specific application, e.g. fitting a machine-learned
 potential, read the available options of the [potential model](potential.md) and

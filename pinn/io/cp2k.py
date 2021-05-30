@@ -149,7 +149,7 @@ def load_cp2k(files, keys, **kwargs):
 
     It takes data from different sources, the CP2K output file and dat files,
     which will be specified in the files dictionary. A list of "keys" is used to
-    specify the data to read and where it is red from.
+    specify the data to read and where it is read from.
 
     | key        | data source         | provides         |
     |------------|---------------------|------------------|

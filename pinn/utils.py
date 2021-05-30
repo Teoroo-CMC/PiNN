@@ -94,17 +94,18 @@ def get_atomic_dress(dataset, elems, key='e_data'):
         atomic_dress: a dictionary comprising the atomic energy of each element
         error: residue error of the atomic dress
     """
+    from pinn.io import sparse_batch
+
     def count_elems(tensors):
         tensors = tensors.copy()
-        if 'ind_1' not in tensors:
-            tensors['ind_1'] = tf.expand_dims(tf.zeros_like(tensors['elems']), 1)
-            tensors[key] = tf.expand_dims(tensors[key], 0)
         count = tf.equal(tf.expand_dims(
             tensors['elems'], 1), tf.expand_dims(elems, 0))
         count = tf.cast(count, tf.int32)
         count = tf.math.segment_sum(count, tensors['ind_1'][:, 0])
         return count, tensors[key]
 
+    if 'ind_1' not in next(iter(dataset)):
+        dataset = dataset.apply(sparse_batch(1))
     x, y = [], []
     for x_i, y_i in dataset.map(count_elems).as_numpy_iterator():
         x.append(x_i)

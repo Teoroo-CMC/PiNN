@@ -1,11 +1,11 @@
 #  train
 
-Trian a PiNN model given a parameter file.
+Train a PiNN model given a parameter file.
 
 ## Usage
 
 ```bash
-pinn trian params [options]
+pinn train params [options]
 ```
 
 ## Options

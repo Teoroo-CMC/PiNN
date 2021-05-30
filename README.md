@@ -1,6 +1,6 @@
 # PiNN: a Python library for building atomic neural networks
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/yqshao/PiNN/Build%20and%20Test/TF2?label=build&style=flat-square)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/Teoroo-CMC/PiNN/Build%20and%20Test/TF2?label=build&style=flat-square)
 
 PiNN<sup>[1](#fn1)</sup> is a Python library built on top of TensorFlow for
 building atomic neural network potentials. The PiNN library also provides
@@ -12,25 +12,25 @@ The code is currently maintained by Yunqi Shao at Uppsala University.
 
 - Python 3
 - ASE, Numpy, Pyyaml
-- TensorFlow >= 2.3<sup>[2](#fn2)</sup>
+- TensorFlow >= 2.4<sup>[2](#fn2)</sup>
 
 ## Installation
 
 Install from source code::
 
 ``` sh
-git clone https://github.com/Teoroo-CMC/PiNN.git
+git clone https://github.com/Teoroo-CMC/PiNN.git 
 cd PiNN && pip install -e .
 ```
 
 Or use the [docker
-image](https://cloud.docker.com/repository/docker/yqshao/pinn/tags). If you use
+image](https://cloud.docker.com/repository/docker/teoroo/pinn/tags). If you use
 singularity, you can build a singularity image directly from the docker image:
 
 ``` sh
-singularity build pinn.sif docker://yqshao/pinn:latest (or latest-gpu)
+singularity build pinn.sif docker://teoroo/pinn:latest-gpu (or latest-cpu)
 singularity exec pinn.sif jupyter notebook # this starts a jupyter notebook server
-./pinn.sif -h # this invokes the pinn CLI
+./pinn.sif --help # this invokes the pinn CLI
 ```
 
 ## Documentation
@@ -86,5 +86,5 @@ Materials. arXiv:1910.03376 [cond-mat, physics:physics] 2019.
 
 <a name="fn2">[2]</a> TensorFlow is not installed automatically by default.
 Since TF 2.0 the GPU support is included in the stable release, ``pip install
-tensorflow>=2.3`` should be suitable for most user.
+tensorflow>=2.4`` should be suitable for most user.
 

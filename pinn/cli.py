@@ -2,7 +2,7 @@
 import click, pinn, os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CONTEXT_SETTINGS = dict()
 
 @click.group()
 def main():
@@ -41,18 +41,18 @@ def convert(filename, fmt, output, shuffle, seed):
 @click.command(name='train', context_settings=CONTEXT_SETTINGS,
                options_metavar='[options]', short_help='train model')
 @click.argument('params', metavar='params', nargs=1)
-@click.option('-d', '--model-dir', metavar='', default=None, help="[default: None] (get from params)")
+@click.option('-d', '--model-dir', metavar='', default=None, help="[default: None (get from params)]")
 @click.option('-t', '--train-ds', metavar='', default='train.yml', show_default=True)
 @click.option('-e', '--eval-ds', metavar='', default='eval.yml', show_default=True)
-@click.option('-b', '--batch', metavar='', type=int, default=None, help="[default: None] (keep as input)")
+@click.option('-b', '--batch', metavar='', type=int, default=None, help="[default: None (keep as input)]")
 @click.option('--cache/--no-cache', metavar='', default=True, show_default=True)
 @click.option('--preprocess/--no-preprocess', metavar='', default=True, show_default=True)
 @click.option('--scratch-dir', metavar='', default=None, help='[default: None] (cache in RAM)')
 @click.option('--train-steps', metavar='', default=1000000, type=int, show_default=True)
-@click.option('--eval-steps', metavar='', default=None, type=int, help='[default: None] (entire eval set)')
+@click.option('--eval-steps', metavar='', default=None, type=int, help='[default: None (entire eval set)]')
 @click.option('--shuffle-buffer', metavar='', default=100, type=int, show_default=True)
-@click.option('--log-every', metavar='', default=100, type=int, show_default=True)
-@click.option('--ckpt-every', metavar='', default=1000, type=int, show_default=True)
+@click.option('--log-every', metavar='', default=1000, type=int, show_default=True)
+@click.option('--ckpt-every', metavar='', default=10000, type=int, show_default=True)
 @click.option('--max-ckpts', metavar='', default=1, type=int, show_default=True)
 @click.option('--init/--no-init', metavar='', default=False, show_default=True)
 def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,

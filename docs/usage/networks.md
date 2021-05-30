@@ -2,10 +2,10 @@
 
 In PiNN, a network refers to a specific architecture of atomic neural network.
 PiNN networks are essentially Keras models, this means you can use networks for
-some simple prediction tasks. More complex tasks like predicting the potential
-energy surface or the dipole moment requires defining an relation between the
-network prediction (atomic energy, atomic charge) to the desired properties
-(forces, dipole moments), which can be done with `pinn.model`.
+some simple prediction tasks. For more complex tasks like predicting the
+potential energy surface or the dipole moment requires defining an relation
+between the network prediction (atomic energy, atomic charge) to the desired
+properties (forces, dipole moments), use `pinn.model`.
 
 ## Using a network
 
@@ -13,7 +13,7 @@ Atomic neural networks (ANNs) in PiNN makes predictions on atoms. By default,
 networks in PiNN makes one prediction per atom. A PiNN network can be used just
 like a Keras model.
 
-```Pthon
+```Python
 from pinn.networks import PiNet
 pinet = PiNet()
 prediction = pinet(tensors)

@@ -50,3 +50,10 @@ The `MetricsCollector` object is a helper object in PiNN to handle different
 forms of errors. It helps to apply customized weights to errors, filter them and
 keep appropriate logs during the training and evaluation phases, see the API
 documentation for more details.
+
+!!! note
+
+    Models created in this way will not be accessible from the PiNN CLI and
+    `pinn.get_model` (they must be created by a `model_fn(params)` call in a
+    python script). A mechanism to include custom models might be aviable in a
+    future version

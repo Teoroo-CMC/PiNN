@@ -11,6 +11,11 @@ def get_calc(model_spec, **kwargs):
     The positional argument will be passed to `pinn.get_model`, keyword
     arguments will be passed to the calculator.
     """
+    import tensorflow as tf
     from pinn import get_model
     from pinn.calculator import PiNN_calc
-    return  PiNN_calc(get_model(model_spec), **kwargs)
+    if isinstance(model_spec, tf.estimator.Estimator):
+        model = model_spec
+    else:
+        model = get_model(model_spec)
+    return  PiNN_calc(model, **kwargs)
