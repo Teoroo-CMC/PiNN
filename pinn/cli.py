@@ -91,8 +91,12 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
         if batch is not None:
             dataset = dataset.apply(sparse_batch(batch))
         if preprocess:
-            network = get_network(params['network'])
-            dataset = dataset.map(network.preprocess)
+            def pre_fn(tensors):
+                with tf.name_scope("PRE") as scope:
+                    network = get_network(params['network'])
+                    tensors = network.preprocess(tensors)
+                return tensors
+            dataset = dataset.map(pre_fn)
         if cache:
             if scratch_dir is not None:
                 cache_dir = mkstemp(dir=scrach_dir)
