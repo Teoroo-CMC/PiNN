@@ -72,7 +72,7 @@ PiNN provides a CLI for training and simple dataset operations:
 
 ```bash
 pinn convert data.traj -o 'trian:8,eval:2'
-pinn train --train-ds train.yml --eval-ds eval.yml --train-steps 1e6
+pinn train -t train.yml -e eval.yml -b 30 --train-steps 100000 params.yml
 ```
 
 ## Monitoring

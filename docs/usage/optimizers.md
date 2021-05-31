@@ -18,7 +18,7 @@ optimizer:
     learning_rate:
       class_name: ExponentialDecay,
       config:
-        initial_learning_rate: 3e-4
+        initial_learning_rate: 0.0003
         decay_steps: 10000
         decay_rate: 0.994
     clipnorm: 0.01
