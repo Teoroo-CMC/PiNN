@@ -11,7 +11,7 @@ def _qm9_spec(label_map):
     return ds_spec
 
 
-def load_qm9(flist, label_map={'e_data': 'U0'}, **kwargs):
+def load_qm9(flist, label_map={'e_data': 'U0'}, splits=None, shuffle=True, seed=0):
     """Loads the QM9 dataset
 
     QM9 provides a variety of labels, but typically we are only
@@ -59,4 +59,4 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, **kwargs):
         for k, v in label_map.items():
             data[k] = float(lines[1].split()[_label_ind[v]])
         return data
-    return _qm9_loader(flist, **kwargs)
+    return _qm9_loader(flist, splits=splits, shuffle=shuffle, seed=seed)

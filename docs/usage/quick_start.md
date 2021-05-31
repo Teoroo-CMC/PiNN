@@ -72,8 +72,12 @@ PiNN provides a CLI for training and simple dataset operations:
 
 ```bash
 pinn convert data.traj -o 'trian:8,eval:2'
-pinn train -t train.yml -e eval.yml -b 30 --train-steps 100000 params.yml
+pinn train -d model -t train.yml -e eval.yml -b 30 --train-steps 100000 params.yml
 ```
+
+The above command takes a trajectory file `data.traj`, and splits it into two
+datasets. Then it takes the parameters from `params.yml`, and trains a model
+in the `model` directory.
 
 ## Monitoring
 PiNN uses TensorFlow as a backend for training, which means the training log can 
@@ -87,3 +91,13 @@ Or with the log inspector of PiNN:
 pinn log model
 ```
 
+
+## Using the model
+The simplest use case for PiNN models is to use them as ASE calculators. A calculator
+can be initialized from the model directory.
+
+```python
+import pinn
+calc = pinn.get_calc('model')
+calc.calculate(atoms)
+```

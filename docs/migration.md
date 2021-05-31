@@ -18,6 +18,9 @@ the structure, see the documentation for more information.
 **Extended Kalman filter**:
 a experimental extended Kalman filter (EKF) optimizer is implemented. 
 
+**`pinn.get_*`** functions are now available to create models, networks and
+calculators from parameters or files.
+
 ## Notes for developers
 
 - Documentation is now built with mkdocs

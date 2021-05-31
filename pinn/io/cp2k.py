@@ -144,7 +144,7 @@ def _gen_list(files, keys):
     print()
     return all_list
 
-def load_cp2k(files, keys, **kwargs):
+def load_cp2k(files, keys, splits=None, shuffle=True, seed=0):
     """This is a experimental loader for CP2K data
 
     It takes data from different sources, the CP2K output file and dat files,
