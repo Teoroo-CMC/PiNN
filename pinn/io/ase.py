@@ -12,7 +12,7 @@ def _ase_spec(atoms):
         ds_spec['cell'] = {'dtype': 'float', 'shape': [3, 3]}
 
     try:
-        atoms.get_potential_enegy()
+        atoms.get_potential_energy()
         ds_spec['e_data'] = {'dtype': 'float', 'shape': []}
     except:
         pass
