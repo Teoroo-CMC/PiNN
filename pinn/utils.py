@@ -25,7 +25,7 @@ def init_params(params, dataset):
                 elems = np.unique(np.concatenate([elems,e]))
         else:
             elems = list(params['model']['params']['e_dress'].keys())
-        elems = np.array(elems, dtype=np.int32)
+        elems = [int(e) for e in elems]
         e_dress, _ = get_atomic_dress(dataset, elems)
         params['model']['params']['e_dress'] = e_dress
 
