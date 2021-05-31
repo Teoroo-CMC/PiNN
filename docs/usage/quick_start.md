@@ -8,9 +8,9 @@ pip install -e PiNN[gpu]
 pinn -h
 ```
 
-Extra dependencies are avaiable:
+Extra dependencies can be specified:
 
-- `[gpu]` and `[cpu]`: cpu and gpu version of Tensorflow
+- `[gpu]` or `[cpu]`: cpu or gpu version of TensorFlow
 - `[dev]`: development requirements for testing
 - `[doc]`: documentation requirements
 - `[extra]`: extra requirements (Jupyter, pymatgen, etc) 
@@ -18,21 +18,20 @@ Extra dependencies are avaiable:
 
 **using container** 
 
-PiNN provides three built docker images, which can be converted to 
-singularity images without much effort:
+PiNN provides two built docker images, which can be converted to singularity
+images without much effort:
 
 ```bash
 singularity build pinn.sif docker://teoroo/pinn:latest-gpu
 ./pinn.sif -h
 ```
 
-Two images are provided:
-
 - `:latest-cpu` is much smaller, it comes without GPU support
 - `:latest-gpu` is the version with GPU support
 
-Extra dependencies like `Jupyter` is included in the image, for a quick 
-development envrionment:
+Extra dependencies like `Jupyter` are included in the image, for a quick 
+development environment:
+
 ```bash
 singularity run pinn.sif jupyter notebook
 ```
@@ -43,7 +42,7 @@ network specifies the neural network architecture used to product atomistic
 predictions from the input (coordinates and elements information). While the
 model interprets the predictions as physical quantities.
 
-In PiNN, the parameters for a model is saved as a `yaml` formated parameter
+In PiNN, the parameters for a model is saved as a `yaml` formatted parameter
 file. A minimal example of model parameter file looks like this:
 
 ```yaml
@@ -83,7 +82,7 @@ in the `model` directory.
 PiNN uses TensorFlow as a backend for training, which means the training log can 
 be monitored in real time using Tensorboard:
 ```bash
-tensorboard --model-dir model --port 6006
+tensorboard --log-dir model --port 6006
 ```
 
 Or with the log inspector of PiNN:

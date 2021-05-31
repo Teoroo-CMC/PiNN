@@ -3,9 +3,9 @@
 In PiNN, the dataset is represented with the TensorFlow [`Dataset`
 class](https://www.tensorflow.org/api_docs/python/tf/data/Dataset). Several
 dataset loaders are implemented in PiNN to load data from common formats.
-Starting from v1.0, PiNN provides a canonical data loader `pinn.io.load_ds`
-that handels dataset with different formats, see below for the API documentation
-and available datasets.
+Starting from v1.0, PiNN provides a canonical data loader `pinn.io.load_ds` that
+handles dataset with different formats, see below for the API documentation and
+available datasets.
 
 ## TFRecord
 
@@ -44,7 +44,7 @@ test = dataset['test']
 ```
 
 Here `train` and `test` will be `tf.data.Dataset` objects which to be consumed
-by our models. The loaders also aceepts a seed parameter for the split to be
+by our models. The loaders also accepts a seed parameter for the split to be
 reproducible, and the default seed is `0`.
 
 ## Batching the dataset
@@ -52,7 +52,7 @@ reproducible, and the default seed is `0`.
 Most TensorFlow operations (caching, repeating, shuffling) can be
 directly applied to the dataset. However, to handle datasets with
 different numbers of atoms in each structure, which is often the case,
-we use a special ``sparse_batch`` operation to create minibatches of
+we use a special ``sparse_batch`` operation to create mini-batches of
 the data in a sparse form. For example:
 
 ```Python
@@ -64,11 +64,11 @@ batched = dataset.apply(sparse_batch(100))
 ## Custom format
 
 To be able to shuffle and split the dataset, PiNN require the dataset to be
-represented as a list of datums. In the simplest case, the dataset could be a
-list of structure files, each contains one structure and label (or a sample).
-PiNN provides a `list_loader` decorator which turns a function reading a
-single sample into a function that transform a list of samples into a dataset.
-For example:
+represented as a list of data. In the simplest case, the dataset could be a list
+of structure files, each contains one structure and label (or a sample). PiNN
+provides a `list_loader` decorator which turns a function reading a single
+sample into a function that transform a list of samples into a dataset. For
+example:
 
 ```Python
 from pinn.io import list_loader

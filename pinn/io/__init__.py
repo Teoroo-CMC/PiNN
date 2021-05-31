@@ -15,7 +15,7 @@ def load_ds(dataset, fmt='auto', splits=False, shuffle=True, seed=0, **kwargs):
     - `load_runner` if it ends with '.data'
     - try to load it with `load_ase`
 
-    If the `fmt` is specified, the loader with use a corresponsing dataset loader.
+    If the `fmt` is specified, the loader will use a corresponsing dataset loader.
 
     Args:
         dataset: dataset a file or input for a loader according to `fmt`
@@ -24,7 +24,6 @@ def load_ds(dataset, fmt='auto', splits=False, shuffle=True, seed=0, **kwargs):
         shuffle (bool): shuffle the dataset (only used when splitting)
         seed (int): random seed for shuffling
         **kwargs: extra arguments to loaders
-
     """
     loaders = {'tfr':    load_tfrecord,
                'runner': load_runner,

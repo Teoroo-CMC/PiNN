@@ -11,12 +11,13 @@ PiNN 1.x introduces a new entrypoint `pinn` as the command line interface. The
 trainer module will be replaced with the `pinn train` sub-command. The CLI also
 exposes utilities like dataset conversion for easier usage.
 
-**Parameter file**:
-in PiNN 1.0 the parameter file will serve as a canonial input for PiNN models, 
-the structure, see the documentation for more information.
+**Parameter file**: 
+in PiNN 1.0 the parameter file will serve as a comprehensive input for PiNN
+models, the structure of the parameter file is changed, see the documentation
+for more information.
 
 **Extended Kalman filter**:
-a experimental extended Kalman filter (EKF) optimizer is implemented. 
+an experimental extended Kalman filter (EKF) optimizer is implemented.
 
 **`pinn.get_*`** functions are now available to create models, networks and
 calculators from parameters or files.
@@ -29,19 +30,20 @@ calculators from parameters or files.
 - The Docker Hub repo is now teoroo/pinn
 
 **Datasets**: dataset loaders should be most compatible with PiNN 0.x. With the
-TF2 update, dataset may be inspected interactively with eager execution. And
-splitting of those datasets (e.g. `load_tfrecord`) becomes possible.
+TF2 update, dataset may be inspected interactively with eager execution.
+Splitting option is simplified (see below), and splitting of `load_tfrecord`
+becomes possible.
 
-**Networks**: following the guidline of TF2, networks in PiNN 1.x are new Keras
-models and layers becomes Keras layers. This means the PiNN networks are be used
+**Networks**: following the guideline of TF2, networks in PiNN 1.x are new Keras
+models and layers becomes Keras layers. This means the PiNN networks can be used
 to perform some simple prediction tasks. Note that PiNN models are still
-implemented as Tensorflow estimators since they provide a better control over
-the training and prediction behavior. Like the desgin of PiNN 0.x, the models
+implemented as TensorFlow estimators since they provide a better control over
+the training and prediction behavior. Like the design of PiNN 0.x, the models
 interpret the predictions of PiNN networks as physical quantities and interface
 them to atomic simulation packages.
 
 **Models**:
-new helper function `export_mode` and class `MetricsCollector` is implemented to
+new helper function `export_mode` and class `MetricsCollector` are implemented to
 simplify the implementation of models, see the source of [dipole
 model](https://github.com/Teoroo-CMC/PiNN/blob/TF2/pinn/models/dipole.py) for an
 example.
@@ -52,6 +54,6 @@ example.
 - For dataset loaders `load_*`
     + the `split` argument is renamed to `splits`
     + splitting is disabled by default
-    + nested splits like `{'train':1, 'test':[1,2,3]}` is not supported anymore
+    + nested splits like `{'train':1, 'test':[1,2,3]}` is not supported any more
 - `format_dict` is renamed as `ds_spec` to be consistent with
   [TensorFlow](https://www.tensorflow.org/api_docs/python/tf/data/DatasetSpec)

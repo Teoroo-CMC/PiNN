@@ -3,7 +3,7 @@
 In PiNN, a network refers to a specific architecture of atomic neural network.
 PiNN networks are essentially Keras models, this means you can use networks for
 some simple prediction tasks. For more complex tasks like predicting the
-potential energy surface or the dipole moment requires defining an relation
+potential energy surface or the dipole moment requires defining a relation
 between the network prediction (atomic energy, atomic charge) to the desired
 properties (forces, dipole moments), use `pinn.model`.
 
@@ -26,10 +26,10 @@ Optionally, a network can output multi-dimensional or per-structure predictions.
 The output is controlled by two parameters of PiNN networks: `out_units` and
 `out_pool`.
 
-PiNN networks output a tensor with the shape `[n_atoms]` if and `[n_atoms,
-out_units]` elsewise. Four `out_pool` options are available: "sum", "max", "min"
-and "avg". Each outputs structure-wise predictions by reducing the atomic
-contributions with the corresponding method.
+PiNN networks output a tensor with the shape `[n_atoms]` if `out_units=1` and
+`[n_atoms, out_units]` otherwise. Four `out_pool` options are available: "sum",
+"max", "min" and "avg". Each outputs structure-wise predictions by reducing the
+atomic contributions with the corresponding method.
 
 ## Preprocessing
 

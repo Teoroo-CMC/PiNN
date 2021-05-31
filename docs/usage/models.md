@@ -9,14 +9,14 @@ defining these tasks in a `network`-agnostic way.
 Two models are implemented in PiNN at this point, their respective options can
 be found in the "Implemented models" section.
 
-## Configurartion
+## Configuration
 
 Models implemented in PiNN used a serialized format for their parameters. The
 parameter file specifies the network architecture, hyperparameters and training
 algorithm. A typical parameter file include the following sections:
 
 ```yaml
-model_dir: /tmp/test_pinet_pot
+model_dir: pinet_potential
 model:
   name: potential_model
   params:
@@ -31,15 +31,15 @@ optimizer:
     learning_rate: 0.03
 ```
 
-Among those, and `optimizer` follows the format of a Keras optimizer. The
-`model` and `network` section constitutes the name and parameters of initialize
+Among those, the `optimizer` section follows the format of a Keras optimizer.
+The `model` and `network` sections specify the name and parameters of initialize
 a PiNN model and network, respectively. A model can be initialized by a
-parameter file or a nested python dictionary.
+parameter file or a corresponding nested python dictionary.
 
 ## Training
 
-The model maybe created by calling the corresponding model function, and a parameter
-dictonary mirroring the parameter file:
+The model maybe created by calling the corresponding model function, and a
+parameter dictionary mirroring the parameter file:
 
 ```Python
 import yaml
@@ -49,16 +49,16 @@ with open('params.yml') as f:
 model = potential_model(params)
 ```
 
-PiNN provides a shortcut `pinn.model` to create an implemented model from a
+PiNN provides a shortcut `pinn.get_model` to create an implemented model from a
 parameter dictionary or parameter file.
 
 ```Python
-model = pinn.get_model('pinet.yml')
+model = pinn.get_model('params.yml')
 ```
 
 `pinn.get_model` automatically saves a copy `params.yml` file in the model
-directory. When if such a file exist, the model can be loaded with its directory
-as well.
+directory. When such a file exist, the model can be loaded with its directory as
+well.
 
 ```Python
 model = pinn.get_model('pinet_potential')

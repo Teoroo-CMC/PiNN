@@ -1,4 +1,4 @@
-#  train
+# train
 
 Train a PiNN model given a parameter file.
 

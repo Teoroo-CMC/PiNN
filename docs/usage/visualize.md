@@ -4,7 +4,7 @@ PiNN provides a tool called PiNNboard to visualize the activation and weights of
 an ANN.
 
 The following code trains a simple PiNet and writes the weights and activations
-to the training log for visualziation.
+to the training log for visualization.
 
 ```Python
 from tensorboard_plugin_pinnboard.summary import PiNNBoardCallback

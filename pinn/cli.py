@@ -47,7 +47,7 @@ def convert(filename, fmt, output, shuffle, seed):
 @click.option('-b', '--batch', metavar='', type=int, default=None, help="[default: None (keep as input)]")
 @click.option('--cache/--no-cache', metavar='', default=True, show_default=True)
 @click.option('--preprocess/--no-preprocess', metavar='', default=True, show_default=True)
-@click.option('--scratch-dir', metavar='', default=None, help='[default: None] (cache in RAM)')
+@click.option('--scratch-dir', metavar='', default=None, help='[default: None (cache in RAM)]')
 @click.option('--train-steps', metavar='', default=1000000, type=int, show_default=True)
 @click.option('--eval-steps', metavar='', default=None, type=int, help='[default: None (entire eval set)]')
 @click.option('--shuffle-buffer', metavar='', default=100, type=int, show_default=True)

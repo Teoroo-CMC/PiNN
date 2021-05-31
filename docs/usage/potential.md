@@ -69,7 +69,7 @@ forces and eV/Å³ for stress tensor. Since PiNN does not know about the unit in
 the dataset, a `to_eV` parameter is given to convert from the dataset unit to eV
 (this optional is not necessary if e_unit is set in the parameters).
 
-###  Available results
+### Available results
 
 - `energy`: total energy
 - `forces`: forces

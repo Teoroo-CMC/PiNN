@@ -1,6 +1,6 @@
 # Writing a PiNN model
 
-Below is an simplified version of the potential model as a template to implement
+Below is a simplified version of the potential model as a template to implement
 new models. See also the API Documentation of the helper functions.
 
 ```Python
@@ -55,5 +55,5 @@ documentation for more details.
 
     Models created in this way will not be accessible from the PiNN CLI and
     `pinn.get_model` (they must be created by a `model_fn(params)` call in a
-    python script). A mechanism to include custom models might be aviable in a
-    future version
+    python script). A mechanism to include custom models might be available in a
+    future version.
