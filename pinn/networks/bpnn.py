@@ -381,7 +381,7 @@ class BPFeedForward(tf.keras.layers.Layer):
         self.out_units = out_units
         for k, v in nn_spec.items():
             self.ff_layers[k] = [
-                tf.keras.layers.Dense(units, activation=act)
+                tf.keras.layers.Dense(units, activation=act, name=f'dense_{k}')
                 for units in v]
             self.ff_layers[k].append(
                 tf.keras.layers.Dense(out_units, activation=None,
