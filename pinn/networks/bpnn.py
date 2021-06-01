@@ -358,7 +358,7 @@ class BPFingerprint(tf.keras.layers.Layer):
             if fp_scale:
                 fp_min = tf.expand_dims(tf.cast(fp_range[i][0], fp.dtype), axis=0)
                 fp_max = tf.expand_dims(tf.cast(fp_range[i][1], fp.dtype), axis=0)
-                fp = (fp-fp_min)/(fp_max-fp_min)*2-1
+                fp = (fp-fp_min)/tf.maximum(fp_max-fp_min, 1e-6)*2-1
             fps[sf['i']].append(fp)
         # Deal with "ALL" fingerprints
         fps_all = fps.pop('ALL')
