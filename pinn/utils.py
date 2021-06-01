@@ -26,10 +26,13 @@ def init_params(params, dataset):
         else:
             elems = list(params['model']['params']['e_dress'].keys())
         elems = [int(e) for e in elems]
-        e_dress, _ = get_atomic_dress(dataset, elems)
+        print('Fitting an atomic dress from the training set.')
+        e_dress, err = get_atomic_dress(dataset, elems)
+        print(f' RMSE after substracting the dress: {np.sqrt(np.mean(err**2)):.6e}')
         params['model']['params']['e_dress'] = e_dress
 
     if params['network']['name']=='BPNN':
+        print('Generating the fp range from the training set (will take a while).')
         fp_range = get_fp_range(params, dataset)
         params['network']['params']['fp_range'] = fp_range
 

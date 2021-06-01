@@ -73,7 +73,7 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
     from pinn.io import load_tfrecord, sparse_batch
     index_warning = 'Converting sparse IndexedSlices'
     warnings.filterwarnings('ignore', index_warning)
-    tf.get_logger().setLevel('INFO')
+    tf.get_logger().setLevel('ERROR')
 
     with FileIO(params, 'r') as f:
         params = yaml.load(f, Loader=yaml.Loader)
