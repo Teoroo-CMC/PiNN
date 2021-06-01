@@ -31,7 +31,9 @@ def init_params(params, dataset):
         print(f' RMSE after substracting the dress: {np.sqrt(np.mean(err**2)):.6e}')
         params['model']['params']['e_dress'] = e_dress
 
-    if params['network']['name']=='BPNN':
+    if params['network']['name']=='BPNN'\
+       and 'fp_scale' in params['network']['params']\
+       and params['network']['params']['fp_scale']:
         print('Generating the fp range from the training set (will take a while).')
         fp_range = get_fp_range(params, dataset)
         params['network']['params']['fp_range'] = fp_range
@@ -47,19 +49,23 @@ def get_fp_range(params, dataset):
     Returns
        a list of ranges, one for each fp specification
     """
-    from pinn import get_network
+    import sys, pinn
     from pinn.io import sparse_batch
-    network = get_network(params['network'])
-    if 'ind_1' in next(iter(dataset)):
+    if 'ind_1' not in next(iter(dataset)):
         dataset = dataset.apply(sparse_batch(1))
-    dataset = dataset.map(network.preprocess)
-    fp_range = {int(k[3:]):  [v.min(axis=0), v.max(axis=0)] for k,v in
-                next(dataset).items() if  k.startswith('fp')}
-    for tensors in dataset:
+    network = pinn.get_network(params['network'])
+    dataset = dataset.map(network.preprocess).as_numpy_iterator()
+    fp_range = {int(k[3:]): [np.min(v, initial=np.Inf, axis=0),
+                             np.max(v, initial=0, axis=0)]
+                for k,v in next(dataset).items() if k.startswith('fp')}
+    for i, tensors in enumerate(dataset):
+        sys.stdout.write(f'\r {i+1} samples scanned for fp_range ...')
         for k, v in fp_range.items():
-            v[0] = np.min([v[0], tensors[f'fp_{k}'].min(axis=0)], axis=0).tolist()
-            v[1] = np.max([v[1], tensors[f'fp_{k}'].max(axis=0)], axis=0).tolist()
-    fp_range = [fp_range[i] for i in range(9)]
+            stacked = np.concatenate([[v[0]], tensors[f'fp_{k}']],axis=0)
+            v[0] = np.min(stacked, axis=0).tolist()
+            v[1] = np.max(stacked, axis=0).tolist()
+    fp_range = [fp_range[i] for i in range(len(fp_range.keys()))]
+    print(f'\r {i+1} samples scanned for fp_range, done.')
     return fp_range
 
 
