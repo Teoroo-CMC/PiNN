@@ -1,5 +1,6 @@
 import tensorflow as tf
 from pinn.optimizers.ekf import EKF, default_ekf
+from pinn.optimizers.gekf import gEKF
 
 default_adam = {
     'class_name': 'Adam',
@@ -13,10 +14,11 @@ default_adam = {
         'clipnorm': 0.01}}
 
 def get(optimizer):
-    if isinstance(optimizer, EKF):
+    if isinstance(optimizer, EKF) or isinstance(optimizer, gEKF):
         return optimizer
-    if isinstance(optimizer, dict) and optimizer['class_name']=='EKF':
-        return EKF(**optimizer['config'])
-    else:
-        return tf.keras.optimizers.get(optimizer)
-
+    if isinstance(optimizer, dict):
+        if optimizer['class_name']=='EKF':
+            return EKF(**optimizer['config'])
+        if optimizer['class_name']=='gEKF':
+            return gEKF(**optimizer['config'])
+    return tf.keras.optimizers.get(optimizer)

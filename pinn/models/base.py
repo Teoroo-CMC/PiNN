@@ -83,9 +83,8 @@ def get_train_op(optimizer, metrics, network, separate_errors=False):
         network: a PiNN network instance.
         sperate_errors (bool): separately update elements in the metrics
     """
-    from pinn.optimizers import get, EKF
+    from pinn.optimizers import get, EKF, gEKF
     import numpy as np
-
 
     optimizer = get(optimizer)
     optimizer.iterations = tf.compat.v1.train.get_or_create_global_step()
@@ -93,8 +92,7 @@ def get_train_op(optimizer, metrics, network, separate_errors=False):
     nvars = np.sum([np.prod(var.shape) for var in tvars])
     print(f'{nvars} trainable vaiabless, training with {tvars[0].dtype.name} precision.')
 
-
-    if not isinstance(optimizer, EKF):
+    if not (isinstance(optimizer, EKF) or isinstance(optimizer, gEKF)):
         loss_list =  metrics.LOSS
         if separate_errors:
             selection = tf.random.uniform([], maxval= len(loss_list), dtype=tf.int32)
@@ -105,8 +103,13 @@ def get_train_op(optimizer, metrics, network, separate_errors=False):
         return optimizer.apply_gradients(zip(grads, tvars))
     else:
         error_list =  metrics.ERROR
-        error = tf.concat([tf.reshape(e, [-1])/tf.math.sqrt(tf.cast(tf.size(e), e.dtype))
-                           for e in error_list], 0)
+        # EKF error vectors are scaled
+        if isinstance(optimizer, EKF):
+            error = tf.concat([tf.reshape(e, [-1])/tf.math.sqrt(tf.cast(tf.size(e), e.dtype))
+                               for e in error_list], 0)
+        # gEKF should handle this automatically
+        if isinstance(optimizer, gEKF):
+            error = tf.concat([tf.reshape(e, [-1]) for e in error_list], 0)
         if separate_errors:
             selection = tf.random.uniform([], maxval= len(error_list), dtype=tf.int32)
             mask = tf.concat([tf.fill([tf.size(e)], tf.equal(selection,i))
