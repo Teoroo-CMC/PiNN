@@ -1,34 +1,16 @@
+#!/usr/bin/env python
 import tensorflow as tf
-
-default_adam = {
-    'class_name': 'Adam',
-    'config': {
-        'learning_rate': {
-            'class_name': 'ExponentialDecay',
-            'config':{
-                'initial_learning_rate': 3e-4,
-                'decay_steps': 10000,
-                'decay_rate': 0.994}},
-        'clipnorm': 0.01}}
 
 default_ekf = {
     'class_name': 'EKF',
     'config': {
         'learning_rate': 0.03}}
 
-def get(optimizer):
-    if isinstance(optimizer, EKF):
-        return optimizer
-    if isinstance(optimizer, dict) and optimizer['class_name']=='EKF':
-        return EKF(**optimizer['config'])
-    else:
-        return tf.keras.optimizers.get(optimizer)
-
 class EKF():
     """The EKF implementation follows mainly Singraber et al.'s description
     (Singraber, Morawietz, Behler and Dellage, JCTC, 2017), with some difference
     in the details about learning rate and noise scheduling.
-   
+
     Args:
         learning_rate: learning rate
         inv_fp_prec (str): floating point precision for matrix inversion
