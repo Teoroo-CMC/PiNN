@@ -127,23 +127,20 @@ def make_metrics(features, pred, params, mode):
 
         f_weight = params['f_loss_multiplier']
         f_weight *= features['f_weight'] if params['use_f_weight'] else 1
-        metrics.add_error('F', f_data, f_pred, mask=f_mask, weight=f_weight,
-                          use_error=params['use_force'], log_error=params['use_force'])
+        metrics.add_error('F', f_data, f_pred, mask=f_mask, weight=f_weight)
 
     if params['use_stress']:
         s_pred = _get_stress(pred, features)
         s_data = features['s_data']*params['e_scale']
-        metrics.add_error('S', s_data, s_pred, weight=params['s_loss_multiplier'],
-                          use_error=params['use_stress'], log_error=params['use_stress'])
+        metrics.add_error('S', s_data, s_pred, weight=params['s_loss_multiplier'])
 
     if params['use_l2']:
         tvars = tf.compat.v1.trainable_variables()
-        l2_loss = tf.add_n([
-            tf.nn.l2_loss(v) for v in tvars if
-            ('bias' not in v.name and 'noact' not in v.name)])
-        l2_loss = l2_loss * params['l2_loss_multiplier']
-        metrics.METRICS['METRICS/L2_LOSS'] = l2_loss
-        metrics.LOSS.append(l2_loss)
+        l2_vars = tf.concat([
+            tf.reshape(v, [-1]) for v in tvars if
+            ('bias' not in v.name and 'noact' not in v.name)], axis=0)
+        metrics.add_error('L2', l2_vars, 0, weight=params['l2_loss_multiplier'],
+                          log_error=False, log_hist=False)
 
     return metrics
 
