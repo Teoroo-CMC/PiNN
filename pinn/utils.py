@@ -49,11 +49,11 @@ def get_fp_range(params, dataset):
     Returns
        a list of ranges, one for each fp specification
     """
-    import sys, pinn
+    import sys, pinn, copy
     from pinn.io import sparse_batch
     if 'ind_1' not in next(iter(dataset)):
         dataset = dataset.apply(sparse_batch(1))
-    network = pinn.get_network(params['network'])
+    network = pinn.get_network(copy.deepcopy(params['network']))
     dataset = dataset.map(network.preprocess).as_numpy_iterator()
     fp_range = {int(k[3:]): [np.min(v, initial=np.Inf, axis=0),
                              np.max(v, initial=0, axis=0)]
