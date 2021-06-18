@@ -8,7 +8,7 @@ from pinn.io.ani import load_ani
 from pinn.io.cp2k import load_cp2k
 from pinn.io.numpy import load_numpy
 
-def load_ds(dataset, fmt='auto', splits=False, shuffle=True, seed=0, **kwargs):
+def load_ds(dataset, fmt='auto', splits=None, shuffle=True, seed=0, **kwargs):
     """This loader tries to guess the format when dataset is a string:
 
     - `load_tfrecoard` if it ends with '.yml'
@@ -39,4 +39,4 @@ def load_ds(dataset, fmt='auto', splits=False, shuffle=True, seed=0, **kwargs):
         else:
             return load_ase(dataset, splits=splits, shuffle=shuffle, seed=seed)
     else:
-        return loaders['fmt'](dataset, splits=splits, shuffle=shuffle, seed=seed, **kwargs)
+        return loaders[fmt](dataset, splits=splits, shuffle=shuffle, seed=seed, **kwargs)
