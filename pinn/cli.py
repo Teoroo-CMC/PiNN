@@ -54,10 +54,11 @@ def convert(filename, fmt, output, shuffle, seed):
 @click.option('--log-every', metavar='', default=1000, type=int, show_default=True)
 @click.option('--ckpt-every', metavar='', default=10000, type=int, show_default=True)
 @click.option('--max-ckpts', metavar='', default=1, type=int, show_default=True)
+@click.option('--early-stop', metavar='', type=str, default=None, help="[default: None]")
 @click.option('--init/--no-init', metavar='', default=False, show_default=True)
 def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
           scratch_dir, train_steps, eval_steps, shuffle_buffer,
-          max_ckpts, log_every, ckpt_every, init):
+          max_ckpts, log_every, ckpt_every, early_stop, init):
     """Train a model with PiNN.
 
     See the documentation for more detailed descriptions of the options
@@ -112,9 +113,16 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
                                     save_summary_steps=log_every,
                                     save_checkpoints_steps=ckpt_every)
 
-    train_spec = tf.estimator.TrainSpec(input_fn=train_fn, max_steps=train_steps)
-    eval_spec  = tf.estimator.EvalSpec(input_fn=eval_fn, steps=eval_steps)
     model = get_model(params, config=config)
+    if early_stop:
+        stops = {s.split(':')[0]: float(s.split(':')[1])
+                 for s in early_stop.split(',')}
+        hooks = [tf.estimator.experimental.stop_if_no_decrease_hook(
+            model, k, v) for k,v in stops.items()]
+    else:
+        hooks=None
+    train_spec = tf.estimator.TrainSpec(input_fn=train_fn, max_steps=train_steps, hooks=hooks)
+    eval_spec  = tf.estimator.EvalSpec(input_fn=eval_fn, steps=eval_steps)
     tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
     if scratch_dir is not None:
         rmtree(scratch_dir)
