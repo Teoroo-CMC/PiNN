@@ -11,15 +11,18 @@ class gEKF():
         q_0: initial process noise
         q_tau: time constant for noise
         q_min: minimal noise
+        div_prec (str): dtype for division
     """
     def __init__(self, learning_rate, epsilon=1,
-                 q_0=0., q_min=0., q_tau=3000.0):
+                 q_0=0., q_min=0., q_tau=3000.0,
+                 div_dtype='float64'):
         self.iterations = None
         self.learning_rate = learning_rate
         self.epsilon = epsilon
         self.q_0 = q_0
         self.q_min = q_min
         self.q_tau = q_tau
+        self.div_dtype = tf.dtypes.as_dtype(div_dtype)
 
     def get_train_op(self, error, tvars):
         from tensorflow.keras.optimizers.schedules import deserialize
@@ -44,8 +47,8 @@ class gEKF():
         Pg2 = tf.einsum('ij,i->j', P, g2)
         g1Pg1 = tf.einsum('i,i->', g1, Pg1)
         g1Pg2 = tf.einsum('i,i->', g1, Pg2)
-        A = 1./(1./lr + g1Pg1)
-        k = Pg1*A
+        k = tf.cast(Pg1, self.div_dtype)/tf.cast(1./lr+g1Pg1, self.div_dtype)
+        k = tf.cast(k, g2.dtype)
         grads = lr/2*(Pg2-k*g1Pg2) # preconditioned gradients for update
         tf.compat.v1.summary.histogram('KalmanFilter/updates', grads)
         Q = tf.eye(n, dtype=g1.dtype)*tf.math.maximum(tf.exp(-t/self.q_tau)*self.q_0, self.q_min)
