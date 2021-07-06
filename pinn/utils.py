@@ -61,9 +61,10 @@ def get_fp_range(params, dataset):
     for i, tensors in enumerate(dataset):
         sys.stdout.write(f'\r {i+1} samples scanned for fp_range ...')
         for k, v in fp_range.items():
-            stacked = np.concatenate([[v[0]], tensors[f'fp_{k}']],axis=0)
-            v[0] = np.min(stacked, axis=0).tolist()
-            v[1] = np.max(stacked, axis=0).tolist()
+            stacked0 = np.concatenate([[v[0]], tensors[f'fp_{k}']],axis=0)
+            stacked1 = np.concatenate([[v[1]], tensors[f'fp_{k}']],axis=0)
+            v[0] = np.min(stacked0, axis=0).tolist()
+            v[1] = np.max(stacked1, axis=0).tolist()
     fp_range = [fp_range[i] for i in range(len(fp_range.keys()))]
     print(f'\r {i+1} samples scanned for fp_range, done.')
     return fp_range
