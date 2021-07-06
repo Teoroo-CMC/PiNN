@@ -21,7 +21,7 @@ and the usage of element specific neural network for atomic energies.
 | nn_spec      |          | neural network specification                                           |
 | rc           |          | cutoff radius                                                          |
 | act          | `'tanh'` | actication function                                                    |
-| cutoff_type  | `'f1'`   | 'f1' or 'f2'                                                           |
+| cutoff_type  | `'f1'`   | 'f1' or 'f2' [^f2]                                                     |
 | fp_range     | `[]`     | speficies the range of atomic fingerprints, see below                  |
 | fp_scale     | `False`  | scales the atomic fingerprints according to fp_range                   |
 | preprocess   | `False`  | run in preprocess mode                                                 |
@@ -68,3 +68,7 @@ ds_cached = ds.map(bpnn.preprocess).cache('/tmp/scratch')
 
 
 \bibliography
+[^f2]:
+    The f2 cutoff function is scaled by a factor of $\mathrm{tanh}(1)^{-3}$ as
+    compared to the original form in [@2015_Behler], so that the function
+    asymptotically equals 1 when $r_{ij}$ approaches $0$.
