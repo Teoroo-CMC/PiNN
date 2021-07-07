@@ -139,7 +139,7 @@ def log(logdir, tag, fmt):
     from warnings import warn
     from itertools import chain
     from tensorboard.backend.event_processing.event_file_loader import LegacyEventFileLoader
-    files = glob(f'{logdir}/events.out.*')
+    files = sorted(glob(f'{logdir}/events.out.*'), key=os.path.getmtime)
     logs = {}
     events = chain(*[LegacyEventFileLoader(log).Load() for log in files])
     for event in events:
