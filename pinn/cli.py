@@ -134,20 +134,21 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
 @click.option('--fmt', metavar='', default='%14.6e ', show_default=True)
 def log(logdir, tag, fmt):
     import numpy as np
-    from sys import stdout
-    from itertools import chain
     from glob import glob
-    from tensorflow.compat.v1.train import summary_iterator
+    from sys import stdout
+    from warnings import warn
+    from itertools import chain
+    from tensorboard.backend.event_processing.event_file_loader import LegacyEventFileLoader
     files = glob(f'{logdir}/events.out.*')
     logs = {}
-    for e, event in enumerate(chain(*[summary_iterator(log) for log in files])):
+    events = chain(*[LegacyEventFileLoader(log).Load() for log in files])
+    for event in events:
         for v in event.summary.value:
             if tag not in v.tag:
                 continue
             if v.tag not in logs.keys():
                 logs[v.tag] = []
             logs[v.tag].append([event.step, v.simple_value])
-
     logs = {k: np.array(v) for k,v in logs.items()}
     keys = list(logs.keys())
     steps = [logs[k][:,0] for k in keys]
