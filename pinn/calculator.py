@@ -8,12 +8,14 @@ from ase.calculators.calculator import Calculator
 
 class PiNN_calc(Calculator):
     def __init__(self, model=None, atoms=None, to_eV=1.0,
-                 properties=['energy', 'forces', 'stress']):
+                 properties=['energy', 'forces', 'stress'],
+                 checkpoint_path=None):
         """PiNN interface with ASE as a calculator
 
         Args:
             model: tf.Estimator object
             atoms: optional, ase Atoms object
+            checkpoint_path: specify the checkpoint to use
             properties: properties to calculate.
                 the properties to calculate is fixed for each calculator,
                 to avoid resetting the predictor during get_* calls.
@@ -25,6 +27,7 @@ class PiNN_calc(Calculator):
         self.atoms = atoms
         self.predictor = None
         self.to_eV = to_eV
+        self.ckpt_path = checkpoint_path
 
     def _generator(self):
         while True:
@@ -61,7 +64,8 @@ class PiNN_calc(Calculator):
         self.predictor = self.model.predict(
             input_fn=lambda: tf.data.Dataset.from_generator(
                 self._generator, dtypes, shapes),
-            predict_keys=properties)
+            predict_keys=properties,
+            checkpoint_path=self.ckpt_path)
         return self.predictor
 
     def calculate(self, atoms=None,
