@@ -150,7 +150,7 @@ def log(logdir, tag, fmt):
                 logs[v.tag] = []
             logs[v.tag].append([event.step, v.simple_value])
     logs = {k: np.array(v) for k,v in logs.items()}
-    keys = list(logs.keys())
+    keys = sorted(list(logs.keys()))
     steps = [logs[k][:,0] for k in keys]
     data = [logs[k][:,1] for k in keys]
     steps, rows = np.unique(np.concatenate(steps), return_inverse=True)
