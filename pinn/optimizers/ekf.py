@@ -18,15 +18,17 @@ class EKF():
         q_tau: time constant for noise
         q_min: minimal noisee
     """
-    def __init__(self, learning_rate, inv_dtype='float64',
-                 max_learning_rate=1, q_0=0.01, q_min=1e-6, q_tau=3000.0):
+    def __init__(self, learning_rate, max_learning_rate=1.0,
+                 epsilon=1.0, q_0=0.0, q_min=0.0, q_tau=3000.0,
+                 inv_dtype='float64'):
         self.iterations = None
         self.learning_rate = learning_rate
         self.max_learning_rate = max_learning_rate
-        self.inv_dtype = tf.dtypes.as_dtype(inv_dtype)
+        self.epsilon = epsilon
         self.q_0 = q_0
         self.q_min = q_min
         self.q_tau = q_tau
+        self.inv_dtype = tf.dtypes.as_dtype(inv_dtype)
 
     def get_train_op(self, error, tvars):
         from tensorflow.python.ops.parallel_for.gradients import jacobian
@@ -39,7 +41,7 @@ class EKF():
             [tf.reduce_prod(var.shape) for var in tvars])
         tf.compat.v1.summary.scalar(f'KalmanFilter/m', m)
         tf.compat.v1.summary.scalar(f'KalmanFilter/n', n)
-        P = tf.Variable(tf.eye(n, dtype=H.dtype),  trainable=False)
+        P = tf.Variable(tf.eye(n, dtype=H.dtype)*self.epsilon, trainable=False)
         t = tf.cast(tf.compat.v1.train.get_global_step(), H.dtype)
         try:
             lr = deserialize(self.learning_rate)(t)
