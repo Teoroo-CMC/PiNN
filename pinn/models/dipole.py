@@ -49,7 +49,8 @@ def dipole_model(features, labels, mode, params):
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         metrics = make_metrics(features, dipole, charge, model_params, mode)
-        train_op = get_train_op(params['optimizer'], metrics, network)
+        tvars = network.trainable_variables
+        train_op = get_train_op(params['optimizer'], metrics, tvars)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           train_op=train_op)
 

@@ -63,7 +63,8 @@ def potential_model(features, labels, mode, params):
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         metrics = make_metrics(features, pred, model_params, mode)
-        train_op = get_train_op(params['optimizer'], metrics, network,
+        tvars = network.trainable_variables
+        train_op = get_train_op(params['optimizer'], metrics, tvars,
                                 separate_errors=model_params['separate_errors'])
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           train_op=train_op)

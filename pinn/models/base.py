@@ -73,7 +73,7 @@ class MetricsCollector():
 
 
 @pi_named('TRAIN_OP')
-def get_train_op(optimizer, metrics, network, separate_errors=False):
+def get_train_op(optimizer, metrics, tvars, separate_errors=False):
     """
     Args:
         optimizer: a PiNN optimizer config.
@@ -88,7 +88,6 @@ def get_train_op(optimizer, metrics, network, separate_errors=False):
 
     optimizer = get(optimizer)
     optimizer.iterations = tf.compat.v1.train.get_or_create_global_step()
-    tvars = network.trainable_variables
     nvars = np.sum([np.prod(var.shape) for var in tvars])
     print(f'{nvars} trainable vaiabless, training with {tvars[0].dtype.name} precision.')
 
