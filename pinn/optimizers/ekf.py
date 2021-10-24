@@ -41,7 +41,7 @@ class EKF():
             [tf.reduce_prod(var.shape) for var in tvars])
         tf.compat.v1.summary.scalar(f'KalmanFilter/m', m)
         tf.compat.v1.summary.scalar(f'KalmanFilter/n', n)
-        P = tf.Variable(tf.eye(n, dtype=H.dtype)*self.epsilon, trainable=False)
+        P = tf.Variable(tf.eye(n, dtype=H.dtype)/self.epsilon, trainable=False)
         t = tf.cast(tf.compat.v1.train.get_global_step(), H.dtype)
         try:
             lr = deserialize(self.learning_rate)(t)

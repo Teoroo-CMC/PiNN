@@ -35,7 +35,7 @@ class gEKF():
         g1 = tf.concat([tf.reshape(g, [-1]) for g in g1], axis=0)
         g2 = tf.concat([tf.reshape(g, [-1]) for g in g2], axis=0)
         n = g1.shape[0]
-        P = tf.Variable(tf.eye(n, dtype=g1.dtype)*self.epsilon, trainable=False)
+        P = tf.Variable(tf.eye(n, dtype=g1.dtype)/self.epsilon, trainable=False)
         t = tf.cast(tf.compat.v1.train.get_global_step(), g1.dtype)
         try:
             lr = deserialize(self.learning_rate)(t)
