@@ -22,7 +22,7 @@ PiNN provides two built docker images, which can be converted to singularity
 images without much effort:
 
 ```bash
-singularity build pinn.sif docker://teoroo/pinn:latest-gpu
+singularity build pinn.sif docker://teoroo/pinn:master-gpu
 ./pinn.sif -h
 ```
 

@@ -54,6 +54,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+      - name: Get Tag
+        run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -63,7 +65,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_REPO }}:latest-cpu
+          tags: ${{ secrets.DOCKERHUB_REPO }}:${{ env.TAG }}-cpu
   build-gpu:
     name: Build docker (gpu)
     needs: pytest
@@ -71,6 +73,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+      - name: Get Tag
+        run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -81,7 +85,7 @@ jobs:
         with:
           push: true
           file: Dockerfile.gpu
-          tags: ${{ secrets.DOCKERHUB_REPO }}:latest-gpu
+          tags: ${{ secrets.DOCKERHUB_REPO }}:${{ env.TAG }}-gpu
   deploy-docs:
     name: Deploy docs
     needs: pytest
