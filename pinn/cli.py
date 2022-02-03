@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import click, pinn, os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

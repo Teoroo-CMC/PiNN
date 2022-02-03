@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-""" Misc tools"""
 
 import tensorflow as tf
 import numpy as np
