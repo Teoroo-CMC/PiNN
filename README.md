@@ -1,6 +1,6 @@
 # PiNN: a Python library for building atomic neural networks
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/Teoroo-CMC/PiNN/Build%20and%20Test/TF2?label=build&style=flat-square)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/Teoroo-CMC/PiNN/Build%20and%20Test/master?label=build&style=flat-square)
 
 PiNN<sup>[1](#fn1)</sup> is a Python library built on top of TensorFlow for
 building atomic neural network potentials. The PiNN library also provides
@@ -10,9 +10,11 @@ The code is currently maintained by Yunqi Shao at Uppsala University.
 
 ## Requirements
 
-- Python 3
-- ASE, Numpy, Pyyaml
-- TensorFlow >= 2.4<sup>[2](#fn2)</sup>
+- Python >= 3.7
+- [ASE](https://wiki.fysik.dtu.dk/ase/) >= 3.19
+- [NumPy](https://numpy.org/) >= 1.15
+- [PyYAML](https://pyyaml.org/) > 3.01
+- [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[2](#fn2)</sup>
 
 ## Installation
 
@@ -35,7 +37,7 @@ singularity exec pinn.sif jupyter notebook # this starts a jupyter notebook serv
 
 ## Documentation
 
-Since PiNN 1.0 the documentation is hosted on [Github pages](https://yqshao.github.io/PiNN/)
+Since PiNN 1.0 the documentation is hosted on [Github pages](https://teoroo-cmc.github.io/PiNN/)
 
 ## Models and datasets
 

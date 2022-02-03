@@ -19,15 +19,13 @@ for more information.
 **Extended Kalman filter**:
 an experimental extended Kalman filter (EKF) optimizer is implemented.
 
-**`pinn.get_*`** functions are now available to create models, networks and
-calculators from parameters or files.
 
 ## Notes for developers
 
-- Documentation is now built with mkdocs
-- Documentation is moved to Github pages
-- Continuous integration is moved to Github Actions
-- The Docker Hub repo is now teoroo/pinn
+- Documentation is now built with mkdocs.
+- Documentation is moved to Github pages.
+- Continuous integration is moved to Github Actions.
+- The Docker Hub repo is now [teoroo/pinn](https://hub.docker.com/repository/docker/teoroo/pinn).
 
 **Datasets**: dataset loaders should be most compatible with PiNN 0.x. With the
 TF2 update, dataset may be inspected interactively with eager execution.
@@ -49,11 +47,11 @@ model](https://github.com/Teoroo-CMC/PiNN/blob/TF2/pinn/models/dipole.py) for an
 example.
 
 ## Breaking changes
-- Models trained in PiNN 0.x will not be usable in PiNN 1.x
-- Model parameters needs to be updated to the new parameter format
-- For dataset loaders `load_*`
-    + the `split` argument is renamed to `splits`
-    + splitting is disabled by default
-    + nested splits like `{'train':1, 'test':[1,2,3]}` is not supported any more
+- Models trained in PiNN 0.x will not be usable in PiNN 1.x.
+- Model parameters needs to be updated to the new parameter format.
+- For dataset loaders `load_*`:
+    + the `split` argument is renamed to `splits`;
+    + splitting is disabled by default;
+    + nested splits like `{'train':1, 'test':[1,2,3]}` is not supported any more.
 - `format_dict` is renamed as `ds_spec` to be consistent with
-  [TensorFlow](https://www.tensorflow.org/api_docs/python/tf/data/DatasetSpec)
+  [TensorFlow](https://www.tensorflow.org/api_docs/python/tf/data/DatasetSpec).

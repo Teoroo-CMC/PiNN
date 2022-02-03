@@ -31,7 +31,3 @@ Checkout [quick start](quick_start.md) to get started. See the
 If you are interested in a specific application, e.g. fitting a machine-learned
 potential, read the available options of the [potential model](potential.md) and
 network (likely [PiNet](pinet.md)) you'd like to use.
-
-If you are interested in developing novel ANN architectures using PiNN, you
-might want to read about the structures of our implemented networks, and
-available [layers](../empty.md) in PiNN.

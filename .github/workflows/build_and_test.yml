@@ -2,7 +2,9 @@ name: Build and Test
 on:
   push:
     branches:
-      - TF2
+      - master
+    tags:
+      - v*
 jobs:
   pytest:
     name: Run Pytest
@@ -87,6 +89,8 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # see https://github.com/jimporter/mike/issues/28
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -103,10 +107,11 @@ jobs:
         run: |
           . ./.venv/bin/activate
           pip install .
+      - name: Configure Git user
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
       - name: Deploy docs
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           . ./.venv/bin/activate
-          wget https://raw.githubusercontent.com/yqshao/mkdocs-material/yqshao/action.sh
-          chmod +x action.sh && ./action.sh
+          mike deploy ${GITHUB_REF##*/} -b gh-pages -p

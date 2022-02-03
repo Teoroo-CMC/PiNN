@@ -2,12 +2,15 @@ site_name: PiNN Documentation
 nav:
   - Home:
     - Introduction: index.md
-    - Migration: migration.md
-    - Cite PiNN: cite.md
+    - Migration to PiNN 1.x: migration.md
   - Usage:
     - Overview: usage/overview.md
     - Quick Start: usage/quick_start.md
-    - Datasests: usage/datasets.md
+    - CLI:
+      - convert: usage/cli/convert.md
+      - train: usage/cli/train.md
+      - log: usage/cli/log.md
+    - Datasets: usage/datasets.md
     - Networks:
       - Overview: usage/networks.md
       - Implemented:
@@ -20,10 +23,6 @@ nav:
         - Dipole Model: usage/dipole.md
       - Custom Mdoel: usage/custom_model.md
     - Optimizers: usage/optimizers.md
-    - CLI:
-      - convert: usage/cli/convert.md
-      - train: usage/cli/train.md
-      - log: usage/cli/log.md
     - Visualize: usage/visualize.md
   - Notebooks:
     - Overview: notebooks/overview.md
@@ -54,7 +53,6 @@ theme:
   favicon: images/favicon.png
   features:
     - navigation.sections
-    - toc.integrate
 extra:
   version:
     provider: mike
@@ -67,6 +65,7 @@ markdown_extensions:
   - pymdownx.arithmatex
   - pymdownx.tasklist
   - pymdownx.superfences
+  - pymdownx.details
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 extra_css:
