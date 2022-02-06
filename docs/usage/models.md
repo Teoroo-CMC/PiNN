@@ -1,10 +1,10 @@
 # Models in PiNN
 
-For regression problems for an atomic for molecular property, it's often
+For regression problems for an atomic or molecular property, it's often
 sufficient to use an `network`. However, atomic machine learning tasks it's
 often desired to train on properties derived from the atomic predictions, such
 as forces, stress tensors for dipole moments. `pinn.models` are created for
-defining these tasks in a `network`-agnostic way. 
+defining these tasks in a `network`-agnostic way.
 
 Two models are implemented in PiNN at this point, their respective options can
 be found in the "Implemented models" section.

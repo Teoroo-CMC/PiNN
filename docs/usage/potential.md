@@ -4,7 +4,7 @@
 
 The absolute value of total energy from ab-initio calculations can often be very
 large. To avoid numerical problems, it is common practice to assign a constant
-atomic energy (dress) to each type of atom such that the average energy is
+atomic energy (dress) to each type of atom, such that the average energy is
 shifted to zero. Such an atomic dress can be generated with
 `pinn.utils.get_atomic_dress`
 
@@ -28,7 +28,7 @@ to be used in the loss function.
 
 ## Parameters
 
-Below a list of additional parameters of the potential model and their
+Below is a list of additional parameters of the potential model and their
 descriptions.
 
 | Parameter            | Default | Description                                                                               |

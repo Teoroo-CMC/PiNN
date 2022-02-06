@@ -2,9 +2,9 @@
 
 Convert datasets into PiNN formatted TFrecord files.
 
-This command output the dataset files `{output}.yml` and `{output}.tfr`. Datsset
-can be split by specifying the ratios in `-o`, e.g. `-o 'train:8,test:2'`. The
-input dataset will be handled by
+This command output the dataset files `{output}.yml` and `{output}.tfr`.
+Datasets can be split by specifying the ratios in `-o`, e.g. `-o
+'train:8,test:2'`. The input dataset will be handled by
 [`pinn.io.load_ds`](../datasets.md#api-documentation), with appropriate options.
 
 ## Usage

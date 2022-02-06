@@ -37,7 +37,7 @@ singularity run pinn.sif jupyter notebook
 ```
 
 ## Configuration
-In PiNN, a model consists two essential parts, the network and the model. The
+In PiNN, a model consists of two essential parts, the network and the model. The
 network specifies the neural network architecture used to product atomistic
 predictions from the input (coordinates and elements information). While the
 model interprets the predictions as physical quantities.

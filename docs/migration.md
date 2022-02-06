@@ -7,7 +7,7 @@ guides for migration.
 ## New features
 
 **CLI**:
-PiNN 1.x introduces a new entrypoint `pinn` as the command line interface. The
+PiNN 1.x introduces a new entry point `pinn` as the command line interface. The
 trainer module will be replaced with the `pinn train` sub-command. The CLI also
 exposes utilities like dataset conversion for easier usage.
 
@@ -48,10 +48,10 @@ example.
 
 ## Breaking changes
 - Models trained in PiNN 0.x will not be usable in PiNN 1.x.
-- Model parameters needs to be updated to the new parameter format.
+- Model parameters need to be adapted to the new parameter format.
 - For dataset loaders `load_*`:
     + the `split` argument is renamed to `splits`;
     + splitting is disabled by default;
-    + nested splits like `{'train':1, 'test':[1,2,3]}` is not supported any more.
+    + nested splits like `{'train':1, 'test':[1,2,3]}` is not supported anymore.
 - `format_dict` is renamed as `ds_spec` to be consistent with
   [TensorFlow](https://www.tensorflow.org/api_docs/python/tf/data/DatasetSpec).
