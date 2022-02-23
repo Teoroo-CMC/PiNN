@@ -971,22 +971,22 @@ predictions from the input (coordinates and elements information). While the
 model interprets the predictions as physical quantities.</p>
 <p>In PiNN, the parameters for a model is saved as a <code>yaml</code> formatted parameter
 file. A minimal example of model parameter file looks like this:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">model_dir</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pinet_potential</span>
-<span class="nt">model</span><span class="p">:</span>
-  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">potential_model</span>
-  <span class="nt">params</span><span class="p">:</span>
-    <span class="nt">use_force</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="nt">network</span><span class="p">:</span>
-  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PiNet</span>
-  <span class="nt">params</span><span class="p">:</span>
-    <span class="nt">atom_types</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">,</span> <span class="nv">7</span><span class="p p-Indicator">,</span> <span class="nv">8</span><span class="p p-Indicator">,</span> <span class="nv">9</span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pinet_potential</span><span class="w"></span>
+<span class="nt">model</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">potential_model</span><span class="w"></span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">use_force</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="nt">network</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PiNet</span><span class="w"></span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">atom_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]</span><span class="w"></span>
 </code></pre></div>
 <p>In addition to the network and the model, the training algorithm should be specified
 as such:
-<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
-  <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EKF</span>
-  <span class="nt">config</span><span class="p">:</span>
-    <span class="nt">learning_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.03</span>
+<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span><span class="w"></span>
 </code></pre></div></p>
 <h2 id="using-the-cli">Using the CLI</h2>
 <p>PiNN provides a CLI for training and simple dataset operations:</p>

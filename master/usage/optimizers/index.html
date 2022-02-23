@@ -903,16 +903,16 @@ list of optimizers and their usage can be found in the TensorFlow
 <p>All optimizers implemented in TensorFlow can be specified by the serialized
 config. For instance, the default optimizer in PiNN can be specified with the
 following block in the <code>params.yml</code> file.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
-  <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Adam</span>
-  <span class="nt">config</span><span class="p">:</span>
-    <span class="nt">learning_rate</span><span class="p">:</span>
-      <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExponentialDecay,</span>
-      <span class="nt">config</span><span class="p">:</span>
-        <span class="nt">initial_learning_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0003</span>
-        <span class="nt">decay_steps</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10000</span>
-        <span class="nt">decay_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.994</span>
-    <span class="nt">clipnorm</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.01</span>
+<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Adam</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExponentialDecay,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">initial_learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0003</span><span class="w"></span>
+<span class="w">        </span><span class="nt">decay_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span><span class="w"></span>
+<span class="w">        </span><span class="nt">decay_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.994</span><span class="w"></span>
+<span class="w">    </span><span class="nt">clipnorm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span><span class="w"></span>
 </code></pre></div>
 <h2 id="ekf">EKF</h2>
 <p>The extended Kalman filter (EKF) is an alternative way to estimate the optimal
@@ -922,15 +922,15 @@ than a Stochastic Gradient Descent (SGD) based optimizer with more computation
 cost per step.</p>
 <p>Below is a recommended setup for using Kalman Filter in a PiNN model, which is
 also available as <code>pinn.optimizers.default_kalman</code>.<sup id="fnref:ekf"><a class="footnote-ref" href="#fn:ekf">1</a></sup></p>
-<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
-  <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EKF</span>
-  <span class="nt">config</span><span class="p">:</span>
-    <span class="nt">learning_rate</span><span class="p">:</span>
-      <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExponentialDecay,</span>
-      <span class="nt">config</span><span class="p">:</span>
-        <span class="nt">initial_learning_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.03</span>
-        <span class="nt">decay_steps</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10000</span>
-        <span class="nt">decay_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.994</span>
+<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExponentialDecay,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">initial_learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span><span class="w"></span>
+<span class="w">        </span><span class="nt">decay_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span><span class="w"></span>
+<span class="w">        </span><span class="nt">decay_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.994</span><span class="w"></span>
 </code></pre></div>
 <div class="footnote">
 <hr />
