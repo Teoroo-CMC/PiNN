@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-venv-py${{ matrix.python-version }}-tf${{ matrix.tf-version }}--${{ hashFiles('./requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-venv-py${{ matrix.python-version }}-tf${{ matrix.tf-version }}--${{ hashFiles('./requirements*.txt') }}
-            ${{ runner.os }}-
+            ${{ runner.os }}-venv-py${{ matrix.python-version }}-tf${{ matrix.tf-version }}
       - name: Install dependencies
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
