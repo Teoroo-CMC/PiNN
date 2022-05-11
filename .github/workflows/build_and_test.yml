@@ -18,35 +18,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Cache Env
-        uses: actions/cache@v2
-        with:
-          path: ./.venv
-          key: ${{ runner.os }}-venv-py${{ matrix.python-version }}-tf${{ matrix.tf-version }}--${{ hashFiles('./requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-venv-py${{ matrix.python-version }}-tf${{ matrix.tf-version }}--${{ hashFiles('./requirements*.txt') }}
-            ${{ runner.os }}-venv-py${{ matrix.python-version }}-tf${{ matrix.tf-version }}
-      - name: Install dependencies
-        if: steps.cache-venv.outputs.cache-hit != 'true'
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
+      - name: Install PiNN
         run: |
-          python3 -m venv ./.venv
-          . ./.venv/bin/activate
           pip install tensorflow==${{ matrix.tf-version }}
           pip install -r requirements-dev.txt
           pip install -r requirements-doc.txt
-      - name: Install PiNN
-        run: |
-          . ./.venv/bin/activate
           pip install .
       - name: Test with pytest
-        run: |
-          . ./.venv/bin/activate
-          pytest --forked tests/
+        run: pytest --forked tests/
   build:
     name: Build docker (cpu)
     needs: pytest
@@ -96,20 +82,16 @@ jobs:
         with:
           fetch-depth: 0 # see https://github.com/jimporter/mike/issues/28
       - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
-      - name: Cache Env
-        uses: actions/cache@v2
-        with:
-          path: ./.venv
-          key: ${{ runner.os }}-venv-py3.9-tf2.5--${{ hashFiles('./requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-venv-py3.9-tf2.5--${{ hashFiles('./requirements*.txt') }}
-            ${{ runner.os }}-
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
       - name: Install PiNN
         run: |
-          . ./.venv/bin/activate
+          pip install tensorflow==2.8
+          pip install -r requirements-dev.txt
+          pip install -r requirements-doc.txt
           pip install .
       - name: Configure Git user
         run: |
@@ -117,5 +99,4 @@ jobs:
           git config --local user.name "github-actions[bot]"
       - name: Deploy docs
         run: |
-          . ./.venv/bin/activate
           mike deploy ${GITHUB_REF##*/} -b gh-pages -p
