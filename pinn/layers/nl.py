@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Common Layers (Keras Layers) for ANNs"""
+
+"""(Keras) Layers for neighbor list"""
 
 import numpy as np
 import tensorflow as tf
@@ -140,107 +141,4 @@ class CellListNL(tf.keras.layers.Layer):
             'dist': dist,
             'diff': diff
            }
-        return output
-
-
-class CutoffFunc(tf.keras.layers.Layer):
-    """returns the cutoff function of given type
-
-    Args:
-        dist (tensor): a tensor of distance
-        cutoff_type (string): name of the cutoff function
-        rc (float): cutoff radius
-
-    Returns:
-        A cutoff function tensor with the same shape of dist
-    """
-    def __init__(self, rc=5.0, cutoff_type='f1'):
-        super(CutoffFunc, self).__init__()
-        self.cutoff_type = cutoff_type
-        self.rc = rc
-        f1 = lambda x: 0.5*(tf.cos(np.pi*x/rc)+1)
-        f2 = lambda x: (tf.tanh(1-x/rc)/np.tanh(1))**3
-        hip = lambda x: tf.cos(np.pi*x/rc/2)**2
-        self.cutoff_fn = {'f1': f1, 'f2':f2, 'hip': hip}[cutoff_type]
-
-    def call(self, distance):
-        return self.cutoff_fn(distance)
-
-
-class GaussianBasis(tf.keras.layers.Layer):
-    """ Gaussian Basis Layer
-
-    Transforms distances to a set of gaussian basis
-    """
-    def __init__(self, cutoff_type, rc, n_basis, gamma, center=None):
-        super(GaussianBasis, self).__init__()
-        self.cutoff_func = CutoffFunc(rc, cutoff_type)
-        if center is None:
-            self.center = np.linspace(0, rc, n_basis)
-        else:
-            self.center = np.array(center)
-        self.gamma = np.broadcast_to(gamma, self.center.shape)
-
-    def call(self, dist):
-        fc = self.cutoff_func(dist)
-        basis = tf.stack([tf.exp(-gamma*(dist-center)**2)*fc
-                          for (center, gamma) in zip(self.center, self.gamma)],
-                         axis=1)
-        return basis
-
-
-class PolynomialBasis(tf.keras.layers.Layer):
-    """ Polynomial Basis Layer
-
-    Transforms distances to a set of polynomial basis
-    """
-    def __init__(self, cutoff_type, rc, n_basis):
-        super(PolynomialBasis, self).__init__()
-        self.cutoff_func = CutoffFunc(rc, cutoff_type)
-        if type(n_basis) != list:
-            n_basis = [(i+1) for i in range(n_basis)]
-        self.n_basis = n_basis
-
-    def call(self, dist):
-        fc = self.cutoff_func(dist)
-        basis = tf.stack([fc**i for i in self.n_basis], axis=1)
-        return basis
-
-
-class AtomicOnehot(tf.keras.layers.Layer):
-    """ One-hot encoding Lyaer
-
-    perform one-hot encoding for elements
-    """
-    def __init__(self, atom_types=[1, 6, 7, 8, 9]):
-        super(AtomicOnehot, self).__init__()
-        self.atom_types = atom_types
-
-    def call(self, elems):
-        output = tf.equal(tf.expand_dims(elems, 1),
-                          tf.expand_dims(self.atom_types, 0))
-        return output
-
-class ANNOutput(tf.keras.layers.Layer):
-    """ ANN Ouput layer
-
-    Output atomic or molecular (system) properties
-    """
-    def __init__(self, out_pool):
-        super(ANNOutput, self).__init__()
-        self.out_pool = out_pool
-
-    def call(self, tensors):
-        ind_1, output = tensors
-
-        if self.out_pool:
-            out_pool = {'sum': tf.math.unsorted_segment_sum,
-                        'max': tf.math.unsorted_segment_max,
-                        'min': tf.math.unsorted_segment_min,
-                        'avg': tf.math.unsorted_segment_mean,
-            }[self.out_pool]
-            output =  out_pool(output, ind_1[:,0],
-                               tf.reduce_max(ind_1)+1)
-        output = tf.squeeze(output, axis=1)
-
         return output
