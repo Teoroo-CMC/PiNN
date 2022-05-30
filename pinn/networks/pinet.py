@@ -56,9 +56,8 @@ class PILayer(tf.keras.layers.Layer):
 
         inter = tf.concat([prop_i, prop_j], axis=-1)
         inter = self.ff_layer(inter)
-        inter = tf.reshape(inter, tf.concat(
-            [tf.shape(inter)[:-1], [self.n_nodes[-1], self.n_basis]], 0))
-        inter = tf.reduce_sum(inter*basis, axis=-1)
+        inter = tf.reshape(inter, [-1, self.n_nodes[-1], self.n_basis])
+        inter = tf.einsum('pcb,pb->pc', inter, basis)
         return inter
 
 
@@ -175,11 +174,12 @@ class PiNet(tf.keras.Model):
 
         self.depth = depth
         self.preprocess = PreprocessLayer(atom_types, rc)
+        self.cutoff = CutoffFunc(rc, cutoff_type)
 
         if basis_type == 'polynomial':
-            self.basis_fn = PolynomialBasis(cutoff_type, rc, n_basis)
+            self.basis_fn = PolynomialBasis(n_basis)
         elif basis_type == 'gaussian':
-            self.basis_fn = GaussianBasis(cutoff_type, rc, n_basis, gamma, center)
+            self.basis_fn = GaussianBasis(rc, center, gamma, rc, n_basis)
 
         self.res_update = [ResUpdate() for i in range(depth)]
         self.gc_blocks = [GCBlock([], pi_nodes, ii_nodes, activation=act)]
@@ -190,8 +190,8 @@ class PiNet(tf.keras.Model):
 
     def call(self, tensors):
         tensors = self.preprocess(tensors)
-        basis = self.basis_fn(tensors['dist'])[:, None, :]
-
+        fc = self.cutoff(tensors['dist'])
+        basis = self.basis_fn(tensors['dist'], fc=fc)
         output = 0.0
         for i in range(self.depth):
             prop = self.gc_blocks[i]([tensors['ind_2'], tensors['prop'], basis])
