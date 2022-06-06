@@ -27,7 +27,7 @@ jobs:
           cache-dependency-path: "requirements*.txt"
       - name: Install PiNN
         run: |
-          pip install tensorflow==${{ matrix.tf-version }}
+          pip install tensorflow==${{ matrix.tf-version }} 'protobuf<3.20'
           pip install -r requirements-dev.txt
           pip install -r requirements-doc.txt
           pip install .
@@ -89,7 +89,7 @@ jobs:
           cache-dependency-path: "requirements*.txt"
       - name: Install PiNN
         run: |
-          pip install tensorflow==2.8
+          pip install tensorflow==2.8 'protobuf<3.20'
           pip install -r requirements-dev.txt
           pip install -r requirements-doc.txt
           pip install .
