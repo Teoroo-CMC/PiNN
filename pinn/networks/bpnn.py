@@ -3,246 +3,19 @@
 import warnings
 import tensorflow as tf
 from pinn.utils import pi_named, connect_dist_grad
+from pinn.layers.bpsf import G2_SF, G3_SF, G4_SF
 from pinn.layers import CellListNL, CutoffFunc, ANNOutput
 
 
-@pi_named('G2_symm_func')
-def G2_SF(tensors, Rs, eta, i="All", j="ALL"):
-    """ BP-style G2 symmetry functions.
-
-    Args:
-        i: central atom type, can be "ALL".
-        j: neighbor atom type, can be "ALL".
-        Rs: a list of Rs values.
-        eta: a list of eta values, eta and Rs must have the same length.
-
-    Returns:
-        fp: a (n_atom x n_fingerprint) tensor of fingerprints
-            where n_atom is the number of central atoms defined by "i"
-        jacob_ind: a (n_pair) tensor
-            each row correspond to the (p_ind x i_rind) of the pair
-            p_ind => the relative position of this pair within all pairs
-            i_rind => the index of the central atom for this pair
-    """
-    Rs = tf.cast(Rs, tf.keras.backend.floatx())
-    eta = tf.cast(eta, tf.keras.backend.floatx())
-    R = tensors['dist']
-    fc = tensors['fc']
-    # Compute p_filter => boolean mask of relavent pairwise interactions
-    p_filter = None
-    a_filter = None
-    # relative position of i atom in the "to_output" group (defined by i)
-    i_rind = tensors['ind_2'][:, 0]
-    a_rind = tf.cumsum(tf.ones_like(tensors['elems'], tf.int32))-1
-    if i != 'ALL':
-        i_elem = tf.gather(tensors['elems'], i_rind)
-        p_filter = tf.equal(i_elem, i)
-        a_rind = tf.cumsum(tf.cast(tf.equal(tensors['elems'], i), tf.int32))-1
-    if j != 'ALL':
-        j_elem = tf.gather(tensors['elems'], tensors['ind_2'][:, 1])
-        j_filter = tf.equal(j_elem, j)
-        p_filter = tf.reduce_all(
-            [p_filter, j_filter], axis=0) if p_filter is not None else j_filter
-    # Gather the interactions
-    if p_filter is not None:
-        p_ind = tf.cast(tf.where(p_filter)[:, 0], tf.int32)
-        R = tf.gather(R, p_ind)
-        fc = tf.gather(fc, p_ind)
-        i_rind = tf.gather(a_rind, tf.gather(i_rind, p_ind))
-    else:
-        p_ind = tf.cumsum(tf.ones_like(i_rind))-1
-    # Symmetry function
-    R = tf.expand_dims(R, 1)
-    fc = tf.expand_dims(fc, 1)
-    Rs = tf.expand_dims(Rs, 0)
-    eta = tf.expand_dims(eta, 0)
-    sf = tf.exp(-eta*(R-Rs)**2)*fc
-    n_sf = sf.shape[-1]
-    fp = tf.scatter_nd(tf.expand_dims(i_rind, 1), sf,
-                       [tf.reduce_max(a_rind)+1, n_sf])
-    jacob_ind = tf.stack([p_ind, i_rind], axis=1)
-    return fp, jacob_ind
-
-
-@pi_named('G3_symm_func')
-def G3_SF(tensors, cutoff_type, rc, lambd, zeta, eta, i="ALL", j="ALL", k="ALL"):
-    """BP-style G3 symmetry functions.
-
-    NOTE(YS): here diff_jk is calculated through diff_ik - diff_ij instead of 
-    retrieving the distance calcualted in cell_list_nl.
-    This makes is easier to get the jacobian with grad(sf, [diff_ij, diff_ik]).
-    However, this also introduce some waste of computation during the fingerprint
-    generation.
-
-    Args:
-        cutoff_type, rc: cutoff function and radius
-            (we need them again because diff_jk is re-calculated)
-        lambd: a list of lambda values.
-        zeta: a list of zeta values.
-        eta: a list of eta values.
-        i, j, k: atom types (as int32)
-
-    Returns:
-        fp: a (n_atom x n_fingerprint) tensor of fingerprints
-            where n_atom is the number of central atoms defined by "i"
-        jacob: a (n_pair x n_fingerprint) tensor 
-            where n_pair is the number of relavent pairs in this SF
-        jacob_ind: a (n_pair) tensor 
-            each row correspond to the (p_ind, i_rind) of the pair
-            p_ind => the relative position of this pair within all pairs
-            i_rind => the index of the central atom for this pair    
-    """
-    lambd = tf.cast(lambd, tf.keras.backend.floatx())
-    zeta = tf.cast(zeta, tf.keras.backend.floatx())
-    eta = tf.cast(eta, tf.keras.backend.floatx())
-    R = tensors['dist']
-    fc = tensors['fc']
-    diff = tensors['diff']
-    ind_ij = tensors['ind_3'][:, 0]
-    ind_ik = tensors['ind_3'][:, 1]
-    ind2 = tensors['ind_2']
-    i_rind = tf.gather(tensors['ind_2'][:, 0], ind_ij)
-    # Build triplet filter
-    t_filter = None
-    a_rind = tf.cumsum(tf.ones_like(tensors['elems'], tf.int32))-1
-    if i != 'ALL':
-        i_elem = tf.gather(tensors['elems'], tf.gather(ind2[:, 0], ind_ij))
-        t_filter = tf.equal(i_elem, i)
-        a_rind = tf.cumsum(tf.cast(tf.equal(tensors['elems'], i), tf.int32))-1
-    if j != 'ALL':
-        j_elem = tf.gather(tensors['elems'], tf.gather(ind2[:, 1], ind_ij))
-        j_filter = tf.equal(j_elem, j)
-        t_filter = tf.reduce_all(
-            [t_filter, j_filter], axis=0) if t_filter is not None else j_filter
-    if k != 'ALL':
-        k_elem = tf.gather(tensors['elems'], tf.gather(ind2[:, 1], ind_ik))
-        k_filter = tf.equal(k_elem, k)
-        t_filter = tf.reduce_all(
-            [t_filter, k_filter], axis=0) if t_filter is not None else k_filter
-    if t_filter is not None:
-        t_ind = tf.where(t_filter)[:, 0]
-        ind_ij = tf.gather(ind_ij, t_ind)
-        ind_ik = tf.gather(ind_ik, t_ind)
-        i_rind = tf.gather(a_rind, tf.gather(i_rind, t_ind))
-    # Filter according to R_jk, once more
-    diff_ij = tf.gather_nd(diff, tf.expand_dims(ind_ij, 1))
-    diff_ik = tf.gather_nd(diff, tf.expand_dims(ind_ik, 1))
-    diff_jk = diff_ik - diff_ij
-    R_jk = tf.norm(diff_jk, axis=1)
-    t_ind = tf.where(R_jk < rc)[:, 0]
-    R_jk = tf.gather(R_jk, t_ind)
-    fc_jk = CutoffFunc(cutoff_type=cutoff_type, rc=rc)(R_jk)
-    ind_ij = tf.gather(ind_ij, t_ind)
-    ind_ik = tf.gather(ind_ik, t_ind)
-    i_rind = tf.gather(i_rind, t_ind)
-    diff_ij = tf.gather_nd(diff_ij, tf.expand_dims(t_ind, 1))
-    diff_ik = tf.gather_nd(diff_ik, tf.expand_dims(t_ind, 1))
-    # G3 symmetry function
-    R_ij = tf.expand_dims(tf.gather(R, ind_ij), 1)
-    R_ik = tf.expand_dims(tf.gather(R, ind_ik), 1)
-    R_jk = tf.expand_dims(R_jk, 1)
-    fc_ij = tf.expand_dims(tf.gather(fc, ind_ij), 1)
-    fc_ik = tf.expand_dims(tf.gather(fc, ind_ik), 1)
-    fc_jk = tf.expand_dims(fc_jk, 1)
-    diff_ij = tf.expand_dims(diff_ij, 1)
-    diff_ik = tf.expand_dims(diff_ik, 1)
-    eta = tf.expand_dims(eta, 0)
-    zeta = tf.expand_dims(zeta, 0)
-    lambd = tf.expand_dims(lambd, 0)
-    # SF definition
-    sf = 2**(1-zeta) *\
-        (1+lambd*tf.reduce_sum(diff_ij*diff_ik, axis=-1)/R_ij/R_ik)**zeta *\
-        tf.exp(-eta*(R_ij**2+R_ik**2+R_jk**2))*fc_ij*fc_ik*fc_jk
-    fp = tf.scatter_nd(tf.expand_dims(i_rind, 1), sf,
-                       [tf.reduce_max(a_rind)+1, tf.shape(eta)[1]])
-    # Generate Jacobian
-    n_sf = sf.shape[-1]
-    p_ind, p_uniq_idx = tf.unique(tf.concat([ind_ij, ind_ik], axis=0))
-    i_rind = tf.math.unsorted_segment_max(
-        tf.concat([i_rind, i_rind], axis=0), p_uniq_idx, tf.shape(p_ind)[0])
-    jacob_ind = tf.stack([p_ind, i_rind], axis=1)
-    return fp, jacob_ind
-
-
-@pi_named('G4_symm_func')
-def G4_SF(tensors, lambd, zeta, eta, i="ALL", j="ALL", k="ALL"):
-    """BP-style G4 symmetry functions.
-
-    lambd, eta should have the same length,
-    each element corresponds to a symmetry function.
-
-    Args:
-        lambd: a list of lambda values.
-        zeta: a list of zeta values.
-        eta: a list of eta values.
-        i, j, k: atom types (as int32)
-
-    Returns:
-        fp: a (n_atom x n_fingerprint) tensor of fingerprints
-            where n_atom is the number of central atoms defined by "i"
-        jacob_ind: a (n_pair) tensor
-            each row correspond to the (p_ind, i_rind) of the pair
-            p_ind => the relative position of this pair within all pairs
-            i_rind => the index of the central atom for this pair
-    """
-    lambd = tf.cast(lambd, tf.keras.backend.floatx())
-    zeta = tf.cast(zeta, tf.keras.backend.floatx())
-    eta = tf.cast(eta, tf.keras.backend.floatx())
-    R = tensors['dist']
-    fc = tensors['fc']
-    diff = tensors['diff']
-    ind_ij = tensors['ind_3'][:, 0]
-    ind_ik = tensors['ind_3'][:, 1]
-    ind2 = tensors['ind_2']
-    i_rind = tf.gather(tensors['ind_2'][:, 0], ind_ij)
-    # Build triplet filter
-    t_filter = None
-    a_rind = tf.cumsum(tf.ones_like(tensors['elems'], tf.int32))-1
-    if i != 'ALL':
-        i_elem = tf.gather(tensors['elems'], tf.gather(ind2[:, 0], ind_ij))
-        t_filter = tf.equal(i_elem, i)
-        a_rind = tf.cumsum(tf.cast(tf.equal(tensors['elems'], i), tf.int32))-1
-    if j != 'ALL':
-        j_elem = tf.gather(tensors['elems'], tf.gather(ind2[:, 1], ind_ij))
-        j_filter = tf.equal(j_elem, j)
-        t_filter = tf.reduce_all(
-            [t_filter, j_filter], axis=0) if t_filter is not None else j_filter
-    if k != 'ALL':
-        k_elem = tf.gather(tensors['elems'], tf.gather(ind2[:, 1], ind_ik))
-        k_filter = tf.equal(k_elem, k)
-        t_filter = tf.reduce_all(
-            [t_filter, k_filter], axis=0) if t_filter is not None else k_filter
-    if t_filter is not None:
-        t_ind = tf.where(t_filter)[:, 0]
-        ind_ij = tf.gather(ind_ij, t_ind)
-        ind_ik = tf.gather(ind_ik, t_ind)
-        i_rind = tf.gather(a_rind, tf.gather(i_rind, t_ind))
-    # G4 symmetry function
-    R_ij = tf.expand_dims(tf.gather(R, ind_ij), 1)
-    R_ik = tf.expand_dims(tf.gather(R, ind_ik), 1)
-    fc_ij = tf.expand_dims(tf.gather(fc, ind_ij), 1)
-    fc_ik = tf.expand_dims(tf.gather(fc, ind_ik), 1)
-    diff_ij = tf.expand_dims(tf.gather_nd(diff, tf.expand_dims(ind_ij, 1)), 1)
-    diff_ik = tf.expand_dims(tf.gather_nd(diff, tf.expand_dims(ind_ik, 1)), 1)
-    eta = tf.expand_dims(eta, 0)
-    zeta = tf.expand_dims(zeta, 0)
-    lambd = tf.expand_dims(lambd, 0)
-    sf = 2**(1-zeta) *\
-        (1+lambd*tf.reduce_sum(diff_ij*diff_ik, axis=-1)/R_ij/R_ik)**zeta *\
-        tf.exp(-eta*(R_ij**2+R_ik**2))*fc_ij*fc_ik
-    fp = tf.scatter_nd(tf.expand_dims(i_rind, 1), sf,
-                       [tf.reduce_max(a_rind)+1, tf.shape(eta)[1]])
-
-    # Jacobian generation (perhaps needs some clarification)
-    # In short, gradients(sf, diff) gives the non-zero parts of the
-    # diff => sf Jacobian (Natom x Natom x 3)
-
-    n_sf = sf.shape[-1]
-    p_ind, p_uniq_idx = tf.unique(tf.concat([ind_ij, ind_ik], axis=0))
-    i_rind = tf.math.unsorted_segment_max(
-        tf.concat([i_rind, i_rind], axis=0), p_uniq_idx, tf.shape(p_ind)[0])
-    jacob_ind = tf.stack([p_ind, i_rind], axis=1)
-    return fp, jacob_ind
+@tf.custom_gradient
+def _fake_fp(diff, fp, jacob, jacob_ind, n_pairs):
+    def _grad(dfp, jacob, jacob_ind):
+        # Expand dfp to => (n_pairs x 3 x n_fp)
+        dfp = tf.expand_dims(tf.gather_nd(dfp, jacob_ind[:, 1:]), axis=1)
+        ddiff = tf.reduce_sum(jacob*dfp, axis=2)
+        ddiff = tf.IndexedSlices(ddiff, jacob_ind[:, 0], [n_pairs, 3])
+        return ddiff, None, None, None, None
+    return tf.identity(fp), lambda dfp: _grad(dfp, jacob, jacob_ind)
 
 
 @pi_named('form_tripet')
@@ -264,72 +37,78 @@ def _form_triplet(tensors):
     return t_ind
 
 
-bp_sf_fns = {'G2': G2_SF, 'G3': G3_SF, 'G4': G4_SF}
 class BPSymmFunc(tf.keras.layers.Layer):
     """ Wrapper for building Behler-style symmetry functions"""
     def __init__(self, sf_spec, rc, cutoff_type, use_jacobian=True):
         super(BPSymmFunc, self).__init__()
+        bpsf_layers = {'G2': G2_SF, 'G3': G3_SF, 'G4': G4_SF}
         # specifications
-        self.sf_spec = []
+        self.bpsfs = []
         self.triplet = False
+        self.fc_layer = CutoffFunc(rc, cutoff_type)
+
         for spec in sf_spec:
-            fn = bp_sf_fns[spec['type']]
-            options = {k:v for k,v in spec.items() if k!='type'}
+            layer = bpsf_layers[spec['type']]
+            args = {k:v for k,v in spec.items() if k!='type'}
             if spec['type'] == 'G3':
-                options.update({'rc': rc, 'cutoff_type': cutoff_type})
+                args.update({'cutoff': self.fc_layer, 'rc': rc})
             if spec['type'] in ['G3', 'G4']:
                 self.triplet = True
-            self.sf_spec.append((fn, options))
+            self.bpsfs.append(layer(**args))
         self.use_jacobian = use_jacobian
-        # the cutoff function needs to be called from here to
-        # calculation the jacobian
-        self.fc_layer = CutoffFunc(rc, cutoff_type)
+
+    def _compute_fps(self, tensors, gtape=None):
+        fc = self.fc_layer(tensors['dist'])
+        fps = {}
+        for i, layer in enumerate(self.bpsfs):
+            if isinstance(layer, G2_SF):
+                fp, jacob_ind = layer(
+                    tensors["ind_2"],
+                    dist=tensors["dist"],
+                    elems=tensors["elems"],
+                    fc=fc,
+                )
+            else:
+                fp, jacob_ind = layer(
+                    tensors["ind_2"],
+                    ind_3=tensors["ind_3"],
+                    dist=tensors["dist"],
+                    diff=tensors["diff"],
+                    elems=tensors["elems"],
+                    fc=fc,
+                )
+            fps[f'fp_{i}'] = fp
+
+            # compute jacobian when a gradient tape is provided
+            if gtape is not None:
+                fp_slices = [fp[:,j] for j in range(fp.shape[1])]
+                with gtape.stop_recording():
+                    warnings.filterwarnings('ignore')
+                    jacob = tf.stack([
+                        gtape.gradient(fp_slice, tensors['diff'])
+                        for fp_slice in fp_slices], axis=2)
+                    warnings.resetwarnings()
+                    jacob = tf.gather_nd(jacob, jacob_ind[:,:1])
+                fps[f'jacob_{i}'] = jacob
+                fps[f'jacob_ind_{i}'] = jacob_ind
+        return fps
 
     def call(self, tensors):
         if self.triplet:
             tensors['ind_3'] = _form_triplet(tensors)
-
         fps = {}
         if self.use_jacobian:
             with tf.GradientTape(persistent=True) as gtape:
                 gtape.watch(tensors['diff'])
                 connect_dist_grad(tensors)
-                tensors['fc'] = self.fc_layer(tensors['dist'])
-                for i, (fn, options) in enumerate(self.sf_spec):
-                    fp, jacob_ind = fn(tensors, **options)
-                    fps['fp_{}'.format(i)] = fp
-                    fp_slices = [fp[:,j] for j in range(fp.shape[1])]
-                    with gtape.stop_recording():
-                        warnings.filterwarnings('ignore')
-                        jacob = tf.stack([
-                            gtape.gradient(fp_slice, tensors['diff'])
-                            for fp_slice in fp_slices], axis=2)
-                        warnings.resetwarnings()
-                        jacob = tf.gather_nd(jacob, jacob_ind[:,:1])
-                        fps['jacob_{}'.format(i)] = jacob
-                        fps['jacob_ind_{}'.format(i)] = jacob_ind
+                fps = self._compute_fps(tensors, gtape = gtape)
         else:
-            tensors['fc'] = self.fc_layer(tensors['dist'])
-            for i, (fn, options) in enumerate(self.sf_spec):
-                fp, jacob_ind = fn(tensors, **options)
-                fps['fp_{}'.format(i)] = fp
+            fps = self._compute_fps(tensors)
         tensors.update(fps)
         tensors.pop('dist')
-        tensors.pop('fc')
         if self.triplet:
             tensors.pop('ind_3')
         return tensors
-
-
-@tf.custom_gradient
-def _fake_fp(diff, fp, jacob, jacob_ind, n_pairs):
-    def _grad(dfp, jacob, jacob_ind):
-        # Expand dfp to => (n_pairs x 3 x n_fp)
-        dfp = tf.expand_dims(tf.gather_nd(dfp, jacob_ind[:, 1:]), axis=1)
-        ddiff = tf.reduce_sum(jacob*dfp, axis=2)
-        ddiff = tf.IndexedSlices(ddiff, jacob_ind[:, 0], [n_pairs, 3])
-        return ddiff, None, None, None, None
-    return tf.identity(fp), lambda dfp: _grad(dfp, jacob, jacob_ind)
 
 
 class BPFingerprint(tf.keras.layers.Layer):
