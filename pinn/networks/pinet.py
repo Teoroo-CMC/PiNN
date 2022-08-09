@@ -179,7 +179,7 @@ class PiNet(tf.keras.Model):
         if basis_type == 'polynomial':
             self.basis_fn = PolynomialBasis(n_basis)
         elif basis_type == 'gaussian':
-            self.basis_fn = GaussianBasis(rc, center, gamma, rc, n_basis)
+            self.basis_fn = GaussianBasis(center, gamma, rc, n_basis)
 
         self.res_update = [ResUpdate() for i in range(depth)]
         self.gc_blocks = [GCBlock([], pi_nodes, ii_nodes, activation=act)]
