@@ -924,19 +924,19 @@ be found in the "Implemented models" section.</p>
 <p>Models implemented in PiNN used a serialized format for their parameters. The
 parameter file specifies the network architecture, hyperparameters and training
 algorithm. A typical parameter file include the following sections:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pinet_potential</span><span class="w"></span>
-<span class="nt">model</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">potential_model</span><span class="w"></span>
-<span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">use_force</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="nt">network</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PiNet</span><span class="w"></span>
-<span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">atom_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="nt">optimizer</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span><span class="w"></span>
-<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pinet_potential</span>
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">potential_model</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">use_force</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">network</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PiNet</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">atom_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]</span>
+<span class="nt">optimizer</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span>
 </code></pre></div>
 <p>Among those, the <code>optimizer</code> section follows the format of a Keras optimizer.
 The <code>model</code> and <code>network</code> sections specify the name and parameters of initialize

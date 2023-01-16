@@ -941,9 +941,9 @@
 <h1 id="quick-start">Quick start</h1>
 <h2 id="installation">Installation</h2>
 <p><strong>using pip</strong></p>
-<div class="highlight"><pre><span></span><code>git clone https://github.com/Teoroo-CMC/PiNN.git -b TF2
-pip install -e PiNN<span class="o">[</span>gpu<span class="o">]</span>
-pinn -h
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git<span class="w"> </span>-b<span class="w"> </span>TF2
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>PiNN<span class="o">[</span>gpu<span class="o">]</span>
+pinn<span class="w"> </span>-h
 </code></pre></div>
 <p>Extra dependencies can be specified:</p>
 <ul>
@@ -955,8 +955,8 @@ pinn -h
 <p><strong>using container</strong> </p>
 <p>PiNN provides two built docker images, which can be converted to singularity
 images without much effort:</p>
-<div class="highlight"><pre><span></span><code>singularity build pinn.sif docker://teoroo/pinn:master-gpu
-./pinn.sif -h
+<div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>build<span class="w"> </span>pinn.sif<span class="w"> </span>docker://teoroo/pinn:master-gpu
+./pinn.sif<span class="w"> </span>-h
 </code></pre></div>
 <ul>
 <li><code>:latest-cpu</code> is much smaller, it comes without GPU support</li>
@@ -964,7 +964,7 @@ images without much effort:</p>
 </ul>
 <p>Extra dependencies like <code>Jupyter</code> are included in the image, for a quick 
 development environment:</p>
-<div class="highlight"><pre><span></span><code>singularity run pinn.sif jupyter notebook
+<div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>run<span class="w"> </span>pinn.sif<span class="w"> </span>jupyter<span class="w"> </span>notebook
 </code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <p>In PiNN, a model consists of two essential parts, the network and the model. The
@@ -973,27 +973,27 @@ predictions from the input (coordinates and elements information). While the
 model interprets the predictions as physical quantities.</p>
 <p>In PiNN, the parameters for a model is saved as a <code>yaml</code> formatted parameter
 file. A minimal example of model parameter file looks like this:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pinet_potential</span><span class="w"></span>
-<span class="nt">model</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">potential_model</span><span class="w"></span>
-<span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">use_force</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="nt">network</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PiNet</span><span class="w"></span>
-<span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">atom_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pinet_potential</span>
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">potential_model</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">use_force</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">network</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PiNet</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">atom_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p>In addition to the network and the model, the training algorithm should be specified
 as such:
-<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span><span class="w"></span>
-<span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span>
 </code></pre></div></p>
 <h2 id="using-the-cli">Using the CLI</h2>
 <p>PiNN provides a CLI for training and simple dataset operations:</p>
-<div class="highlight"><pre><span></span><code>pinn convert data.traj -o <span class="s1">&#39;trian:8,eval:2&#39;</span>
-pinn train -d model -t train.yml -e eval.yml -b <span class="m">30</span> --train-steps <span class="m">100000</span> params.yml
+<div class="highlight"><pre><span></span><code>pinn<span class="w"> </span>convert<span class="w"> </span>data.traj<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;trian:8,eval:2&#39;</span>
+pinn<span class="w"> </span>train<span class="w"> </span>-d<span class="w"> </span>model<span class="w"> </span>-t<span class="w"> </span>train.yml<span class="w"> </span>-e<span class="w"> </span>eval.yml<span class="w"> </span>-b<span class="w"> </span><span class="m">30</span><span class="w"> </span>--train-steps<span class="w"> </span><span class="m">100000</span><span class="w"> </span>params.yml
 </code></pre></div>
 <p>The above command takes a trajectory file <code>data.traj</code>, and splits it into two
 datasets. Then it takes the parameters from <code>params.yml</code>, and trains a model
@@ -1001,10 +1001,10 @@ in the <code>model</code> directory.</p>
 <h2 id="monitoring">Monitoring</h2>
 <p>PiNN uses TensorFlow as a backend for training, which means the training log can 
 be monitored in real time using Tensorboard:
-<div class="highlight"><pre><span></span><code>tensorboard --log-dir model --port <span class="m">6006</span>
+<div class="highlight"><pre><span></span><code>tensorboard<span class="w"> </span>--log-dir<span class="w"> </span>model<span class="w"> </span>--port<span class="w"> </span><span class="m">6006</span>
 </code></pre></div></p>
 <p>Or with the log inspector of PiNN:
-<div class="highlight"><pre><span></span><code>pinn log model
+<div class="highlight"><pre><span></span><code>pinn<span class="w"> </span>log<span class="w"> </span>model
 </code></pre></div></p>
 <h2 id="using-the-model">Using the model</h2>
 <p>The simplest use case for PiNN models is to use them as ASE calculators. A calculator

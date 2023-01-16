@@ -1116,7 +1116,7 @@ example:</p>
         <details class="quote">
           <summary>Source code in <code>pinn/io/__init__.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_ds</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This loader tries to guess the format when dataset is a string:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This loader tries to guess the format when dataset is a string:</span>
 
 <span class="sd">    - `load_tfrecoard` if it ends with &#39;.yml&#39;</span>
 <span class="sd">    - `load_runner` if it ends with &#39;.data&#39;</span>
@@ -1197,7 +1197,7 @@ training.</p>
         <details class="quote">
           <summary>Source code in <code>pinn/io/tfr.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_tfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Load tfrecord dataset.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load tfrecord dataset.</span>
 
 <span class="sd">    Note that the splits given by load_tfrecord should be consistent with other</span>
 <span class="sd">    loaders, but the orders of data points will not be shuffled. Make sure to</span>
@@ -1293,7 +1293,7 @@ training.</p>
         <details class="quote">
           <summary>Source code in <code>pinn/io/ase.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_ase</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads a ASE trajectory</span>
 
 <span class="sd">    Args:</span>
@@ -1377,7 +1377,7 @@ training.</p>
         <details class="quote">
           <summary>Source code in <code>pinn/io/runner.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_runner</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads runner formatted trajectory</span>
 <span class="sd">    Args:</span>
 <span class="sd">        flist (str): one or a list of runner formatted trajectory(s)</span>
@@ -1455,7 +1455,7 @@ i.e. <code>label_map={'e_data': 'U0'}</code>.</p>
         <details class="quote">
           <summary>Source code in <code>pinn/io/qm9.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_qm9</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">label_map</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="s1">&#39;U0&#39;</span><span class="p">},</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Loads the QM9 dataset</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the QM9 dataset</span>
 
 <span class="sd">    QM9 provides a variety of labels, but typically we are only</span>
 <span class="sd">    training on one target, e.g. U0. A ``label_map`` option is</span>
@@ -1553,7 +1553,7 @@ i.e. <code>label_map={'e_data': 'U0'}</code>.</p>
         <details class="quote">
           <summary>Source code in <code>pinn/io/ani.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_ani</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cycle_length</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Loads the ANI-1 dataset</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the ANI-1 dataset</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filelist (list): filenames of ANI-1 h5 files.</span>
@@ -1672,7 +1672,7 @@ specify the data to read and where it is read from.</p>
         <details class="quote">
           <summary>Source code in <code>pinn/io/cp2k.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_cp2k</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This is a experimental loader for CP2K data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a experimental loader for CP2K data</span>
 
 <span class="sd">    It takes data from different sources, the CP2K output file and dat files,</span>
 <span class="sd">    which will be specified in the files dictionary. A list of &quot;keys&quot; is used to</span>
