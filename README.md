@@ -1,6 +1,6 @@
 # PiNN: a Python library for building atomic neural networks
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/Teoroo-CMC/PiNN/Build%20and%20Test/master?label=build&style=flat-square)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/Teoroo-CMC/PiNN/build_and_test.yml?branch=master&label=build&style=flat-square)
 
 PiNN<sup>[1](#fn1)</sup> is a Python library built on top of TensorFlow for
 building atomic neural network potentials. The PiNN library also provides
