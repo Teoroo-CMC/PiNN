@@ -14,7 +14,7 @@ The code is currently maintained by Yunqi Shao at Uppsala University.
 - [ASE](https://wiki.fysik.dtu.dk/ase/) >= 3.19
 - [NumPy](https://numpy.org/) >= 1.15
 - [PyYAML](https://pyyaml.org/) > 3.01
-- [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[2](#fn2)</sup>
+- [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[2](#fn2)</sup> and <=2.9<sup>[3](#fn3)</sup>
 
 ## Installation
 
@@ -88,5 +88,7 @@ Materials. arXiv:1910.03376 [cond-mat, physics:physics] 2019.
 
 <a name="fn2">[2]</a> TensorFlow is not installed automatically by default.
 Since TF 2.0 the GPU support is included in the stable release, ``pip install
-tensorflow>=2.4`` should be suitable for most user.
+tensorflow>=2.4`` should be suitable for most user. 
 
+<a name="fn3">[3]</a> Currently the code is not compatible with TF 2.10 and above,
+see [Issue #7](https://github.com/Teoroo-CMC/PiNN/issues/7) for details or updates.
