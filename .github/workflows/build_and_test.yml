@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]
-        tf-version: [2.4, 2.5, 2.7, 2.8]
+        tf-version: [2.4, 2.5, 2.7, 2.8, 2.9, '2.10', 2.11]
         exclude:
           - python-version: 3.9
             tf-version: 2.4
