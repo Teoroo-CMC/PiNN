@@ -7,29 +7,38 @@ on:
       - v*
 jobs:
   pytest:
-    name: Run Pytest
+    continue-on-error: ${{ matrix.experimental }}
+    name: "PYtest (Py${{ matrix.py-version }}-TF${{ matrix.tf-version }}${{ matrix.experimental && '-exp' || '' }})"
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9]
-        tf-version: [2.4, 2.5, 2.7, 2.8, 2.9, '2.10', 2.11]
+        py-version: ["3.7", "3.9"]
+        tf-version: ["2.4", "2.8", "2.9"]
+        experimental: [false]
         exclude:
-          - python-version: 3.9
-            tf-version: 2.4
+          - py-version: "3.9"
+            tf-version: "2.4"
+        # include: # test newer versions of TF
+        #   - py-version: "3.9"
+        #     tf-version: "2.10"
+        #     experimental: true
+        #   - py-version: "3.9"
+        #     tf-version: "2.13"
+        #     experimental: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.py-version }}
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.py-version }}
           cache: "pip"
           cache-dependency-path: "requirements*.txt"
       - name: Install PiNN
         run: |
-          pip install tensorflow==${{ matrix.tf-version }} 'protobuf<3.20'
           pip install -r requirements-dev.txt
           pip install -r requirements-doc.txt
+          pip install tensorflow==${{ matrix.tf-version }} 'protobuf<3.20'
           pip install .
       - name: Test with pytest
         run: pytest --forked tests/

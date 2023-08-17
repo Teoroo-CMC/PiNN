@@ -12,7 +12,6 @@ The code is currently maintained by Yunqi Shao at Uppsala University.
 
 - Python >= 3.7
 - [ASE](https://wiki.fysik.dtu.dk/ase/) >= 3.19
-- [NumPy](https://numpy.org/) >= 1.15
 - [PyYAML](https://pyyaml.org/) > 3.01
 - [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[2](#fn2)</sup> and <=2.9<sup>[3](#fn3)</sup>
 
