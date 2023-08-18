@@ -1,0 +1,1817 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
+    
+    
+      
+        <title>Datasets - PiNN Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.e411adfe.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
+        
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-loaders" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+        </aside>
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PiNN Documentation" class="md-header__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
+      
+  <img src="../../images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PiNN Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Datasets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PiNN Documentation" class="md-nav__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
+      
+  <img src="../../images/logo.svg" alt="logo">
+
+    </a>
+    PiNN Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Home
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Home" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Home
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/" class="md-nav__link">
+        Migration to PiNN 1.x
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Usage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Usage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/" class="md-nav__link">
+        Quick Start
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          CLI
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="CLI" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          CLI
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/convert/" class="md-nav__link">
+        convert
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/train/" class="md-nav__link">
+        train
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/log/" class="md-nav__link">
+        log
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Datasets
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Datasets
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tfrecord" class="md-nav__link">
+    TFRecord
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitting-the-dataset" class="md-nav__link">
+    Splitting the dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batching-the-dataset" class="md-nav__link">
+    Batching the dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-format" class="md-nav__link">
+    Custom format
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-formats" class="md-nav__link">
+    Available formats
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-documentation" class="md-nav__link">
+    API documentation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_5" type="checkbox" id="__nav_2_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_5">
+          Networks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Networks" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          Networks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../networks/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_5_2" type="checkbox" id="__nav_2_5_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_5_2">
+          Implemented
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Implemented" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Implemented
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinet/" class="md-nav__link">
+        PiNet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bpnn/" class="md-nav__link">
+        BPNN
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6" type="checkbox" id="__nav_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_6">
+          Models
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Models" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          Models
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6_2" type="checkbox" id="__nav_2_6_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_6_2">
+          Implemented
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Implemented" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          Implemented
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../potential/" class="md-nav__link">
+        Potential Model
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dipole/" class="md-nav__link">
+        Dipole Model
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_model/" class="md-nav__link">
+        Custom Mdoel
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../optimizers/" class="md-nav__link">
+        Optimizers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visualize/" class="md-nav__link">
+        Visualize
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Notebooks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Notebooks" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Notebooks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/Quick_tour/" class="md-nav__link">
+        Quick tour with QM9
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/More_on_training/" class="md-nav__link">
+        Optimizing the training
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_3">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/Customizing_dataset/" class="md-nav__link">
+        Customizing dataset
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/Learn_LJ_potential/" class="md-nav__link">
+        Learning a LJ potential
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tfrecord" class="md-nav__link">
+    TFRecord
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitting-the-dataset" class="md-nav__link">
+    Splitting the dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batching-the-dataset" class="md-nav__link">
+    Batching the dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-format" class="md-nav__link">
+    Custom format
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-formats" class="md-nav__link">
+    Available formats
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-documentation" class="md-nav__link">
+    API documentation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="data-loaders">Data loaders</h1>
+<p>In PiNN, the dataset is represented with the TensorFlow <a href="https://www.tensorflow.org/api_docs/python/tf/data/Dataset"><code>Dataset</code>
+class</a>. Several
+dataset loaders are implemented in PiNN to load data from common formats.
+Starting from v1.0, PiNN provides a canonical data loader <code>pinn.io.load_ds</code> that
+handles dataset with different formats, see below for the API documentation and
+available datasets.</p>
+<h2 id="tfrecord">TFRecord</h2>
+<p>The tfrecord format is a serialized format for efficient data reading in
+TensorFlow. PiNN can save datasets in the TFRecord dataset. When PiNN writes the
+dataset, it creates a <code>.yml</code> file records the data structure of the dataset, and
+a <code>.tfr</code> file holds the data. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_ds</span><span class="p">,</span> <span class="n">write_tfrecord</span>
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">write_tfrecord</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/home/yunqi/datasets/QM9/dsgdb9nsd/*.xyz&#39;</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ds</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;qm9&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span>
+<span class="n">write_tfrecord</span><span class="p">(</span><span class="s1">&#39;train.yml&#39;</span><span class="p">,</span> <span class="n">train_set</span><span class="p">)</span>
+<span class="n">train_ds</span> <span class="o">=</span> <span class="n">load_ds</span><span class="p">(</span><span class="s1">&#39;train.yml&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>We advise you to convert your dataset into the TFRecord format for training. The
+advantage of using this format is that it allows for the storage of preprocessed
+data and batched dataset.</p>
+<h2 id="splitting-the-dataset">Splitting the dataset</h2>
+<p>It is a common practice to split the dataset into subsets for validation in
+machine learning tasks. PiNN dataset loaders support a <code>split</code> option to do
+this. The <code>split</code> can be a dictionary specifying the subsets and their relative
+ratios. The dataset loader will return a dictionary of datasets with
+corresponding ratios. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_ds</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ds</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;qm9&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p>Here <code>train</code> and <code>test</code> will be <code>tf.data.Dataset</code> objects which to be consumed
+by our models. The loaders also accepts a seed parameter for the split to be
+reproducible, and the default seed is <code>0</code>.</p>
+<h2 id="batching-the-dataset">Batching the dataset</h2>
+<p>Most TensorFlow operations (caching, repeating, shuffling) can be
+directly applied to the dataset. However, to handle datasets with
+different numbers of atoms in each structure, which is often the case,
+we use a special <code>sparse_batch</code> operation to create mini-batches of
+the data in a sparse form. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">sparse_batch</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ds</span><span class="p">(</span><span class="n">fileanme</span><span class="p">)</span>
+<span class="n">batched</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="custom-format">Custom format</h2>
+<p>To be able to shuffle and split the dataset, PiNN require the dataset to be
+represented as a list of data. In the simplest case, the dataset could be a list
+of structure files, each contains one structure and label (or a sample). PiNN
+provides a <code>list_loader</code> decorator which turns a function reading a single
+sample into a function that transform a list of samples into a dataset. For
+example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+
+<span class="nd">@list_loader</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">load_file_list</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="c1"># read a single file here</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">elems</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">e_data</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">datum</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">coord</span><span class="p">,</span> <span class="s1">&#39;elems&#39;</span><span class="p">:</span><span class="n">elems</span><span class="p">,</span> <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="n">e_data</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">datum</span>
+</code></pre></div>
+<p>An example notebook on preparing a custom dataset is
+<a href="../../notebooks/Customizing_dataset/">here</a>.</p>
+<h2 id="available-formats">Available formats</h2>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Loader</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tfr</td>
+<td><code>load_tfrecord</code></td>
+<td>See <a href="#tfrecord">TFRecord</a></td>
+</tr>
+<tr>
+<td>runner</td>
+<td><code>load_runner</code></td>
+<td>Loader for datasets in the <a href="https://www.uni-goettingen.de/de/560580.html">RuNNer</a> foramt</td>
+</tr>
+<tr>
+<td>ase</td>
+<td><code>load_ase</code></td>
+<td>Load the files with the <a href="https://wiki.fysik.dtu.dk/ase/_modules/ase/io/formats.html#iread"><code>ase.io.iead</code></a> function</td>
+</tr>
+<tr>
+<td>qm9</td>
+<td><code>load_qm9</code></td>
+<td>A xyz-like file format used in the QM9<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> dataset</td>
+</tr>
+<tr>
+<td>ani</td>
+<td><code>load_ani</code></td>
+<td>HD5-based format used in the ANI-1<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> dataset</td>
+</tr>
+<tr>
+<td>cp2k</td>
+<td><code>load_cp2k</code></td>
+<td>Loader for <a href="https://www.cp2k.org/">CP2K</a> output (experimental)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api-documentation">API documentation</h2>
+<h3 id="pinnioload_ds">pinn.io.load_ds</h3>
+
+
+  <div class="doc doc-object doc-function">
+
+
+    <div class="doc doc-contents first">
+
+      <p>This loader tries to guess the format when dataset is a string:</p>
+<ul>
+<li><code>load_tfrecoard</code> if it ends with '.yml'</li>
+<li><code>load_runner</code> if it ends with '.data'</li>
+<li>try to load it with <code>load_ase</code></li>
+</ul>
+<p>If the <code>fmt</code> is specified, the loader will use a corresponsing dataset loader.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><p>dataset a file or input for a loader according to <code>fmt</code></p></td>
+      </tr>
+      <tr>
+        <td><code>fmt</code></td>
+        <td><p>dataset format, see avialable formats.</p></td>
+      </tr>
+      <tr>
+        <td><code>splits</code></td>
+        <td><p>key-val pairs specifying the ratio of subsets</p></td>
+      </tr>
+      <tr>
+        <td><code>shuffle</code></td>
+        <td><p>shuffle the dataset (only used when splitting)</p></td>
+      </tr>
+      <tr>
+        <td><code>seed</code></td>
+        <td><p>random seed for shuffling</p></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><p>extra arguments to loaders</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pinn/io/__init__.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_ds</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This loader tries to guess the format when dataset is a string:</span>
+
+<span class="sd">    - `load_tfrecoard` if it ends with &#39;.yml&#39;</span>
+<span class="sd">    - `load_runner` if it ends with &#39;.data&#39;</span>
+<span class="sd">    - try to load it with `load_ase`</span>
+
+<span class="sd">    If the `fmt` is specified, the loader will use a corresponsing dataset loader.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset: dataset a file or input for a loader according to `fmt`</span>
+<span class="sd">        fmt (str): dataset format, see avialable formats.</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">        **kwargs: extra arguments to loaders</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loaders</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tfr&#39;</span><span class="p">:</span>    <span class="n">load_tfrecord</span><span class="p">,</span>
+               <span class="s1">&#39;runner&#39;</span><span class="p">:</span> <span class="n">load_runner</span><span class="p">,</span>
+               <span class="s1">&#39;ase&#39;</span><span class="p">:</span>    <span class="n">load_ase</span><span class="p">,</span>
+               <span class="s1">&#39;qm9&#39;</span><span class="p">:</span>    <span class="n">load_qm9</span><span class="p">,</span>
+               <span class="s1">&#39;ani&#39;</span><span class="p">:</span>    <span class="n">load_ani</span><span class="p">,</span>
+               <span class="s1">&#39;cp2k&#39;</span><span class="p">:</span>   <span class="n">load_cp2k</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">fmt</span><span class="o">==</span><span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.yml&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">load_tfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.data&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">load_runner</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">load_ase</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">loaders</span><span class="p">[</span><span class="n">fmt</span><span class="p">](</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<h3 id="pinnioload_tfrecord">pinn.io.load_tfrecord</h3>
+
+
+  <div class="doc doc-object doc-function">
+
+
+    <div class="doc doc-contents first">
+
+      <p>Load tfrecord dataset.</p>
+<p>Note that the splits given by load_tfrecord should be consistent with other
+loaders, but the orders of data points will not be shuffled. Make sure to
+use a large shuffling buffer when splits given by <code>load_tfrecord</code> is used in
+training.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><p>filename of the .yml metadata file to be loaded.</p></td>
+      </tr>
+      <tr>
+        <td><code>splits</code></td>
+        <td><p>key-val pairs specifying the ratio of subsets</p></td>
+      </tr>
+      <tr>
+        <td><code>shuffle</code></td>
+        <td><p>shuffle the dataset (only used when splitting)</p></td>
+      </tr>
+      <tr>
+        <td><code>seed</code></td>
+        <td><p>random seed for shuffling</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pinn/io/tfr.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_tfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load tfrecord dataset.</span>
+
+<span class="sd">    Note that the splits given by load_tfrecord should be consistent with other</span>
+<span class="sd">    loaders, but the orders of data points will not be shuffled. Make sure to</span>
+<span class="sd">    use a large shuffling buffer when splits given by `load_tfrecord` is used in</span>
+<span class="sd">    training.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">       dataset (str): filename of the .yml metadata file to be loaded.</span>
+<span class="sd">       splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">       shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">       seed (int): random seed for shuffling</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">yaml</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">from</span> <span class="nn">pinn.io.base</span> <span class="kn">import</span> <span class="n">split_list</span>
+    <span class="kn">from</span> <span class="nn">tensorflow.python.lib.io.file_io</span> <span class="kn">import</span> <span class="n">FileIO</span>
+    <span class="c1"># dataset</span>
+    <span class="k">with</span> <span class="n">FileIO</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">ds_spec</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">format_dict</span> <span class="o">=</span> <span class="n">ds_spec</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">]</span>
+
+    <span class="n">dtypes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">format_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;dtype&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">format_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+    <span class="n">shapes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">format_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">format_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+    <span class="n">feature_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">([],</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dtypes</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">example</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">parse_single_example</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="n">feature_dict</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">converter</span><span class="p">(</span><span class="n">tensors</span><span class="p">):</span>
+        <span class="n">tensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">parse_tensor</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                   <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tensors</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">set_shape</span><span class="p">(</span><span class="n">shapes</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tensors</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">tensors</span>
+    <span class="n">tfr</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;tfr&#39;</span><span class="p">])</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TFRecordDataset</span><span class="p">(</span><span class="n">tfr</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">converter</span><span class="p">)</span>
+    <span class="c1"># tfr splitter</span>
+    <span class="k">if</span> <span class="n">splits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dataset</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_sample</span> <span class="o">=</span> <span class="n">ds_spec</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;n_sample&#39;</span><span class="p">]</span>
+        <span class="n">splits</span> <span class="o">=</span> <span class="n">split_list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">))),</span>
+                            <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">splitted</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">zip</span><span class="p">((</span>
+            <span class="n">dataset</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">)))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_any</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">)))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">d</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">splits</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">splitted</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<h3 id="pinnioload_ase">pinn.io.load_ase</h3>
+
+
+  <div class="doc doc-object doc-function">
+
+
+    <div class="doc doc-contents first">
+
+      <p>Loads a ASE trajectory</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><p>a filename or trajectory</p></td>
+      </tr>
+      <tr>
+        <td><code>splits</code></td>
+        <td><p>key-val pairs specifying the ratio of subsets</p></td>
+      </tr>
+      <tr>
+        <td><code>shuffle</code></td>
+        <td><p>shuffle the dataset (only used when splitting)</p></td>
+      </tr>
+      <tr>
+        <td><code>seed</code></td>
+        <td><p>random seed for shuffling</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pinn/io/ase.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_ase</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads a ASE trajectory</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (str or ase.io.trajectory): a filename or trajectory</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="n">_ase_spec</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_ase_loader</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="n">datum</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
+            <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="s1">&#39;cell&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;cell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[:]</span>
+
+        <span class="k">if</span> <span class="s1">&#39;e_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;e_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;f_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;f_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;q_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;q_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_charges</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;d_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;d_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_dipole_moment</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">datum</span>
+
+    <span class="k">return</span> <span class="n">_ase_loader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<h3 id="pinnioload_runner">pinn.io.load_runner</h3>
+
+
+  <div class="doc doc-object doc-function">
+
+
+    <div class="doc doc-contents first">
+
+      <p>Loads runner formatted trajectory</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>flist</code></td>
+        <td><p>one or a list of runner formatted trajectory(s)</p></td>
+      </tr>
+      <tr>
+        <td><code>splits</code></td>
+        <td><p>key-val pairs specifying the ratio of subsets</p></td>
+      </tr>
+      <tr>
+        <td><code>shuffle</code></td>
+        <td><p>shuffle the dataset (only used when splitting)</p></td>
+      </tr>
+      <tr>
+        <td><code>seed</code></td>
+        <td><p>random seed for shuffling</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pinn/io/runner.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_runner</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads runner formatted trajectory</span>
+<span class="sd">    Args:</span>
+<span class="sd">        flist (str): one or a list of runner formatted trajectory(s)</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">flist</span> <span class="o">=</span> <span class="p">[</span><span class="n">flist</span><span class="p">]</span>
+    <span class="n">frame_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">flist</span><span class="p">:</span>
+        <span class="n">frame_list</span> <span class="o">+=</span> <span class="n">_gen_frame_list</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_frame_loader</span><span class="p">(</span><span class="n">frame_list</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<h3 id="pinnioload_qm9">pinn.io.load_qm9</h3>
+
+
+  <div class="doc doc-object doc-function">
+
+
+    <div class="doc doc-contents first">
+
+      <p>Loads the QM9 dataset</p>
+<p>QM9 provides a variety of labels, but typically we are only
+training on one target, e.g. U0. A <code>label_map</code> option is
+offered to choose the output dataset structure, by default, it
+only takes "U0" and maps that to "e_data",
+i.e. <code>label_map={'e_data': 'U0'}</code>.</p>
+<p>Other available labels are</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;tag&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;homo&#39;</span><span class="p">,</span> <span class="s1">&#39;lumo&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;gap&#39;</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="s1">&#39;zpve&#39;</span><span class="p">,</span> <span class="s1">&#39;U0&#39;</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;Cv&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p>Desciptions of those tags can be found in QM9's description file.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>flist</code></td>
+        <td><p>list of QM9-formatted data files.</p></td>
+      </tr>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><p>filename of the .yml metadata file to be loaded.</p></td>
+      </tr>
+      <tr>
+        <td><code>splits</code></td>
+        <td><p>key-val pairs specifying the ratio of subsets</p></td>
+      </tr>
+      <tr>
+        <td><code>shuffle</code></td>
+        <td><p>shuffle the dataset (only used when splitting)</p></td>
+      </tr>
+      <tr>
+        <td><code>seed</code></td>
+        <td><p>random seed for shuffling</p></td>
+      </tr>
+      <tr>
+        <td><code>label_map</code></td>
+        <td><p>dictionary mapping labels to output datasets</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pinn/io/qm9.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_qm9</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">label_map</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="s1">&#39;U0&#39;</span><span class="p">},</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the QM9 dataset</span>
+
+<span class="sd">    QM9 provides a variety of labels, but typically we are only</span>
+<span class="sd">    training on one target, e.g. U0. A ``label_map`` option is</span>
+<span class="sd">    offered to choose the output dataset structure, by default, it</span>
+<span class="sd">    only takes &quot;U0&quot; and maps that to &quot;e_data&quot;,</span>
+<span class="sd">    i.e. `label_map={&#39;e_data&#39;: &#39;U0&#39;}`.</span>
+
+<span class="sd">    Other available labels are</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    [&#39;tag&#39;, &#39;index&#39;, &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;mu&#39;, &#39;alpha&#39;, &#39;homo&#39;, &#39;lumo&#39;,</span>
+<span class="sd">     &#39;gap&#39;, &#39;r2&#39;, &#39;zpve&#39;, &#39;U0&#39;, &#39;U&#39;, &#39;H&#39;, &#39;G&#39;, &#39;Cv&#39;]</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    Desciptions of those tags can be found in QM9&#39;s description file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        flist (list): list of QM9-formatted data files.</span>
+<span class="sd">        dataset (str): filename of the .yml metadata file to be loaded.</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">        label_map (dict): dictionary mapping labels to output datasets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">from</span> <span class="nn">pinn.io.base</span> <span class="kn">import</span> <span class="n">list_loader</span>
+    <span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">atomic_numbers</span>
+
+    <span class="n">_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tag&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;homo&#39;</span><span class="p">,</span> <span class="s1">&#39;lumo&#39;</span><span class="p">,</span> <span class="s1">&#39;gap&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="s1">&#39;zpve&#39;</span><span class="p">,</span> <span class="s1">&#39;U0&#39;</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;Cv&#39;</span><span class="p">]</span>
+    <span class="n">_label_ind</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_labels</span><span class="p">)}</span>
+
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">_qm9_spec</span><span class="p">(</span><span class="n">label_map</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">_qm9_loader</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">elems</span> <span class="o">=</span> <span class="p">[</span><span class="n">atomic_numbers</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;*^&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]]</span>
+                 <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="n">elems</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elems</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">elems</span><span class="p">,</span> <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">coord</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">label_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">_label_ind</span><span class="p">[</span><span class="n">v</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">_qm9_loader</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<h3 id="pinnioload_ani">pinn.io.load_ani</h3>
+
+
+  <div class="doc doc-object doc-function">
+
+
+    <div class="doc doc-contents first">
+
+      <p>Loads the ANI-1 dataset</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>filelist</code></td>
+        <td><p>filenames of ANI-1 h5 files.</p></td>
+      </tr>
+      <tr>
+        <td><code>split</code></td>
+        <td><p>key-val pairs specifying the ratio of subsets</p></td>
+      </tr>
+      <tr>
+        <td><code>shuffle</code></td>
+        <td><p>shuffle the dataset (only used when splitting)</p></td>
+      </tr>
+      <tr>
+        <td><code>seed</code></td>
+        <td><p>random seed for shuffling</p></td>
+      </tr>
+      <tr>
+        <td><code>cycle_length</code></td>
+        <td><p>number of parallel threads to read h5 file</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pinn/io/ani.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_ani</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cycle_length</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the ANI-1 dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filelist (list): filenames of ANI-1 h5 files.</span>
+<span class="sd">        split (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">        cycle_length (int): number of parallel threads to read h5 file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">h5py</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">from</span> <span class="nn">pinn.io.base</span> <span class="kn">import</span> <span class="n">split_list</span>
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>   <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]},</span>
+        <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">floatx</span><span class="p">(),</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+        <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">floatx</span><span class="p">(),</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
+    <span class="c1"># Load the list of samples</span>
+    <span class="n">sample_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">:</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="n">k1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="n">k1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k2</span> <span class="ow">in</span> <span class="n">samples</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">sample_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">)))</span>
+    <span class="c1"># Generate dataset from sample list</span>
+
+    <span class="k">def</span> <span class="nf">generator_fn</span><span class="p">(</span><span class="n">samplelist</span><span class="p">):</span> <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_generator</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">_ani_generator</span><span class="p">(</span><span class="n">samplelist</span><span class="p">),</span> <span class="n">output_signature</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">)</span><span class="o">.</span><span class="n">interleave</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">cycle_length</span><span class="o">=</span><span class="n">cycle_length</span><span class="p">)</span>
+    <span class="c1"># Generate nested dataset</span>
+    <span class="n">subsets</span> <span class="o">=</span> <span class="n">split_list</span><span class="p">(</span><span class="n">sample_list</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="n">split</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">splitted</span> <span class="o">=</span> <span class="n">map_nested</span><span class="p">(</span><span class="n">generator_fn</span><span class="p">,</span> <span class="n">subsets</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">splitted</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<h3 id="pinnioload_cp2k">pinn.io.load_cp2k</h3>
+
+
+  <div class="doc doc-object doc-function">
+
+
+    <div class="doc doc-contents first">
+
+      <p>This is a experimental loader for CP2K data</p>
+<p>It takes data from different sources, the CP2K output file and dat files,
+which will be specified in the files dictionary. A list of "keys" is used to
+specify the data to read and where it is read from.</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>data source</th>
+<th>provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>force</code></td>
+<td><code>files['out']</code></td>
+<td><code>f_data</code></td>
+</tr>
+<tr>
+<td><code>energy</code></td>
+<td><code>files['out']</code></td>
+<td><code>e_data</code></td>
+</tr>
+<tr>
+<td><code>stress</code></td>
+<td><code>files['out']</code></td>
+<td><code>coord</code>, <code>elems</code></td>
+</tr>
+<tr>
+<td><code>cell_dat</code></td>
+<td><code>files['cell_dat']</code></td>
+<td><code>cell</code></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>files</code></td>
+        <td><p>input files</p></td>
+      </tr>
+      <tr>
+        <td><code>keys</code></td>
+        <td><p>data to read</p></td>
+      </tr>
+      <tr>
+        <td><code>splits</code></td>
+        <td><p>key-val pairs specifying the ratio of subsets</p></td>
+      </tr>
+      <tr>
+        <td><code>shuffle</code></td>
+        <td><p>shuffle the dataset (only used when splitting)</p></td>
+      </tr>
+      <tr>
+        <td><code>seed</code></td>
+        <td><p>random seed for shuffling</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pinn/io/cp2k.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_cp2k</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a experimental loader for CP2K data</span>
+
+<span class="sd">    It takes data from different sources, the CP2K output file and dat files,</span>
+<span class="sd">    which will be specified in the files dictionary. A list of &quot;keys&quot; is used to</span>
+<span class="sd">    specify the data to read and where it is read from.</span>
+
+<span class="sd">    | key        | data source         | provides         |</span>
+<span class="sd">    |------------|---------------------|------------------|</span>
+<span class="sd">    | `force`    | `files[&#39;out&#39;]`      | `f_data`         |</span>
+<span class="sd">    | `energy`   | `files[&#39;out&#39;]`      | `e_data`         |</span>
+<span class="sd">    | `stress`   | `files[&#39;out&#39;]`      | `coord`, `elems` |</span>
+<span class="sd">    | `cell_dat` | `files[&#39;cell_dat&#39;]` | `cell`           |</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        files (dict): input files</span>
+<span class="sd">        keys (list): data to read</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">provides</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="n">ds_spec</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="n">formats</span><span class="p">[</span><span class="n">name</span><span class="p">]})</span>
+
+    <span class="n">all_list</span> <span class="o">=</span> <span class="n">_gen_list</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
+
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_frame_loader</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">all_list</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loaders</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">return</span> <span class="n">_frame_loader</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_list</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]))),</span>
+                         <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>R. Ramakrishnan, P. O. Dral, M. Rupp, and O. A. von Lilienfeld. Quantum chemistry structures and properties of 134 kilo molecules. <em>Sci. Data</em>, 1:140022, August 2014. <a href="https://doi.org/10.1038/sdata.2014.22">doi:10.1038/sdata.2014.22</a>.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>J. S. Smith, O. Isayev, and Adrian E. Roitberg. ANI-1, A data set of 20 million calculated off-equilibrium conformations for organic molecules. <em>Sci. Data</em>, 4:170193, December 2017. <a href="https://doi.org/10.1038/sdata.2017.193">doi:10.1038/sdata.2017.193</a>.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../cli/log/" class="md-footer__link md-footer__link--prev" aria-label="Previous: log" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              log
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../networks/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Overview
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ed9748b7.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+    
+  </body>
+</html>
