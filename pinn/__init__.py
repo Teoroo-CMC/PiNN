@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-__version__ = '1.1.0.dev'
+__version__ = '1.1.0'
 
 from pinn.networks import get as get_network
 from pinn.models import get as get_model
