@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="../../images/favicon.png">
+      <link rel="icon" href="../images/favicon.png">
       <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
     
     
       
-        <title>Optimizers - PiNN Documentation</title>
+        <title>Changelog - PiNN Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.e411adfe.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.e411adfe.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cc9b2e1e.min.css">
         
       
     
@@ -35,11 +35,11 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../css/extra.css">
+      <link rel="stylesheet" href="../css/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -63,7 +63,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#optimizers-in-pinn" class="md-skip">
+        <a href="#changelog" class="md-skip">
           Skip to content
         </a>
       
@@ -83,9 +83,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="PiNN Documentation" class="md-header__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
+    <a href=".." title="PiNN Documentation" class="md-header__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
       
-  <img src="../../images/logo.svg" alt="logo">
+  <img src="../images/logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -101,7 +101,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Optimizers
+              Changelog
             
           </span>
         </div>
@@ -135,9 +135,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="PiNN Documentation" class="md-nav__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
+    <a href=".." title="PiNN Documentation" class="md-nav__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
       
-  <img src="../../images/logo.svg" alt="logo">
+  <img src="../images/logo.svg" alt="logo">
 
     </a>
     PiNN Documentation
@@ -151,14 +151,16 @@
 
   
   
+    
+  
   
     
       
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
       
       
       
@@ -181,7 +183,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -195,7 +197,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         Migration to PiNN 1.x
       </a>
     </li>
@@ -207,11 +209,59 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Changelog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Changelog
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v1xy" class="md-nav__link">
+    v1.x.y
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0xy" class="md-nav__link">
+    v0.x.y
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -229,16 +279,14 @@
 
   
   
-    
-  
   
     
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
       
       
       
@@ -261,7 +309,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+      <a href="../usage/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -275,7 +323,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quick_start/" class="md-nav__link">
+      <a href="../usage/quick_start/" class="md-nav__link">
         Quick Start
       </a>
     </li>
@@ -315,7 +363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/convert/" class="md-nav__link">
+      <a href="../usage/cli/convert/" class="md-nav__link">
         convert
       </a>
     </li>
@@ -329,7 +377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/train/" class="md-nav__link">
+      <a href="../usage/cli/train/" class="md-nav__link">
         train
       </a>
     </li>
@@ -343,7 +391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/log/" class="md-nav__link">
+      <a href="../usage/cli/log/" class="md-nav__link">
         log
       </a>
     </li>
@@ -364,7 +412,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../datasets/" class="md-nav__link">
+      <a href="../usage/datasets/" class="md-nav__link">
         Datasets
       </a>
     </li>
@@ -404,7 +452,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../networks/" class="md-nav__link">
+      <a href="../usage/networks/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -444,7 +492,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../pinet/" class="md-nav__link">
+      <a href="../usage/pinet/" class="md-nav__link">
         PiNet
       </a>
     </li>
@@ -458,7 +506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../bpnn/" class="md-nav__link">
+      <a href="../usage/bpnn/" class="md-nav__link">
         BPNN
       </a>
     </li>
@@ -512,7 +560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+      <a href="../usage/models/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -552,7 +600,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../potential/" class="md-nav__link">
+      <a href="../usage/potential/" class="md-nav__link">
         Potential Model
       </a>
     </li>
@@ -566,7 +614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dipole/" class="md-nav__link">
+      <a href="../usage/dipole/" class="md-nav__link">
         Dipole Model
       </a>
     </li>
@@ -587,7 +635,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../custom_model/" class="md-nav__link">
+      <a href="../usage/custom_model/" class="md-nav__link">
         Custom Mdoel
       </a>
     </li>
@@ -606,59 +654,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Optimizers
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../usage/optimizers/" class="md-nav__link">
         Optimizers
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#tensorflow-optimizer" class="md-nav__link">
-    TensorFlow Optimizer
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ekf" class="md-nav__link">
-    EKF
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -670,7 +670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../visualize/" class="md-nav__link">
+      <a href="../usage/visualize/" class="md-nav__link">
         Visualize
       </a>
     </li>
@@ -720,7 +720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/overview/" class="md-nav__link">
+      <a href="../notebooks/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -760,7 +760,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/Quick_tour/" class="md-nav__link">
+      <a href="../notebooks/Quick_tour/" class="md-nav__link">
         Quick tour with QM9
       </a>
     </li>
@@ -774,7 +774,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/More_on_training/" class="md-nav__link">
+      <a href="../notebooks/More_on_training/" class="md-nav__link">
         Optimizing the training
       </a>
     </li>
@@ -821,7 +821,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/Customizing_dataset/" class="md-nav__link">
+      <a href="../notebooks/Customizing_dataset/" class="md-nav__link">
         Customizing dataset
       </a>
     </li>
@@ -835,7 +835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../notebooks/Learn_LJ_potential/" class="md-nav__link">
+      <a href="../notebooks/Learn_LJ_potential/" class="md-nav__link">
         Learning a LJ potential
       </a>
     </li>
@@ -883,15 +883,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tensorflow-optimizer" class="md-nav__link">
-    TensorFlow Optimizer
+  <a href="#v1xy" class="md-nav__link">
+    v1.x.y
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ekf" class="md-nav__link">
-    EKF
+  <a href="#v0xy" class="md-nav__link">
+    v0.x.y
   </a>
   
 </li>
@@ -910,57 +910,21 @@
                 
 
 
-<h1 id="optimizers-in-pinn">Optimizers in PiNN</h1>
-<p>The optimizer is an essential component in training neural networks. Since PiNN
-networks are Keras models they can be optimized like any other Keras models, a
-list of optimizers and their usage can be found in the TensorFlow
-<a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers">documentation</a>.</p>
-<h2 id="tensorflow-optimizer">TensorFlow Optimizer</h2>
-<p>All optimizers implemented in TensorFlow can be specified by the serialized
-config. For instance, the default optimizer in PiNN can be specified with the
-following block in the <code>params.yml</code> file.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Adam</span>
-<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExponentialDecay,</span>
-<span class="w">      </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">initial_learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0003</span>
-<span class="w">        </span><span class="nt">decay_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
-<span class="w">        </span><span class="nt">decay_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.994</span>
-<span class="w">    </span><span class="nt">clipnorm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span>
-</code></pre></div>
-<h2 id="ekf">EKF</h2>
-<p>The extended Kalman filter (EKF) is an alternative way to estimate the optimal
-weights in neural networks. The EKF has long been used in combination with
-atomic neural networks to approximate PES. EKF typically converges much faster
-than a Stochastic Gradient Descent (SGD) based optimizer with more computation
-cost per step.</p>
-<p>Below is a recommended setup for using Kalman Filter in a PiNN model, which is
-also available as <code>pinn.optimizers.default_kalman</code>.<sup id="fnref:ekf"><a class="footnote-ref" href="#fn:ekf">1</a></sup></p>
-<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span>
-<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExponentialDecay,</span>
-<span class="w">      </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">initial_learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span>
-<span class="w">        </span><span class="nt">decay_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
-<span class="w">        </span><span class="nt">decay_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.994</span>
-</code></pre></div>
-<div class="footnote">
-<hr />
-<ol>
-<li id="fn:ekf">
-<p>Note that the EKF implemented in PiNN is not a standard TensorFlow Optimizer
-object, therefore, you can not use it directly as a regular optimizer, e.g.
-<code>opt.minimize(loss)</code> in combination with the Keras models. This is mainly
-due to the fact that <code>EFK</code> uses the error Jacobian rather than a scalar loss
-function as input. Further updates might improve the API for better
-consistency.&#160;<a class="footnote-backref" href="#fnref:ekf" title="Jump back to footnote 1 in the text">&#8617;</a></p>
-</li>
-</ol>
-</div>
+<h1 id="changelog">Changelog</h1>
+<h2 id="v1xy">v1.x.y</h2>
+<h3 id="v110">v1.1.0</h3>
+<ul>
+<li>Refactor layers (breaks compatibility with saved models &lt;v1.1.0).</li>
+</ul>
+<h3 id="v100">v1.0.0</h3>
+<ul>
+<li>Refactor to TensorFlow 2.</li>
+</ul>
+<h2 id="v0xy">v0.x.y</h2>
+<h3 id="v030">v0.3.0</h3>
+<ul>
+<li>Initial public release</li>
+</ul>
 
               
             </article>
@@ -974,7 +938,7 @@ consistency.&#160;<a class="footnote-backref" href="#fnref:ekf" title="Jump back
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../custom_model/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Custom Mdoel" rel="prev">
+        <a href="../migration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Migration to PiNN 1.x" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -983,20 +947,20 @@ consistency.&#160;<a class="footnote-backref" href="#fnref:ekf" title="Jump back
               <span class="md-footer__direction">
                 Previous
               </span>
-              Custom Mdoel
+              Migration to PiNN 1.x
             </div>
           </div>
         </a>
       
       
         
-        <a href="../visualize/" class="md-footer__link md-footer__link--next" aria-label="Next: Visualize" rel="next">
+        <a href="../usage/overview/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Visualize
+              Overview
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -1026,10 +990,10 @@ consistency.&#160;<a class="footnote-backref" href="#fnref:ekf" title="Jump back
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections"], "search": "../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.ed9748b7.min.js"></script>
+      <script src="../assets/javascripts/bundle.ed9748b7.min.js"></script>
       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       
