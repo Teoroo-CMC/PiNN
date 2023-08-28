@@ -7,7 +7,7 @@ properties of molecules and materials.
 
 ## Flexibility
 
-![](images/implement.png)
+![](images/implement.png){width="600"}
 
 PiNN is built with modularized components, and we try to make it as easy as
 possible. You do not have to rewrite everything if you just want to design a new

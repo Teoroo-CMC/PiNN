@@ -11,7 +11,7 @@ called pairwise interactions.
 
 The overall architecture of PiNet is illustrated with the graph convolution block below:
 
-![PiNet architecture](../tikz/pinet.svg){width="600"}
+![PiNet architecture](../tikz/pinet.svg){width="500"}
 
 We classify the latent variables into the atom-centered "properties"
 ($\mathbb{P}$) and the pair-wise "interactions" ($\mathbb{I}$) in our notation.

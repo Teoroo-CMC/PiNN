@@ -1,59 +1,60 @@
-site_name: PiNN Documentation
+site_name: <span>Pi</span>NN
+repo_name: teoroo-cmc/pinn
+repo_url: https://github.com/teoroo-cmc/pinn/
+site_url: https://teoroo-cmc.github.io/pinn/
 nav:
   - Home:
       - Introduction: index.md
-      - Migration to PiNN 1.x: migration.md
       - Changelog: changelog.md
+      - Migration: migration.md
   - Usage:
       - Overview: usage/overview.md
       - Quick Start: usage/quick_start.md
-      - CLI:
-          - convert: usage/cli/convert.md
-          - train: usage/cli/train.md
-          - log: usage/cli/log.md
-      - Datasets: usage/datasets.md
+      - IO:
+          - Datasets: usage/datasets.md
       - Networks:
           - Overview: usage/networks.md
           - PiNet: usage/pinet.md
           - BPNN: usage/bpnn.md
       - Models:
           - Overview: usage/models.md
-          - Potential Model: usage/potential.md
-          - Dipole Model: usage/dipole.md
-          - Custom Mdoel: usage/custom_model.md
-      - Optimizers: usage/optimizers.md
-      - Visualize: usage/visualize.md
+          - Potential: usage/potential.md
+          - Dipole: usage/dipole.md
+          - Customize: usage/custom_model.md
+      - CLI:
+          - convert: usage/cli/convert.md
+          - train: usage/cli/train.md
+          - log: usage/cli/log.md
+      - Misc:
+          - Optimizers: usage/optimizers.md
+          - Visualize: usage/visualize.md
   - Notebooks:
       - Overview: notebooks/overview.md
       - Tutorials:
           - Quick Start: notebooks/Quick_tour.ipynb
           - Training Tips: notebooks/More_on_training.ipynb
       - Examples:
-          - Custom Dataset: notebooks/Customizing_dataset.ipynb
-          - LJ potential: notebooks/Learn_LJ_potential.ipynb
+          - Custom Data: notebooks/Customizing_dataset.ipynb
+          - LJ Potential: notebooks/Learn_LJ_potential.ipynb
 plugins:
   - bibtex:
       bib_file: "docs/references.bib"
-      cite_style: "pandoc"
-  - mkdocs-jupyter
+      csl_file: "docs/jcp.csl"
+  - mkdocs-jupyter:
+      ignore_h1_titles: True
   - mkdocstrings:
       custom_templates: docs/templates
       handlers:
         python:
           rendering:
-            show_source: true
+            show_source: false
             show_root_toc_entry: false
             heading_level: 4
-            members: false
       watch:
         - pinn
   - mike
 theme:
-  name: material
-  logo: images/logo.svg
-  favicon: images/favicon.png
-  features:
-    - navigation.sections
+  name: flux
 extra:
   version:
     provider: mike
@@ -65,11 +66,14 @@ markdown_extensions:
   - footnotes
   - pymdownx.snippets
   - pymdownx.highlight
-  - pymdownx.arithmatex
   - pymdownx.tasklist
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
 extra_javascript:
-  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - js/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js
 extra_css:
   - css/extra.css
