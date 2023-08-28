@@ -18,12 +18,12 @@ def load_ds(dataset, fmt='auto', splits=None, shuffle=True, seed=0, **kwargs):
     If the `fmt` is specified, the loader will use a corresponsing dataset loader.
 
     Args:
-        dataset: dataset a file or input for a loader according to `fmt`
+        dataset (Dataset): dataset a file or input for a loader according to `fmt`
         fmt (str): dataset format, see avialable formats.
         splits (dict): key-val pairs specifying the ratio of subsets
         shuffle (bool): shuffle the dataset (only used when splitting)
         seed (int): random seed for shuffling
-        **kwargs: extra arguments to loaders
+        **kwargs (dict): extra arguments to loaders
     """
     loaders = {'tfr':    load_tfrecord,
                'runner': load_runner,

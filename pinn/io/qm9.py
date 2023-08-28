@@ -31,7 +31,6 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, splits=None, shuffle=True, seed=
 
     Args:
         flist (list): list of QM9-formatted data files.
-        dataset (str): filename of the .yml metadata file to be loaded.
         splits (dict): key-val pairs specifying the ratio of subsets
         shuffle (bool): shuffle the dataset (only used when splitting)
         seed (int): random seed for shuffling
