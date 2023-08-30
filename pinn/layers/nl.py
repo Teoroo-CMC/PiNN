@@ -51,19 +51,39 @@ def _wrap_coord(tensors):
 
 
 class CellListNL(tf.keras.layers.Layer):
-    """ Compute neighbour list with celllist approach
-    https://en.wikipedia.org/wiki/Cell_lists
-    This is very lengthy and confusing implementation of cell list nl.
-    Probably needs optimization outside Tensorflow.
+    """Compute neighbour list with celllist approach, see
+    <https://en.wikipedia.org/wiki/Cell_lists>.
 
-    The layer expects a dictionary of tensors from a sparse_batch
-    with keys: 'ind_1', 'coord' and optionally 'cell'
     """
     def __init__(self, rc=5.0):
+        """
+        Args:
+            rc (float): cutoff radius
+        """
         super(CellListNL, self).__init__()
         self.rc = rc
 
     def call(self, tensors):
+        """
+        The layer expects a dictionary of tensors from a sparse_batch
+        with keys:
+
+        - `ind_1`: sparse indices of atoms in batch, with shape `(n_atoms, 1)`
+        - `coord`: atomic coordinate, with shape `(n_atoms, 3)`
+        - `cell` (optional): cell vectors with shape`(n_batch,3,3)`
+
+        It output a dictionary
+
+        - `ind_2`: sparse indices of neighbor list, with shape `(n_pairs, 2)`
+        - `diff`: displacement vectors, with shape `(n_pairs, 3)`
+        - `dist`: pairwise distances, with shape `(n_pairs)`
+
+        Args:
+            tensors (dict of tensor): input tensors, with keys: `{"ind_1", "coord", "cell"}`
+
+        Returns:
+            output (dict of tensor): output tensors, with keys: {"ind_2", "diff", "dist"}`
+        """
         atom_sind = tensors['ind_1']
         atom_apos = tensors['coord']
         atom_gind = tf.cumsum(tf.ones_like(atom_sind), 0)

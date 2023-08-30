@@ -7,18 +7,23 @@ import tensorflow as tf
 
 
 class CutoffFunc(tf.keras.layers.Layer):
-    """returns the cutoff function of given type
+    """Cutoff function layer
 
-    Args:
-        dist (tensor): a tensor of distance
-        cutoff_type (string): name of the cutoff function
-        rc (float): cutoff radius
+    The following types of cutoff function are implemented (all functions are
+    defined within $r_{ij}<r_{c}$):
 
-    Returns:
-        A cutoff function tensor with the same shape of dist
+    - `f1`: $0.5 (\mathrm{cos}(\pi r_{ij}/r_{c})+1)$
+    - `f2`: $\mathrm{tanh}^3(1- r_{ij}/r_{c})/\mathrm{tanh}^3(1)$
+    - `hip`: $\mathrm{cos}^2(\pi r_{ij}/2r_{c})$
+
     """
 
     def __init__(self, rc=5.0, cutoff_type="f1"):
+        """
+        Args:
+            rc (float): cutoff radius
+            cutoff_type (string): name of the cutoff function
+        """
         super(CutoffFunc, self).__init__()
         self.cutoff_type = cutoff_type
         self.rc = rc
@@ -27,27 +32,31 @@ class CutoffFunc(tf.keras.layers.Layer):
         hip = lambda x: tf.cos(np.pi * x / rc / 2) ** 2
         self.cutoff_fn = {"f1": f1, "f2": f2, "hip": hip}[cutoff_type]
 
-    def call(self, distance):
-        return self.cutoff_fn(distance)
+    def call(self, dist):
+        """
+        Args:
+            dist (tensor): distance tensor with arbitrary shape
+
+        Returns:
+            fc (tensor): cutoff function with the same shape as the input
+        """
+        return self.cutoff_fn(dist)
 
 
 class GaussianBasis(tf.keras.layers.Layer):
-    """Gaussian Basis Layer
-
-    Transforms distances to a set of gaussian basis
-    """
+    """Gaussian Basis Layer"""
 
     def __init__(self, center=None, gamma=None, rc=None, n_basis=None):
-        """
-        Initialize the Gaussian basis layer.
-
-        n_basis and rc are only used when center is not given
+        """When center is not given, `n_basis` and `rc` are used to generat a
+        linearly spaced set of basis, otherwise `n_basis` will be the size of
+        `center`.
 
         Args:
-            center (list/array of float): Gaussian centers
-            gamma (list/array of float): inverse Gaussian width
-            rc: cutoff radius
-            n_basis: number of basis function
+            center (float or array): Gaussian centers
+            gamma (float or array): inverse Gaussian width
+            rc (float): cutoff radius
+            n_basis (int): number of basis function
+
         """
         super(GaussianBasis, self).__init__()
         if center is None:
@@ -57,6 +66,14 @@ class GaussianBasis(tf.keras.layers.Layer):
         self.gamma = np.broadcast_to(gamma, self.center.shape)
 
     def call(self, dist, fc=None):
+        """
+        Args:
+           dist (tensor): distance tensor with shape (n_pairs)
+           fc (tensor, optional): when supplied, apply a cutoff function to the basis
+
+        Returns:
+            basis (tensor): basis functions with shape (n_pairs, n_basis)
+        """
         basis = tf.stack(
             [
                 tf.exp(-gamma * (dist - center) ** 2)
@@ -70,19 +87,14 @@ class GaussianBasis(tf.keras.layers.Layer):
 
 
 class PolynomialBasis(tf.keras.layers.Layer):
-    """Polynomial Basis Layer
-
-    Transforms distances to a set of polynomial basis
-    """
+    """Polynomial Basis Layer"""
 
     def __init__(self, n_basis):
         """
-        Initialize the Polynomial Basis
-
-        n_basis can be a list of explicitly specified polynomail orders
+        n_basis can be a list of explicitly specified polynomail orders or the max order.
 
         Args:
-            n_basis: number of basis function
+            n_basis (int or list): number of basis function
         """
         super(PolynomialBasis, self).__init__()
         if type(n_basis) != list:
@@ -90,6 +102,14 @@ class PolynomialBasis(tf.keras.layers.Layer):
         self.n_basis = n_basis
 
     def call(self, dist, fc=None):
+        """
+        Args:
+           dist (tensor): distance tensor with shape (n_pairs)
+           fc (tensor): when supplied, apply a cutoff function to the basis
+
+        Returns:
+            basis (tensor): basis functions with shape (n_pairs, n_basis)
+        """
         assert fc is not None, "Polynomail basis requires a cutoff function."
         basis = tf.stack([fc**i for i in self.n_basis], axis=1)
         return basis

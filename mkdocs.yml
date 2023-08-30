@@ -14,6 +14,7 @@ nav:
           - Datasets: usage/datasets.md
       - Networks:
           - Overview: usage/networks.md
+          - Layers: usage/layers.md
           - PiNet: usage/pinet.md
           - BPNN: usage/bpnn.md
       - Models:
@@ -36,6 +37,8 @@ nav:
       - Examples:
           - Custom Data: notebooks/Customizing_dataset.ipynb
           - LJ Potential: notebooks/Learn_LJ_potential.ipynb
+      - Develop:
+          - Layer Debug: notebooks/Layer_debug.ipynb
 plugins:
   - bibtex:
       bib_file: "docs/references.bib"
