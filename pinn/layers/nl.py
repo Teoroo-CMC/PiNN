@@ -51,7 +51,7 @@ def _wrap_coord(tensors):
 
 
 class CellListNL(tf.keras.layers.Layer):
-    """Compute neighbour list with celllist approach, see
+    """Compute neighbour list with cell lists approach, see
     <https://en.wikipedia.org/wiki/Cell_lists>.
 
     """
@@ -68,13 +68,13 @@ class CellListNL(tf.keras.layers.Layer):
         The layer expects a dictionary of tensors from a sparse_batch
         with keys:
 
-        - `ind_1`: sparse indices of atoms in batch, with shape `(n_atoms, 1)`
+        - `ind_1`: [sparse indices](layers.md#sparse-indices) of atoms in batch, with shape `(n_atoms, 2)`
         - `coord`: atomic coordinate, with shape `(n_atoms, 3)`
         - `cell` (optional): cell vectors with shape`(n_batch,3,3)`
 
         It output a dictionary
 
-        - `ind_2`: sparse indices of neighbor list, with shape `(n_pairs, 2)`
+        - `ind_2`: [sparse indices](layers.md#sparse-indices) of neighbor list, with shape `(n_pairs, 2)`
         - `diff`: displacement vectors, with shape `(n_pairs, 3)`
         - `dist`: pairwise distances, with shape `(n_pairs)`
 

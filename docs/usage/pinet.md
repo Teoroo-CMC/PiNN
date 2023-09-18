@@ -11,7 +11,7 @@ called pairwise interactions.
 
 The overall architecture of PiNet is illustrated with the illustration below:
 
-![PiNet architecture](../tikz/pinet.svg){width="750"}
+![PiNet architecture](../tikz/pinet.svg){width="780"}
 
 The preprocess part of the network are implemented with shared layers (see
 [Layers](./layers.md)). The graph-convolution (GC) block are further divided
@@ -26,15 +26,24 @@ $\mathbb{I}$ are usually standard feed-forward neural networks (`FFLayer`), the
 special part of PiNet are `PILayer` and `IPLayers`, which transform between
 those two types of variables.
 
-We use the subscripts to denote the dimensionality of each variable, following
-the convention:
+We use the superscript to identify each tensor, and the subscripts to
+differentiate the indices of different types for each variable, following the
+convention:
 
 - $b$: basis function index;
-- $c,d,e$: feature channels;
-- $i,j,k$: atom indices;
+- $\alpha,\beta,\gamma,\ldots$: feature channels;
+- $i,j,k,\ldots$: atom indices;
 - $x,y,z$: Cartesian coordinate indices.
 
-The equations that explain each of the above layers and the hyperparameters
+$\mathbb{P}^{t}_{i\alpha}$ thus denote value of the $\alpha$-th channel of the
+$i$-th atom in the tensor $\mathbb{P}^{t}$. We always provide all the subscripts
+of a given tensor in the equations below, so that the dimensionality of each
+tensor is unambiguously implied.
+
+For instance, $r_{ij}$ entails a scalar distance defined between
+each pair of atoms, indexed by $i,j$; $\mathbb{P}_{i\alpha}$ entails the atomic
+feature vectors indexed by $i$ for the atom, and $\alpha$ for the channel. The
+equations that explain each of the above layers and the hyperparameters
 available for the PiNet network are detailed below.
 
 ## Network specification

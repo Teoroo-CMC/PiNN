@@ -5,18 +5,17 @@
 import tensorflow as tf
 
 class AtomicOnehot(tf.keras.layers.Layer):
-    """One-hot embedding layer
+    R"""One-hot embedding layer
 
     Given the atomic number of each atom ($Z_{i}$) and a list of specified
-    element types ($Z_{c}$), returns:
+    element types denoted as ($Z^{\mathrm{0}}_{\alpha}$), returns:
 
-    $$\mathbb{P}_{ic} = \delta_{Z_{i},Z_{c}}$$
-
+    $$\mathbb{P}_{i\alpha} = \delta_{Z_{i},Z^{\mathrm{0}}_{\alpha}}$$
     """
     def __init__(self, atom_types=[1, 6, 7, 8, 9]):
         """
         Args:
-            atom_types (list of int): list of elements
+            atom_types (list of int): list of elements ($Z^{0}$)
         """
         super(AtomicOnehot, self).__init__()
         self.atom_types = atom_types

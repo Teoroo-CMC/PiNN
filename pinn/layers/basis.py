@@ -7,14 +7,14 @@ import tensorflow as tf
 
 
 class CutoffFunc(tf.keras.layers.Layer):
-    """Cutoff function layer
+    R"""Cutoff function layer
 
     The following types of cutoff function are implemented (all functions are
-    defined within $r_{ij}<r_{c}$):
+    defined within $r_{ij}<r_{c}$ and decay to zero at $r_{c}$):
 
-    - `f1`: $0.5 (\mathrm{cos}(\pi r_{ij}/r_{c})+1)$
-    - `f2`: $\mathrm{tanh}^3(1- r_{ij}/r_{c})/\mathrm{tanh}^3(1)$
-    - `hip`: $\mathrm{cos}^2(\pi r_{ij}/2r_{c})$
+    - $f^1(r_{ij}) = 0.5 (\mathrm{cos}(\pi r_{ij}/r_{c})+1)$
+    - $f^2(r_{ij}) = \mathrm{tanh}^3(1- r_{ij}/r_{c})/\mathrm{tanh}^3(1)$
+    - $hip(r_{ij}) = \mathrm{cos}^2(\pi r_{ij}/2r_{c})$
 
     """
 
@@ -44,13 +44,25 @@ class CutoffFunc(tf.keras.layers.Layer):
 
 
 class GaussianBasis(tf.keras.layers.Layer):
-    """Gaussian Basis Layer"""
+    R"""Gaussian Basis Layer
+
+    Builds the Gaussian basis function:
+
+    $$
+    e_{ijb} = e^{-\eta_b (r_{ij}-r_{b})^2}
+    $$
+
+
+    Both the Gaussian centers $r_{b}$ and width $\eta_{b}$ can be arrays that
+    specifies the parameter for each basis function. When $\eta$ is given as a
+    single float, the same value is assigned to every basis. When center is not
+    given, `n_basis` and `rc` are used to generat a linearly spaced set of
+    basis.
+
+    """
 
     def __init__(self, center=None, gamma=None, rc=None, n_basis=None):
-        """When center is not given, `n_basis` and `rc` are used to generat a
-        linearly spaced set of basis, otherwise `n_basis` will be the size of
-        `center`.
-
+        """
         Args:
             center (float or array): Gaussian centers
             gamma (float or array): inverse Gaussian width
@@ -87,11 +99,22 @@ class GaussianBasis(tf.keras.layers.Layer):
 
 
 class PolynomialBasis(tf.keras.layers.Layer):
-    """Polynomial Basis Layer"""
+    """Polynomial Basis Layer
+
+    Builds the polynomial basis function:
+
+    $$
+    e_{ijb} = \mathrm{power}(r_{ij}, {n_{b}})
+    $$
+
+    , where $n_b$ is specified by `n_basis`. `n_basis` can be a list that
+    explicitly specifies polynomail orders, or an integer that specifies a the
+    orders as `[0, 1, ..., n_basis-1]`.
+
+    """
 
     def __init__(self, n_basis):
         """
-        n_basis can be a list of explicitly specified polynomail orders or the max order.
 
         Args:
             n_basis (int or list): number of basis function
