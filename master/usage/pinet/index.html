@@ -1,1080 +1,1624 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>PiNet - PiNN</title>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-      <link rel="icon" href="../../images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
-    
-    
-      
-        <title>PiNet - PiNN Documentation</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../assets/stylesheets/main.e411adfe.min.css">
-      
-        
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
-        
-      
-    
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
-    
-      <link rel="stylesheet" href="../../css/extra.css">
-    
-    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
 
-    
-    
-  </head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
   
+    <script src="../../js/mathjax.js"></script>
   
-    
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   
-    
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
       
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
         
-        <a href="#the-pinet-network" class="md-skip">
-          Skip to content
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-      <div data-md-component="outdated" hidden>
-        <aside class="md-banner md-banner--warning">
-          
-        </aside>
-      </div>
-    
-    
-      
-
-<header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="PiNN Documentation" class="md-header__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
-      
-  <img src="../../images/logo.svg" alt="logo">
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            PiNN Documentation
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              PiNet
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-    
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
         
-          
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
         
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
       
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="PiNN Documentation" class="md-nav__button md-logo" aria-label="PiNN Documentation" data-md-component="logo">
-      
-  <img src="../../images/logo.svg" alt="logo">
-
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
     </a>
-    PiNN Documentation
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-      
+  </li>
 
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
   
-  
-  
-    
-      
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_1">
-          Home
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Home" data-md-level="1">
-        <label class="md-nav__title" for="__nav_1">
-          <span class="md-nav__icon md-icon"></span>
-          Home
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
-        Introduction
-      </a>
-    </li>
-  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
 
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration/" class="md-nav__link">
-        Migration to PiNN 1.x
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
-        Changelog
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    
-      
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2">
-          Usage
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Usage" data-md-level="1">
-        <label class="md-nav__title" for="__nav_2">
-          <span class="md-nav__icon md-icon"></span>
-          Usage
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
         Overview
       </a>
     </li>
-  
 
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../quick_start/" class="md-nav__link">
+                 
+                   
+    <li >
+      <a href="../quick_start/" class="">
         Quick Start
       </a>
     </li>
-  
 
-            
-          
-            
-              
-  
-  
+                 
+                   
+  <a class="nav-title" > IO </a>
   
     
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2_3">
-          CLI
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="CLI" data-md-level="2">
-        <label class="md-nav__title" for="__nav_2_3">
-          <span class="md-nav__icon md-icon"></span>
-          CLI
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/convert/" class="md-nav__link">
-        convert
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/train/" class="md-nav__link">
-        train
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/log/" class="md-nav__link">
-        log
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../datasets/" class="md-nav__link">
+    <li >
+      <a href="../datasets/" class="">
         Datasets
       </a>
     </li>
+
   
 
-            
-          
-            
-              
-  
+                 
+                   
+  <a class="nav-title" > Networks </a>
   
     
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_5" type="checkbox" id="__nav_2_5" checked>
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2_5">
-          Networks
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Networks" data-md-level="2">
-        <label class="md-nav__title" for="__nav_2_5">
-          <span class="md-nav__icon md-icon"></span>
-          Networks
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../networks/" class="md-nav__link">
+    <li >
+      <a href="../networks/" class="">
         Overview
       </a>
     </li>
-  
 
-            
-          
-            
-              
-  
   
     
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_5_2" type="checkbox" id="__nav_2_5_2" checked>
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2_5_2">
-          Implemented
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Implemented" data-md-level="3">
-        <label class="md-nav__title" for="__nav_2_5_2">
-          <span class="md-nav__icon md-icon"></span>
-          Implemented
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
+    <li >
+      <a href="../layers/" class="">
+        Layers
+      </a>
+    </li>
+
   
     
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          PiNet
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="active">
+      <a href="./" class="">
         PiNet
       </a>
-      
-        
+    </li>
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
   
     
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    Parameters
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../bpnn/" class="md-nav__link">
+    <li >
+      <a href="../bpnn/" class="">
         BPNN
       </a>
     </li>
+
   
 
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
+                 
+                   
+  <a class="nav-title" > Models </a>
   
     
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6" type="checkbox" id="__nav_2_6" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2_6">
-          Models
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Models" data-md-level="2">
-        <label class="md-nav__title" for="__nav_2_6">
-          <span class="md-nav__icon md-icon"></span>
-          Models
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+    <li >
+      <a href="../models/" class="">
         Overview
       </a>
     </li>
-  
 
-            
-          
-            
-              
-  
-  
   
     
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6_2" type="checkbox" id="__nav_2_6_2" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2_6_2">
-          Implemented
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Implemented" data-md-level="3">
-        <label class="md-nav__title" for="__nav_2_6_2">
-          <span class="md-nav__icon md-icon"></span>
-          Implemented
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../potential/" class="md-nav__link">
-        Potential Model
+    <li >
+      <a href="../potential/" class="">
+        Potential
       </a>
     </li>
-  
 
-            
-          
-            
-              
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../dipole/" class="md-nav__link">
-        Dipole Model
+    
+    <li >
+      <a href="../dipole/" class="">
+        Dipole
       </a>
     </li>
-  
 
-            
-          
-        </ul>
-      </nav>
-    </li>
   
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../custom_model/" class="md-nav__link">
-        Custom Mdoel
+    
+    <li >
+      <a href="../custom_model/" class="">
+        Customize
       </a>
     </li>
+
   
 
-            
-          
-        </ul>
-      </nav>
+                 
+                   
+  <a class="nav-title" > CLI </a>
+  
+    
+    <li >
+      <a href="../cli/convert/" class="">
+        convert
+      </a>
     </li>
+
+  
+    
+    <li >
+      <a href="../cli/train/" class="">
+        train
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/log/" class="">
+        log
+      </a>
+    </li>
+
   
 
-            
-          
-            
-              
+                 
+                   
+  <a class="nav-title" > Misc </a>
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../optimizers/" class="md-nav__link">
+    
+    <li >
+      <a href="../optimizers/" class="">
         Optimizers
       </a>
     </li>
-  
 
-            
-          
-            
-              
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../visualize/" class="md-nav__link">
+    
+    <li >
+      <a href="../visualize/" class="">
         Visualize
       </a>
     </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
 
   
-  
-  
-    
-      
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3">
-          Notebooks
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Notebooks" data-md-level="1">
-        <label class="md-nav__title" for="__nav_3">
-          <span class="md-nav__icon md-icon"></span>
-          Notebooks
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
 
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
+                 
+               
+             </ul>
+           </div>
+         
       
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3_2">
-          Tutorials
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Tutorials" data-md-level="2">
-        <label class="md-nav__title" for="__nav_3_2">
-          <span class="md-nav__icon md-icon"></span>
-          Tutorials
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
+       
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/Quick_tour/" class="md-nav__link">
-        Quick tour with QM9
-      </a>
-    </li>
-  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
 
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/More_on_training/" class="md-nav__link">
-        Optimizing the training
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
       
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3_3">
-          Examples
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Examples" data-md-level="2">
-        <label class="md-nav__title" for="__nav_3_3">
-          <span class="md-nav__icon md-icon"></span>
-          Examples
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/Customizing_dataset/" class="md-nav__link">
-        Customizing dataset
-      </a>
-    </li>
-  
+      </ul>
+    </div>
 
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/Learn_LJ_potential/" class="md-nav__link">
-        Learning a LJ potential
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-  </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    Parameters
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          <div class="md-content" data-md-component="content">
-            <article class="md-content__inner md-typeset">
-              
-                
-
-
-<h1 id="the-pinet-network">The PiNet network</h1>
+    <div id="content">
+      <h1 id="the-pinet-network">The PiNet network</h1>
 <p>The PiNet network implements the network architecture described in our
 paper.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> The network architecture features the
 graph-convolution which recursively generates atomic properties from local
-environment.</p>
-<p>One distinctive feature of PiNet is that the convolution operation is realized
-with pairwise functions whose form are determined by the pair, called pairwise
-interactions.</p>
-<h2 id="parameters">Parameters</h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>atom_types</td>
-<td><code>[1, 6, 7, 8]</code></td>
-<td>List of elements</td>
-</tr>
-<tr>
-<td>rc</td>
-<td><code>4.0</code></td>
-<td>Cutoff radius</td>
-</tr>
-<tr>
-<td>cutoff_type</td>
-<td><code>'f1'</code></td>
-<td>One of 'f1' or 'f2'</td>
-</tr>
-<tr>
-<td>basis_type</td>
-<td><code>'polynomial'</code></td>
-<td>One of 'polynomial' or 'gaussian'</td>
-</tr>
-<tr>
-<td>n_basis</td>
-<td><code>4</code></td>
-<td>Number of radial basis functions to generate</td>
-</tr>
-<tr>
-<td>gamma</td>
-<td><code>3.0</code></td>
-<td>controls width of the Gaussian basis</td>
-</tr>
-<tr>
-<td>center</td>
-<td><code>None</code></td>
-<td>replace centers the for Gaussian basis with a list</td>
-</tr>
-<tr>
-<td>pp_nodes</td>
-<td><code>[16, 16]</code></td>
-<td>specifies the property-property hidden layers</td>
-</tr>
-<tr>
-<td>pi_nodes</td>
-<td><code>[16, 16]</code></td>
-<td>specifies the property-interaction hidden layers</td>
-</tr>
-<tr>
-<td>ii_nodes</td>
-<td><code>[16, 16]</code></td>
-<td>specifies the interaction-interaction hidden layers</td>
-</tr>
-<tr>
-<td>out_nodes</td>
-<td><code>[16, 16]</code></td>
-<td>specifies the output hidden layers</td>
-</tr>
-<tr>
-<td>out_units</td>
-<td><code>1</code></td>
-<td>the dimension of outputs</td>
-</tr>
-<tr>
-<td>out_pool</td>
-<td><code>False</code></td>
-<td><code>min</code>, <code>max</code> or <code>sum</code>, pool atomic outputs to give global predictions</td>
-</tr>
-<tr>
-<td>act</td>
-<td><code>'tanh'</code></td>
-<td>activation function to use</td>
-</tr>
-<tr>
-<td>depth</td>
-<td><code>4</code></td>
-<td>number of graph-convolution layers to use</td>
-</tr>
-</tbody>
-</table>
-<div class="footnote">
+environment. One distinctive feature of PiNet is that the convolution operation
+is realized with pairwise functions whose form are determined by the pair,
+called pairwise interactions.</p>
+<h2 id="network-architecture">Network architecture</h2>
+<p>The overall architecture of PiNet is illustrated with the illustration below:</p>
+<p><img alt="PiNet architecture" src="../../tikz/pinet.svg" width="750" /></p>
+<p>The preprocess part of the network are implemented with shared layers (see
+<a href="../layers/">Layers</a>). The graph-convolution (GC) block are further divided
+into PI and IP operations, each consists several layers. Those operations are
+recursively applied to update the latent variables, and the output is updated
+after each iteration (<code>OutLayer</code>).</p>
+<p>We classify the latent variables into the atom-centered "properties"
+(<span class="arithmatex">\(\mathbb{P}\)</span>) and the pair-wise "interactions" (<span class="arithmatex">\(\mathbb{I}\)</span>) in our notation.
+Since the layers that transform <span class="arithmatex">\(\mathbb{P}\)</span> to <span class="arithmatex">\(\mathbb{P}\)</span> or <span class="arithmatex">\(\mathbb{I}\)</span> to
+<span class="arithmatex">\(\mathbb{I}\)</span> are usually standard feed-forward neural networks (<code>FFLayer</code>), the
+special part of PiNet are <code>PILayer</code> and <code>IPLayers</code>, which transform between
+those two types of variables.</p>
+<p>We use the subscripts to denote the dimensionality of each variable, following
+the convention:</p>
+<ul>
+<li><span class="arithmatex">\(b\)</span>: basis function index;</li>
+<li><span class="arithmatex">\(c,d,e\)</span>: feature channels;</li>
+<li><span class="arithmatex">\(i,j,k\)</span>: atom indices;</li>
+<li><span class="arithmatex">\(x,y,z\)</span>: Cartesian coordinate indices.</li>
+</ul>
+<p>The equations that explain each of the above layers and the hyperparameters
+available for the PiNet network are detailed below.</p>
+<h2 id="network-specification">Network specification</h2>
+<h3 id="pinetpinet">pinet.PiNet</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="tensorflow.keras.Model">Model</span></code></p>
+
+  
+      <p>This class implements the Keras Model for the PiNet network.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.PiNet.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">atom_types</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">rc</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">cutoff_type</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span> <span class="n">basis_type</span><span class="o">=</span><span class="s1">&#39;polynomial&#39;</span><span class="p">,</span> <span class="n">n_basis</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pp_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">pi_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">ii_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">out_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">out_units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>atom_types</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>elements for the one-hot embedding</p>
+            </div>
+          </td>
+          <td>
+                <code>[1, 6, 7, 8]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>pp_nodes</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of nodes for PPLayer</p>
+            </div>
+          </td>
+          <td>
+                <code>[16, 16]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>pi_nodes</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of nodes for PILayer</p>
+            </div>
+          </td>
+          <td>
+                <code>[16, 16]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ii_nodes</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of nodes for IILayer</p>
+            </div>
+          </td>
+          <td>
+                <code>[16, 16]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>out_nodes</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of nodes for OutLayer</p>
+            </div>
+          </td>
+          <td>
+                <code>[16, 16]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>out_pool</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>pool atomic outputs, see ANNOutput</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>depth</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of interaction blocks</p>
+            </div>
+          </td>
+          <td>
+                <code>4</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>rc</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>cutoff radius</p>
+            </div>
+          </td>
+          <td>
+                <code>4.0</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>basis_type</code></td>
+          <td>
+                <code>string</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>basis function, can be "polynomial" or "gaussian"</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;polynomial&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>n_basis</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of basis functions to use</p>
+            </div>
+          </td>
+          <td>
+                <code>4</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>gamma</code></td>
+          <td>
+                <code>float or array</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>width of gaussian function for gaussian basis</p>
+            </div>
+          </td>
+          <td>
+                <code>3.0</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>center</code></td>
+          <td>
+                <code>float or array</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>center of gaussian function for gaussian basis</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>cutoff_type</code></td>
+          <td>
+                <code>string</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>cutoff function to use with the basis.</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;f1&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>act</code></td>
+          <td>
+                <code>string</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>activation function to use</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;tanh&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.PiNet.call" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>PiNet takes batches atomic data as input, the following keys are
+required in the input dictionary of tensors:</p>
+<ul>
+<li><code>ind_1</code>: sparse indices for the batched data, with shape <code>(n_atoms, 1)</code>;</li>
+<li><code>elems</code>: element (atomic numbers) for each atom, with shape <code>(n_atoms)</code>;</li>
+<li><code>coord</code>: coordintaes for each atom, with shape <code>(n_atoms, 3)</code>.</li>
+</ul>
+<p>Optionally, the input dataset can be processed with
+<code>PiNet.preprocess(tensors)</code>, which adds the following tensors to the
+dictionary:</p>
+<ul>
+<li><code>ind_2</code>: sparse indices for neighbour list, with shape <code>(n_pairs, 2)</code>;</li>
+<li><code>dist</code>: distances from the neighbour list, with shape <code>(n_pairs)</code>;</li>
+<li><code>diff</code>: distance vectors from the neighbour list, with shape <code>(n_pairs, 3)</code>;</li>
+<li><code>prop</code>: initial properties <code>(n_pairs, n_elems)</code>;</li>
+</ul>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>tensors</code></td>
+          <td>
+                <code>dict of tensors</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>input tensors</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>output</code></td>          <td>
+                <code>tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>output tensor with shape <code>[n_atoms, out_nodes]</code></p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div><h2 id="layer-specifications">Layer specifications</h2>
+<h3 id="pinetfflayer">pinet.FFLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+  
+      <p><code>FFLayer</code> is a shortcut to create a multi-layer perceptron (MLP) or a
+feed-forward network. A <code>FFLayer</code> takes one tensor as input of arbitratry
+shape, and parse it to a list of <code>tf.keras.layers.Dense</code> layers, specified
+by <code>n_nodes</code>. Each dense layer transforms the input variable as:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathbb{X}'_{\ldots{}d} &amp;= \mathrm{Dense}(\mathbb{X}_{\ldots{}c}) \\
+  &amp;= h\left( \sum_c W_{cd} \mathbb{X}_{\ldots{}c} + b_{d} \right)
+\end{aligned}
+\]</div>
+<p>, where <span class="arithmatex">\(W_{cd}\)</span>, <span class="arithmatex">\(b_{d}\)</span> are the learnable weights and biases, <span class="arithmatex">\(h\)</span> is the
+activation function, and <span class="arithmatex">\(\mathbb{X}\)</span> can be <span class="arithmatex">\(\mathbb{P}_{ic}\)</span> or
+<span class="arithmatex">\(\mathbb{I}_{ijc}\)</span> with <span class="arithmatex">\(c,d\)</span> being the indices of input/output channels. The
+keyward arguments are parsed into the class, which can be used to specify
+the bias, activation function, etc for the dense layer. <code>FFLayer</code> outputs a
+tensor with the shape <code>[..., n_nodes[-1]]</code>.</p>
+<p>In the PiNet architecture, <code>PPLayer</code> and <code>IILayer</code> are both instances of the
+<code>FFLayer</code> class, with the difference that <code>IILayer</code>s have their baises set
+to zero to avoid discontinuity in the model output.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.FFLayer.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">n_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>n_nodes</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>dimension of the layers</p>
+            </div>
+          </td>
+          <td>
+                <code>[64, 64]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>**kwargs</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>options to be parsed to dense layers</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.FFLayer.call" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>tensor</code></td>
+          <td>
+                <code>tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>input tensor</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>tensor</code></td>          <td>
+                <code>tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>tensor with shape <code>(...,n_nodes[-1])</code></p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div><h3 id="pinetpilayer">pinet.PILayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+  
+      <p><code>PILayer</code> takes the properties (<span class="arithmatex">\(\mathbb{P}_{ik}, \mathbb{P}_{jk}\)</span>) of a
+pair of atoms as input and outputs a set of interactions for each pair. The
+input <span class="arithmatex">\(\mathbb{P}_{i}, \mathbb{P}_{j}\)</span> will be concatenated as the input of
+a feed-forward neural network (<code>FFLayer</code>), and the interactions are
+generated by taking the output of the <code>FFLayer</code> as weights of radial basis
+functions, i.e.:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathbb{I}^{w}_{ij(bd)} &amp;= \mathrm{FFLayer}\left((\mathbf{1}_{ij}\mathbb{P}_{ic})\Vert(\mathbf{1}_{ij}\mathbb{P}_{jc})\right) \\
+                        &amp;= \mathrm{FFLayer}(\mathbb{I}'_{ijc}\Vert\mathbb{I}''_{ijc}) \\
+\mathbb{I}_{ijd} &amp;= \sum_b \mathbb{I}^{w}_{ij(bd)} \, e_{ijb}
+\end{aligned}
+\]</div>
+<p>, where <span class="arithmatex">\(\mathbb{I}^{w}_{ij(bd)}\)</span> is an intemediate weight tensor for the
+radial basis functions, output by the <code>FFLayer</code>; the output channel is
+reshaped into two dimensions, where <span class="arithmatex">\(b\)</span> is the index for the basis function
+and <span class="arithmatex">\(d\)</span> is the index for output interaction.</p>
+<p><code>n_nodes</code> specifies the number of nodes in the <code>FFLayer</code>. Note that the last
+element of n_nodes specifies the number of output channels after applying
+the basis function (<span class="arithmatex">\(d\)</span> instead of <span class="arithmatex">\(bd\)</span>), i.e. the output dimension of
+FFLayer is <code>[n_pairs,n_nodes[-1]*n_basis]</code>, the output is then summed with
+the basis to form the output interaction.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.PILayer.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">n_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>n_nodes</code></td>
+          <td>
+                <code>list of int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of nodes to use</p>
+            </div>
+          </td>
+          <td>
+                <code>[64]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>**kwargs</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>keyword arguments will be parsed to the feed forward layers</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.PILayer.call" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>PILayer take a list of three tensors as input:</p>
+<ul>
+<li>ind_2: sparse indices of pairs with shape <code>(n_pairs, 2)</code></li>
+<li>prop: property tensor with shape <code>(n_atoms, n_prop)</code></li>
+<li>basis: interaction tensor with shape <code>(n_pairs, n_basis)</code></li>
+</ul>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>tensors</code></td>
+          <td>
+                <code>list of tensors</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>list of <code>[ind_2, prop, basis]</code> tensors</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>inter</code></td>          <td>
+                <code>tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>interaction tensor with shape <code>(n_pairs, n_nodes[-1])</code></p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div><h3 id="pinetiplayer">pinet.IPLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+  
+      <p>The IPLayer transforms pairwise interactions to atomic properties</p>
+<p>The IPLayer has no learnable variables and simply sums up the pairwise
+interations. Thus the returned property has the same shape with the
+input interaction, i.e.:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathbb{P}_{ic} = \mathrm{IPLayer}(\mathbb{I}_{ijc}) = \sum_{j} \mathbb{I}_{ijc}
+\end{aligned}
+\]</div>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.IPLayer.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">()</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>IPLayer does not require any parameter, initialize as <code>IPLayer()</code>.</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.IPLayer.call" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>IPLayer take a list of three tensors list as input:</p>
+<ul>
+<li>ind_2: sparse indices of pairs with shape <code>(n_pairs, 2)</code></li>
+<li>prop: property tensor with shape <code>(n_atoms, n_prop)</code></li>
+<li>inter: interaction tensor with shape <code>(n_pairs, n_inter)</code></li>
+</ul>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>tensors</code></td>
+          <td>
+                <code>list of tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>list of [ind_2, prop, inter] tensors</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>prop</code></td>          <td>
+                <code>tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>new property tensor with shape <code>(n_atoms, n_inter)</code></p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div><h3 id="pinetresupdate">pinet.ResUpdate</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+  
+      <p><code>ResUpdate</code> layer implements ResNet-like update of properties that
+addresses vanishing/exploding gradient problems (see
+<a href="https://arxiv.org/abs/1512.03385">arXiv:1512.03385</a>).</p>
+<p>It takes two tensors (old and new) as input, the tensors should have the
+same shape except for the last dimension, and a tensor with the shape of the
+new tensor is always returned.</p>
+<p>If shapes of the two tensors match, their sum is returned. If the two
+tensors' shapes differ in the last dimension, the old tensor will be added
+to the new after a learnable linear transformation that matches its shape to
+the new tensor, i.e.:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathbb{X}'_{\ldots{}d} &amp;= \mathrm{ResUpdate}(\mathbb{X}^{\mathrm{old}}_{\ldots{}c},\mathbb{X}^{\mathrm{new}}_{\ldots{}d}) &amp; \\
+  &amp;= \begin{cases}
+       \mathbb{X}^{\mathrm{old}}_{\ldots{}d} + \mathbb{X}^{\mathrm{new}}_{\ldots{}d} &amp; \textrm{, if dimension matches} \\
+       \sum_{c} W_{cd} \, \mathbb{X}^{\mathrm{old}}_{\ldots{}c} + \mathbb{X}^{\mathrm{new}}_{\ldots{}d} &amp; \textrm{, elsewise}
+     \end{cases}
+\end{aligned}
+\]</div>
+<p>, where <span class="arithmatex">\(W_{cd}\)</span> is a learnable weight matrix if needed.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.ResUpdate.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">()</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>ResUpdate does not require any parameter, initialize as <code>ResUpdate()</code>.</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.ResUpdate.call" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>tensors</code></td>
+          <td>
+                <code>list of tensors</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>two tensors with matching shapes expect the last dimension</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>tensor</code></td>          <td>
+                <code>tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>updated tensor with the same shape as the second input tensor</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div><h3 id="pinetoutlayer">pinet.OutLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+  <div class="doc doc-contents first">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+  
+      <p><code>OutLayer</code> is a simple combination of the <code>FFLayer</code> and the <code>ResUpdate</code>
+layer, where the <code>out_units</code> controls the dimension of outputs. In addition
+to the <code>FFLayer</code> specified by <code>n_nodes</code>, the <code>OutLayer</code> has one additional
+linear biasless layer that scales the outputs, specified by <code>out_units</code>.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.OutLayer.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">out_units</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>n_nodes</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>dimension of the hidden layers</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>out_units</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>dimension of the output units</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>**kwargs</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>options to be parsed to dense layers</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h4 id="pinn.networks.pinet.OutLayer.call" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>OutLayer takes a list of three tensors as input:</p>
+<ul>
+<li>ind_1: sparse indices of atoms with shape <code>(n_atoms, 1)</code></li>
+<li>prop: property tensor with shape <code>(n_atoms, n_prop)</code></li>
+<li>prev_output:  previous output with shape <code>(n_atoms, out_units)</code></li>
+</ul>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>tensors</code></td>
+          <td>
+                <code>list of tensors</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>list of [ind_1, prop, prev_output] tensors</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>output</code></td>          <td>
+                <code>tensor</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>an updated output tensor with shape <code>(n_atoms, out_units)</code></p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div><div class="footnote">
 <hr />
 <ol>
 <li id="fn:1">
-<p>Y. Shao, M. Hellström, P. D. Mitev, L. Knijff, and C. Zhang. PiNN: a python library for building atomic neural networks of molecules and materials. <em>J. Chem. Inf. Model.</em>, 60:1184–1193, January 2020. <a href="https://doi.org/10.1021/acs.jcim.9b00994">doi:10.1021/acs.jcim.9b00994</a>.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p><sup>1</sup> Y. Shao, M. Hellström, P.D. Mitev, L. Knijff, and C. Zhang, “<a href="https://doi.org/10.1021/acs.jcim.9b00994">PiNN: A python library for building atomic neural networks of molecules and materials</a>,” J. Chem. Inf. Model. <strong>60</strong>, 1184–1193 (2020).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
+    </div>
 
-              
-            </article>
-          </div>
-        </div>
-        
-      </main>
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
       
-        <footer class="md-footer">
-  
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      <a href="../layers/" title="Layers"><span>«</span> Previous</a>
       
-        
-        <a href="../networks/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Overview
-            </div>
-          </div>
-        </a>
+    </div>
+    <div class="page-next">
       
-      
-        
-        <a href="../bpnn/" class="md-footer__link md-footer__link--next" aria-label="Next: BPNN" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              BPNN
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
+      <a href="../bpnn/" title="BPNN" />Next <span>»</span></a>
       
     </div>
   </div>
-</footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
-    
-    
-      <script src="../../assets/javascripts/bundle.ed9748b7.min.js"></script>
-      
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-      
-    
-  </body>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
 </html>

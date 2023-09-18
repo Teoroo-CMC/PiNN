@@ -15,7 +15,7 @@
     The page_title contains the title for a page as shown in the navigation.
     Site name contains the name as defined in the mkdocs.yml
   -->
-  <title>LJ Potential - PiNN</title>
+  <title>Layer Debug - PiNN</title>
 
   <link rel="stylesheet" href="../../css/theme.css">
   <link rel="stylesheet" href="../../css/pygments.css">
@@ -219,8 +219,8 @@
 
   
     
-    <li class="active">
-      <a href="./" class="">
+    <li >
+      <a href="../Learn_LJ_potential/" class="">
         LJ Potential
       </a>
     </li>
@@ -232,8 +232,8 @@
   <a class="nav-title" > Develop </a>
   
     
-    <li >
-      <a href="../Layer_debug/" class="">
+    <li class="active">
+      <a href="./" class="">
         Layer Debug
       </a>
     </li>
@@ -1287,10 +1287,7 @@ Licensed under the Apache License, Version 2.0.
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1>Learning a LJ potential <a href="https://colab.research.google.com/github/Teoroo-CMC/PiNN/blob/master/docs/notebooks/Learn_LJ_potential.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></h1>
-<p>This notebook showcases the usage of PiNN with a toy problem of learning a Lennard-Jones
-potential with a hand-generated dataset.<br>
-It serves as a basic test, and demonstration of the workflow with PiNN.</p>
+<h1>Debugging PiNN layers and networks <a href="https://colab.research.google.com/github/Teoroo-CMC/PiNN/blob/master/docs/notebooks/Layer_debug.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a></h1>
 
 </div>
 </div>
@@ -1316,11 +1313,11 @@ It serves as a basic test, and demonstration of the workflow with PiNN.</p>
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Install PiNN</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+<span class="err">!</span><span class="n">wget</span> <span class="o">-</span><span class="n">nv</span> <span class="o">-</span><span class="n">nc</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN_lab</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">resources</span><span class="o">/</span><span class="n">qm9_train</span><span class="o">.</span><span class="p">{</span><span class="n">yml</span><span class="p">,</span><span class="n">tfr</span><span class="p">}</span>
 </pre></div>
-<div id="cell-1" class="clipboard-copy-txt"># Install PiNN
-!pip install git+https://github.com/Teoroo-CMC/PiNN</div>
+<div id="cell-1" class="clipboard-copy-txt">!pip install git+https://github.com/Teoroo-CMC/PiNN
+!wget -nv -nc https://raw.githubusercontent.com/Teoroo-CMC/PiNN_lab/master/resources/qm9_train.{yml,tfr}</div>
     
         </div>
     </div>
@@ -1329,13 +1326,25 @@ It serves as a basic test, and demonstration of the workflow with PiNN.</p>
 </div>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="loading-data">Loading data<a class="anchor-link" href="#loading-data">&#182;</a></h2><p>For the purpose of testing we download a subset of the QM9 dataset used in <a href="https://github.com/Teoroo-CMC/PiNN_lab">PiNN_lab</a>.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -1350,9 +1359,19 @@ It serves as a basic test, and demonstration of the workflow with PiNN.</p>
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_tfrecord</span><span class="p">,</span> <span class="n">sparse_batch</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_tfrecord</span><span class="p">(</span><span class="s2">&quot;qm9_train.yml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">datum</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">datum</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+    <span class="k">break</span>
 </pre></div>
-<div id="cell-2" class="clipboard-copy-txt">%matplotlib inline</div>
+<div id="cell-2" class="clipboard-copy-txt">from pinn.io import load_tfrecord, sparse_batch
+
+dataset = load_tfrecord("qm9_train.yml").apply(sparse_batch(10))
+for datum in dataset:
+    print({k: v.shape for k, v in datum.items()})
+    break</div>
     
         </div>
     </div>
@@ -1360,6 +1379,45 @@ It serves as a basic test, and demonstration of the workflow with PiNN.</p>
 </div>
 </div>
 
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>{&#39;A&#39;: TensorShape([10]), &#39;B&#39;: TensorShape([10]), &#39;C&#39;: TensorShape([10]), &#39;Cv&#39;: TensorShape([10]), &#39;G&#39;: TensorShape([10]), &#39;H&#39;: TensorShape([10]), &#39;U&#39;: TensorShape([10]), &#39;U0&#39;: TensorShape([10]), &#39;alpha&#39;: TensorShape([10]), &#39;coord&#39;: TensorShape([176, 3]), &#39;elems&#39;: TensorShape([176]), &#39;gap&#39;: TensorShape([10]), &#39;homo&#39;: TensorShape([10]), &#39;lumo&#39;: TensorShape([10]), &#39;mu&#39;: TensorShape([10]), &#39;r2&#39;: TensorShape([10]), &#39;zpve&#39;: TensorShape([10]), &#39;ind_1&#39;: TensorShape([176, 1])}
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="using-pinn-layers">Using PiNN Layers<a class="anchor-link" href="#using-pinn-layers">&#182;</a></h2><p>PiNN networks and layers are Keras <a href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">Layers</a> 
+and <a href="https://www.tensorflow.org/api_docs/python/tf/keras/Model">Models</a>.</p>
+<p>To use them, you create an instance of layer, after that, the layer object can be used as a function. Each layer
+is initialized with different parameters and requires different input tensors, see their individual documentation
+for the details.</p>
+
+</div>
+</div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -1367,7 +1425,7 @@ It serves as a basic test, and demonstration of the workflow with PiNN.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -1382,25 +1440,23 @@ It serves as a basic test, and demonstration of the workflow with PiNN.</p>
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">from</span> <span class="nn">ase.calculators.lj</span> <span class="kn">import</span> <span class="n">LennardJones</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-<span class="n">index_warning</span> <span class="o">=</span> <span class="s1">&#39;Converting sparse IndexedSlices&#39;</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">index_warning</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pinn.layers</span> <span class="kn">import</span> <span class="n">CellListNL</span>
+<span class="kn">from</span> <span class="nn">pinn.networks.pinet</span> <span class="kn">import</span> <span class="n">PILayer</span><span class="p">,</span> <span class="n">PiNet</span>
+
+<span class="n">nl</span> <span class="o">=</span> <span class="n">CellListNL</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">datum</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+    <span class="n">nl</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+    <span class="k">break</span>
 </pre></div>
-<div id="cell-3" class="clipboard-copy-txt">import os, warnings
-import numpy as np
-import tensorflow as tf
-import matplotlib.pyplot as plt
-from ase import Atoms
-from ase.calculators.lj import LennardJones
-os.environ['CUDA_VISIBLE_DEVICES'] = ''
-index_warning = 'Converting sparse IndexedSlices'
-warnings.filterwarnings('ignore', index_warning)</div>
+<div id="cell-3" class="clipboard-copy-txt">from pinn.layers import CellListNL
+from pinn.networks.pinet import PILayer, PiNet
+
+nl = CellListNL(rc=5)
+
+for datum in dataset:
+    nl(datum)
+    break</div>
     
         </div>
     </div>
@@ -1416,17 +1472,25 @@ warnings.filterwarnings('ignore', index_warning)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="reference-data">Reference data<a class="anchor-link" href="#reference-data">&#182;</a></h2>
+<p>The definition of a layer needs three parts:</p>
+<ul>
+<li><code>__init__</code> defines the layer object; </li>
+<li><code>build</code> creates the necessary variables or sub-layers; </li>
+<li><code>call</code> defines how the input tensors are processed.</li>
+</ul>
+<p>The <code>build()</code> method is only called once when the layer is used for the first tiem (e.g. in a loop).
+See below for an example definition for the <code>PILayer</code></p>
+
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -1441,23 +1505,9 @@ warnings.filterwarnings('ignore', index_warning)</div>
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Helper function: get the position given PES dimension(s)</span>
-<span class="k">def</span> <span class="nf">three_body_sample</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
-    <span class="n">pos</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-           <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-           <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)]]</span>
-    <span class="n">atoms</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">atoms</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="err">??</span><span class="n">PILayer</span>
 </pre></div>
-<div id="cell-4" class="clipboard-copy-txt"># Helper function: get the position given PES dimension(s)
-def three_body_sample(atoms, a, r):
-    x = a * np.pi / 180
-    pos = [[0, 0, 0],
-           [0, 2, 0],
-           [0, r*np.cos(x), r*np.sin(x)]]
-    atoms.set_positions(pos)
-    return atoms</div>
+<div id="cell-4" class="clipboard-copy-txt">??PILayer</div>
     
         </div>
     </div>
@@ -1465,14 +1515,93 @@ def three_body_sample(atoms, a, r):
 </div>
 </div>
 
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output " data-mime-type="text/plain">
+<pre><span class="ansi-red-fg">Init signature:</span> PILayer<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Source:</span>        
+<span class="ansi-green-fg">class</span> PILayer<span class="ansi-blue-fg">(</span>tf<span class="ansi-blue-fg">.</span>keras<span class="ansi-blue-fg">.</span>layers<span class="ansi-blue-fg">.</span>Layer<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    <span class="ansi-blue-fg">&#34;&#34;&#34;PiNN style interaction layer</span>
+
+<span class="ansi-blue-fg">    Args:</span>
+<span class="ansi-blue-fg">        n_nodes: number of nodes to use</span>
+<span class="ansi-blue-fg">            Note that the last element of n_nodes specifies the dimention of</span>
+<span class="ansi-blue-fg">            the fully connected network before applying the basis function.</span>
+<span class="ansi-blue-fg">            Dimension of the last node is [pairs*n_nodes[-1]*n_basis], the</span>
+<span class="ansi-blue-fg">            output is then summed with the basis to form the interaction nodes</span>
+<span class="ansi-blue-fg">        **kwargs: keyword arguments will be parsed to the feed forward layers</span>
+<span class="ansi-blue-fg">    &#34;&#34;&#34;</span>
+    <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> n_nodes<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">64</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        super<span class="ansi-blue-fg">(</span>PILayer<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+        self<span class="ansi-blue-fg">.</span>n_nodes <span class="ansi-blue-fg">=</span> n_nodes
+        self<span class="ansi-blue-fg">.</span>kwargs <span class="ansi-blue-fg">=</span> kwargs
+
+    <span class="ansi-green-fg">def</span> build<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> shapes<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        self<span class="ansi-blue-fg">.</span>n_basis <span class="ansi-blue-fg">=</span> shapes<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
+        n_nodes_iter <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>n_nodes<span class="ansi-blue-fg">.</span>copy<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+        n_nodes_iter<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">*=</span> self<span class="ansi-blue-fg">.</span>n_basis
+        self<span class="ansi-blue-fg">.</span>ff_layer <span class="ansi-blue-fg">=</span> FFLayer<span class="ansi-blue-fg">(</span>n_nodes_iter<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>self<span class="ansi-blue-fg">.</span>kwargs<span class="ansi-blue-fg">)</span>
+
+    <span class="ansi-green-fg">def</span> call<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> tensors<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        ind_2<span class="ansi-blue-fg">,</span> prop<span class="ansi-blue-fg">,</span> basis <span class="ansi-blue-fg">=</span> tensors
+        ind_i <span class="ansi-blue-fg">=</span> ind_2<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span>
+        ind_j <span class="ansi-blue-fg">=</span> ind_2<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
+        prop_i <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>gather<span class="ansi-blue-fg">(</span>prop<span class="ansi-blue-fg">,</span> ind_i<span class="ansi-blue-fg">)</span>
+        prop_j <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>gather<span class="ansi-blue-fg">(</span>prop<span class="ansi-blue-fg">,</span> ind_j<span class="ansi-blue-fg">)</span>
+
+        inter <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>concat<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>prop_i<span class="ansi-blue-fg">,</span> prop_j<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+        inter <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>ff_layer<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">)</span>
+        inter <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>reshape<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">,</span> tf<span class="ansi-blue-fg">.</span>concat<span class="ansi-blue-fg">(</span>
+            <span class="ansi-blue-fg">[</span>tf<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span>self<span class="ansi-blue-fg">.</span>n_nodes<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>n_basis<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+        inter <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>reduce_sum<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">*</span>basis<span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+        <span class="ansi-green-fg">return</span> inter
+<span class="ansi-red-fg">File:</span>           ~/code/PiNN/pinn/networks/pinet.py
+<span class="ansi-red-fg">Type:</span>           type
+<span class="ansi-red-fg">Subclasses:</span>     
+</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="using-pinn-networks">Using PiNN Networks<a class="anchor-link" href="#using-pinn-networks">&#182;</a></h2><p><code>network</code> (Keras Models) are defined similarly, but they can be directly used to perform regression task.</p>
+<p>By default, <code>network</code>  produces per-atom predictions, this can be changed by the <code>out_pool</code> parameter to 
+get some simple per-structure predictions. In that case, the network object can be used to perform trainig directly.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -1487,69 +1616,27 @@ def three_body_sample(atoms, a, r):
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">atoms</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="s1">&#39;H3&#39;</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="n">LennardJones</span><span class="p">())</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span> <span class="nf">label_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># defines the label to train on</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lumo&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
 
-<span class="n">na</span><span class="p">,</span> <span class="n">nr</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
-<span class="n">arange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="n">na</span><span class="p">)</span>
-<span class="n">rrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">nr</span><span class="p">)</span>
-
-<span class="c1"># Truth</span>
-<span class="n">agrid</span><span class="p">,</span> <span class="n">rgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">arange</span><span class="p">,</span> <span class="n">rrange</span><span class="p">)</span>
-<span class="n">egrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">na</span><span class="p">,</span> <span class="n">nr</span><span class="p">])</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">na</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nr</span><span class="p">):</span>
-        <span class="n">atoms</span> <span class="o">=</span> <span class="n">three_body_sample</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">arange</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rrange</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-        <span class="n">egrid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
-        
-<span class="c1"># Samples</span>
-<span class="n">nsample</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">asample</span><span class="p">,</span> <span class="n">rsample</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="n">distsample</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;e_data&#39;</span><span class="p">:[],</span> <span class="s1">&#39;f_data&#39;</span><span class="p">:[],</span> <span class="s1">&#39;elems&#39;</span><span class="p">:[],</span> <span class="s1">&#39;coord&#39;</span><span class="p">:[]}</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsample</span><span class="p">):</span>
-    <span class="n">a</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">arange</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">rrange</span><span class="p">)</span>
-    <span class="n">atoms</span> <span class="o">=</span> <span class="n">three_body_sample</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-    <span class="n">dist</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_all_distances</span><span class="p">()</span>
-    <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">dist</span><span class="p">)]</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;e_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">())</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;f_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">())</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">())</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;elems&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">)</span>
-    <span class="n">asample</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-    <span class="n">rsample</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-    <span class="n">distsample</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">label_data</span><span class="p">)</span>
+<span class="n">pinet</span> <span class="o">=</span> <span class="n">PiNet</span><span class="p">(</span><span class="n">out_pool</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
+<span class="n">pinet</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;Adam&#39;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;MAE&#39;</span><span class="p">)</span>
+<span class="n">pinet</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
-<div id="cell-5" class="clipboard-copy-txt">atoms = Atoms('H3', calculator=LennardJones())
+<div id="cell-5" class="clipboard-copy-txt">def label_data(data):
+    # defines the label to train on
+    x = data
+    y = data['lumo']
+    return x, y
 
-na, nr = 50, 50
-arange = np.linspace(30,180,na)
-rrange = np.linspace(1,3,nr)
-
-# Truth
-agrid, rgrid = np.meshgrid(arange, rrange)
-egrid = np.zeros([na, nr])
-for i in range(na):
-    for j in range(nr):
-        atoms = three_body_sample(atoms, arange[i], rrange[j])
-        egrid[i,j] = atoms.get_potential_energy()
-        
-# Samples
-nsample = 100
-asample, rsample = [], []
-distsample = []
-data = {'e_data':[], 'f_data':[], 'elems':[], 'coord':[]}
-for i in range(nsample):
-    a, r = np.random.choice(arange), np.random.choice(rrange)
-    atoms = three_body_sample(atoms, a, r)
-    dist = atoms.get_all_distances()
-    dist = dist[np.nonzero(dist)]
-    data['e_data'].append(atoms.get_potential_energy())
-    data['f_data'].append(atoms.get_forces())
-    data['coord'].append(atoms.get_positions())
-    data['elems'].append(atoms.numbers)
-    asample.append(a)
-    rsample.append(r)
-    distsample.append(dist)</div>
+train = dataset.map(label_data)
+pinet = PiNet(out_pool='min')
+pinet.compile(optimizer='Adam', loss='MAE')
+pinet.fit(train, epochs=3)</div>
     
         </div>
     </div>
@@ -1557,40 +1644,74 @@ for i in range(nsample):
 </div>
 </div>
 
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-6">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">agrid</span><span class="p">,</span> <span class="n">rgrid</span><span class="p">,</span> <span class="n">egrid</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">rsample</span><span class="p">,</span> <span class="s1">&#39;rx&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-</pre></div>
-<div id="cell-6" class="clipboard-copy-txt">plt.pcolormesh(agrid, rgrid, egrid, shading='auto')
-plt.plot(asample, rsample, 'rx')
-plt.colorbar()</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
     
-        </div>
-    </div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Epoch 1/3
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>/home/yunqi/.miniconda/envs/pinn-tf2/lib/python3.9/site-packages/tensorflow/python/framework/indexed_slices.py:444: UserWarning: Converting sparse IndexedSlices(IndexedSlices(indices=Tensor(&#34;Adam/gradients/concat_1:0&#34;, shape=(None,), dtype=int32), values=Tensor(&#34;Adam/gradients/concat:0&#34;, shape=(None, 16), dtype=float32), dense_shape=Tensor(&#34;gradient_tape/pi_net_1/gc_block_7/pi_layer_7/Cast:0&#34;, shape=(2,), dtype=int32))) to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  warnings.warn(
+/home/yunqi/.miniconda/envs/pinn-tf2/lib/python3.9/site-packages/tensorflow/python/framework/indexed_slices.py:444: UserWarning: Converting sparse IndexedSlices(IndexedSlices(indices=Tensor(&#34;Adam/gradients/concat_3:0&#34;, shape=(None,), dtype=int32), values=Tensor(&#34;Adam/gradients/concat_2:0&#34;, shape=(None, 16), dtype=float32), dense_shape=Tensor(&#34;gradient_tape/pi_net_1/gc_block_6/pi_layer_6/Cast:0&#34;, shape=(2,), dtype=int32))) to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  warnings.warn(
+/home/yunqi/.miniconda/envs/pinn-tf2/lib/python3.9/site-packages/tensorflow/python/framework/indexed_slices.py:444: UserWarning: Converting sparse IndexedSlices(IndexedSlices(indices=Tensor(&#34;Adam/gradients/concat_5:0&#34;, shape=(None,), dtype=int32), values=Tensor(&#34;Adam/gradients/concat_4:0&#34;, shape=(None, 16), dtype=float32), dense_shape=Tensor(&#34;gradient_tape/pi_net_1/gc_block_5/pi_layer_5/Cast:0&#34;, shape=(2,), dtype=int32))) to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  warnings.warn(
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>2000/2000 [==============================] - 37s 17ms/step - loss: 0.0551
+Epoch 2/3
+2000/2000 [==============================] - 35s 18ms/step - loss: 0.0285
+Epoch 3/3
+2000/2000 [==============================] - 35s 17ms/step - loss: 0.0240
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>&lt;keras.callbacks.History at 0x7f17c86591f0&gt;</pre>
+</div>
 
 </div>
+
+</div>
+
 </div>
 
 </div>
@@ -1601,494 +1722,12 @@ plt.colorbar()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="dataset-from-numpy-arrays">Dataset from numpy arrays<a class="anchor-link" href="#dataset-from-numpy-arrays">&#182;</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-7">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">sparse_batch</span><span class="p">,</span> <span class="n">load_numpy</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-<span class="n">dataset</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">load_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
-
-<span class="n">train</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
-<span class="n">test</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
-</pre></div>
-<div id="cell-7" class="clipboard-copy-txt">from pinn.io import sparse_batch, load_numpy
-data = {k:np.array(v) for k,v in data.items()}
-dataset = lambda: load_numpy(data, splits={'train':8, 'test':2})
-
-train = lambda: dataset()['train'].shuffle(100).repeat().apply(sparse_batch(100))
-test = lambda: dataset()['test'].repeat().apply(sparse_batch(100))</div>
-    
-        </div>
-    </div>
+<h2 id="further-benchmarks">Further benchmarks<a class="anchor-link" href="#further-benchmarks">&#182;</a></h2><p>For more advanced usage you are recommended to use the <code>Model</code> API to define the trainig loss, derived predicates.
+For traininig potential energy surfaces, you are recommended to use <code>pinn.models.potential_model</code> in combination with the command line interface (CLI).</p>
+<p>Alternatively, see the <a href="../More_on_training.ipynb">Trainig Tips</a> notebook to see how to run the tranining interactively in a notebook.</p>
 
 </div>
 </div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="training">Training<a class="anchor-link" href="#training">&#182;</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="model-specification">Model specification<a class="anchor-link" href="#model-specification">&#182;</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-8">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">pinn</span>
-
-<span class="n">params</span><span class="o">=</span><span class="p">{</span>
-    <span class="s1">&#39;model_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/PiNet&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PiNet&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;ii_nodes&#39;</span><span class="p">:[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span>
-            <span class="s1">&#39;pi_nodes&#39;</span><span class="p">:[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span>
-            <span class="s1">&#39;pp_nodes&#39;</span><span class="p">:[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span>
-            <span class="s1">&#39;out_nodes&#39;</span><span class="p">:[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span>
-            <span class="s1">&#39;depth&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s1">&#39;rc&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
-            <span class="s1">&#39;atom_types&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">]}},</span>
-    <span class="s1">&#39;model&#39;</span><span class="p">:{</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;potential_model&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;e_dress&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mf">0.3</span><span class="p">},</span>  <span class="c1"># element-specific energy dress</span>
-            <span class="s1">&#39;e_scale&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="c1"># energy scale for prediction</span>
-            <span class="s1">&#39;e_unit&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># output unit of energy dur</span>
-            <span class="s1">&#39;log_e_per_atom&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="c1"># log e_per_atom and its distribution    </span>
-            <span class="s1">&#39;use_force&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}}}</span>      <span class="c1"># include force in Loss function</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">pinn</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-</pre></div>
-<div id="cell-8" class="clipboard-copy-txt">import pinn
-
-params={
-    'model_dir': '/tmp/PiNet',
-    'network': {
-        'name': 'PiNet',
-        'params': {
-            'ii_nodes':[8,8],
-            'pi_nodes':[8,8],
-            'pp_nodes':[8,8],
-            'out_nodes':[8,8],
-            'depth': 4,
-            'rc': 3.0,
-            'atom_types':[1]}},
-    'model':{
-        'name': 'potential_model',
-        'params': {
-            'e_dress': {1:-0.3},  # element-specific energy dress
-            'e_scale': 2, # energy scale for prediction
-            'e_unit': 1.0,  # output unit of energy dur
-            'log_e_per_atom': True, # log e_per_atom and its distribution    
-            'use_force': True}}}      # include force in Loss function
-model = pinn.get_model(params)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-9">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="o">%</span><span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">PiNet</span>
-<span class="n">train_spec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">TrainSpec</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mf">5e3</span><span class="p">)</span>
-<span class="n">eval_spec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EvalSpec</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_spec</span><span class="p">,</span> <span class="n">eval_spec</span><span class="p">)</span>
-</pre></div>
-<div id="cell-9" class="clipboard-copy-txt">%rm -rf /tmp/PiNet
-train_spec = tf.estimator.TrainSpec(input_fn=train, max_steps=5e3)
-eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=10)
-tf.estimator.train_and_evaluate(model, train_spec, eval_spec)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="validate-the-results">Validate the results<a class="anchor-link" href="#validate-the-results">&#182;</a></h2><h3 id="pes-analysis">PES analysis<a class="anchor-link" href="#pes-analysis">&#182;</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-10">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">atoms</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="s1">&#39;H3&#39;</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="n">pinn</span><span class="o">.</span><span class="n">get_calc</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-<span class="n">epred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">na</span><span class="p">,</span> <span class="n">nr</span><span class="p">])</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">na</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nr</span><span class="p">):</span>
-        <span class="n">a</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">arange</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rrange</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">atoms</span> <span class="o">=</span> <span class="n">three_body_sample</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-        <span class="n">epred</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
-</pre></div>
-<div id="cell-10" class="clipboard-copy-txt">atoms = Atoms('H3', calculator=pinn.get_calc(model))
-epred = np.zeros([na, nr])
-for i in range(na):
-    for j in range(nr):
-        a, r = arange[i], rrange[j]
-        atoms = three_body_sample(atoms, a, r)
-        epred[i,j] = atoms.get_potential_energy()</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-11">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">agrid</span><span class="p">,</span> <span class="n">rgrid</span><span class="p">,</span> <span class="n">epred</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;NN predicted PES&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">agrid</span><span class="p">,</span> <span class="n">rgrid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">egrid</span><span class="o">-</span><span class="n">epred</span><span class="p">),</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">rsample</span><span class="p">,</span> <span class="s1">&#39;rx&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;NN Prediction error and sampled points&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-</pre></div>
-<div id="cell-11" class="clipboard-copy-txt">plt.pcolormesh(agrid, rgrid, epred, shading='auto')
-plt.colorbar()
-plt.title('NN predicted PES')
-plt.figure()
-plt.pcolormesh(agrid, rgrid, np.abs(egrid-epred), shading='auto')
-plt.plot(asample, rsample, 'rx')
-plt.title('NN Prediction error and sampled points')
-plt.colorbar()</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="pairwise-potential-analysis">Pairwise potential analysis<a class="anchor-link" href="#pairwise-potential-analysis">&#182;</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-12">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">atoms1</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="s1">&#39;H2&#39;</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="n">pinn</span><span class="o">.</span><span class="n">get_calc</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-<span class="n">atoms2</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="s1">&#39;H2&#39;</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="n">LennardJones</span><span class="p">())</span>
-
-<span class="n">nr2</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">rrange2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.9</span><span class="p">,</span><span class="n">nr2</span><span class="p">)</span>
-<span class="n">epred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nr2</span><span class="p">)</span>
-<span class="n">etrue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nr2</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nr2</span><span class="p">):</span>
-    <span class="n">pos</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-           <span class="p">[</span><span class="n">rrange2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
-    <span class="n">atoms1</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-    <span class="n">atoms2</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-    <span class="n">epred</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
-    <span class="n">etrue</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms2</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
-</pre></div>
-<div id="cell-12" class="clipboard-copy-txt">atoms1 = Atoms('H2', calculator=pinn.get_calc(model))
-atoms2 = Atoms('H2', calculator=LennardJones())
-
-nr2 = 100
-rrange2 = np.linspace(1,1.9,nr2)
-epred = np.zeros(nr2)
-etrue = np.zeros(nr2)
-
-for i in range(nr2):
-    pos = [[0, 0, 0],
-           [rrange2[i], 0, 0]]
-    atoms1.set_positions(pos)
-    atoms2.set_positions(pos)
-    epred[i] = atoms1.get_potential_energy()
-    etrue[i] = atoms2.get_potential_energy()</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-13">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">gridspec_kw</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height_ratios&#39;</span><span class="p">:[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rrange2</span><span class="p">,</span> <span class="n">epred</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rrange2</span><span class="p">,</span> <span class="n">etrue</span><span class="p">,</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Prediction&#39;</span><span class="p">,</span> <span class="s1">&#39;Truth&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">_</span><span class="o">=</span><span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">distsample</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="mi">20</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.9</span><span class="p">))</span>
-</pre></div>
-<div id="cell-13" class="clipboard-copy-txt">f, (ax1, ax2) = plt.subplots(2,1, gridspec_kw = {'height_ratios':[3, 1]})
-ax1.plot(rrange2, epred)
-ax1.plot(rrange2, etrue,'--')
-ax1.legend(['Prediction', 'Truth'], loc=4)
-_=ax2.hist(np.concatenate(distsample,0), 20, range=(1,1.9))</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="molecular-dynamics-with-ase">Molecular dynamics with ASE<a class="anchor-link" href="#molecular-dynamics-with-ase">&#182;</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-14">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">units</span>
-<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">Trajectory</span>
-<span class="kn">from</span> <span class="nn">ase.md.nvtberendsen</span> <span class="kn">import</span> <span class="n">NVTBerendsen</span>
-<span class="kn">from</span> <span class="nn">ase.md.velocitydistribution</span> <span class="kn">import</span> <span class="n">MaxwellBoltzmannDistribution</span>
-</pre></div>
-<div id="cell-14" class="clipboard-copy-txt">from ase import units
-from ase.io import Trajectory
-from ase.md.nvtberendsen import NVTBerendsen
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-15">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">atoms</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">repeat</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="n">atoms</span><span class="o">.</span><span class="n">rattle</span><span class="p">()</span>
-<span class="n">atoms</span><span class="o">.</span><span class="n">set_calculator</span><span class="p">(</span><span class="n">pinn</span><span class="o">.</span><span class="n">get_calc</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-<span class="n">MaxwellBoltzmannDistribution</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="mi">300</span><span class="o">*</span><span class="n">units</span><span class="o">.</span><span class="n">kB</span><span class="p">)</span>
-<span class="n">dyn</span> <span class="o">=</span> <span class="n">NVTBerendsen</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">taut</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="mi">100</span><span class="o">*</span><span class="n">units</span><span class="o">.</span><span class="n">fs</span><span class="p">)</span>
-<span class="n">dyn</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">Trajectory</span><span class="p">(</span><span class="s1">&#39;ase_nvt.traj&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">dyn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
-</pre></div>
-<div id="cell-15" class="clipboard-copy-txt">atoms = Atoms('H', cell=[2, 2, 2], pbc=True)
-atoms = atoms.repeat([5,5,5])
-atoms.rattle()
-atoms.set_calculator(pinn.get_calc(model))
-MaxwellBoltzmannDistribution(atoms, 300*units.kB)
-dyn = NVTBerendsen(atoms, 0.5 * units.fs, 300, taut=0.5*100*units.fs)
-dyn.attach(Trajectory('ase_nvt.traj', 'w', atoms).write, interval=10)
-dyn.run(5000)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
 </div>
 </div>
 </div>
@@ -2101,12 +1740,10 @@ dyn.run(5000)</div>
   <div class="page">
     <div class="page-prev">
       
-      <a href="../Customizing_dataset/" title="Custom Data"><span>«</span> Previous</a>
+      <a href="../Learn_LJ_potential/" title="LJ Potential"><span>«</span> Previous</a>
       
     </div>
     <div class="page-next">
-      
-      <a href="../Layer_debug/" title="Layer Debug" />Next <span>»</span></a>
       
     </div>
   </div>

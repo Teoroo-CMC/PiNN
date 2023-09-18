@@ -1,21 +1,20 @@
 :root {
-  --md-primary-fg-color:         #be2435;
-  --md-accent-fg-color:          #be2433;
+  font-size: 12pt;
 }
 
-.md-typeset__table {
-  min-width: 100%;
+.doc-properties {
+  display: none;
 }
 
-.md-typeset table:not([class]) td:last-of-type{
-  width: 100%;
+.doc-heading > .highlight > span {
+  color: var(--theme-color);
 }
 
-.md-typeset table:not([class]) td{
-  padding: 10px 20px;
-  white-space:nowrap;
+.jp-InputPrompt,
+.jp-OutputPrompt {
+  display: none !important;
 }
-.md-typeset table:not([class]) th{
-  padding: 10px 20px;
-  white-space:nowrap;
+
+.clipboard-copy-icon {
+  width: 1em;
 }
