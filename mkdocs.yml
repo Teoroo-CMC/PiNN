@@ -7,6 +7,7 @@ nav:
       - Introduction: index.md
       - Changelog: changelog.md
       - Migration: migration.md
+      - Contribute: contribute.md
   - Usage:
       - Overview: usage/overview.md
       - Quick Start: usage/quick_start.md
@@ -69,11 +70,13 @@ markdown_extensions:
   - footnotes
   - pymdownx.snippets
   - pymdownx.highlight
-  - pymdownx.tasklist
   - pymdownx.superfences
   - pymdownx.details
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
 extra_javascript:
   - js/mathjax.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
