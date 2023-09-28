@@ -349,7 +349,7 @@ is realized with pairwise functions whose form are determined by the pair,
 called pairwise interactions.</p>
 <h2 id="network-architecture">Network architecture</h2>
 <p>The overall architecture of PiNet is illustrated with the illustration below:</p>
-<p><img alt="PiNet architecture" src="../../tikz/pinet.svg" width="750" /></p>
+<p><img alt="PiNet architecture" src="../../tikz/pinet.svg" width="780" /></p>
 <p>The preprocess part of the network are implemented with shared layers (see
 <a href="../layers/">Layers</a>). The graph-convolution (GC) block are further divided
 into PI and IP operations, each consists several layers. Those operations are
@@ -361,15 +361,23 @@ Since the layers that transform <span class="arithmatex">\(\mathbb{P}\)</span> t
 <span class="arithmatex">\(\mathbb{I}\)</span> are usually standard feed-forward neural networks (<code>FFLayer</code>), the
 special part of PiNet are <code>PILayer</code> and <code>IPLayers</code>, which transform between
 those two types of variables.</p>
-<p>We use the subscripts to denote the dimensionality of each variable, following
-the convention:</p>
+<p>We use the superscript to identify each tensor, and the subscripts to
+differentiate the indices of different types for each variable, following the
+convention:</p>
 <ul>
 <li><span class="arithmatex">\(b\)</span>: basis function index;</li>
-<li><span class="arithmatex">\(c,d,e\)</span>: feature channels;</li>
-<li><span class="arithmatex">\(i,j,k\)</span>: atom indices;</li>
+<li><span class="arithmatex">\(\alpha,\beta,\gamma,\ldots\)</span>: feature channels;</li>
+<li><span class="arithmatex">\(i,j,k,\ldots\)</span>: atom indices;</li>
 <li><span class="arithmatex">\(x,y,z\)</span>: Cartesian coordinate indices.</li>
 </ul>
-<p>The equations that explain each of the above layers and the hyperparameters
+<p><span class="arithmatex">\(\mathbb{P}^{t}_{i\alpha}\)</span> thus denote value of the <span class="arithmatex">\(\alpha\)</span>-th channel of the
+<span class="arithmatex">\(i\)</span>-th atom in the tensor <span class="arithmatex">\(\mathbb{P}^{t}\)</span>. We always provide all the subscripts
+of a given tensor in the equations below, so that the dimensionality of each
+tensor is unambiguously implied.</p>
+<p>For instance, <span class="arithmatex">\(r_{ij}\)</span> entails a scalar distance defined between
+each pair of atoms, indexed by <span class="arithmatex">\(i,j\)</span>; <span class="arithmatex">\(\mathbb{P}_{i\alpha}\)</span> entails the atomic
+feature vectors indexed by <span class="arithmatex">\(i\)</span> for the atom, and <span class="arithmatex">\(\alpha\)</span> for the channel. The
+equations that explain each of the above layers and the hyperparameters
 available for the PiNet network are detailed below.</p>
 <h2 id="network-specification">Network specification</h2>
 <h3 id="pinetpinet">pinet.PiNet</h3>
@@ -648,7 +656,7 @@ available for the PiNet network are detailed below.</p>
       <p>PiNet takes batches atomic data as input, the following keys are
 required in the input dictionary of tensors:</p>
 <ul>
-<li><code>ind_1</code>: sparse indices for the batched data, with shape <code>(n_atoms, 1)</code>;</li>
+<li><code>ind_1</code>: <a href="../layers/#sparse-indices">sparse indices</a> for the batched data, with shape <code>(n_atoms, 1)</code>;</li>
 <li><code>elems</code>: element (atomic numbers) for each atom, with shape <code>(n_atoms)</code>;</li>
 <li><code>coord</code>: coordintaes for each atom, with shape <code>(n_atoms, 3)</code>.</li>
 </ul>
@@ -656,7 +664,7 @@ required in the input dictionary of tensors:</p>
 <code>PiNet.preprocess(tensors)</code>, which adds the following tensors to the
 dictionary:</p>
 <ul>
-<li><code>ind_2</code>: sparse indices for neighbour list, with shape <code>(n_pairs, 2)</code>;</li>
+<li><code>ind_2</code>: <a href="../layers/#sparse-indices">sparse indices</a> for neighbour list, with shape <code>(n_pairs, 2)</code>;</li>
 <li><code>dist</code>: distances from the neighbour list, with shape <code>(n_pairs)</code>;</li>
 <li><code>diff</code>: distance vectors from the neighbour list, with shape <code>(n_pairs, 3)</code>;</li>
 <li><code>prop</code>: initial properties <code>(n_pairs, n_elems)</code>;</li>
@@ -746,19 +754,27 @@ shape, and parse it to a list of <code>tf.keras.layers.Dense</code> layers, spec
 by <code>n_nodes</code>. Each dense layer transforms the input variable as:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-\mathbb{X}'_{\ldots{}d} &amp;= \mathrm{Dense}(\mathbb{X}_{\ldots{}c}) \\
-  &amp;= h\left( \sum_c W_{cd} \mathbb{X}_{\ldots{}c} + b_{d} \right)
+\mathbb{X}'_{\ldots{}\beta} &amp;= \mathrm{Dense}(\mathbb{X}_{\ldots{}\alpha}) \\
+  &amp;= h\left( \sum_\alpha W_{\alpha\beta} \mathbb{X}_{\ldots{}\alpha} + b_{\beta} \right)
 \end{aligned}
 \]</div>
-<p>, where <span class="arithmatex">\(W_{cd}\)</span>, <span class="arithmatex">\(b_{d}\)</span> are the learnable weights and biases, <span class="arithmatex">\(h\)</span> is the
-activation function, and <span class="arithmatex">\(\mathbb{X}\)</span> can be <span class="arithmatex">\(\mathbb{P}_{ic}\)</span> or
-<span class="arithmatex">\(\mathbb{I}_{ijc}\)</span> with <span class="arithmatex">\(c,d\)</span> being the indices of input/output channels. The
-keyward arguments are parsed into the class, which can be used to specify
-the bias, activation function, etc for the dense layer. <code>FFLayer</code> outputs a
-tensor with the shape <code>[..., n_nodes[-1]]</code>.</p>
+<p>, where <span class="arithmatex">\(W_{\alpha\beta}\)</span>, <span class="arithmatex">\(b_{\beta}\)</span> are the learnable weights and biases,
+<span class="arithmatex">\(h\)</span> is the activation function, and <span class="arithmatex">\(\mathbb{X}\)</span> can be
+<span class="arithmatex">\(\mathbb{P}_{i\alpha}\)</span> or <span class="arithmatex">\(\mathbb{I}_{ij\alpha}\)</span> with <span class="arithmatex">\(\alpha,\beta\)</span> being
+the indices of input/output channels. The keyward arguments are parsed into
+the class, which can be used to specify the bias, activation function, etc
+for the dense layer. <code>FFLayer</code> outputs a tensor with the shape <code>[...,
+n_nodes[-1]]</code>.</p>
 <p>In the PiNet architecture, <code>PPLayer</code> and <code>IILayer</code> are both instances of the
-<code>FFLayer</code> class, with the difference that <code>IILayer</code>s have their baises set
-to zero to avoid discontinuity in the model output.</p>
+<code>FFLayer</code> class , namely:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+  \mathbb{I}_{ij\gamma} &amp;= \mathrm{IILayer}(\mathbb{I}'_{ij\beta}) = \mathrm{FFLayer}(\mathbb{I}'_{ij\beta}) \\
+  \mathbb{P}_{i\delta} &amp;= \mathrm{PPLayer}(\mathbb{P}''_{i\gamma}) = \mathrm{FFLayer}(\mathbb{P}'_{i\gamma})
+\end{aligned}
+\]</div>
+<p>, with the difference that <code>IILayer</code>s have their baises set to zero to avoid
+discontinuity in the model output.</p>
 
 
   
@@ -928,20 +944,19 @@ to zero to avoid discontinuity in the model output.</p>
             Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
 
   
-      <p><code>PILayer</code> takes the properties (<span class="arithmatex">\(\mathbb{P}_{ik}, \mathbb{P}_{jk}\)</span>) of a
-pair of atoms as input and outputs a set of interactions for each pair. The
-input <span class="arithmatex">\(\mathbb{P}_{i}, \mathbb{P}_{j}\)</span> will be concatenated as the input of
-a feed-forward neural network (<code>FFLayer</code>), and the interactions are
-generated by taking the output of the <code>FFLayer</code> as weights of radial basis
-functions, i.e.:</p>
+      <p><code>PILayer</code> takes the properties (<span class="arithmatex">\(\mathbb{P}_{i\alpha},
+\mathbb{P}_{j\alpha}\)</span>) of a pair of atoms as input and outputs a set of
+interactions for each pair. The inputs will be broadcasted and concatenated
+as the input of a feed-forward neural network (<code>FFLayer</code>), and the
+interactions are generated by taking the output of the <code>FFLayer</code> as weights
+of radial basis functions, i.e.:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-\mathbb{I}^{w}_{ij(bd)} &amp;= \mathrm{FFLayer}\left((\mathbf{1}_{ij}\mathbb{P}_{ic})\Vert(\mathbf{1}_{ij}\mathbb{P}_{jc})\right) \\
-                        &amp;= \mathrm{FFLayer}(\mathbb{I}'_{ijc}\Vert\mathbb{I}''_{ijc}) \\
-\mathbb{I}_{ijd} &amp;= \sum_b \mathbb{I}^{w}_{ij(bd)} \, e_{ijb}
+w_{ij(b\beta)} &amp;= \mathrm{FFLayer}\left((\mathbf{1}_{ij}\mathbb{P}_{i\alpha})\Vert(\mathbf{1}_{ij}\mathbb{P}_{j\alpha})\right) \\
+\mathbb{I}'_{ij\beta} &amp;= \sum_b W_{ij(b\beta)} \, e_{ijb}
 \end{aligned}
 \]</div>
-<p>, where <span class="arithmatex">\(\mathbb{I}^{w}_{ij(bd)}\)</span> is an intemediate weight tensor for the
+<p>, where <span class="arithmatex">\(w_{ij(b\beta)}\)</span> is an intemediate weight tensor for the
 radial basis functions, output by the <code>FFLayer</code>; the output channel is
 reshaped into two dimensions, where <span class="arithmatex">\(b\)</span> is the index for the basis function
 and <span class="arithmatex">\(d\)</span> is the index for output interaction.</p>
@@ -1043,7 +1058,7 @@ the basis to form the output interaction.</p>
   
       <p>PILayer take a list of three tensors as input:</p>
 <ul>
-<li>ind_2: sparse indices of pairs with shape <code>(n_pairs, 2)</code></li>
+<li>ind_2: <a href="../layers/#sparse-indices">sparse indices</a> of pairs with shape <code>(n_pairs, 2)</code></li>
 <li>prop: property tensor with shape <code>(n_atoms, n_prop)</code></li>
 <li>basis: interaction tensor with shape <code>(n_pairs, n_basis)</code></li>
 </ul>
@@ -1131,7 +1146,7 @@ interations. Thus the returned property has the same shape with the
 input interaction, i.e.:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-\mathbb{P}_{ic} = \mathrm{IPLayer}(\mathbb{I}_{ijc}) = \sum_{j} \mathbb{I}_{ijc}
+\mathbb{P}_{i\gamma} = \mathrm{IPLayer}(\mathbb{I}_{ij\gamma}) = \sum_{j} \mathbb{I}_{ij\gamma}
 \end{aligned}
 \]</div>
 
@@ -1184,7 +1199,7 @@ input interaction, i.e.:</p>
   
       <p>IPLayer take a list of three tensors list as input:</p>
 <ul>
-<li>ind_2: sparse indices of pairs with shape <code>(n_pairs, 2)</code></li>
+<li>ind_2: <a href="../layers/#sparse-indices">sparse indices</a> of pairs with shape <code>(n_pairs, 2)</code></li>
 <li>prop: property tensor with shape <code>(n_atoms, n_prop)</code></li>
 <li>inter: interaction tensor with shape <code>(n_pairs, n_inter)</code></li>
 </ul>
@@ -1275,17 +1290,20 @@ new tensor is always returned.</p>
 <p>If shapes of the two tensors match, their sum is returned. If the two
 tensors' shapes differ in the last dimension, the old tensor will be added
 to the new after a learnable linear transformation that matches its shape to
-the new tensor, i.e.:</p>
+the new tensor, i.e., according to the above flowchart:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-\mathbb{X}'_{\ldots{}d} &amp;= \mathrm{ResUpdate}(\mathbb{X}^{\mathrm{old}}_{\ldots{}c},\mathbb{X}^{\mathrm{new}}_{\ldots{}d}) &amp; \\
+\mathbb{P}'_{i\gamma} &amp;= \mathrm{ResUpdate}(\mathbb{P}^{t}_{i\alpha},\mathbb{P}''_{i\gamma}) &amp; \\
   &amp;= \begin{cases}
-       \mathbb{X}^{\mathrm{old}}_{\ldots{}d} + \mathbb{X}^{\mathrm{new}}_{\ldots{}d} &amp; \textrm{, if dimension matches} \\
-       \sum_{c} W_{cd} \, \mathbb{X}^{\mathrm{old}}_{\ldots{}c} + \mathbb{X}^{\mathrm{new}}_{\ldots{}d} &amp; \textrm{, elsewise}
+       \mathbb{P}^{t}_{i\alpha} + \mathbb{P}''_{i\gamma} &amp; \textrm{, if } \mathrm{dim}(\mathbb{P}^{t}) = \mathrm{dim}(\mathbb{P}'')\\
+       \sum_{\alpha} W_{\alpha\gamma} \, \mathbb{P}^{t}_{i\alpha} + \mathbb{P}''_{i\gamma} &amp; \textrm{, if } \mathrm{dim}(\mathbb{P}^{t}) \ne \mathrm{dim}(\mathbb{P}'')
      \end{cases}
 \end{aligned}
 \]</div>
-<p>, where <span class="arithmatex">\(W_{cd}\)</span> is a learnable weight matrix if needed.</p>
+<p>, where <span class="arithmatex">\(W_{\alpha\beta}\)</span> is a learnable weight matrix if needed.</p>
+<p>In the PiNet architecture above, ResUpdate is only used to update the
+properties after the <code>IPLayer</code>, when <code>ii_nodes[-1]==pp_nodes[-1]</code>, the
+weight matrix is only necessary at <span class="arithmatex">\(t=0\)</span>.</p>
 
 
   
@@ -1412,10 +1430,10 @@ the new tensor, i.e.:</p>
             Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
 
   
-      <p><code>OutLayer</code> is a simple combination of the <code>FFLayer</code> and the <code>ResUpdate</code>
-layer, where the <code>out_units</code> controls the dimension of outputs. In addition
-to the <code>FFLayer</code> specified by <code>n_nodes</code>, the <code>OutLayer</code> has one additional
-linear biasless layer that scales the outputs, specified by <code>out_units</code>.</p>
+      <p><code>OutLayer</code> updates the network output with a <code>FFLayer</code> layer, where the
+<code>out_units</code> controls the dimension of outputs. In addition to the <code>FFLayer</code>
+specified by <code>n_nodes</code>, the <code>OutLayer</code> has one additional linear biasless
+layer that scales the outputs, specified by <code>out_units</code>.</p>
 
 
   
@@ -1523,7 +1541,7 @@ linear biasless layer that scales the outputs, specified by <code>out_units</cod
   
       <p>OutLayer takes a list of three tensors as input:</p>
 <ul>
-<li>ind_1: sparse indices of atoms with shape <code>(n_atoms, 1)</code></li>
+<li>ind_1: <a href="../layers/#sparse-indices">sparse indices</a> of atoms with shape <code>(n_atoms, 2)</code></li>
 <li>prop: property tensor with shape <code>(n_atoms, n_prop)</code></li>
 <li>prev_output:  previous output with shape <code>(n_atoms, out_units)</code></li>
 </ul>

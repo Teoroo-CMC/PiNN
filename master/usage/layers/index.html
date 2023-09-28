@@ -340,8 +340,35 @@
     </div>
 
     <div id="content">
-      <h1 id="shared-layers">Shared Layers</h1>
-<p>This page documents the common layers in different networks.</p>
+      <h1 id="shared-parts-of-networks">Shared parts of networks</h1>
+<p>This page documents the shared layers in different networks, along with the
+convention about data structure.</p>
+<h2 id="convention">Convention</h2>
+<h3 id="sparse-indices">Sparse indices</h3>
+<p><img alt="PiNet architecture" src="../../tikz/sparse_indices.svg" width="500" /></p>
+<p>Since atomistic data comes in irregular shapes, PiNN uses sparse data structure
+for data batching, and the construction of pairwise, triplet-wise tensors. All
+these tensors are associated with indices named as <code>ind_*</code>, with shapes <code>ind_1:
+[n_atoms, 2]</code>, <code>ind_2: [n_pairs, 2]</code>, etc. The meanings of indices are:</p>
+<ul>
+<li>For <code>ind_1</code>: <code>[i-th_struct_in_batch, j-th_atom_in_struct]</code>;</li>
+<li>For <code>ind_2</code>: <code>[i-th_atom_in_batch, j-th_atom_in_batch]</code>;</li>
+<li>For <code>ind_3</code>: <code>[i-th_pair_in_batch, j-th_pair_in_batch]</code>, with shared central atom;</li>
+<li>...</li>
+</ul>
+<h2 id="using-sparse-indices">Using sparse indices</h2>
+<p>To construct a pairwise variable from atom-centered ones, use the
+<code>tf.gather_nd</code> operator, for instance the following operation broadcasts the
+atom-centered <span class="arithmatex">\(\mathbb{P}_{i\alpha}\)</span> variable to each pair of atoms
+(<span class="arithmatex">\(\mathbb{I}_{ij\alpha}=\mathbf{1}_{ij}\mathbb{P}_{i\alpha}\)</span>).</p>
+<div class="highlight"><pre><span></span><code><span class="n">I</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">ind_2</span><span class="p">)</span>
+</code></pre></div>
+<p>To accumulate pairwise predictions over neighbors (<span class="arithmatex">\(\mathbb{P}_{i\alpha} =
+\sum_{j} \mathbb{I}_{ij\alpha}\)</span>), use the <code>tf.scatter_nd</code> operation:</p>
+<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">n_alpha</span><span class="p">])</span>
+</code></pre></div>
+<p>Note that the number of atoms must be supplied since it cannot be inferred from
+<code>ind_2</code>.</p>
 <h2 id="neighbor-list">Neighbor list</h2>
 <h3 id="celllistnl">CellListNL</h3>
 
@@ -356,7 +383,7 @@
             Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
 
   
-      <p>Compute neighbour list with celllist approach, see
+      <p>Compute neighbour list with cell lists approach, see
 <a href="https://en.wikipedia.org/wiki/Cell_lists">https://en.wikipedia.org/wiki/Cell_lists</a>.</p>
 
 
@@ -438,13 +465,13 @@
       <p>The layer expects a dictionary of tensors from a sparse_batch
 with keys:</p>
 <ul>
-<li><code>ind_1</code>: sparse indices of atoms in batch, with shape <code>(n_atoms, 1)</code></li>
+<li><code>ind_1</code>: <a href="./#sparse-indices">sparse indices</a> of atoms in batch, with shape <code>(n_atoms, 2)</code></li>
 <li><code>coord</code>: atomic coordinate, with shape <code>(n_atoms, 3)</code></li>
 <li><code>cell</code> (optional): cell vectors with shape<code>(n_batch,3,3)</code></li>
 </ul>
 <p>It output a dictionary</p>
 <ul>
-<li><code>ind_2</code>: sparse indices of neighbor list, with shape <code>(n_pairs, 2)</code></li>
+<li><code>ind_2</code>: <a href="./#sparse-indices">sparse indices</a> of neighbor list, with shape <code>(n_pairs, 2)</code></li>
 <li><code>diff</code>: displacement vectors, with shape <code>(n_pairs, 3)</code></li>
 <li><code>dist</code>: pairwise distances, with shape <code>(n_pairs)</code></li>
 </ul>
@@ -529,11 +556,11 @@ with keys:</p>
   
       <p>Cutoff function layer</p>
 <p>The following types of cutoff function are implemented (all functions are
-defined within <span class="arithmatex">\(r_{ij}&lt;r_{c}\)</span>):</p>
+defined within <span class="arithmatex">\(r_{ij}&lt;r_{c}\)</span> and decay to zero at <span class="arithmatex">\(r_{c}\)</span>):</p>
 <ul>
-<li><code>f1</code>: <span class="arithmatex">\(0.5 (\mathrm{cos}(\pi r_{ij}/r_{c})+1)\)</span></li>
-<li><code>f2</code>: <span class="arithmatex">\(\mathrm{tanh}^3(1- r_{ij}/r_{c})/\mathrm{tanh}^3(1)\)</span></li>
-<li><code>hip</code>: <span class="arithmatex">\(\mathrm{cos}^2(\pi r_{ij}/2r_{c})\)</span></li>
+<li><span class="arithmatex">\(f^1(r_{ij}) = 0.5 (\mathrm{cos}(\pi r_{ij}/r_{c})+1)\)</span></li>
+<li><span class="arithmatex">\(f^2(r_{ij}) = \mathrm{tanh}^3(1- r_{ij}/r_{c})/\mathrm{tanh}^3(1)\)</span></li>
+<li><span class="arithmatex">\(hip(r_{ij}) = \mathrm{cos}^2(\pi r_{ij}/2r_{c})\)</span></li>
 </ul>
 
 
@@ -705,6 +732,15 @@ defined within <span class="arithmatex">\(r_{ij}&lt;r_{c}\)</span>):</p>
 
   
       <p>Gaussian Basis Layer</p>
+<p>Builds the Gaussian basis function:</p>
+<div class="arithmatex">\[
+e_{ijb} = e^{-\eta_b (r_{ij}-r_{b})^2}
+\]</div>
+<p>Both the Gaussian centers <span class="arithmatex">\(r_{b}\)</span> and width <span class="arithmatex">\(\eta_{b}\)</span> can be arrays that
+specifies the parameter for each basis function. When <span class="arithmatex">\(\eta\)</span> is given as a
+single float, the same value is assigned to every basis. When center is not
+given, <code>n_basis</code> and <code>rc</code> are used to generat a linearly spaced set of
+basis.</p>
 
 
   
@@ -733,9 +769,6 @@ defined within <span class="arithmatex">\(r_{ij}&lt;r_{c}\)</span>):</p>
 
   <div class="doc doc-contents ">
   
-      <p>When center is not given, <code>n_basis</code> and <code>rc</code> are used to generat a
-linearly spaced set of basis, otherwise <code>n_basis</code> will be the size of
-<code>center</code>.</p>
 
 
 
@@ -920,6 +953,13 @@ linearly spaced set of basis, otherwise <code>n_basis</code> will be the size of
 
   
       <p>Polynomial Basis Layer</p>
+<p>Builds the polynomial basis function:</p>
+<div class="arithmatex">\[
+e_{ijb} = \mathrm{power}(r_{ij}, {n_{b}})
+\]</div>
+<p>, where <span class="arithmatex">\(n_b\)</span> is specified by <code>n_basis</code>. <code>n_basis</code> can be a list that
+explicitly specifies polynomail orders, or an integer that specifies a the
+orders as <code>[0, 1, ..., n_basis-1]</code>.</p>
 
 
   
@@ -948,7 +988,6 @@ linearly spaced set of basis, otherwise <code>n_basis</code> will be the size of
 
   <div class="doc doc-contents ">
   
-      <p>n_basis can be a list of explicitly specified polynomail orders or the max order.</p>
 
 
 
@@ -1093,8 +1132,8 @@ linearly spaced set of basis, otherwise <code>n_basis</code> will be the size of
   
       <p>One-hot embedding layer</p>
 <p>Given the atomic number of each atom (<span class="arithmatex">\(Z_{i}\)</span>) and a list of specified
-element types (<span class="arithmatex">\(Z_{c}\)</span>), returns:</p>
-<div class="arithmatex">\[\mathbb{P}_{ic} = \delta_{Z_{i},Z_{c}}\]</div>
+element types denoted as (<span class="arithmatex">\(Z^{\mathrm{0}}_{\alpha}\)</span>), returns:</p>
+<div class="arithmatex">\[\mathbb{P}_{i\alpha} = \delta_{Z_{i},Z^{\mathrm{0}}_{\alpha}}\]</div>
 
 
   
@@ -1144,7 +1183,7 @@ element types (<span class="arithmatex">\(Z_{c}\)</span>), returns:</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>list of elements</p>
+              <p>list of elements (<span class="arithmatex">\(Z^{0}\)</span>)</p>
             </div>
           </td>
           <td>

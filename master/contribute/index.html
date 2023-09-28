@@ -15,7 +15,7 @@
     The page_title contains the title for a page as shown in the navigation.
     Site name contains the name as defined in the mkdocs.yml
   -->
-  <title>Migration - PiNN</title>
+  <title>Contribute - PiNN</title>
 
   <link rel="stylesheet" href="../css/theme.css">
   <link rel="stylesheet" href="../css/pygments.css">
@@ -163,16 +163,16 @@
 
                  
                    
-    <li class="active">
-      <a href="./" class="">
+    <li >
+      <a href="../migration/" class="">
         Migration
       </a>
     </li>
 
                  
                    
-    <li >
-      <a href="../contribute/" class="">
+    <li class="active">
+      <a href="./" class="">
         Contribute
       </a>
     </li>
@@ -219,56 +219,43 @@
     </div>
 
     <div id="content">
-      <h1 id="migrating-to-pinn-1x-tf2">Migrating to PiNN 1.x (TF2)</h1>
-<p>Since version 1.x, PiNN switched to TensorFlow 2 as a backend, this introduces
-changes to the API. This document provides information for the changes and
-guides for migration.</p>
-<h2 id="new-features">New features</h2>
-<p><strong>CLI</strong>:
-PiNN 1.x introduces a new entry point <code>pinn</code> as the command line interface. The
-trainer module will be replaced with the <code>pinn train</code> sub-command. The CLI also
-exposes utilities like dataset conversion for easier usage.</p>
-<p><strong>Parameter file</strong>: 
-in PiNN 1.0 the parameter file will serve as a comprehensive input for PiNN
-models, the structure of the parameter file is changed, see the documentation
-for more information.</p>
-<p><strong>Extended Kalman filter</strong>:
-an experimental extended Kalman filter (EKF) optimizer is implemented.</p>
-<h2 id="notes-for-developers">Notes for developers</h2>
-<ul>
-<li>Documentation is now built with mkdocs.</li>
-<li>Documentation is moved to Github pages.</li>
-<li>Continuous integration is moved to Github Actions.</li>
-<li>The Docker Hub repo is now <a href="https://hub.docker.com/repository/docker/teoroo/pinn">teoroo/pinn</a>.</li>
+      <h1 id="contributing-guide">Contributing Guide</h1>
+<h2 id="developer-setup">Developer Setup</h2>
+<p>Install the library with the <code>[dev,doc]</code> options to install the test and
+documentation building suite.</p>
+<div class="highlight"><pre><span></span><code><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span><span class="o">.</span><span class="n">git</span><span class="p">[</span><span class="n">dev</span><span class="p">,</span><span class="n">doc</span><span class="p">]</span>
+<span class="n">pytest</span> <span class="c1"># to run all the tests</span>
+<span class="n">mkdocs</span> <span class="n">serve</span> <span class="c1"># build a live documentation</span>
+</code></pre></div>
+<h2 id="pull-request-checklist">Pull Request Checklist</h2>
+<p>Contributions to the main repo <code>teoroo-cmc/pinn</code> shall proceed with a pull
+request (PR), which will be reviewed by at least one member of the PiNN team.
+Track your development with a fork and start contributing by opening a PR. PR
+can be used to discussed new features without implementation. </p>
+<p>The default GitHub actions runs the tests automatically, and builds a versioned
+documentation for each fork. Below is a checklist before merging commits to the
+master branch:</p>
+<h3 id="code-quality">Code Quality</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> Test should pass;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> New code should be tested at least with an integration test (e.g. a layer
+      should be used in a test of the potential model);</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> Components with non-trivial expected outputs should be tested with simple
+      cases (e.g. neighbor list or equivarient tensor products).</li>
 </ul>
-<p><strong>Datasets</strong>: dataset loaders should be most compatible with PiNN 0.x. With the
-TF2 update, dataset may be inspected interactively with eager execution.
-Splitting option is simplified (see below), and splitting of <code>load_tfrecord</code>
-becomes possible.</p>
-<p><strong>Networks</strong>: following the guideline of TF2, networks in PiNN 1.x are new Keras
-models and layers becomes Keras layers. This means the PiNN networks can be used
-to perform some simple prediction tasks. Note that PiNN models are still
-implemented as TensorFlow estimators since they provide a better control over
-the training and prediction behavior. Like the design of PiNN 0.x, the models
-interpret the predictions of PiNN networks as physical quantities and interface
-them to atomic simulation packages.</p>
-<p><strong>Models</strong>:
-new helper function <code>export_mode</code> and class <code>MetricsCollector</code> are implemented to
-simplify the implementation of models, see the source of <a href="https://github.com/Teoroo-CMC/PiNN/blob/TF2/pinn/models/dipole.py">dipole
-model</a> for an
-example.</p>
-<h2 id="breaking-changes">Breaking changes</h2>
-<ul>
-<li>Models trained in PiNN 0.x will not be usable in PiNN 1.x.</li>
-<li>Model parameters need to be adapted to the new parameter format.</li>
-<li>For dataset loaders <code>load_*</code>:<ul>
-<li>the <code>split</code> argument is renamed to <code>splits</code>;</li>
-<li>splitting is disabled by default;</li>
-<li>nested splits like <code>{'train':1, 'test':[1,2,3]}</code> is not supported anymore.</li>
+<h3 id="documentation">Documentation</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> Documentation build should pass;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> New layers should be documented, include equations when necessary;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> Citations should be added as a Bibtex entry.</li>
 </ul>
-</li>
-<li><code>format_dict</code> is renamed as <code>ds_spec</code> to be consistent with
-  <a href="https://www.tensorflow.org/api_docs/python/tf/data/DatasetSpec">TensorFlow</a>.</li>
+<h3 id="hygiene-rules">Hygiene Rules</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> <strong>Rebase changes</strong> new changes should always be rebased on the latest
+      master branch before merged, see <a href="https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History">interactive
+      rebase</a> if you
+      need to rewrite history;</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox"/><span class="task-list-indicator"></span></label> Follow <a href="https://peps.python.org/pep-0440/">PEP 440</a> for versioning.</li>
 </ul>
     </div>
 
@@ -277,12 +264,12 @@ example.</p>
   <div class="page">
     <div class="page-prev">
       
-      <a href="../changelog/" title="Changelog"><span>«</span> Previous</a>
+      <a href="../migration/" title="Migration"><span>«</span> Previous</a>
       
     </div>
     <div class="page-next">
       
-      <a href="../contribute/" title="Contribute" />Next <span>»</span></a>
+      <a href="../usage/overview/" title="Overview" />Next <span>»</span></a>
       
     </div>
   </div>
