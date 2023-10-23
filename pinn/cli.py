@@ -132,8 +132,8 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
 @click.command(name='log', context_settings=CONTEXT_SETTINGS,
                options_metavar='[options]', short_help='inspect training logs')
 @click.argument('logdir', metavar='logdir', nargs=1)
-@click.option('--tag', metavar='', default='RMSE', show_default=True)
-@click.option('--fmt', metavar='', default='%14.6e ', show_default=True)
+@click.option('-t','--tag', metavar='', default='RMSE', show_default=True)
+@click.option('-f','--fmt', metavar='', default='%14.6e ', show_default=True)
 def log(logdir, tag, fmt):
     import numpy as np
     from glob import glob
