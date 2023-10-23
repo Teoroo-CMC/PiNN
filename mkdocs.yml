@@ -7,6 +7,7 @@ nav:
       - Introduction: index.md
       - Changelog: changelog.md
       - Migration: migration.md
+      - Benchmarks: benchmarks.md
       - Contribute: contribute.md
   - Usage:
       - Overview: usage/overview.md
