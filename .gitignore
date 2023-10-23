@@ -8,3 +8,7 @@ _build/
 .ipynb_checkpoints/
 /.coverage
 /coverage.xml
+/.nextflow*
+/work/
+/datasets
+/*.tar
