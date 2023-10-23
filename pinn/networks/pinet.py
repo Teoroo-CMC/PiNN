@@ -83,7 +83,7 @@ class PILayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    w_{ij(b\beta)} &= \mathrm{FFLayer}\left((\mathbf{1}_{ij}\mathbb{P}_{i\alpha})\Vert(\mathbf{1}_{ij}\mathbb{P}_{j\alpha})\right) \\
+    w_{ij(b\beta)} &= \mathrm{FFLayer}\left((\mathbf{1}_{j}\mathbb{P}_{i\alpha})\Vert(\mathbf{1}_{i}\mathbb{P}_{j\alpha})\right) \\
     \mathbb{I}'_{ij\beta} &= \sum_b W_{ij(b\beta)} \, e_{ijb}
     \end{aligned}
     $$
