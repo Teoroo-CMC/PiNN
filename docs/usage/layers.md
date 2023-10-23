@@ -35,7 +35,7 @@ To accumulate pairwise predictions over neighbors ($\mathbb{P}_{i\alpha} =
 \sum_{j} \mathbb{I}_{ij\alpha}$), use the `tf.scatter_nd` operation:
 
 ```python
-P = tf.gather_nd(ind_2, P, shape=[n_atoms, n_alpha])
+P = tf.scatter_nd(ind_2, P, shape=[n_atoms, n_alpha])
 ```
 
 Note that the number of atoms must be supplied since it cannot be inferred from
