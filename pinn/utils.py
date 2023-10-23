@@ -30,6 +30,11 @@ def init_params(params, dataset):
         print(f' RMSE after substracting the dress: {np.sqrt(np.mean(err**2)):.6e}')
         params['model']['params']['e_dress'] = e_dress
 
+    # Auto-fill atom_types when reasonable
+    if 'PiNet' in params['network']['name']\
+       and 'atom_types' not in params['network']['params']:
+        params['network']['params']['atom_types'] = elems
+
     if params['network']['name']=='BPNN'\
        and 'fp_scale' in params['network']['params']\
        and params['network']['params']['fp_scale']:
