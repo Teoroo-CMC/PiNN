@@ -42,7 +42,7 @@ def load_ase(dataset, splits=None, shuffle=True, seed=0):
     Loads a ASE trajectory
 
     Args:
-        dataset (str or ase.io.trajectory): a filename or trajectory
+        dataset (str|ase.io.trajectory): a filename or trajectory
         splits (dict): key-val pairs specifying the ratio of subsets
         shuffle (bool): shuffle the dataset (only used when splitting)
         seed (int): random seed for shuffling

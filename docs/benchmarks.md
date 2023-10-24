@@ -6,7 +6,7 @@ PiNN collects a small set of benchmarks that are continuously tested
 against (see [version convention]). The benchmark datasets and trained
 models are accessible from the shared [box folder].
 
-[version convention]: ../changelog/#conventions
+[version convention]: changelog.md/#conventions
 [box folder]: https://uppsala.box.com/v/teoroo-cmc-pinn-data
 
 ## Latest benchmarks (v1.2.0)

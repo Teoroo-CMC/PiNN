@@ -64,8 +64,8 @@ class GaussianBasis(tf.keras.layers.Layer):
     def __init__(self, center=None, gamma=None, rc=None, n_basis=None):
         """
         Args:
-            center (float or array): Gaussian centers
-            gamma (float or array): inverse Gaussian width
+            center (float|array): Gaussian centers
+            gamma (float|array): inverse Gaussian width
             rc (float): cutoff radius
             n_basis (int): number of basis function
 
@@ -99,7 +99,7 @@ class GaussianBasis(tf.keras.layers.Layer):
 
 
 class PolynomialBasis(tf.keras.layers.Layer):
-    """Polynomial Basis Layer
+    R"""Polynomial Basis Layer
 
     Builds the polynomial basis function:
 
@@ -117,7 +117,7 @@ class PolynomialBasis(tf.keras.layers.Layer):
         """
 
         Args:
-            n_basis (int or list): number of basis function
+            n_basis (int|list): number of basis function
         """
         super(PolynomialBasis, self).__init__()
         if type(n_basis) != list:
