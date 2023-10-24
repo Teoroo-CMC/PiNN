@@ -342,6 +342,7 @@ class PiNet(tf.keras.Model):
         ii_nodes=[16, 16],
         out_nodes=[16, 16],
         out_units=1,
+        out_inter=0,
         out_pool=False,
         act="tanh",
         depth=4,
@@ -380,7 +381,13 @@ class PiNet(tf.keras.Model):
             GCBlock(pp_nodes, pi_nodes, ii_nodes, activation=act)
             for i in range(depth - 1)
         ]
-        self.out_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
+        self.pout_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
+
+        if outer_inter > 0:
+            self.iout_layers = [PILayer(out_nodes+[out_inter]) for i in range(depth)]
+        else:
+            self.iout_layers = None
+
         self.ann_output = ANNOutput(out_pool)
 
     def call(self, tensors):
@@ -409,11 +416,21 @@ class PiNet(tf.keras.Model):
         tensors = self.preprocess(tensors)
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
-        output = 0.0
+
+        if out_interaction>0 and out_pool==True:
+            raise Exception("Currently this is not implemented in PiNN.")
+
+        pout = 0.0
+        iout = 0.0
         for i in range(self.depth):
             prop = self.gc_blocks[i]([tensors["ind_2"], tensors["prop"], basis])
-            output = self.out_layers[i]([tensors["ind_1"], prop, output])
             tensors["prop"] = self.res_update[i]([tensors["prop"], prop])
+            pout = self.pout_layers[i]([tensors["ind_1"], prop, pout])
+            iout += self.iout_layers[i]([tensors["ind_2"], prop, basis])
 
-        output = self.ann_output([tensors["ind_1"], output])
-        return output
+        pout = self.ann_output([tensors["ind_1"], pout])
+
+        if self.iout_layers is not None:
+            return pout, iout
+        else:
+            return pout
