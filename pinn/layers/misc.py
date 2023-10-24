@@ -33,14 +33,14 @@ class AtomicOnehot(tf.keras.layers.Layer):
         return prop
 
 class ANNOutput(tf.keras.layers.Layer):
-    """ANN Ouput layer
+    R"""ANN Ouput layer
 
     Output atomic or molecular (system) properties depending on `out_pool`
 
     $$
-    \\begin{cases}
-     \mathbb{P}^{\mathrm{out}}_i  &, \\textrm{if out_pool is False}\\\\
-     \mathrm{pool}_i(\mathbb{P}^{\mathrm{out}}_i)  &, \\textrm{if out_pool}
+    \begin{cases}
+     \mathbb{P}^{\mathrm{out}}_i  &, \textrm{if out_pool is False}\\
+     \mathrm{pool}_i(\mathbb{P}^{\mathrm{out}}_i)  &, \textrm{if out_pool}
     \end{cases}
     $$
 

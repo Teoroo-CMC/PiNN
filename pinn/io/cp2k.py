@@ -15,7 +15,7 @@ def _stress_indexer(files):
     f = open(files['out'], 'r')
     m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
     locs = [match.span()[0] for match in
-            re.finditer(b'STRESS TENSOR \[GPa\]', m)]
+            re.finditer(br'STRESS TENSOR \[GPa\]', m)]
     indexes = list(zip([files['out']]*len(locs), locs))
     f.close()
     return indexes

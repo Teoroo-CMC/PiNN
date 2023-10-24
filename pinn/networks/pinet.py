@@ -358,8 +358,8 @@ class PiNet(tf.keras.Model):
             rc (float): cutoff radius
             basis_type (string): basis function, can be "polynomial" or "gaussian"
             n_basis (int): number of basis functions to use
-            gamma (float or array): width of gaussian function for gaussian basis
-            center (float or array): center of gaussian function for gaussian basis
+            gamma (float|array): width of gaussian function for gaussian basis
+            center (float|array): center of gaussian function for gaussian basis
             cutoff_type (string): cutoff function to use with the basis.
             act (string): activation function to use
         """
