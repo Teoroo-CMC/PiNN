@@ -10,11 +10,17 @@
   color: var(--theme-color);
 }
 
-.jp-InputPrompt,
-.jp-OutputPrompt {
-  display: none !important;
+.output pre {
+    border: 1px dotted var(--theme-color);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
 }
 
-.clipboard-copy-icon {
-  width: 1em;
+.input code, .input pre {
+    background-color: unset !important;
+}
+
+.highlight {
+    margin-top: 10px;
 }
