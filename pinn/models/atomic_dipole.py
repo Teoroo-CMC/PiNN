@@ -30,22 +30,22 @@ default_params = {
 }
 
 @export_model
-def dipole_model(features, labels, mode, params):
+def dipole_model(tensors, labels, mode, params):
     """Model function for neural network dipoles"""
     params['network']['params'].update({'out_prop':0, 'out_inter':1})
     network = get_network(params['network'])
     model_params = default_params
     model_params.update(params['model']['params'])
 
-    features = network.preprocess(features)
-    ppred, ipred = network(features)
+    tensors = network.preprocess(tensors)
+    ppred, ipred = network(tensors)
     ppred = tf.expand_dims(ppred, axis=1)
     ipred = tf.expand_dims(ipred, axis=1)
 
-    ind = features['ind_1']  # ind_1 => id of molecule for each atom
-    nbatch = tf.reduce_max(ind)+1
+    ind1 = tensors['ind_1']  # ind_1 => id of molecule for each atom
+    nbatch = tf.reduce_max(ind1)+1
 
-    atom_rind, pair_rind = make_indices(features)
+    atom_rind, pair_rind = make_indices(tensors)
 
     # Compute bond vector
     R = tf.fill([nbatch, nmax, 3], np.nan)
@@ -53,7 +53,7 @@ def dipole_model(features, labels, mode, params):
     R_ij = R[:,None,:,:] - R[:,:,None,:]
     
     # Apply minimum image convention if there exists a cell
-    cell = features['cell'] if 'cell' in features is not None
+    cell = tensors['cell'] if 'cell' in tensors is not None
     if cell is not None:
         R_ij_flat = tf.reshape(tf.transpose(R_ij, [0,3,1,2]), [nbatch, 3, -1])
         cell_inv = tf.linalg.inv(cell)
@@ -66,19 +66,19 @@ def dipole_model(features, labels, mode, params):
 
 
     charge = tf.math.unsorted_segment_sum(pred, ind[:, 0], nbatch)
-    dipole = pred * features['coord']
+    dipole = pred * tensors['coord']
     dipole = tf.math.unsorted_segment_sum(dipole, ind[:, 0], nbatch)
     dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
-        metrics = make_metrics(features, dipole, charge, model_params, mode)
+        metrics = make_metrics(tensors, dipole, charge, model_params, mode)
         tvars = network.trainable_variables
         train_op = get_train_op(params['optimizer'], metrics, tvars)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
-        metrics = make_metrics(features, dipole, charge, model_params, mode)
+        metrics = make_metrics(tensors, dipole, charge, model_params, mode)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
 
@@ -95,22 +95,22 @@ def dipole_model(features, labels, mode, params):
 
 
 @pi_named("METRICS")
-def make_metrics(features, d_pred, q_pred, params, mode):
+def make_metrics(tensors, d_pred, q_pred, params, mode):
     metrics = MetricsCollector(mode)
 
-    d_data = features['d_data']
+    d_data = tensors['d_data']
     q_data = tf.zeros_like(q_pred)
     d_data *= model_params['d_scale']
     d_mask = tf.abs(d_data) > params['max_dipole'] if params['max_dipole'] else None
     d_weight = params['d_loss_multiplier']
-    d_weight *= features['d_weight'] if params['use_d_weight'] else 1
+    d_weight *= tensors['d_weight'] if params['use_d_weight'] else 1
 
     metrics.add_error('Q', q_data, q_pred)
     metrics.add_error('D', d_data, d_pred, mask=d_mask, weight=d_weight,
                       use_error=(not params['use_d_per_atom']))
 
     if params['use_d_per_atom'] or params['log_d_per_atom']:
-        n_atoms = count_atoms(features['ind_1'], dtype=d_data.dtype)
+        n_atoms = count_atoms(tensors['ind_1'], dtype=d_data.dtype)
         metrics.add_error('D_PER_ATOM', d_data/n_atoms, d_pred/n_atoms, mask=d_mask,
                           weight=d_weight, use_error=params['use_d_per_atom'],
                           log_error=params['log_d_per_atom'])
