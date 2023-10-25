@@ -91,6 +91,27 @@ def count_atoms(ind_1, dtype):
         tf.ones_like(ind_1, dtype), ind_1, tf.reduce_max(ind_1)+1)
 
 
+def make_indices(tensors):
+    ind1 = tensors['ind_1']
+    ind2 = tensors['ind_2']
+    coord = tensors['coord']
+    natoms = tf.shape(ind1)[0]
+    nbatch = tf.reduce_max(ind1)+1
+    aind = tf.cumsum(tf.ones_like(ind1))
+    amax = tf.shape(ind1)[0]
+    rind = aind-tf.gather(tf.math.unsorted_segment_min(aind, ind1, nbatch), ind1)
+    rmax = tf.math.unsorted_segment_max(rind, ind1, nbatch)
+    ind4J = tf.transpose([ind1, rind, rind])[0]
+
+    atom_rind = tf.transpose([ind1, rind])[0]
+    pair_rind = tf.transpose([
+        tf.gather(ind1, ind2[:,0]),
+        tf.gather(rind, ind2[:,0]),
+        tf.gather(rind, ind2[:,1])])[0]
+    return atom_rind, pair_rind
+
+
+
 def get_atomic_dress(dataset, elems, key='e_data'):
     """Fit the atomic energy with a element dependent atomic dress
 
