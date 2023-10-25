@@ -43,12 +43,18 @@ def dipole_model(tensors, labels, mode, params):
     ipred = tf.expand_dims(ipred, axis=1)
 
     ind1 = tensors['ind_1']  # ind_1 => id of molecule for each atom
-    nbatch = tf.reduce_max(ind1)+1
+    ind2 = tensors['ind_2']
 
     atom_rind, pair_rind = make_indices(tensors)
+    
+    nbatch = tf.reduce_max(atom_rind[:,0])+1
+    nmax = tf.reduce_max(atom_rind[:, 1])+1
 
     # Compute bond vector
     disp_r = tensors['diff']
+
+    # Compute atomic dipole
+    atomic_d_pairwise = ipred * disp_r
 
     # Compute the total charge per structure in the batch
     charge = tf.math.unsorted_segment_sum(ppred, ind1[:, 0], nbatch)
