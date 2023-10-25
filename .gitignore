@@ -12,3 +12,4 @@ _build/
 /work/
 /datasets
 /*.tar
+/models/
