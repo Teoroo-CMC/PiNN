@@ -64,10 +64,12 @@ def dipole_model(tensors, labels, mode, params):
 
     R_ij = tf.where(tf.math.is_nan(R_ij), tf.zeros_like(R_ij), R_ij)
 
+    # Compute the total charge per structure in the batch
+    charge = tf.math.unsorted_segment_sum(ppred, ind1[:, 0], nbatch)
 
-    charge = tf.math.unsorted_segment_sum(pred, ind[:, 0], nbatch)
-    dipole = pred * tensors['coord']
-    dipole = tf.math.unsorted_segment_sum(dipole, ind[:, 0], nbatch)
+    # Compute the dipole moment using the predicted charges
+    dipole = ppred * tensors['coord']
+    dipole = tf.math.unsorted_segment_sum(dipole, ind1[:, 0], nbatch)
     dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
