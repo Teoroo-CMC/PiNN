@@ -32,16 +32,37 @@ default_params = {
 @export_model
 def dipole_model(features, labels, mode, params):
     """Model function for neural network dipoles"""
+    params['network']['params'].update({'out_prop':0, 'out_inter':1})
     network = get_network(params['network'])
     model_params = default_params
     model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
-    pred = network(features)
-    pred = tf.expand_dims(pred, axis=1)
+    ppred, ipred = network(features)
+    ppred = tf.expand_dims(ppred, axis=1)
+    ipred = tf.expand_dims(ipred, axis=1)
 
     ind = features['ind_1']  # ind_1 => id of molecule for each atom
     nbatch = tf.reduce_max(ind)+1
+
+    # Compute bond vector
+    R = tf.fill([nbatch, nmax, 3], np.nan)
+    R = tf.tensor_scatter_nd_update(R, atom_rind, coord)
+    R_ij = R[:,None,:,:] - R[:,:,None,:]
+    
+    # Apply minimum image convention if there exists a cell
+    cell = features['cell'] if 'cell' in features is not None
+    if cell is not None:
+        R_ij_flat = tf.reshape(tf.transpose(R_ij, [0,3,1,2]), [nbatch, 3, -1])
+        cell_inv = tf.linalg.inv(cell)
+        R_ij_frac = tf.einsum('bxc,bxp->bcp', cell_inv, R_ij_flat)
+        R_ij_frac -= tf.math.rint(R_ij_frac)
+        R_ij_flat = tf.einsum('bcx,bcp->bxp', cell, R_ij_frac)
+        R_ij = tf.transpose(tf.reshape(R_ij_flat,[nbatch,3,nmax,nmax]),[0,2,3,1])
+
+    R_ij = tf.where(tf.math.is_nan(R_ij), tf.zeros_like(R_ij), R_ij)
+
+
     charge = tf.math.unsorted_segment_sum(pred, ind[:, 0], nbatch)
     dipole = pred * features['coord']
     dipole = tf.math.unsorted_segment_sum(dipole, ind[:, 0], nbatch)
