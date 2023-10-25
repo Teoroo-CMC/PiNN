@@ -342,6 +342,7 @@ class PiNet(tf.keras.Model):
         ii_nodes=[16, 16],
         out_nodes=[16, 16],
         out_units=1,
+        out_prop=1,
         out_inter=0,
         out_pool=False,
         act="tanh",
