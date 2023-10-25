@@ -383,11 +383,13 @@ class PiNet(tf.keras.Model):
         ]
         self.pout_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
 
-        if outer_inter > 0:
+        if out_inter>0:
             self.iout_layers = [PILayer(out_nodes+[out_inter]) for i in range(depth)]
         else:
             self.iout_layers = None
 
+
+        self.out_pool = out_pool
         self.ann_output = ANNOutput(out_pool)
 
     def call(self, tensors):
@@ -417,7 +419,7 @@ class PiNet(tf.keras.Model):
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
 
-        if out_interaction>0 and out_pool==True:
+        if self.iout_layers is not None and self.out_pool==True:
             raise Exception("Currently this is not implemented in PiNN.")
 
         pout = 0.0
