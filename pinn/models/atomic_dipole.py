@@ -8,7 +8,7 @@ the total dipole.
 import numpy as np
 import tensorflow as tf
 from pinn import get_network
-from pinn.utils import pi_named
+from pinn.utils import pi_named, make_indices
 from pinn.models.base import export_model, get_train_op, MetricsCollector
 
 default_params = {
@@ -44,6 +44,8 @@ def dipole_model(features, labels, mode, params):
 
     ind = features['ind_1']  # ind_1 => id of molecule for each atom
     nbatch = tf.reduce_max(ind)+1
+
+    atom_rind, pair_rind = make_indices(features)
 
     # Compute bond vector
     R = tf.fill([nbatch, nmax, 3], np.nan)
