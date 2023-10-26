@@ -50,20 +50,18 @@ def dipole_model(tensors, labels, mode, params):
     nbatch = tf.reduce_max(atom_rind[:,0])+1
     nmax = tf.reduce_max(atom_rind[:, 1])+1
 
+    natoms = tf.reduce_max(ind2)+1
+
     # Compute bond vector
     disp_r = tensors['diff']
 
     # Compute atomic dipole
     atomic_d_pairwise = ipred * disp_r
-
-    # Compute the total charge per structure in the batch
-    charge = tf.math.unsorted_segment_sum(ppred, ind1[:, 0], nbatch)
-
-    # Compute the dipole moment using the predicted charges
-    dipole = ppred * tensors['coord']
-    dipole = tf.math.unsorted_segment_sum(dipole, ind1[:, 0], nbatch)
+    atomic_d = tf.math.unsorted_segment_sum(atomic_d, ind2[:, 0], natoms) 
+    dipole = tf.math.unsorted_segment_sum(atomic_d, ind1[:, 0], nbatch)
     dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
 
+    
     if mode == tf.estimator.ModeKeys.TRAIN:
         metrics = make_metrics(tensors, dipole, charge, model_params, mode)
         tvars = network.trainable_variables
