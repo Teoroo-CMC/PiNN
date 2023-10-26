@@ -57,7 +57,7 @@ def dipole_model(tensors, labels, mode, params):
 
     # Compute atomic dipole
     atomic_d_pairwise = ipred * disp_r
-    atomic_d = tf.math.unsorted_segment_sum(atomic_d, ind2[:, 0], natoms) 
+    atomic_d = tf.math.unsorted_segment_sum(atomic_d_pairwise, ind2[:, 0], natoms) 
     dipole = tf.math.unsorted_segment_sum(atomic_d, ind1[:, 0], nbatch)
     dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
 
