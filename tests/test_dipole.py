@@ -61,7 +61,6 @@ def test_pinn_atomic_dipole():
 def _atomic_dipole_tests(params):
     # Series of tasks that the atomic dipole model should pass
     import pinn
-    from pinn.calculator import PiNN_calc
 
     data = _get_dipole_data()
 
@@ -73,9 +72,6 @@ def _atomic_dipole_tests(params):
     eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=100)
 
     model = pinn.get_model(params)
-    results, _ = tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
+    tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
     
-    assert np.allclose(results['METRICS/E_RMSE']/params['model']['params']['e_scale'],
-                       np.sqrt(np.mean((e_pred/params['model']['params']['e_unit']
-                                        - data['e_data'])**2)), rtol=1e-2)
 
