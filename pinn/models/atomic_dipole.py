@@ -30,7 +30,7 @@ default_params = {
 }
 
 @export_model
-def dipole_model(tensors, labels, mode, params):
+def atomic_dipole_model(tensors, labels, mode, params):
     """Model function for neural network dipoles"""
     params['network']['params'].update({'out_prop':0, 'out_inter':1})
     network = get_network(params['network'])
