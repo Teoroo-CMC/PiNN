@@ -22,7 +22,7 @@ def _get_dipole_data():
 
         coord.append(water.positions)
         elems.append(water.numbers)
-        d_data.append(dipole.flatten())
+        d_data.append(dipole)
 
     data = {
             'coord': np.array(coord),
@@ -52,7 +52,12 @@ def test_pinn_atomic_dipole():
             'name': 'PiNet',
             'params': network_params},
         'model': {
-            'name': 'atomic_dipole_model'}}
+            'name': 'atomic_dipole_model',
+            'params':  {
+                'd_scale': 1.0,
+                'd_unit': 1.0
+                }
+            }}
     _atomic_dipole_tests(params)
     rmtree(testpath)
 
@@ -72,6 +77,8 @@ def _atomic_dipole_tests(params):
     eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=100)
 
     model = pinn.get_model(params)
-    tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
+    results, _ = tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
+
+    assert False, results
     
 

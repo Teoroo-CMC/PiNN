@@ -25,27 +25,30 @@ default_params = {
     'log_d_per_atom': False,  # log d_per_atom and its distribution
                              # ^- this is forcely done if use_d_per_atom
     'use_d_weight': False,   # scales the loss according to d_weight
+    # L2 loss
+    'use_l2': False,
     # Loss function multipliers
-    'd_loss_multiplier': 1.0,
+    'd_loss_multiplier': 1.0
 }
 
 @export_model
-def atomic_dipole_model(tensors, labels, mode, params):
+def atomic_dipole_model(features, labels, mode, params):
     """Model function for neural network dipoles"""
     params['network']['params'].update({'out_prop':0, 'out_inter':1})
     network = get_network(params['network'])
-    model_params = default_params
+    model_params = default_params.copy()
+    print(params['model'])
     model_params.update(params['model']['params'])
 
-    tensors = network.preprocess(tensors)
-    ppred, ipred = network(tensors)
+    features = network.preprocess(features)
+    ppred, ipred = network(features)
     ppred = tf.expand_dims(ppred, axis=1)
     ipred = tf.expand_dims(ipred, axis=1)
 
-    ind1 = tensors['ind_1']  # ind_1 => id of molecule for each atom
-    ind2 = tensors['ind_2']
+    ind1 = features['ind_1']  # ind_1 => id of molecule for each atom
+    ind2 = features['ind_2']
 
-    atom_rind, pair_rind = make_indices(tensors)
+    atom_rind, pair_rind = make_indices(features)
     
     nbatch = tf.reduce_max(atom_rind[:,0])+1
     nmax = tf.reduce_max(atom_rind[:, 1])+1
@@ -53,7 +56,7 @@ def atomic_dipole_model(tensors, labels, mode, params):
     natoms = tf.reduce_max(ind2)+1
 
     # Compute bond vector
-    disp_r = tensors['diff']
+    disp_r = features['diff']
 
     # Compute atomic dipole
     atomic_d_pairwise = ipred * disp_r
@@ -62,14 +65,14 @@ def atomic_dipole_model(tensors, labels, mode, params):
 
     
     if mode == tf.estimator.ModeKeys.TRAIN:
-        metrics = make_metrics(tensors, dipole, charge, model_params, mode)
+        metrics = make_metrics(features, dipole, model_params, mode)
         tvars = network.trainable_variables
         train_op = get_train_op(params['optimizer'], metrics, tvars)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
-        metrics = make_metrics(tensors, dipole, charge, model_params, mode)
+        metrics = make_metrics(features, dipole, model_params, mode)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
 
@@ -78,30 +81,27 @@ def atomic_dipole_model(tensors, labels, mode, params):
         pred *= model_params['d_unit']
 
         predictions = {
-            'dipole': dipole,
-            'charges': tf.expand_dims(pred, 0)
+            'dipole': dipole
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
 
 
 @pi_named("METRICS")
-def make_metrics(tensors, d_pred, q_pred, params, mode):
+def make_metrics(features, d_pred, params, mode):
     metrics = MetricsCollector(mode)
 
-    d_data = tensors['d_data']
-    q_data = tf.zeros_like(q_pred)
-    d_data *= model_params['d_scale']
+    d_data = features['d_data']
+    d_data *= params['d_scale']
     d_mask = tf.abs(d_data) > params['max_dipole'] if params['max_dipole'] else None
     d_weight = params['d_loss_multiplier']
-    d_weight *= tensors['d_weight'] if params['use_d_weight'] else 1
+    d_weight *= features['d_weight'] if params['use_d_weight'] else 1
 
-    metrics.add_error('Q', q_data, q_pred)
     metrics.add_error('D', d_data, d_pred, mask=d_mask, weight=d_weight,
                       use_error=(not params['use_d_per_atom']))
 
     if params['use_d_per_atom'] or params['log_d_per_atom']:
-        n_atoms = count_atoms(tensors['ind_1'], dtype=d_data.dtype)
+        n_atoms = count_atoms(features['ind_1'], dtype=d_data.dtype)
         metrics.add_error('D_PER_ATOM', d_data/n_atoms, d_pred/n_atoms, mask=d_mask,
                           weight=d_weight, use_error=params['use_d_per_atom'],
                           log_error=params['log_d_per_atom'])
