@@ -34,6 +34,11 @@ jobs:
           python-version: ${{ matrix.py-version }}
           cache: "pip"
           cache-dependency-path: "requirements*.txt"
+      - name: Cache regression test files
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pinn/regression
+          key: ${{ hashFiles('tests/test_regression.py') }}
       - name: Install PiNN
         run: |
           pip install -r requirements-dev.txt
