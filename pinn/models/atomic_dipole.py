@@ -43,8 +43,7 @@ def atomic_dipole_model(features, labels, mode, params):
     features = network.preprocess(features)
     ppred, ipred = network(features)
     ppred = tf.expand_dims(ppred, axis=1)
-    ipred = tf.expand_dims(ipred, axis=1)
-
+    
     ind1 = features['ind_1']  # ind_1 => id of molecule for each atom
     ind2 = features['ind_2']
 
@@ -75,7 +74,6 @@ def atomic_dipole_model(features, labels, mode, params):
         metrics = make_metrics(features, dipole, model_params, mode)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
-
     else:
         dipole = dipole / model_params['d_scale']
         dipole *= model_params['d_unit']

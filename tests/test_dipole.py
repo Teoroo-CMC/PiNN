@@ -22,7 +22,7 @@ def _get_dipole_data():
 
         coord.append(water.positions)
         elems.append(water.numbers)
-        d_data.append(dipole)
+        d_data.append(dipole[0])
 
     data = {
             'coord': np.array(coord),
