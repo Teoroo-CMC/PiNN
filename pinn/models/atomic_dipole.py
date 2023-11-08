@@ -77,8 +77,8 @@ def atomic_dipole_model(features, labels, mode, params):
                                           eval_metric_ops=metrics.METRICS)
 
     else:
-        pred = pred / model_params['d_scale']
-        pred *= model_params['d_unit']
+        dipole = dipole / model_params['d_scale']
+        dipole *= model_params['d_unit']
 
         predictions = {
             'dipole': dipole
