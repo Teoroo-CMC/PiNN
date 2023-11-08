@@ -423,17 +423,26 @@ class PiNet(tf.keras.Model):
         if self.iout_layers is not None and self.out_pool==True:
             raise Exception("Currently this is not implemented in PiNN.")
 
-        pout = 0.0
-        iout = 0.0
-        for i in range(self.depth):
-            prop = self.gc_blocks[i]([tensors["ind_2"], tensors["prop"], basis])
-            tensors["prop"] = self.res_update[i]([tensors["prop"], prop])
-            pout = self.pout_layers[i]([tensors["ind_1"], prop, pout])
-            iout += self.iout_layers[i]([tensors["ind_2"], prop, basis])
-
-        pout = self.ann_output([tensors["ind_1"], pout])
-
         if self.iout_layers is not None:
+            pout = 0.0
+            iout = 0.0
+            for i in range(self.depth):
+                prop = self.gc_blocks[i]([tensors["ind_2"], tensors["prop"], basis])
+                tensors["prop"] = self.res_update[i]([tensors["prop"], prop])
+                pout = self.pout_layers[i]([tensors["ind_1"], prop, pout])
+                iout += self.iout_layers[i]([tensors["ind_2"], prop, basis])
+
+            pout = self.ann_output([tensors["ind_1"], pout])
+
             return pout, iout
+        
         else:
+            pout = 0.0
+            for i in range(self.depth):
+                prop = self.gc_blocks[i]([tensors["ind_2"], tensors["prop"], basis])
+                tensors["prop"] = self.res_update[i]([tensors["prop"], prop])
+                pout = self.pout_layers[i]([tensors["ind_1"], prop, pout])
+
+            pout = self.ann_output([tensors["ind_1"], pout])
+
             return pout
