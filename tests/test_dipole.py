@@ -44,7 +44,7 @@ def test_pinn_atomic_dipole():
         'depth': 3,
         'rc': 5.,
         'n_basis': 5,
-        'atom_types': [1]
+        'atom_types': [1,8]
     }
     params = {
         'model_dir': testpath,
