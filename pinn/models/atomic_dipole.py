@@ -37,7 +37,6 @@ def atomic_dipole_model(features, labels, mode, params):
     params['network']['params'].update({'out_prop':0, 'out_inter':1})
     network = get_network(params['network'])
     model_params = default_params.copy()
-    print(params['model'])
     model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
@@ -47,12 +46,8 @@ def atomic_dipole_model(features, labels, mode, params):
     ind1 = features['ind_1']  # ind_1 => id of molecule for each atom
     ind2 = features['ind_2']
 
-    atom_rind, pair_rind = make_indices(features)
-    
-    nbatch = tf.reduce_max(atom_rind[:,0])+1
-    nmax = tf.reduce_max(atom_rind[:, 1])+1
-
-    natoms = tf.reduce_max(ind2)+1
+    natoms = tf.reduce_max(tf.shape(ind1))
+    nbatch = tf.reduce_max(ind1)+1 
 
     # Compute bond vector
     disp_r = features['diff']
