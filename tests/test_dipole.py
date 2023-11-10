@@ -17,10 +17,10 @@ def _get_dipole_data():
     coord, elems, d_data = [], [], []
     for i in range(120):
         water.rotate(3, 'x')
-        r = water.positions
+        r = water.positions.copy()
         dipole = q @ r
 
-        coord.append(water.positions)
+        coord.append(r)
         elems.append(water.numbers)
         d_data.append(dipole[0])
 
@@ -44,7 +44,7 @@ def test_pinn_atomic_dipole():
         'depth': 3,
         'rc': 5.,
         'n_basis': 5,
-        'atom_types': [1,8]
+        'atom_types': [1, 8]
     }
     params = {
         'model_dir': testpath,
@@ -79,6 +79,6 @@ def _atomic_dipole_tests(params):
     model = pinn.get_model(params)
     results, _ = tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
 
-    assert False, results
+    #assert False, results
     
 
