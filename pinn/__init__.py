@@ -4,6 +4,7 @@ __version__ = '1.2.0.dev'
 
 from pinn.networks import get as get_network
 from pinn.models import get as get_model
+from pinn import report
 
 def get_calc(model_spec, **kwargs):
     """Get a calculator from a trained model.
