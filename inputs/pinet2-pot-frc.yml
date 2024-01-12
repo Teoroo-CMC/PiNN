@@ -2,14 +2,13 @@ model:
   name: potential_model
   params:
     use_force: true
-    e_loss_multiplier: 1.0
-    f_loss_multiplier: 10.0
-    e_scale: 1.0
-    e_unit: 1.0
+    e_loss_multiplier: 0.0
+    f_loss_multiplier: 1.0
     use_e_per_atom: false
     log_e_per_atom: true
+    e_scale: 1.0
 network:
-  name: PiNet
+  name: PiNet2
   params:
     depth: 5
     rc: 4.5
@@ -19,6 +18,7 @@ network:
     pp_nodes: [64,64,64,64]
     ii_nodes: [64,64,64,64]
     out_nodes: [64]
+    weighted: False
 optimizer:
   class_name: Adam
   config:
