@@ -21,3 +21,4 @@ pinn convert [options] filename
 | `--format [-f]`    | `'auto'`    | format of input dataset        |
 | `--(no-)shuffle`   | `True`      | shuffle dataset when splitting |
 | `--seed`           | `0`         | random seed if shuffle is used |
+| `--total [-t]`     | `-1`        | total number of samples        |
