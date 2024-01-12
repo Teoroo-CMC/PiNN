@@ -1,4 +1,5 @@
 */__pycache__
+work
 .pytest_cache
 pinn.egg-info/
 tmp/
@@ -12,4 +13,8 @@ _build/
 /work/
 /datasets
 /*.tar
+./vscode
+/*.tar
 /models/
+*.log
+*.out
