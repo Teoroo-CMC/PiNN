@@ -6,6 +6,7 @@ params.convert_flags = '-o train:8,eval:2'
 process train {
   publishDir "models/$name", pattern: "{model,*.log}"
   label "train"
+  tag "$name"
 
   input:
   tuple(path(ds), path(input), val(seed))
