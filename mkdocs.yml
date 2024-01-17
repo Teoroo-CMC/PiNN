@@ -29,6 +29,7 @@ nav:
           - convert: usage/cli/convert.md
           - train: usage/cli/train.md
           - log: usage/cli/log.md
+          - report: usage/cli/report.md
       - Misc:
           - Optimizers: usage/optimizers.md
           - Visualize: usage/visualize.md
