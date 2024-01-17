@@ -152,7 +152,7 @@ class PIXLayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    {}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{i} {}^{3}\mathbb{P}_{jx\zeta}
+    {}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\zeta}
     \end{aligned}
     $$
 

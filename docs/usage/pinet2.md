@@ -4,35 +4,23 @@ PiNet2 represents the next generation of PiNet, now equipped with equivariant su
 
 ## Network architecture
 
-The overall architecture of PiNet is illustrated with the illustration below:
+The overall architecture of PiNet2 is illustrated with the illustration below:
 
-![PiNet architecture](../tikz/pinet2.svg){width="750"}
+![PiNet2 architecture](../tikz/pinet2.svg){width="750"}
 
-The preprocess part of the network are implemented with shared layers (see
-[Layers](./layers.md)). The graph-convolution (GC) block are further divided
-into PI and IP operations, each consists several layers. Those operations are
-recursively applied to update the latent variables, and the output is updated
-after each iteration (`OutLayer`).
+PiNet2 follows the structure of pinet and adds first-order equivarible, which are demonstrated in blue nodes. Equalvariance-target layers are implemented and tested, e.g. `PIXLayer`, `ScaleLayer` and `DotLayer`, and rest of layers reuse PiNet code. The details about those layer can be found below. 
 
-We classify the latent variables into the atom-centered "properties"
-($\mathbb{P}$) and the pair-wise "interactions" ($\mathbb{I}$) in our notation.
-Since the layers that transform $\mathbb{P}$ to $\mathbb{P}$ or $\mathbb{I}$ to
-$\mathbb{I}$ are usually standard feed-forward neural networks (`FFLayer`), the
-special part of PiNet are `PILayer` and `IPLayers`, which transform between
-those two types of variables.
-
-To 
-
-We use the subscripts to denote the dimensionality of each variable, following
-the convention:
+Indices denoted the dimensionality of each variable still following previous the convention:
 
 - $b$: basis function index;
-- $c,d,e$: feature channels;
-- $i,j,k$: atom indices;
+- $\alpha,\beta,\gamma,\ldots$: feature channels;
+- $i,j,k,\ldots$: atom indices;
 - $x,y,z$: Cartesian coordinate indices.
 
+The number in left-top of a variable indicates the dimension. For instance, ${}^{3}\mathbb{P}^{t}_{ix\zeta}$ means it is a property in $\mathbb{R}^3$, and `x` is index representing three coordinates. 
+
 The equations that explain each of the above layers and the hyperparameters
-available for the PiNet network are detailed below.
+available for the PiNet2 network are detailed below.
 
 ## Network specification
 
