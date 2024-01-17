@@ -30,14 +30,6 @@ available for the PiNet2 network are detailed below.
 
 ## Layer specifications
 
-### pinet2.FFLayer
-
-::: pinn.networks.pinet2.FFLayer
-
-### pinet2.PILayer
-
-::: pinn.networks.pinet2.PILayer
-
 ### pinet2.PIXLayer
 
 ::: pinn.networks.pinet2.PIXLayer
@@ -49,17 +41,5 @@ available for the PiNet2 network are detailed below.
 ### pinet2.ScaleLayer
 
 ::: pinn.networks.pinet2.ScaleLayer
-
-### pinet2.IPLayer
-
-::: pinn.networks.pinet2.IPLayer
-
-### pinet2.ResUpdate
-
-::: pinn.networks.pinet2.ResUpdate
-
-### pinet2.OutLayer
-
-::: pinn.networks.pinet2.OutLayer
 
 \bibliography
