@@ -18,12 +18,19 @@
   <title>Layers - PiNN</title>
 
   <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
   <link rel="stylesheet" href="../../css/pygments.css">
   <link rel="icon" href="data:,">
   
     <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
   
     <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
   
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -349,9 +356,9 @@ convention about data structure.</p>
 <p>Since atomistic data comes in irregular shapes, PiNN uses sparse data structure
 for data batching, and the construction of pairwise, triplet-wise tensors. All
 these tensors are associated with indices named as <code>ind_*</code>, with shapes <code>ind_1:
-[n_atoms, 2]</code>, <code>ind_2: [n_pairs, 2]</code>, etc. The meanings of indices are:</p>
+[n_atoms, 1]</code>, <code>ind_2: [n_pairs, 2]</code>, etc. The meanings of indices are:</p>
 <ul>
-<li>For <code>ind_1</code>: <code>[i-th_struct_in_batch, j-th_atom_in_struct]</code>;</li>
+<li>For <code>ind_1</code>: <code>[i-th_struct_in_batch]</code>;</li>
 <li>For <code>ind_2</code>: <code>[i-th_atom_in_batch, j-th_atom_in_batch]</code>;</li>
 <li>For <code>ind_3</code>: <code>[i-th_pair_in_batch, j-th_pair_in_batch]</code>, with shared central atom;</li>
 <li>...</li>
@@ -361,14 +368,19 @@ these tensors are associated with indices named as <code>ind_*</code>, with shap
 <code>tf.gather_nd</code> operator, for instance the following operation broadcasts the
 atom-centered <span class="arithmatex">\(\mathbb{P}_{i\alpha}\)</span> variable to each pair of atoms
 (<span class="arithmatex">\(\mathbb{I}_{ij\alpha}=\mathbf{1}_{ij}\mathbb{P}_{i\alpha}\)</span>).</p>
-<div class="highlight"><pre><span></span><code><span class="n">I</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">ind_2</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">I</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">ind_2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">ind_2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
 </code></pre></div>
 <p>To accumulate pairwise predictions over neighbors (<span class="arithmatex">\(\mathbb{P}_{i\alpha} =
 \sum_{j} \mathbb{I}_{ij\alpha}\)</span>), use the <code>tf.scatter_nd</code> operation:</p>
-<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">n_alpha</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">scatter_nd</span><span class="p">(</span><span class="n">ind_2</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">I</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">n_alpha</span><span class="p">])</span>
+</code></pre></div>
+<p>or <code>tf.math.unsorted_segment_sum</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">ind_2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">natoms</span><span class="p">)</span>
 </code></pre></div>
 <p>Note that the number of atoms must be supplied since it cannot be inferred from
-<code>ind_2</code>.</p>
+<code>ind_2</code>, it can be inferred from a per-atom tensor instead, e.g.: </p>
+<div class="highlight"><pre><span></span><code><span class="n">n_atoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">P</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
 <h2 id="neighbor-list">Neighbor list</h2>
 <h3 id="celllistnl">CellListNL</h3>
 
@@ -401,7 +413,6 @@ atom-centered <span class="arithmatex">\(\mathbb{P}_{i\alpha}\)</span> variable 
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -450,7 +461,6 @@ atom-centered <span class="arithmatex">\(\mathbb{P}_{i\alpha}\)</span> variable 
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -540,6 +550,7 @@ with keys:</p>
 
   </div>
 
+
 </div><h2 id="basis-functions">Basis functions</h2>
 <h3 id="cutofffunc">CutoffFunc</h3>
 
@@ -578,7 +589,6 @@ defined within <span class="arithmatex">\(r_{ij}&lt;r_{c}\)</span> and decay to 
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -641,7 +651,6 @@ defined within <span class="arithmatex">\(r_{ij}&lt;r_{c}\)</span> and decay to 
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -718,6 +727,7 @@ defined within <span class="arithmatex">\(r_{ij}&lt;r_{c}\)</span> and decay to 
 
   </div>
 
+
 </div><h3 id="gaussianbasis">GaussianBasis</h3>
 
 
@@ -760,7 +770,6 @@ basis.</p>
 
 
 
-
 <h4 id="pinn.layers.basis.GaussianBasis.__init__" class="doc doc-heading">
           <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_basis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -786,7 +795,7 @@ basis.</p>
         <tr>
           <td><code>center</code></td>
           <td>
-                <code>float or array</code>
+                <code>float | array</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -800,7 +809,7 @@ basis.</p>
         <tr>
           <td><code>gamma</code></td>
           <td>
-                <code>float or array</code>
+                <code>float | array</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -848,7 +857,6 @@ basis.</p>
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -939,6 +947,7 @@ basis.</p>
 
   </div>
 
+
 </div><h3 id="polynomialbasis">PolynomialBasis</h3>
 
 
@@ -979,7 +988,6 @@ orders as <code>[0, 1, ..., n_basis-1]</code>.</p>
 
 
 
-
 <h4 id="pinn.layers.basis.PolynomialBasis.__init__" class="doc doc-heading">
           <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">n_basis</span><span class="p">)</span></code>
 
@@ -1005,7 +1013,7 @@ orders as <code>[0, 1, ..., n_basis-1]</code>.</p>
         <tr>
           <td><code>n_basis</code></td>
           <td>
-                <code>int or list</code>
+                <code>int | list</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1025,7 +1033,6 @@ orders as <code>[0, 1, ..., n_basis-1]</code>.</p>
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -1116,6 +1123,7 @@ orders as <code>[0, 1, ..., n_basis-1]</code>.</p>
 
   </div>
 
+
 </div><h2 id="misc">Misc</h2>
 <h3 id="atomiconehot">AtomicOneHot</h3>
 
@@ -1150,7 +1158,6 @@ element types denoted as (<span class="arithmatex">\(Z^{\mathrm{0}}_{\alpha}\)</
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -1199,7 +1206,6 @@ element types denoted as (<span class="arithmatex">\(Z^{\mathrm{0}}_{\alpha}\)</
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -1276,6 +1282,7 @@ element types denoted as (<span class="arithmatex">\(Z^{\mathrm{0}}_{\alpha}\)</
 
   </div>
 
+
 </div><h3 id="annoutput">ANNOutput</h3>
 
 
@@ -1315,7 +1322,6 @@ it can be one of 'sum', 'max', 'min', 'avg'.</p>
 
 
 <div class="doc doc-object doc-function">
-
 
 
 
@@ -1391,6 +1397,7 @@ it can be one of 'sum', 'max', 'min', 'avg'.</p>
   </div>
 
   </div>
+
 
 </div>
     </div>

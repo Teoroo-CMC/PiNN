@@ -15,7 +15,7 @@
     The page_title contains the title for a page as shown in the navigation.
     Site name contains the name as defined in the mkdocs.yml
   -->
-  <title>Migration - PiNN</title>
+  <title>Benchmarks - PiNN</title>
 
   <link rel="stylesheet" href="../css/theme.css">
   <link rel="stylesheet" href="../css/notebook.css">
@@ -170,16 +170,16 @@
 
                  
                    
-    <li class="active">
-      <a href="./" class="">
+    <li >
+      <a href="../migration/" class="">
         Migration
       </a>
     </li>
 
                  
                    
-    <li >
-      <a href="../benchmarks/" class="">
+    <li class="active">
+      <a href="./" class="">
         Benchmarks
       </a>
     </li>
@@ -234,57 +234,53 @@
     </div>
 
     <div id="content">
-      <h1 id="migrating-to-pinn-1x-tf2">Migrating to PiNN 1.x (TF2)</h1>
-<p>Since version 1.x, PiNN switched to TensorFlow 2 as a backend, this introduces
-changes to the API. This document provides information for the changes and
-guides for migration.</p>
-<h2 id="new-features">New features</h2>
-<p><strong>CLI</strong>:
-PiNN 1.x introduces a new entry point <code>pinn</code> as the command line interface. The
-trainer module will be replaced with the <code>pinn train</code> sub-command. The CLI also
-exposes utilities like dataset conversion for easier usage.</p>
-<p><strong>Parameter file</strong>: 
-in PiNN 1.0 the parameter file will serve as a comprehensive input for PiNN
-models, the structure of the parameter file is changed, see the documentation
-for more information.</p>
-<p><strong>Extended Kalman filter</strong>:
-an experimental extended Kalman filter (EKF) optimizer is implemented.</p>
-<h2 id="notes-for-developers">Notes for developers</h2>
+      <h1 id="benchmarks">Benchmarks</h1>
+<h2 id="about-the-benchmark">About the benchmark</h2>
+<p>PiNN collects a small set of benchmarks that are continuously tested
+against (see <a href="../changelog/#conventions">version convention</a>). The benchmark datasets and trained
+models are accessible from the shared <a href="https://uppsala.box.com/v/teoroo-cmc-pinn-data">box folder</a>.</p>
+<h2 id="latest-benchmarks-v120dev0">Latest benchmarks (v1.2.0.dev0)</h2>
+<h3 id="qm91">QM9<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></h3>
+<p>Energy MAE: 15.0(std:0.83) meV.</p>
+<h3 id="md172">MD17<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></h3>
 <ul>
-<li>Documentation is now built with mkdocs.</li>
-<li>Documentation is moved to Github pages.</li>
-<li>Continuous integration is moved to Github Actions.</li>
-<li>The Docker Hub repo is now <a href="https://hub.docker.com/repository/docker/teoroo/pinn">teoroo/pinn</a>.</li>
+<li>aspirin:   Energy MAE: 19.47(std:9.31) meV; Force MAE: 13.65(std:1.19) meV/Å.</li>
+<li>ethanol:   Energy MAE: 2.62(std:0.38) meV;  Force MAE: 1.98(std:0.08) meV/Å.</li>
+<li>uracil:    Energy MAE: 7.44(std:4.00) meV;  Force MAE: 6.72(std:0.07) meV/Å.</li>
 </ul>
-<p><strong>Datasets</strong>: dataset loaders should be most compatible with PiNN 0.x. With the
-TF2 update, dataset may be inspected interactively with eager execution.
-Splitting option is simplified (see below), and splitting of <code>load_tfrecord</code>
-becomes possible.</p>
-<p><strong>Networks</strong>: following the guideline of TF2, networks in PiNN 1.x are new Keras
-models and layers becomes Keras layers. This means the PiNN networks can be used
-to perform some simple prediction tasks. Note that PiNN models are still
-implemented as TensorFlow estimators since they provide a better control over
-the training and prediction behavior. Like the design of PiNN 0.x, the models
-interpret the predictions of PiNN networks as physical quantities and interface
-them to atomic simulation packages.</p>
-<p><strong>Models</strong>:
-new helper function <code>export_mode</code> and class <code>MetricsCollector</code> are implemented to
-simplify the implementation of models, see the source of <a href="https://github.com/Teoroo-CMC/PiNN/blob/TF2/pinn/models/dipole.py">dipole
-model</a> for an
-example.</p>
-<h2 id="breaking-changes">Breaking changes</h2>
-<ul>
-<li>Models trained in PiNN 0.x will not be usable in PiNN 1.x.</li>
-<li>Model parameters need to be adapted to the new parameter format.</li>
-<li>For dataset loaders <code>load_*</code>:<ul>
-<li>the <code>split</code> argument is renamed to <code>splits</code>;</li>
-<li>splitting is disabled by default;</li>
-<li>nested splits like <code>{'train':1, 'test':[1,2,3]}</code> is not supported anymore.</li>
-</ul>
+<h2 id="reproducing-the-benchmark">Reproducing the benchmark</h2>
+<p>To manually run the benchmarks with the latest version of PiNN you
+will need to have <a href="https://www.nextflow.io/">Nextflow</a> and <a href="https://docs.sylabs.io/guides/latest/user-guide/">Singularity</a> installed.</p>
+<div class="highlight"><pre><span></span><code>nextflow run teoroo-cmc/pinn -r master
+</code></pre></div>
+<h2 id="for-developers">For developers</h2>
+<p>Install PiNN in editable mode and run the benchmark
+from the <code>PiNN</code> folder.  You will probably need to set up the
+development environments on an HPC cluster (e.g. ALVIS):</p>
+<div class="highlight"><pre><span></span><code>ml<span class="w"> </span>TensorFlow/2.6.0-foss-2021a-CUDA-11.3.1
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="nv">$HOME</span>/pinn-tf26
+<span class="nb">source</span><span class="w"> </span><span class="nv">$HOME</span>/pinn-tf26/bin/activate
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>PiNN
+<span class="nb">cd</span><span class="w"> </span>PiNN
+</code></pre></div>
+<p>And run the benchmark using a corresponding profile:</p>
+<div class="highlight"><pre><span></span><code>export SLURM_ACCOUNT=NAISS2023-5-282
+export SALLOC_ACCOUNT=$SLURM_ACCOUNT
+export SBATCH_ACCOUNT=$SLURM_ACCOUNT
+nextflow run . -profile alvis
+</code></pre></div>
+<p>Adjust the scheduler setup in <code>nextflow.config</code> if needed.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><sup>1</sup> R. Ramakrishnan, P.O. Dral, M. Rupp, and O.A. von Lilienfeld, “<a href="https://doi.org/10.1038/sdata.2014.22">Quantum chemistry structures and properties of 134 kilo molecules</a>,” Sci. Data <strong>1</strong>, 140022 (2014).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
-<li><code>format_dict</code> is renamed as <code>ds_spec</code> to be consistent with
-  <a href="https://www.tensorflow.org/api_docs/python/tf/data/DatasetSpec">TensorFlow</a>.</li>
-</ul>
+<li id="fn:2">
+<p><sup>1</sup> S. Chmiela, A. Tkatchenko, H.E. Sauceda, I. Poltavsky, K.T. Schütt, and K.-R. Müller, “<a href="https://doi.org/10.1126/sciadv.1603015">Machine learning of accurate energy-conserving molecular force fields</a>,” Sci. Adv. <strong>3</strong>(5), (2017).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
     </div>
 
   </div>
@@ -292,12 +288,12 @@ example.</p>
   <div class="page">
     <div class="page-prev">
       
-      <a href="../changelog/" title="Changelog"><span>«</span> Previous</a>
+      <a href="../migration/" title="Migration"><span>«</span> Previous</a>
       
     </div>
     <div class="page-next">
       
-      <a href="../benchmarks/" title="Benchmarks" />Next <span>»</span></a>
+      <a href="../contribute/" title="Contribute" />Next <span>»</span></a>
       
     </div>
   </div>

@@ -2,132 +2,137 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://teoroo-cmc.github.io/pinn/master/benchmarks/</loc>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/changelog/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/contribute/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/migration/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/notebooks/Customizing_dataset/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/notebooks/Layer_debug/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/notebooks/Learn_LJ_potential/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/notebooks/More_on_training/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/notebooks/Quick_tour/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/notebooks/overview/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/bpnn/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/custom_model/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/datasets/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/dipole/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/layers/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/models/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/networks/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/optimizers/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/overview/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/pinet/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/potential/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/quick_start/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/visualize/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/cli/convert/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/cli/log/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://teoroo-cmc.github.io/pinn/master/usage/cli/train/</loc>
-         <lastmod>2023-10-19</lastmod>
+         <lastmod>2024-01-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

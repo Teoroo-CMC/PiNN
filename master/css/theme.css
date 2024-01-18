@@ -434,6 +434,7 @@ input[id='nav-chk']:not(:checked)+.nav-bar {
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: thin;
+    margin-top: 10px;
 }
 
 .doc .highlight {
