@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
-
-params.train_flags = "--init --shuffle-buffer 1000 --train-steps 2000000"
+params.train_steps = 2000000
+params.train_flags = "--init --shuffle-buffer 1000 --train-steps ${params.train_steps}"
 params.convert_flags = '-o train:950,eval:50'
 
 process train {

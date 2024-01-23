@@ -1,11 +1,13 @@
 model:
   name: potential_model
   params:
-    use_force: false
+    use_force: true
+    e_loss_multiplier: 0.0
+    f_loss_multiplier: 1.0
+    e_scale: 1.0
+    e_unit: 1.0
     use_e_per_atom: false
     log_e_per_atom: true
-    e_loss_multiplier: 627.5
-    e_scale: 1.0
 network:
   name: PiNet
   params:

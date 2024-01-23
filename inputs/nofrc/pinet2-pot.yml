@@ -4,8 +4,8 @@ model:
     use_force: false
     use_e_per_atom: false
     log_e_per_atom: true
-    e_loss_multiplier: 1.0
     e_scale: 1.0
+    e_loss_multiplier: 1.0
 network:
   name: PiNet2
   params:
