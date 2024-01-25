@@ -17,18 +17,17 @@ class PIXLayer(tf.keras.layers.Layer):
     R"""`PIXLayer` takes the equalvariant properties ${}^{3}\mathbb{P}_{ix\zeta}$ as input and outputs interactions for each pair ${}^{3}\mathbb{I}_{ijx\zeta}$. The `PIXLayer` has two styles, specified by the `weighted` argument:
 
     `weighted`:
-
     $$
     \begin{aligned}
-    {}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\zeta}
+    {}^{3}\mathbb{I}_{ijx\gamma} = W_{\zeta\gamma}^{'} \mathbf{1}_{j}^{'} {}^{3}\mathbb{P}_{ix\zeta} + W_{\zeta\gamma}^{''} \mathbf{1}_{i}^{''} {}^{3}\mathbb{P}_{jx\zeta}
     \end{aligned}
     $$
 
-    `non-weighted`:
 
+    `non-weighted`:
     $$
     \begin{aligned}
-    {}^{3}\mathbb{I}_{ijx\gamma} = W_{\zeta\gamma}^{'} \mathbf{1}_{j}^{'} \mathbb{P}_{ix\zeta} + W_{\zeta\gamma}^{''} \mathbf{1}_{i}^{''} \mathbb{P}_{jx\zeta}
+    {}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\zeta}
     \end{aligned}
     $$
 
