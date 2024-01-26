@@ -3,26 +3,27 @@
 """
 Script to generate reports from benchmar results
 """
-from collections import defaultdict
 import re, os
 import warnings
 import numpy as np
+from typing import List
 from glob import glob
 from pathlib import Path
+from collections import defaultdict
 
 hartree2meV = 27.2114079527 * 1000
 kcalpermol2meV = 0.0433641153087705 * 1000
 
-def report_log(model_paths:list[str], keyword_filter:list[str]=[], log_name:str = 'eval.log'):
+def report_log(model_paths:List[str], keyword_filter:List[str]=[], log_name:str = 'eval.log'):
     """
     report log of training process
 
     Args:
-        model_paths (list[str]): path the model host, e.g. models/pinet2-pot-simple-nofrc-qm9-bs120-1. The identifier of this model is [pinet2, pot, simple, nofrc, qm9, bs120], but exclude the last number.
+        model_paths (List[str]): path the model host, e.g. models/pinet2-pot-simple-nofrc-qm9-bs120-1. The identifier of this model is [pinet2, pot, simple, nofrc, qm9, bs120], but exclude the last number.
 
         log_name (str, optional): name of log file. Defaults to 'eval.log'.
 
-        keyword_filter (list[str], optional): filter option, only report the model contains all the args. Defaults to [].
+        keyword_filter (List[str], optional): filter option, only report the model contains all the args. Defaults to [].
     """
     # groupby name of model
     trials = defaultdict(list) # {name: [path1, path2, ...]}
