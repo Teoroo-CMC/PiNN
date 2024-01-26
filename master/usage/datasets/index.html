@@ -227,6 +227,14 @@
   
     
     <li >
+      <a href="../pinet2/" class="">
+        PiNet2
+      </a>
+    </li>
+
+  
+    
+    <li >
       <a href="../bpnn/" class="">
         BPNN
       </a>
@@ -295,6 +303,14 @@
     <li >
       <a href="../cli/log/" class="">
         log
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/report/" class="">
+        report
       </a>
     </li>
 
@@ -592,10 +608,9 @@ example:</p>
   <div class="doc doc-contents first">
   
       <p>Load tfrecord dataset.</p>
-<p>Note that the splits given by load_tfrecord should be consistent with other
-loaders, but the orders of data points will not be shuffled. Make sure to
-use a large shuffling buffer when splits given by <code>load_tfrecord</code> is used in
-training.</p>
+<p>Note that the splits given by <code>load_tfrecord</code> should be the same
+as other dataset loaders. However, the sequence is not guaranteed
+with <code>shuffle=True</code>.</p>
 
 
 
