@@ -8,6 +8,7 @@ import random
 import subprocess
 import click, pinn, os
 from pinn.report import report_log
+from typing import List
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 CONTEXT_SETTINGS = dict()
@@ -185,7 +186,7 @@ def log(logdir, tag, fmt):
 @click.argument('model_host_path', metavar='model_host_path', nargs=1)
 @click.option('-f', '--filter', metavar='', default='', show_default=True)
 @click.option('-l', '--log-name', metavar='', default='eval.log', show_default=True)
-def report(model_host_path:str, filter:list[str], log_name:str='eval.log'):
+def report(model_host_path:str, filter:List[str], log_name:str='eval.log'):
     model_host_path = Path(model_host_path)
     log_paths = model_host_path.glob(f'**/{log_name}')
     report_log(list(map(str, map(lambda x:x.parent, log_paths))), filter, log_name)
