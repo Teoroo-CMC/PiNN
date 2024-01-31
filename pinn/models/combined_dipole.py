@@ -28,7 +28,8 @@ default_params = {
     # L2 loss
     'use_l2': False,
     # Loss function multipliers
-    'd_loss_multiplier': 1.0
+    'd_loss_multiplier': 1.0,
+    'q_loss_multiplier': 0.0
 }
 
 @export_model
@@ -65,14 +66,14 @@ def atomic_dipole_model(features, labels, mode, params):
     dipole = q_d + atomic_d
 
     if mode == tf.estimator.ModeKeys.TRAIN:
-        metrics = make_metrics(features, dipole, model_params, mode)
+        metrics = make_metrics(features, dipole, q_molecule, model_params, mode)
         tvars = network.trainable_variables
         train_op = get_train_op(params['optimizer'], metrics, tvars)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
-        metrics = make_metrics(features, dipole, model_params, mode)
+        metrics = make_metrics(features, dipole, q_molecule, model_params, mode)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
     else:
@@ -80,14 +81,15 @@ def atomic_dipole_model(features, labels, mode, params):
         dipole *= model_params['d_unit']
 
         predictions = {
-            'dipole': dipole
+            'dipole': dipole,
+            'charge': q_molecule
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
 
 
 @pi_named("METRICS")
-def make_metrics(features, d_pred, params, mode):
+def make_metrics(features, d_pred, q_pred, params, mode):
     metrics = MetricsCollector(mode)
 
     d_data = features['d_data']
@@ -98,6 +100,10 @@ def make_metrics(features, d_pred, params, mode):
 
     metrics.add_error('D', d_data, d_pred, mask=d_mask, weight=d_weight,
                       use_error=(not params['use_d_per_atom']))
+
+    q_data = tf.zeros_like(q_pred)
+    q_weight = params['q_loss_multiplier']
+    metrics.add_error('Total q', q_data, q_pred, weight=q_weight, use_error=False)
 
     if params['use_d_per_atom'] or params['log_d_per_atom']:
         n_atoms = count_atoms(features['ind_1'], dtype=d_data.dtype)
