@@ -33,7 +33,7 @@ default_params = {
 }
 
 @export_model
-def atomic_dipole_model(features, labels, mode, params):
+def combined_dipole_model(features, labels, mode, params):
     """Model function for neural network dipoles"""
     params['network']['params'].update({'out_prop':0, 'out_inter':1})
     network = get_network(params['network'])

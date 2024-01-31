@@ -9,10 +9,12 @@ def get(model_spec, **kwargs):
     from pinn.models.potential import potential_model
     from pinn.models.dipole import dipole_model
     from pinn.models.atomic_dipole import atomic_dipole_model
+    from pinn.models.combined_dipole import combined_dipole_model
     implemented_models = {
         'potential_model': potential_model,
         'dipole_model': dipole_model,
-        'atomic_dipole_model': atomic_dipole_model}
+        'atomic_dipole_model': atomic_dipole_model,
+        'combined_dipole_model': combined_dipole_model}
 
     if isinstance(model_spec, str):
         if tf.io.gfile.exists('{}/params.yml'.format(model_spec)):
