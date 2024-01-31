@@ -50,7 +50,7 @@ def atomic_dipole_model(features, labels, mode, params):
     nbatch = tf.reduce_max(ind1)+1 
 
 
-    q = tf.math.unsorted_segment_sum(ppred, ind1[:, 0], nbatch)
+    q_molecule = tf.math.unsorted_segment_sum(ppred, ind1[:, 0], nbatch)
     q_d = ppred * features['coord']
     q_d = tf.math.unsorted_segment_sum(q_d, ind1[:, 0], nbatch)
     
