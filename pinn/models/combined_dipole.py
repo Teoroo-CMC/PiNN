@@ -29,7 +29,7 @@ default_params = {
     'use_l2': False,
     # Loss function multipliers
     'd_loss_multiplier': 1.0,
-    'q_loss_multiplier': 0.0
+    'q_loss_multiplier': 1.0
 }
 
 @export_model
@@ -103,7 +103,7 @@ def make_metrics(features, d_pred, q_pred, params, mode):
 
     q_data = tf.zeros_like(q_pred)
     q_weight = params['q_loss_multiplier']
-    metrics.add_error('Total q', q_data, q_pred, weight=q_weight, use_error=False)
+    metrics.add_error('Total q', q_data, q_pred, weight=q_weight, use_error=True)
 
     if params['use_d_per_atom'] or params['log_d_per_atom']:
         n_atoms = count_atoms(features['ind_1'], dtype=d_data.dtype)
