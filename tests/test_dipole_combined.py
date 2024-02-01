@@ -49,7 +49,7 @@ def test_pinn_atomic_dipole():
     params = {
         'model_dir': testpath,
         'network': {
-            'name': 'PiNet',
+            'name': 'PiNet2',
             'params': network_params},
         'model': {
             'name': 'combined_dipole_model',
