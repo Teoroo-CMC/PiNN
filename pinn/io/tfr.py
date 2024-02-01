@@ -58,10 +58,9 @@ def write_tfrecord(fname, dataset, log_every=100, pre_fn=None):
 def load_tfrecord(dataset, splits=None, shuffle=True, seed=0):
     """Load tfrecord dataset.
 
-    Note that the splits given by load_tfrecord should be consistent with other
-    loaders, but the orders of data points will not be shuffled. Make sure to
-    use a large shuffling buffer when splits given by `load_tfrecord` is used in
-    training.
+    Note that the splits given by `load_tfrecord` should be the same
+    as other dataset loaders. However, the sequence is not guaranteed
+    with `shuffle=True`.
 
     Args:
        dataset (str): filename of the .yml metadata file to be loaded.
@@ -105,4 +104,6 @@ def load_tfrecord(dataset, splits=None, shuffle=True, seed=0):
                 lambda d, i: tf.reduce_any(tf.equal(v,i))).map(
                     lambda d, i: d)
                     for k,v in splits.items()}
+        if shuffle:
+            splitted = {k:v.shuffle(len(splits[k])) for k,v in splitted.items()}
         return splitted

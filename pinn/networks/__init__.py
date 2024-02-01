@@ -10,10 +10,12 @@ def get(network_spec):
     from pinn.networks.pinet import PiNet
     from pinn.networks.bpnn import BPNN
     from pinn.networks.lj import LJ
+    from pinn.networks.pinet2 import PiNet2
     implemented_networks = {
         'PiNet': PiNet,
         'BPNN': BPNN,
-        'LJ': LJ
+        'LJ': LJ,
+        'PiNet2': PiNet2
     }
     if isinstance(network_spec, tf.keras.Model):
         return network_spec

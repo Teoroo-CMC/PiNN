@@ -7,6 +7,7 @@ nav:
       - Introduction: index.md
       - Changelog: changelog.md
       - Migration: migration.md
+      - Benchmarks: benchmarks.md
       - Contribute: contribute.md
   - Usage:
       - Overview: usage/overview.md
@@ -17,6 +18,7 @@ nav:
           - Overview: usage/networks.md
           - Layers: usage/layers.md
           - PiNet: usage/pinet.md
+          - PiNet2: usage/pinet2.md
           - BPNN: usage/bpnn.md
       - Models:
           - Overview: usage/models.md
@@ -27,6 +29,7 @@ nav:
           - convert: usage/cli/convert.md
           - train: usage/cli/train.md
           - log: usage/cli/log.md
+          - report: usage/cli/report.md
       - Misc:
           - Optimizers: usage/optimizers.md
           - Visualize: usage/visualize.md
@@ -40,12 +43,13 @@ nav:
           - LJ Potential: notebooks/Learn_LJ_potential.ipynb
       - Develop:
           - Layer Debug: notebooks/Layer_debug.ipynb
+watch:
+  - pinn
 plugins:
   - bibtex:
       bib_file: "docs/references.bib"
       csl_file: "docs/jcp.csl"
-  - mkdocs-jupyter:
-      ignore_h1_titles: True
+  - mknotebooks
   - mkdocstrings:
       custom_templates: docs/templates
       handlers:
@@ -54,8 +58,6 @@ plugins:
             show_source: false
             show_root_toc_entry: false
             heading_level: 4
-      watch:
-        - pinn
   - mike
 theme:
   name: flux

@@ -83,7 +83,7 @@ class PILayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    w_{ij(b\beta)} &= \mathrm{FFLayer}\left((\mathbf{1}_{ij}\mathbb{P}_{i\alpha})\Vert(\mathbf{1}_{ij}\mathbb{P}_{j\alpha})\right) \\
+    w_{ij(b\beta)} &= \mathrm{FFLayer}\left((\mathbf{1}_{j}\mathbb{P}_{i\alpha})\Vert(\mathbf{1}_{i}\mathbb{P}_{j\alpha})\right) \\
     \mathbb{I}'_{ij\beta} &= \sum_b W_{ij(b\beta)} \, e_{ijb}
     \end{aligned}
     $$
@@ -360,8 +360,8 @@ class PiNet(tf.keras.Model):
             rc (float): cutoff radius
             basis_type (string): basis function, can be "polynomial" or "gaussian"
             n_basis (int): number of basis functions to use
-            gamma (float or array): width of gaussian function for gaussian basis
-            center (float or array): center of gaussian function for gaussian basis
+            gamma (float|array): width of gaussian function for gaussian basis
+            center (float|array): center of gaussian function for gaussian basis
             cutoff_type (string): cutoff function to use with the basis.
             act (string): activation function to use
         """

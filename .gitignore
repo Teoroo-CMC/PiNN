@@ -1,4 +1,5 @@
 */__pycache__
+work
 .pytest_cache
 pinn.egg-info/
 tmp/
@@ -8,3 +9,12 @@ _build/
 .ipynb_checkpoints/
 /.coverage
 /coverage.xml
+/.nextflow*
+/work/
+/datasets
+/*.tar
+./vscode
+/*.tar
+/models/
+*.log
+*.out

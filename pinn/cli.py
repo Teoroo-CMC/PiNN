@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from functools import reduce
+import operator
+from pathlib import Path
+import random
+import subprocess
 import click, pinn, os
+from pinn.report import report_log
+from typing import List
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 CONTEXT_SETTINGS = dict()
@@ -22,23 +29,32 @@ def version():
 @click.option('-o', '--output', metavar='', default='dataset', show_default=True)
 @click.option('--shuffle/--no-shuffle', metavar='', default=True, show_default=True)
 @click.option('--seed', metavar='', default='0',  type=int, show_default=True)
-def convert(filename, fmt, output, shuffle, seed):
+@click.option('-t', '--total', metavar='', default='-1',  type=int, show_default=True)
+def convert(filename, fmt, output, shuffle, seed, total):
     """Convert or split dataset to PiNN formatted tfrecord files
 
     See the documentation for more detailed descriptions of the options
     https://Teoroo-CMC.github.io/PiNN/latest/usage/cli/convert/
     """
     from pinn.io import load_ds, write_tfrecord
+    assert total >= -1, \
+        ValueError('Total used data must greater than 0')
     if ':' not in output: # single output
         ds = load_ds(filename, fmt=fmt)
-        write_tfrecord(f'output.yml', ds)
+        write_tfrecord(f'output.yml', ds.take(total))
     else:
         splits = {
             s.split(':')[0]: float(s.split(':')[1])
             for s in output.split(',')}
         ds = load_ds(filename, fmt=fmt, splits=splits, shuffle=shuffle, seed=seed)
-        for k, v in ds.items():
-            write_tfrecord(f'{k}.yml', v)
+        if total == -1:  # If count is -1, or if count is greater than the size of this dataset, return whole dataset
+            for k, v in ds.items():
+                write_tfrecord(f'{k}.yml', v)
+        else:  # or scale down each dataset
+            total_splits = reduce(operator.add, splits.values())
+            for k, v in ds.items():
+                take_n = int(total * splits[k] / total_splits)
+                write_tfrecord(f'{k}.yml', v.take(take_n))
 
 @click.command(name='train', context_settings=CONTEXT_SETTINGS,
                options_metavar='[options]', short_help='train model')
@@ -102,7 +118,7 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
             dataset = dataset.map(pre_fn)
         if cache:
             if scratch_dir is not None:
-                cache_dir = mkstemp(dir=scrach_dir)
+                cache_dir = mkstemp(dir=scratch_dir)
             else:
                 cache_dir = ''
             dataset = dataset.cache(cache_dir)
@@ -132,8 +148,8 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
 @click.command(name='log', context_settings=CONTEXT_SETTINGS,
                options_metavar='[options]', short_help='inspect training logs')
 @click.argument('logdir', metavar='logdir', nargs=1)
-@click.option('--tag', metavar='', default='RMSE', show_default=True)
-@click.option('--fmt', metavar='', default='%14.6e ', show_default=True)
+@click.option('-t','--tag', metavar='', default='RMSE', show_default=True)
+@click.option('-f','--fmt', metavar='', default='%14.6e ', show_default=True)
 def log(logdir, tag, fmt):
     import numpy as np
     from glob import glob
@@ -165,11 +181,22 @@ def log(logdir, tag, fmt):
     np.savetxt(stdout, out, '%-9d '+fmt*tmp.shape[1],
                header='  '.join(header))
 
+@click.command(name='report', context_settings=CONTEXT_SETTINGS,
+                options_metavar='[options]', short_help='generate report')
+@click.argument('model_host_path', metavar='model_host_path', nargs=1)
+@click.option('-f', '--filter', metavar='', default='', show_default=True)
+@click.option('-l', '--log-name', metavar='', default='eval.log', show_default=True)
+def report(model_host_path:str, filter:List[str], log_name:str='eval.log'):
+    model_host_path = Path(model_host_path)
+    log_paths = model_host_path.glob(f'**/{log_name}')
+    report_log(list(map(str, map(lambda x:x.parent, log_paths))), filter, log_name)
+
 
 main.add_command(convert)
 main.add_command(train)
 main.add_command(log)
 main.add_command(version)
+main.add_command(report)
 
 if __name__ == '__main__':
     main()
