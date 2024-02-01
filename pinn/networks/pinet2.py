@@ -270,6 +270,8 @@ class PiNet2(tf.keras.Model):
         ii_nodes=[16, 16],
         out_nodes=[16, 16],
         out_units=1,
+        out_prop=1,
+        out_inter=0,
         out_pool=False,
         act="tanh",
         depth=4,
@@ -311,7 +313,16 @@ class PiNet2(tf.keras.Model):
             GCBlock(weighted, pp_nodes, pi_nodes, ii_nodes, activation=act)
             for i in range(depth - 1)
         ]
-        self.out_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
+        self.pout_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
+
+        if out_inter>0:
+            self.iout_layers = [PILayer(out_nodes+[out_inter]) for i in range(depth)]
+            self.iout3_layers = [PIXLayer(out_nodes+[out_inter]) for i in range(depth)]
+        else:
+            self.iout_layers = None
+
+
+        self.out_pool = out_pool
         self.ann_output = ANNOutput(out_pool)
 
     def call(self, tensors):
@@ -341,14 +352,40 @@ class PiNet2(tf.keras.Model):
         tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
-        output = 0.0
-        for i in range(self.depth):
-            p1, p3 = self.gc_blocks[i](
-                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["diff"], basis]
-            )
-            output = self.out_layers[i]([tensors["ind_1"], p1, p3, output])
-            tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])
-            tensors["p3"] = self.res_update3[i]([tensors["p3"], p3])
+        
+        if self.iout_layers is not None and self.out_pool==True:
+            raise Exception("Currently this is not implemented in PiNN.")
 
-        output = self.ann_output([tensors["ind_1"], output])
-        return output
+        if self.iout_layers is not None:
+            pout = 0.0
+            iout = 0.0
+            iout3 = 0.0
+            for i in range(self.depth):
+                p1, p3 = self.gc_blocks[i](
+                        [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["diff"], basis]
+                        )
+                pout = self.pout_layers[i]([tensors["ind_1"], p1, p3, pout])
+                iout += self.iout_layers[i]([tensors["ind_2"], p1, basis])
+                iout3 += self.iout3_layers[i]([tensors["ind_2"], p3])
+                tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])
+                tensors["p3"] = self.res_update3[i]([tensors["p3"], p3])
+
+            pout = self.ann_output([tensors["ind_1"], pout])
+
+            return pout, iout
+        
+        else:
+            pout = 0.0
+            for i in range(self.depth):
+                p1, p3 = self.gc_blocks[i](
+                        [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["diff"], basis]
+                        )
+                pout = self.pout_layers[i]([tensors["ind_1"], p1, p3, pout])
+                tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])
+                tensors["p3"] = self.res_update3[i]([tensors["p3"], p3])
+                
+
+            pout = self.ann_output([tensors["ind_1"], pout])
+
+            return pout
+
