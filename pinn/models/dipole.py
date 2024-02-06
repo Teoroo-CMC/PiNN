@@ -25,15 +25,17 @@ default_params = {
     'log_d_per_atom': False,  # log d_per_atom and its distribution
                              # ^- this is forcely done if use_d_per_atom
     'use_d_weight': False,   # scales the loss according to d_weight
+    # L2 loss
+    'use_l2': False,
     # Loss function multipliers
-    'd_loss_multiplier': 1.0,
+    'd_loss_multiplier': 1.0
 }
 
 @export_model
 def dipole_model(features, labels, mode, params):
     """Model function for neural network dipoles"""
     network = get_network(params['network'])
-    model_params = default_params
+    model_params = default_params.copy()
     model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
@@ -45,7 +47,7 @@ def dipole_model(features, labels, mode, params):
     charge = tf.math.unsorted_segment_sum(pred, ind[:, 0], nbatch)
     dipole = pred * features['coord']
     dipole = tf.math.unsorted_segment_sum(dipole, ind[:, 0], nbatch)
-    dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
+    #dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         metrics = make_metrics(features, dipole, charge, model_params, mode)
@@ -65,7 +67,8 @@ def dipole_model(features, labels, mode, params):
 
         predictions = {
             'dipole': dipole,
-            'charges': tf.expand_dims(pred, 0)
+            #'charges': tf.expand_dims(pred, 0)
+            'charge': charge
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
@@ -77,7 +80,7 @@ def make_metrics(features, d_pred, q_pred, params, mode):
 
     d_data = features['d_data']
     q_data = tf.zeros_like(q_pred)
-    d_data *= model_params['d_scale']
+    d_data *= params['d_scale']
     d_mask = tf.abs(d_data) > params['max_dipole'] if params['max_dipole'] else None
     d_weight = params['d_loss_multiplier']
     d_weight *= features['d_weight'] if params['use_d_weight'] else 1
