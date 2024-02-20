@@ -32,7 +32,7 @@ default_params = {
 }
 
 @export_model
-def dipole_model(features, labels, mode, params):
+def neutral_dipole_model_QM9(features, labels, mode, params):
     """Model function for neural network dipoles"""
     network = get_network(params['network'])
     model_params = default_params.copy()
@@ -49,7 +49,7 @@ def dipole_model(features, labels, mode, params):
     p_charge = charge/N
     charge_corr = tf.gather(p_charge, ind)[:,0]
     pred =  pred - charge_corr
-    charge_n = tf.unsorted_segment_sum(pred, ind[:,0], nbatch)
+    charge_n = tf.math.unsorted_segment_sum(pred, ind[:,0], nbatch)
 
 
     pred = tf.expand_dims(pred, axis=1)
@@ -58,14 +58,14 @@ def dipole_model(features, labels, mode, params):
     #dipole = tf.sqrt(tf.reduce_sum(dipole**2, axis=1)+1e-6)
 
     if mode == tf.estimator.ModeKeys.TRAIN:
-        metrics = make_metrics(features, dipole, charge, model_params, mode)
+        metrics = make_metrics(features, dipole, charge_n, model_params, mode)
         tvars = network.trainable_variables
         train_op = get_train_op(params['optimizer'], metrics, tvars)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
-        metrics = make_metrics(features, dipole, charge, model_params, mode)
+        metrics = make_metrics(features, dipole, charge_n, model_params, mode)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
 
@@ -76,7 +76,7 @@ def dipole_model(features, labels, mode, params):
         predictions = {
             'dipole': dipole,
             #'charges': tf.expand_dims(pred, 0)
-            'charge': charge
+            'charge': charge_n
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
@@ -93,7 +93,7 @@ def make_metrics(features, d_pred, q_pred, params, mode):
     d_weight = params['d_loss_multiplier']
     d_weight *= features['d_weight'] if params['use_d_weight'] else 1
 
-    metrics.add_error('Q', q_data, q_pred)
+    metrics.add_error('Q', q_data, q_pred, weight=0, use_error=False)
     metrics.add_error('D', d_data, d_pred, mask=d_mask, weight=d_weight,
                       use_error=(not params['use_d_per_atom']))
 

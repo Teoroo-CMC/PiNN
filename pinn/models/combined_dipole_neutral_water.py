@@ -33,7 +33,7 @@ default_params = {
 }
 
 @export_model
-def combined_dipole_model(features, labels, mode, params):
+def neutral_combined_dipole_model_water(features, labels, mode, params):
     """Model function for neural network dipoles"""
     params['network']['params'].update({'out_prop':1, 'out_inter':1})
     network = get_network(params['network'])
@@ -75,14 +75,14 @@ def combined_dipole_model(features, labels, mode, params):
     dipole = q_d + atomic_d
 
     if mode == tf.estimator.ModeKeys.TRAIN:
-        metrics = make_metrics(features, dipole, q_molecule, model_params, mode)
+        metrics = make_metrics(features, dipole, q_tot, model_params, mode)
         tvars = network.trainable_variables
         train_op = get_train_op(params['optimizer'], metrics, tvars)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           train_op=train_op)
 
     if mode == tf.estimator.ModeKeys.EVAL:
-        metrics = make_metrics(features, dipole, q_molecule, model_params, mode)
+        metrics = make_metrics(features, dipole, q_tot, model_params, mode)
         return tf.estimator.EstimatorSpec(mode, loss=tf.reduce_sum(metrics.LOSS),
                                           eval_metric_ops=metrics.METRICS)
     else:
@@ -91,7 +91,7 @@ def combined_dipole_model(features, labels, mode, params):
 
         predictions = {
             'dipole': dipole,
-            'charge': q_molecule
+            'charge': q_tot
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
@@ -112,7 +112,7 @@ def make_metrics(features, d_pred, q_pred, params, mode):
 
     q_data = tf.zeros_like(q_pred)
     q_weight = params['q_loss_multiplier']
-    metrics.add_error('Total q', q_data, q_pred, weight=q_weight, use_error=True)
+    metrics.add_error('Total q', q_data, q_pred, weight=0, use_error=False)
 
     if params['use_d_per_atom'] or params['log_d_per_atom']:
         n_atoms = count_atoms(features['ind_1'], dtype=d_data.dtype)
