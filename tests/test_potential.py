@@ -8,7 +8,6 @@ from pinn.io import load_numpy, sparse_batch
 from shutil import rmtree
 from ase import Atoms
 
-@pytest.mark.forked
 def test_pinn_potential():
     testpath = tempfile.mkdtemp()
     network_params = {
@@ -37,7 +36,6 @@ def test_pinn_potential():
     rmtree(testpath)
 
 
-@pytest.mark.forked
 def test_bpnn_potential():
     testpath = tempfile.mkdtemp()
     network_params = {
@@ -68,7 +66,6 @@ def test_bpnn_potential():
     rmtree(testpath)
 
 
-@pytest.mark.forked
 def test_bpnn_potential_pre_cond():
     from pinn.networks.bpnn import BPNN
     testpath = tempfile.mkdtemp()

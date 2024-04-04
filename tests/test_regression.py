@@ -30,7 +30,6 @@ if not os.path.exists(cache_path):
 model_list = glob(f'{cache_path}/*/')
 
 @pytest.mark.parametrize('model_path', model_list)
-@pytest.mark.forked
 def test_model_regression(model_path):
     import pinn
     import numpy as np

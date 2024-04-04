@@ -7,7 +7,6 @@ import pinn
 from shutil import rmtree
 
 
-@pytest.mark.forked
 def test_potential_model():
     """A simple example to test training and using a potential"""
     from ase import Atoms    
@@ -76,7 +75,6 @@ def test_potential_model():
     rmtree(tmp, ignore_errors=True)    
 
 
-@pytest.mark.forked
 def test_derivitives():
     """ Test the calcualted derivitives: forces and stress
     with a LJ calculator against ASE's implementation
@@ -114,7 +112,6 @@ def test_derivitives():
             assert np.allclose(s_pinn, s_ase, rtol=1e-2)
 
 
-@pytest.mark.forked
 def test_clist_nl():
     """Cell list neighbor test
     Compare with ASE implementation
