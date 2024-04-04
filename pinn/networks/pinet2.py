@@ -194,11 +194,11 @@ class GCBlock(tf.keras.layers.Layer):
         super(GCBlock, self).__init__()
         iiargs = kwargs.copy()
         iiargs.update(use_bias=False)
-        ii_nodes = ii_nodes.copy()
-        ii_nodes[-1] *= 3
+        ii1_nodes = ii_nodes.copy()
+        ii1_nodes[-1] *= 3
         self.pp1_layer = FFLayer(pp_nodes, **kwargs)
         self.pi1_layer = PILayer(pi_nodes, **kwargs)
-        self.ii1_layer = FFLayer(ii_nodes, **iiargs)
+        self.ii1_layer = FFLayer(ii1_nodes, **iiargs)
         self.ip1_layer = IPLayer()
 
         self.pp3_layer = FFLayer(pp_nodes, activation=None, use_bias=False)
@@ -224,6 +224,7 @@ class GCBlock(tf.keras.layers.Layer):
         p3 = self.pp3_layer(p3)
         i3 = self.pix_layer([ind_2, p3])
         i3 = self.scale1_layer([i3, i1_3])
+        i3 = self.ii3_layer(i3)
         scaled_diff = self.scale2_layer([diff[:, :, None], i1_1])
         i3 = i3 + scaled_diff
         p3 = self.ip3_layer([ind_2, p3, i3])
@@ -250,6 +251,7 @@ class PreprocessLayer(tf.keras.layers.Layer):
             tensors["p1"] = tf.cast(  # difference with pinet: prop->p1
                 self.embed(tensors["elems"]), tensors["coord"].dtype
             )
+        tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
         return tensors
 
 
@@ -341,10 +343,10 @@ class PiNet2(tf.keras.Model):
         tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
-        output = 0.0
+        output = tf.Variable(0.0)  # latest tf does not allow passing in non-tensor variables
         for i in range(self.depth):
             p1, p3 = self.gc_blocks[i](
-                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["diff"], basis]
+                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["norm_diff"], basis]
             )
             output = self.out_layers[i]([tensors["ind_1"], p1, p3, output])
             tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])
