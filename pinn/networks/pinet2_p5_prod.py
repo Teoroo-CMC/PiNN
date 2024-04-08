@@ -33,27 +33,6 @@ class TensorProductLayer(tf.keras.layers.Layer):
         return tf.einsum('ijl,ijkl,ikl->il', p3, p5, p3)
 
 
-class TensorProductLayer(tf.keras.layers.Layer):
-
-    def __init__(self, **kwargs):
-        """
-        Args:
-            weighted (bool): style of the layer
-        """
-        super(TensorProductLayer, self).__init__()
-
-    def call(self, tensor):
-        """
-        Args:
-            tensor (`tensor`): tensor to be dot producted
-
-        Returns:
-            tensor: dot producted tensor
-        """
-
-        p3, p5 = tensor
-        return tf.einsum('ijl,ijkl,ikl->il', p3, p5, p3)
-
 class GCBlock(tf.keras.layers.Layer):
     def __init__(self, weighted: bool, pp_nodes, pi_nodes, ii_nodes, **kwargs):
         super(GCBlock, self).__init__()
@@ -95,7 +74,7 @@ class GCBlock(tf.keras.layers.Layer):
 
         p3 = self.pp3_layer(p3)
         i3 = self.pi3_layer([ind_2, p3])
-        # i3 = self.ii3_layer(i3)
+        i3 = self.ii3_layer(i3)
 
         i3 = self.scale1_layer([i3, i1_3])
         i3 = i3 + scaled_diff
@@ -103,7 +82,7 @@ class GCBlock(tf.keras.layers.Layer):
 
         p5 = self.pp5_layer(p5)
         i5 = self.pi5_layer([ind_2, p5])
-        # i5 = self.ii5_layer(i5)
+        i5 = self.ii5_layer(i5)
         i5 = self.scale2_layer([i5, i1_4[:, None, :]])
 
         i5 = self.add_layer([i5, scaled_diff])

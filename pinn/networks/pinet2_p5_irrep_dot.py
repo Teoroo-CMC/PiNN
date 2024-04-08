@@ -37,7 +37,8 @@ class GCBlock(tf.keras.layers.Layer):
         self.ii5_layer = FFLayer(ii_nodes, **iiargs)
         self.ip5_layer = IPLayer()
 
-        self.dot_layer = DotLayer(weighted=weighted)
+        self.dot_layer1 = DotLayer(weighted=weighted)
+        self.dot_layer2 = DotLayer(weighted=weighted)
 
         self.scale0_layer = ScaleLayer()
         self.scale1_layer = ScaleLayer()
@@ -71,7 +72,7 @@ class GCBlock(tf.keras.layers.Layer):
 
         i5 = i5 + scaled_diff5
         p5 = self.ip5_layer([ind_2, p5, i5])
-        p1t1 = self.dot_layer(tf.reshape(p5, (-1, 5, p5.shape[-1]))) + self.dot_layer(p3) + p1
+        p1t1 = self.dot_layer1(tf.reshape(p5, (-1, 5, p5.shape[-1]))) + self.dot_layer2(p3) + p1
         p3t1 = self.scale3_layer([p3, p1t1])
         p5t1 = self.scale4_layer([p5, p1t1])
 

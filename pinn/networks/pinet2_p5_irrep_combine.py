@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
+import numpy as np
 from pinn.layers import (
+    CellListNL,
     CutoffFunc,
     PolynomialBasis,
     GaussianBasis,
+    AtomicOnehot,
     ANNOutput,
 )
 
 from .pinet import FFLayer, PILayer, IPLayer, ResUpdate
-from .pinet2_p5_dot import PreprocessLayer, PIXLayer, AddLayer, ScaleLayer, OutLayer, DotLayer
+from .pinet2_p5_dot import PIXLayer, ScaleLayer, OutLayer, DotLayer
 from .pinet2_p5_prod import TensorProductLayer
+
 
 class GCBlock(tf.keras.layers.Layer):
     def __init__(self, weighted: bool, pp_nodes, pi_nodes, ii_nodes, **kwargs):
@@ -18,7 +22,7 @@ class GCBlock(tf.keras.layers.Layer):
         iiargs = kwargs.copy()
         iiargs.update(use_bias=False)
         ii1_nodes = ii_nodes.copy()
-        ii1_nodes[-1] *= 4
+        ii1_nodes[-1] *= 5
         self.pp1_layer = FFLayer(pp_nodes, **kwargs)
         self.pi1_layer = PILayer(pi_nodes, **kwargs)
         self.ii1_layer = FFLayer(ii1_nodes, **iiargs)
@@ -33,11 +37,10 @@ class GCBlock(tf.keras.layers.Layer):
         self.pi5_layer = PIXLayer(weighted=weighted, **kwargs)
         self.ii5_layer = FFLayer(ii_nodes, **iiargs)
         self.ip5_layer = IPLayer()
-        self.add_layer = AddLayer()
-        self.product_layer = TensorProductLayer()
 
         self.dot_layer1 = DotLayer(weighted=weighted)
         self.dot_layer2 = DotLayer(weighted=weighted)
+        self.product_layer = TensorProductLayer()
 
         self.scale0_layer = ScaleLayer()
         self.scale1_layer = ScaleLayer()
@@ -45,37 +48,81 @@ class GCBlock(tf.keras.layers.Layer):
         self.scale3_layer = ScaleLayer()
         self.scale4_layer = ScaleLayer()
 
+    def build(self, tensor):
+        pass
+
     def call(self, tensors):
-        ind_2, p1, p3, p5, diff, basis = tensors
+        ind_2, p1, p3, p5, diff, diff_p5, basis = tensors
         p1 = self.pp1_layer(p1)
         i1 = self.pi1_layer([ind_2, p1, basis])
         i1 = self.ii1_layer(i1)
-        i1_1, i1_2, i1_3, i1_4 = tf.split(i1, 4, axis=-1)
+        i1_1, i1_2, i1_3, i1_4, i1_5 = tf.split(i1, 5, axis=-1)
         p1 = self.ip1_layer([ind_2, p1, i1_1])
-        scaled_diff = self.scale0_layer([diff[:, :, None], i1_2])
+        scaled_diff3 = self.scale0_layer([diff[:, :, None], i1_2])
+        scaled_diff5 = self.scale1_layer([diff_p5[:, :, None], i1_3])
 
         p3 = self.pp3_layer(p3)
         i3 = self.pi3_layer([ind_2, p3])
 
-        i3 = self.scale1_layer([i3, i1_3])
-        i3 = i3 + scaled_diff
+        i3 = self.scale1_layer([i3, i1_4])
+        i3 = i3 + scaled_diff3
         p3 = self.ip3_layer([ind_2, p3, i3])
 
         p5 = self.pp5_layer(p5)
         i5 = self.pi5_layer([ind_2, p5])
-        i5 = self.scale2_layer([i5, i1_4[:, None, :]])
+        i5 = self.scale2_layer([i5, i1_5])
 
-        i5 = self.add_layer([i5, scaled_diff])
+        i5 = i5 + scaled_diff5
         p5 = self.ip5_layer([ind_2, p5, i5])
+        p9 = tf.stack([
+            p5[:, 0, :], p5[:, 2, :], p5[:, 3, :], 
+            p5[:, 2, :], p5[:, 1, :], p5[:, 4, :], 
+            p5[:, 3, :], p5[:, 4, :], -p5[:, 0, :]-p5[:, 1, :]
+        ], axis=1)
+        p9 = tf.reshape(p9, (p5.shape[0], 3, 3, p5.shape[-1]))
 
-        p1t1 = self.product_layer([p3, p5]) + self.dot_layer1(tf.reshape(p5, (-1, 9, p5.shape[-1]))) + self.dot_layer2(p3) + p1
+        p1t1 = self.product_layer([p3, p9]) + self.dot_layer1(tf.reshape(p5, (-1, 9, p5.shape[-1]))) + self.dot_layer2(p3) + p1
         p3t1 = self.scale3_layer([p3, p1t1])
-        p5t1 = self.scale4_layer([p5, p1t1[:, None, :]])
+        p5t1 = self.scale4_layer([p5, p1t1])
 
         return p1t1, p3t1, p5t1
 
 
-class PiNet2P5Combine(tf.keras.Model):
+class PreprocessLayer(tf.keras.layers.Layer):
+    def __init__(self, atom_types, rc):
+        super(PreprocessLayer, self).__init__()
+        self.embed = AtomicOnehot(atom_types)
+        self.nl_layer = CellListNL(rc)
+
+    def call(self, tensors):
+        tensors = tensors.copy()
+        for k in ["elems", "dist"]:
+            if k in tensors.keys():
+                tensors[k] = tf.reshape(tensors[k], tf.shape(tensors[k])[:1])
+        if "ind_2" not in tensors:
+            tensors.update(self.nl_layer(tensors))
+            tensors["p1"] = tf.cast(  # difference with pinet: prop->p1
+                self.embed(tensors["elems"]), tensors["coord"].dtype
+            )
+        tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
+        diff = tensors["norm_diff"]
+        x = diff[:, 0]
+        y = diff[:, 1]
+        z = diff[:, 2]
+        x2 = x**2
+        y2 = y**2
+        z2 = z**2
+        tensors["diff_p5"] = tf.stack([
+            2/3 * x2 - 1/3 * y2 - 1/3 * z2,
+            2/3 * y2 - 1/3 * x2 - 1/3 * z2,
+            x*y,
+            x*z,
+            y*z
+        ], axis=1)
+        return tensors
+
+
+class PiNet2P5IrrepCombine(tf.keras.Model):
     """This class implements the Keras Model for the PiNet network."""
 
     def __init__(
@@ -115,7 +162,7 @@ class PiNet2P5Combine(tf.keras.Model):
             act (string): activation function to use
             weighted (bool): whether to use weighted style
         """
-        super(PiNet2P5Combine, self).__init__()
+        super(PiNet2P5IrrepCombine, self).__init__()
 
         self.depth = depth
         self.preprocess = PreprocessLayer(atom_types, rc)
@@ -136,6 +183,9 @@ class PiNet2P5Combine(tf.keras.Model):
         ]
         self.out_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
         self.ann_output = ANNOutput(out_pool)
+
+    def build(self, tensors):
+        pass
 
     def call(self, tensors):
         """PiNet takes batches atomic data as input, the following keys are
@@ -162,13 +212,13 @@ class PiNet2P5Combine(tf.keras.Model):
         """
         tensors = self.preprocess(tensors)
         tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
-        tensors["p5"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 3, 1])
+        tensors["p5"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 5, 1])
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
         output = tf.Variable(0.0)  # latest tf does not allow passing in non-tensor variables
         for i in range(self.depth):
             p1, p3, p5 = self.gc_blocks[i](
-                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["p5"], tensors["norm_diff"], basis]
+                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["p5"], tensors["norm_diff"], tensors["diff_p5"], basis]
             )
             output = self.out_layers[i]([tensors["ind_1"], p1, p3, output])
             tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])

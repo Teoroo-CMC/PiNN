@@ -28,6 +28,7 @@ workflow {
   }
 
   todo_channel.view()
+  | train
   
 }
 

@@ -4,7 +4,7 @@ from pinn.networks.pinet2_p5_dot import PiNet2P5Dot
 from pinn.networks.pinet2_p5_prod import PiNet2P5Prod
 from pinn.networks.pinet2_p5_irrep_dot import PiNet2P5IrrepDot
 from pinn.networks.pinet2_p5_irrep_prod import PiNet2P5IrrepProd
-from pinn.networks.pinet2_p5_irrep_combine import PiNet2P5IrrepCombine
+# from pinn.networks.pinet2_p5_irrep_combine import PiNet2P5IrrepCombine
 import pytest
 import tensorflow as tf
 import numpy as np
@@ -19,6 +19,7 @@ def create_rot_mat(theta):
 def rotate(x, theta):
     rot = create_rot_mat(theta)
     return tf.einsum('ix,xy->iy', x, rot)
+
 
 class TestEquivar:
 
@@ -81,6 +82,20 @@ class TestEquivar:
 
     def test_pinet2_p5_irrep_dot(self, mocked_data):
         pinet = PiNet2P5IrrepDot(
+            atom_types=[0, 1],
+        )
+        import random
+        for batch in mocked_data:
+            batch1 = batch.copy()
+            energy1 = pinet(batch1)
+
+            batch2 = batch.copy()
+            batch2['coord'] = rotate(tf.cast(batch2['coord'], tf.float32), random.randint(0, 4123))
+            energy2 = pinet(batch2)
+            np.testing.assert_allclose(energy1, energy2, rtol=1e-2, atol=1e-3)
+
+    def test_pinet2_p5_irrep_prod(self, mocked_data):
+        pinet = PiNet2P5IrrepProd(
             atom_types=[0, 1],
         )
         import random
