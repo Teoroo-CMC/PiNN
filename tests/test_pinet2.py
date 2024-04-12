@@ -27,6 +27,7 @@ def rotate(x, theta):
 
 class TestPiNet2:
 
+    @pytest.mark.forked
     def test_pixlayer_rank2(self):
             
         n_atoms = 10
@@ -44,6 +45,7 @@ class TestPiNet2:
             actual, expect
         )
 
+    @pytest.mark.forked
     def test_dotlayer_rank2(self):
 
         n_atoms = 10
@@ -59,6 +61,7 @@ class TestPiNet2:
             actual, expect
         )        
 
+    @pytest.mark.forked
     def test_scalelayer_rank2(self):
 
         n_atoms = 10
@@ -75,6 +78,7 @@ class TestPiNet2:
             rotate(scaler([px, p1[:, None, :]]), 42.), scaler([rotate(px, 42.), p1[:, None, :]])
         )
 
+    @pytest.mark.forked
     def test_addlayer_rank2(self):
 
         n_atoms = 10
@@ -97,6 +101,7 @@ class TestPiNet2:
             rotate(layer([ix_j, i3]), 42.), layer([rotate(ix_j, 42.), rotate(i3, 42.)]), rtol=1e-5, atol=1e-5
         )
 
+    @pytest.mark.forked
     def test_prodlayer_rank2(self):
 
         n_atoms = 10
@@ -115,6 +120,7 @@ class TestPiNet2:
             actual, expect, rtol=1e-5, atol=1e-5
         )   
 
+    @pytest.mark.forked
     def test_simple_dotlayer(self):
 
         n_atoms = 10
@@ -130,6 +136,7 @@ class TestPiNet2:
             actual, expect
         )
 
+    @pytest.mark.forked
     def test_general_dotlayer(self):
 
         n_atoms = 10
@@ -144,6 +151,7 @@ class TestPiNet2:
             dot(prop), dot(rotate(prop, theta))
         )
 
+    @pytest.mark.forked
     def test_scalelayer(self):
 
         n_atoms = 10
@@ -160,6 +168,7 @@ class TestPiNet2:
             rotate(scaler([px, p1]), 42.), scaler([rotate(px, 42.), p1])
         )
 
+    @pytest.mark.forked
     def test_simple_pixlayer_rank1(self):
 
         n_atoms = 10
@@ -176,7 +185,7 @@ class TestPiNet2:
             rotate(pix([ind_2, px]), 42.), pix([ind_2, rotate(px, 42.)])
         )
 
-
+    @pytest.mark.forked
     def test_general_pixlayer(self):
 
         n_atoms = 10

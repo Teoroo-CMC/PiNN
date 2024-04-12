@@ -165,7 +165,7 @@ class PiNet2P5Combine(tf.keras.Model):
         tensors["p5"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 3, 1])
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
-        output = tf.Variable(0.0)  # latest tf does not allow passing in non-tensor variables
+        output = 0.0
         for i in range(self.depth):
             p1, p3, p5 = self.gc_blocks[i](
                 [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["p5"], tensors["norm_diff"], basis]

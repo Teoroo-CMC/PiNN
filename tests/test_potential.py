@@ -65,7 +65,7 @@ def test_bpnn_potential():
     _potential_tests(params)
     rmtree(testpath)
 
-
+@pytest.mark.forked
 def test_bpnn_potential_pre_cond():
     from pinn.networks.bpnn import BPNN
     testpath = tempfile.mkdtemp()

@@ -409,7 +409,7 @@ class PiNet(tf.keras.Model):
         tensors = self.preprocess(tensors)
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
-        output = tf.Variable(0.0)  # latest tf does not allow passing in non-tensor variables
+        output = 0.0
         for i in range(self.depth):
             prop = self.gc_blocks[i]([tensors["ind_2"], tensors["prop"], basis])
             output = self.out_layers[i]([tensors["ind_1"], prop, output])

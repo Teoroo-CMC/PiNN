@@ -1,7 +1,7 @@
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-import warnings
-warnings.filterwarnings("ignore")
+# import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+# import warnings
+# warnings.filterwarnings("ignore")
 
 import numpy as np
 from pinn.io import load_numpy, sparse_batch

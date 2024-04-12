@@ -77,10 +77,9 @@ class GCBlock(tf.keras.layers.Layer):
             p5[:, 0, :], p5[:, 2, :], p5[:, 3, :], 
             p5[:, 2, :], p5[:, 1, :], p5[:, 4, :], 
             p5[:, 3, :], p5[:, 4, :], -p5[:, 0, :]-p5[:, 1, :]
-        ], axis=1)# .reshape(p5.shape[0], 3, 3, p5.shape[-1])
-        p9 = tf.reshape(p9, (p5.shape[0], 3, 3, p5.shape[-1]))
-
-        p1t1 = self.product_layer([p3, p9]) + p1
+        ], axis=1)
+        
+        p1t1 = self.product_layer([p3, tf.reshape(p9, (tf.shape(p5)[0], 3, 3, p5.shape[-1]))]) + p1
         p3t1 = self.scale3_layer([p3, p1t1])
         p5t1 = self.scale4_layer([p5, p1t1])
 
@@ -214,7 +213,7 @@ class PiNet2P5IrrepProd(tf.keras.Model):
         tensors["p5"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 5, 1])
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
-        output = tf.Variable(0.0)  # latest tf does not allow passing in non-tensor variables
+        output = 0.0
         for i in range(self.depth):
             p1, p3, p5 = self.gc_blocks[i](
                 [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["p5"], tensors["norm_diff"], tensors["diff_p5"], basis]

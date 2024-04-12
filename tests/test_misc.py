@@ -97,21 +97,21 @@ def test_derivitives():
     for atoms in test_set:
         pos = atoms.get_positions()
         atoms.set_positions(pos+np.random.uniform(0,0.2,pos.shape))
-        atoms.set_calculator(pi_lj)
+        atoms.calc = pi_lj
         f_pinn, e_pinn = atoms.get_forces(), atoms.get_potential_energy()
-        atoms.set_calculator(LennardJones())
+        atoms.calc = LennardJones()
         f_ase, e_ase = atoms.get_forces(), atoms.get_potential_energy()
         assert np.allclose(f_pinn, f_ase, rtol=1e-2)
         assert np.allclose(e_pinn, e_ase, rtol=1e-2)
         assert np.abs(e_pinn-e_ase)<1e-3
         if np.any(atoms.pbc):
-            atoms.set_calculator(pi_lj)
+            atoms.calc = pi_lj
             s_pinn = atoms.get_stress()
-            atoms.set_calculator(LennardJones())
+            atoms.calc = LennardJones()
             s_ase = atoms.get_stress()
             assert np.allclose(s_pinn, s_ase, rtol=1e-2)
 
-
+@pytest.mark.forked
 def test_clist_nl():
     """Cell list neighbor test
     Compare with ASE implementation
