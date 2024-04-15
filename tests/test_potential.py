@@ -8,6 +8,7 @@ from pinn.io import load_numpy, sparse_batch
 from shutil import rmtree
 from ase import Atoms
 
+@pytest.mark.forked
 def test_pinn_potential():
     testpath = tempfile.mkdtemp()
     network_params = {
@@ -35,7 +36,7 @@ def test_pinn_potential():
     _potential_tests(params)
     rmtree(testpath)
 
-
+@pytest.mark.forked
 def test_bpnn_potential():
     testpath = tempfile.mkdtemp()
     network_params = {
@@ -109,7 +110,6 @@ def test_bpnn_potential_pre_cond():
     _potential_tests(params)
     rmtree(testpath)
 
-
 def _get_lj_data():
     from ase.calculators.lj import LennardJones
 
@@ -130,7 +130,6 @@ def _get_lj_data():
         'f_data': np.array(f_data)
     }
     return data
-
 
 def _potential_tests(params):
     # Series of tasks that a potential should pass

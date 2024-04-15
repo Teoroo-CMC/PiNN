@@ -6,7 +6,7 @@ import numpy as np
 import pinn
 from shutil import rmtree
 
-
+@pytest.mark.forked
 def test_potential_model():
     """A simple example to test training and using a potential"""
     from ase import Atoms    
@@ -74,7 +74,7 @@ def test_potential_model():
     tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
     rmtree(tmp, ignore_errors=True)    
 
-
+@pytest.mark.forked
 def test_derivitives():
     """ Test the calcualted derivitives: forces and stress
     with a LJ calculator against ASE's implementation

@@ -37,7 +37,7 @@ def _manual_sfs():
 
     return g2_a, g3_a, g4_a
 
-
+@pytest.mark.forked
 def test_sfs():
     # test the BP symmetry functions against manual calculations
     # units in the original runner format is Bohr
@@ -64,6 +64,7 @@ def test_sfs():
     assert np.allclose(tensors['fp_1'][0], g3_a, rtol=5e-3)
     assert np.allclose(tensors['fp_2'][0], g4_a, rtol=5e-3)
 
+@pytest.mark.forked
 def test_jacob_bpnn():
     """Check BPNN jacobian calculation"""
     from ase.collections import g2
