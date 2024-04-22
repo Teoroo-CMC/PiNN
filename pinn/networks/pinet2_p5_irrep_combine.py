@@ -79,9 +79,9 @@ class GCBlock(tf.keras.layers.Layer):
             p5[:, 2, :], p5[:, 1, :], p5[:, 4, :], 
             p5[:, 3, :], p5[:, 4, :], -p5[:, 0, :]-p5[:, 1, :]
         ], axis=1)
-        p9 = tf.reshape(p9, (p5.shape[0], 3, 3, p5.shape[-1]))
+        
+        p1t1 = self.product_layer([p3, tf.reshape(p9, (tf.shape(p5)[0], 3, 3, p5.shape[-1]))]) + self.dot_layer1(tf.reshape(p5, (-1, 5, p5.shape[-1]))) + self.dot_layer2(p3) + p1
 
-        p1t1 = self.product_layer([p3, p9]) + self.dot_layer1(tf.reshape(p5, (-1, 9, p5.shape[-1]))) + self.dot_layer2(p3) + p1
         p3t1 = self.scale3_layer([p3, p1t1])
         p5t1 = self.scale4_layer([p5, p1t1])
 

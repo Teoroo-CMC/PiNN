@@ -251,7 +251,7 @@ class GCBlock(tf.keras.layers.Layer):
         iiargs = kwargs.copy()
         iiargs.update(use_bias=False)
         ii1_nodes = ii_nodes.copy()
-        ii1_nodes[-1] *= 4
+        ii1_nodes[-1] *= 5
         self.pp1_layer = FFLayer(pp_nodes, **kwargs)
         self.pi1_layer = PILayer(pi_nodes, **kwargs)
         self.ii1_layer = FFLayer(ii1_nodes, **iiargs)
@@ -278,28 +278,29 @@ class GCBlock(tf.keras.layers.Layer):
         self.scale4_layer = ScaleLayer()
 
     def call(self, tensors):
-        ind_2, p1, p3, p5, diff, basis = tensors
+        ind_2, p1, p3, p5, diff, diff_p5, basis = tensors
         p1 = self.pp1_layer(p1)
         i1 = self.pi1_layer([ind_2, p1, basis])
         i1 = self.ii1_layer(i1)
-        i1_1, i1_2, i1_3, i1_4 = tf.split(i1, 4, axis=-1)
+        i1_1, i1_2, i1_3, i1_4, i1_5 = tf.split(i1, 5, axis=-1)
         p1 = self.ip1_layer([ind_2, p1, i1_1])
-        scaled_diff = self.scale0_layer([diff[:, :, None], i1_2])
+        scaled_diff3 = self.scale0_layer([diff[:, :, None], i1_2])
+        scaled_diff5 = self.scale1_layer([diff_p5[:, :, :, None], i1_3[:, None, :]])
 
         p3 = self.pp3_layer(p3)
         i3 = self.pi3_layer([ind_2, p3])
-        i3 = self.ii3_layer(i3)
+        # i3 = self.ii3_layer(i3)
 
-        i3 = self.scale1_layer([i3, i1_3])
-        i3 = i3 + scaled_diff
+        i3 = self.scale1_layer([i3, i1_4])
+        i3 = i3 + scaled_diff3
         p3 = self.ip3_layer([ind_2, p3, i3])
 
         p5 = self.pp5_layer(p5)
         i5 = self.pi5_layer([ind_2, p5])
-        i5 = self.ii5_layer(i5)
-        i5 = self.scale2_layer([i5, i1_4[:, None, :]])
+        # i5 = self.ii5_layer(i5)
+        i5 = self.scale2_layer([i5, i1_5[:, None, :]])
 
-        i5 = self.add_layer([i5, scaled_diff])
+        i5 = i5 + scaled_diff5
         p5 = self.ip5_layer([ind_2, p5, i5])
         p1t1 = self.dot_layer1(tf.reshape(p5, (-1, 9, p5.shape[-1]))) + self.dot_layer2(p3) + p1
         p3t1 = self.scale3_layer([p3, p1t1])
@@ -324,6 +325,22 @@ class PreprocessLayer(tf.keras.layers.Layer):
                 self.embed(tensors["elems"]), tensors["coord"].dtype
             )
         tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
+        diff = tensors["norm_diff"]
+        x = diff[:, 0]
+        y = diff[:, 1]
+        z = diff[:, 2]
+        x2 = x**2
+        y2 = y**2
+        z2 = z**2
+        p1 = 2/3 * x2 - 1/3 * y2 - 1/3 * z2
+        p2 = 2/3 * y2 - 1/3 * x2 - 1/3 * z2
+        p3 = x*y
+        p4 = x*z
+        p5 = y*z
+        tensors["diff_p5"] = tf.stack([
+            p1, p3, p4, p3, p2, p5, p4, p5, -p1-p2
+        ], axis=1)
+        tensors["diff_p5"] = tf.reshape(tensors["diff_p5"], (tf.shape(tensors["diff_p5"])[0], 3, 3))
         return tensors
 
 
@@ -420,7 +437,7 @@ class PiNet2P5Dot(tf.keras.Model):
         output = 0.0
         for i in range(self.depth):
             p1, p3, p5 = self.gc_blocks[i](
-                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["p5"], tensors["norm_diff"], basis]
+                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["p5"], tensors["norm_diff"], tensors["diff_p5"], basis]
             )
             output = self.out_layers[i]([tensors["ind_1"], p1, p3, output])
             tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])
