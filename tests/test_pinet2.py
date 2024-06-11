@@ -26,7 +26,7 @@ class TestPiNet2:
 
         prop = tf.random.uniform((nsamples, ndims, nchannels))
 
-        dot = DotLayer('simple')
+        dot = DotLayer(weighted=False)
         tf.debugging.assert_near(
             dot(prop), dot(rotate(prop, 42.))
         )
@@ -41,7 +41,7 @@ class TestPiNet2:
         prop = tf.random.uniform((nsamples, ndims, nchannels))
         theta = 42.
 
-        dot = DotLayer('general')
+        dot = DotLayer(weighted=True)
         tf.debugging.assert_near(
             dot(prop), dot(rotate(prop, theta))
         )
@@ -73,7 +73,7 @@ class TestPiNet2:
         px = tf.random.uniform((nsamples, ndims, nchannels))
         ind_2 = tf.random.uniform((nnbors, 2), maxval=nsamples, dtype=tf.int32)
 
-        pix = PIXLayer('simple')
+        pix = PIXLayer(weighted=False)
         out = pix([ind_2, px])
         assert out.shape == (nnbors, ndims, nchannels)
         tf.debugging.assert_near(
@@ -91,7 +91,7 @@ class TestPiNet2:
         px = tf.random.uniform((nsamples, ndims, nchannels))
         ind_2 = tf.random.uniform((nnbors, 2), maxval=nsamples, dtype=tf.int32)
 
-        pix = PIXLayer('general')
+        pix = PIXLayer(weighted=True)
         out = pix([ind_2, px])
         assert out.shape == (nnbors, ndims, nchannels)
         tf.debugging.assert_near(
