@@ -37,12 +37,16 @@ class InvarLayer(tf.keras.layers.Layer):
 
 class EquiVarLayer(tf.keras.layers.Layer):
 
-    def __init__(self, n_outs, weighted, **kwargs):
+    def __init__(self, n_outs, weighted=False, **kwargs):
 
         super().__init__()
 
-        self.pp_layer = FFLayer(n_outs, use_bias=False, **kwargs)
-        self.pi_layer = PIXLayer(weighted=weighted, **kwargs)
+        kw = kwargs.copy()
+        kw["use_bias"] = False
+        kw["activation"] = None
+
+        self.pp_layer = FFLayer(n_outs, **kw)
+        self.pi_layer = PIXLayer(weighted=weighted, **kw)
         self.ip_layer = IPLayer()
 
         self.scale_layer = ScaleLayer()
@@ -57,7 +61,7 @@ class EquiVarLayer(tf.keras.layers.Layer):
         scaled_diff = self.scale_layer([diff[:, :, None], i1])
         ix = ix + scaled_diff
         px = self.ip_layer([ind_2, px, ix])
-        
+        px = self.pp_layer(px)
         dotted_px = self.dot_layer(px)
         
         return px, ix, dotted_px
@@ -217,7 +221,7 @@ class PiNet2(tf.keras.Model):
         self.out_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
         self.out_extra = out_extra
         for k, v in out_extra.items():
-            setattr(self, f"{k}_out_layers", [OutLayer([], v) for i in range(depth)])
+            setattr(self, f"{k}_out_layers", [OutLayer(out_nodes, v) for i in range(depth)])
         self.ann_output = ANNOutput(out_pool)
 
     def call(self, tensors):
@@ -294,15 +298,16 @@ class PiNet2(tf.keras.Model):
             )
             output = self.out_layers[i]([tensors["ind_1"], px_list[0], output])
             for k in self.out_extra:
+                _idx = int(int(k[-1]) // 2)
                 if k.startswith('p'):
-                    output = getattr(self, f"{k}_out_layers")[i]([tensors["ind_1"], px_list[k], output[k]])
+                    output_extra[k] = getattr(self, f"{k}_out_layers")[i]([tensors["ind_1"], px_list[_idx], output_extra[k]])
                 else:
-                    output_extra[k] = getattr(self, f"{k}_out_layers")[i]([tensors["ind_1"], px_list[0], output_extra[k]])
-            if self.rank > 1:
+                    output_extra[k] = getattr(self, f"{k}_out_layers")[i]([tensors["ind_1"], ix_list[_idx], output_extra[k]])
+            if self.rank >= 1:
                 tensors["p1"] = self.res_update1[i]([tensors["p1"], px_list[0]])
-            if self.rank > 3:
+            if self.rank >= 3:
                 tensors["p3"] = self.res_update3[i]([tensors["p3"], px_list[1]])
-            if self.rank > 5:
+            if self.rank >= 5:
                 tensors["p5"] = self.res_update5[i]([tensors["p5"], px_list[2]])
 
         output = self.ann_output([tensors["ind_1"], output])
