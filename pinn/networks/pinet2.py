@@ -183,7 +183,7 @@ class OutLayer(tf.keras.layers.Layer):
         Returns:
             output (tensor): an updated output tensor with shape `(n_atoms, out_units)`
         """
-        ind_1, p1, p3, prev_output = tensors
+        ind_1, p1, prev_output = tensors
         p1 = self.ff_layer(p1)
         output = self.out_units(p1) + prev_output
         return output
@@ -339,6 +339,7 @@ class PiNet2(tf.keras.Model):
         """
         tensors = self.preprocess(tensors)
         tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
+        tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
         output = 0.0
