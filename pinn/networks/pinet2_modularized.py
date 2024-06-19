@@ -195,6 +195,7 @@ class PiNet2(tf.keras.Model):
             cutoff_type (string): cutoff function to use with the basis.
             act (string): activation function to use
             weighted (bool): whether to use weighted style
+            rank (int[1, 3, 5]): which order of variable to use 
         """
         super(PiNet2, self).__init__()
 
