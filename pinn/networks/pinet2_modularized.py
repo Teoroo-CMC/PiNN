@@ -248,30 +248,30 @@ class PiNet2(tf.keras.Model):
             output (tensor): output tensor with shape `[n_atoms, out_nodes]`
         """
         tensors = self.preprocess(tensors)
-
-        tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
-        
-        if self.rank >= 3:
-            tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
-        if self.rank >= 5:
-            tensors["p5"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 5, 1])
-            diff = tensors["norm_diff"]
-            x = diff[:, 0]
-            y = diff[:, 1]
-            z = diff[:, 2]
-            x2 = x**2
-            y2 = y**2
-            z2 = z**2
-            tensors["diff_p5"] = tf.stack(
-                [
-                    2 / 3 * x2 - 1 / 3 * y2 - 1 / 3 * z2,
-                    2 / 3 * y2 - 1 / 3 * x2 - 1 / 3 * z2,
-                    x * y,
-                    x * z,
-                    y * z,
-                ],
-                axis=1,
-            )
+        if "norm_diff":
+            tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
+            
+            if self.rank >= 3:
+                tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
+            if self.rank >= 5:
+                tensors["p5"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 5, 1])
+                diff = tensors["norm_diff"]
+                x = diff[:, 0]
+                y = diff[:, 1]
+                z = diff[:, 2]
+                x2 = x**2
+                y2 = y**2
+                z2 = z**2
+                tensors["diff_p5"] = tf.stack(
+                    [
+                        2 / 3 * x2 - 1 / 3 * y2 - 1 / 3 * z2,
+                        2 / 3 * y2 - 1 / 3 * x2 - 1 / 3 * z2,
+                        x * y,
+                        x * z,
+                        y * z,
+                    ],
+                    axis=1,
+                )
 
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)

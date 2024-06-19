@@ -183,9 +183,9 @@ class OutLayer(tf.keras.layers.Layer):
         Returns:
             output (tensor): an updated output tensor with shape `(n_atoms, out_units)`
         """
-        ind_1, p1, prev_output = tensors
-        p1 = self.ff_layer(p1)
-        output = self.out_units(p1) + prev_output
+        ind_1, px, prev_output = tensors
+        px = self.ff_layer(px)
+        output = self.out_units(px) + prev_output
         return output
 
 
