@@ -176,7 +176,7 @@ class PiNet2(tf.keras.Model):
         act="tanh",
         depth=4,
         weighted=True,
-        rank=2,
+        rank=3,
     ):
         """
         Args:
@@ -200,6 +200,7 @@ class PiNet2(tf.keras.Model):
         super(PiNet2, self).__init__()
 
         self.depth = depth
+        assert rank in [1, 3, 5], ValueError("rank must be 1, 3, or 5")
         self.rank = rank
         self.preprocess = PreprocessLayer(rank, atom_types, rc)
         self.cutoff = CutoffFunc(rc, cutoff_type)
