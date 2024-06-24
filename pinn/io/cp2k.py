@@ -1,46 +1,70 @@
 # -*- coding: utf-8 -*-
+from ase.units import create_units
+
+# This is to follow the CP2K standard to use CODATA 2006, which differs from the
+# the defaults of ASE (as of ASE ver 3.23 and CP2K v2022.1, Sep 2022)
+units = create_units("2006")
 
 def _cell_dat_indexer(files):
-    if isinstance(files['cell_dat'], str):
+    import numpy as np
+    if not isinstance(files['cell_dat'], str):
         return [files['cell_dat']]
     else:
-        return files['cell_dat']
+        # the line start with # will be ignored by np zzy 20240324
+        arrCells = np.loadtxt(files['cell_dat'], usecols=(2,3,4))
+        arrLocs = np.arange(0,arrCells.shape[0],1)
+        listLocs = arrLocs.tolist()
+        indexes = list(zip([files['cell_dat']] * len(listLocs), listLocs))
+        return indexes
 
 def _cell_dat_loader(index):
     import numpy as np
-    return {'cell': np.loadtxt(index, usecols=(1,2,3))}
+    fname, loc = index
+    data = []
+    arrCellXs = np.loadtxt(fname, usecols=(2, 3, 4))
+    data.append(arrCellXs[loc].tolist())
+    arrCellYs = np.loadtxt(fname, usecols=(5, 6, 7))
+    data.append(arrCellYs[loc].tolist())
+    arrCellZs = np.loadtxt(fname, usecols=(8, 9, 10))
+    data.append(arrCellZs[loc].tolist())
+    return {'cell': np.array(data, float)}
 
 def _stress_indexer(files):
     import mmap, re
     f = open(files['out'], 'r')
     m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
     locs = [match.span()[0] for match in
-            re.finditer(br'STRESS TENSOR \[GPa\]', m)]
+            re.finditer(br' STRESS\| Analytical stress tensor \[GPa\]', m)]
     indexes = list(zip([files['out']]*len(locs), locs))
     f.close()
     return indexes
 
 def _stress_loader(index):
     import numpy as np
+    data = []
     fname, loc = index
     f = open(fname, 'r')
-    data = []
     f.seek(loc)
-    [f.readline() for i in range(3)]
+    assert f.readline().startswith(
+        " STRESS| Analytical stress tensor [GPa]"
+    ) & f.readline().startswith(
+        " STRESS|                        x"
+    ), "Unknown format of CP2K log, aborting"
     for i in range(3):
         l = f.readline().strip()
-        data.append(l.split()[1:])
-    unit = -1e9*2.2937e17*1e-30 # GPa -> Hartree/Ang^3
+        data.append(l.split()[2:])
     f.close()
-    return {'s_data': np.array(data, np.float)*unit}
+    return {"s_data": -np.array(data, float) * units["GPa"]}
 
 def _energy_indexer(files):
     import mmap, re
     f = open(files['out'], 'r')
     regex = r'ENERGY\|\ Total FORCE_EVAL.*:\s*([-+]?\d*\.?\d*)'
-    energies = [float(e) for e in re.findall(regex, f.read())]
+    energies = [float(e) * units["Hartree"] for e in re.findall(regex, f.read())]
     f.close()
-    return energies
+    nPrintStep = 1 # should change the value based on your own cp5k setting
+    print("Note: the snapshotsteps in CP2K is set as %d"%(nPrintStep))
+    return energies[::nPrintStep]
 
 def _energy_loader(energy):
     return {'e_data': energy}
@@ -50,28 +74,33 @@ def _force_indexer(files):
     f = open(files['out'], 'r')
     m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
     locs = [match.span()[0] for match in
-            re.finditer(b'ATOMIC FORCES in', m)]
+            re.finditer(br' ATOMIC FORCES in \[a.u.\]', m)]
     indexes = list(zip([files['out']]*len(locs), locs))
     f.close()
     return indexes
 
 def _force_loader(index):
     import numpy as np
-    bohr2ang = 0.5291772109
     fname, loc = index
-    f = open(fname, 'r')
+
     data = []
+    f = open(fname, "r")
     f.seek(loc)
-    [f.readline() for i in range(3)]
+    assert (
+        f.readline().startswith(" ATOMIC FORCES in [a.u.]")
+        & f.readline().startswith("\n")
+        & f.readline().startswith(" # Atom   Kind   Element")
+    ), "Unknown format of CP2K log, aborting"
     l = f.readline().strip()
-    while not l.startswith('SUM OF'):
+    while not l.startswith("SUM OF"):
         data.append(l.split()[3:])
         l = f.readline().strip()
     f.close()
-    return {'f_data': np.array(data, np.float)/bohr2ang}
+
+    return {"f_data": np.array(data, float) * units["Hartree"] / units["Bohr"]}
 
 def _coord_indexer(files):
-    import mmap
+    import mmap,re
     f = open(files['coord'], 'r')
     first_line = f.readline(); f.seek(0);
     regex = str.encode('(^|\n)'+first_line[:-1]+'(\r\n|\n)')
@@ -83,6 +112,7 @@ def _coord_indexer(files):
     return indexes
 
 def _coord_loader(index):
+    import numpy as np
     from ase.data import atomic_numbers
     fname, loc = index
     elems = []
@@ -97,8 +127,8 @@ def _coord_loader(index):
         elems.append(atomic_numbers[line[0]])
         coord.append(line[1:4])
     f.close()
-    return {'elems': np.array(elems, np.float),
-            'coord': np.array(coord, np.float)}
+    return {'elems': np.array(elems, int),
+            'coord': np.array(coord, float)}
 
 
 indexers = {'force': _force_indexer,

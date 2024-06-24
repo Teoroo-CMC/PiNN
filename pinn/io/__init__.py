@@ -2,7 +2,7 @@
 from pinn.io.base import list_loader, sparse_batch
 from pinn.io.tfr import load_tfrecord, write_tfrecord
 from pinn.io.ase import load_ase
-from pinn.io.runner import load_runner
+from pinn.io.runner import load_runner,write_runner
 from pinn.io.qm9 import load_qm9
 from pinn.io.ani import load_ani
 from pinn.io.cp2k import load_cp2k
