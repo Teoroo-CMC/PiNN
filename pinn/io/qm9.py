@@ -45,6 +45,9 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, splits=None, shuffle=True, seed=
                'r2', 'zpve', 'U0', 'U', 'H', 'G', 'Cv']
     _label_ind = {k: i for i, k in enumerate(_labels)}
 
+    ev2hartree = 0.0367493
+    print("Note: gap and U0 has been scaled up by %f" % (1.0 / ev2hartree))
+
     @list_loader(ds_spec=_qm9_spec(label_map))
     def _qm9_loader(fname):
         with open(fname) as f:
@@ -56,6 +59,9 @@ def load_qm9(flist, label_map={'e_data': 'U0'}, splits=None, shuffle=True, seed=
         coord = np.array(coord, float)
         data = {'elems': elems, 'coord': coord}
         for k, v in label_map.items():
-            data[k] = float(lines[1].split()[_label_ind[v]])
+            if (v == "gap" or v == "U0"):
+                data[k] = float(lines[1].split()[_label_ind[v]]) / ev2hartree
+            else:
+                data[k] = float(lines[1].split()[_label_ind[v]])
         return data
     return _qm9_loader(flist, splits=splits, shuffle=shuffle, seed=seed)
