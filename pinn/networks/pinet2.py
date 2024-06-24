@@ -344,8 +344,9 @@ class PiNet2(tf.keras.Model):
         output = 0.0
         for i in range(self.depth):
             p1, p3 = self.gc_blocks[i](
-                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["diff"], basis]
+                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["diff"]/tf.norm(tensors["diff"], axis=1, keepdims=True), basis]
             )
+
             output = self.out_layers[i]([tensors["ind_1"], p1, p3, output])
             tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])
             tensors["p3"] = self.res_update3[i]([tensors["p3"], p3])
