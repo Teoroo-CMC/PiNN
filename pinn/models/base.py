@@ -56,6 +56,8 @@ class MetricsCollector():
             if mask is not None:
                 error = tf.boolean_mask(error, mask)
             if use_error:
+                # when using F_weights, the original code terminaed by Incompatible shapes: [696,3] vs. [2088] zzy 20230617
+                weight = tf.reshape(weight, shape=[-1])
                 loss = tf.reduce_mean(error**2 * weight)
                 tf.compat.v1.summary.scalar(f'{tag}_LOSS', loss)
                 self.ERROR.append(error*tf.math.sqrt(weight))
@@ -67,6 +69,8 @@ class MetricsCollector():
             if mask is not None:
                 error = tf.boolean_mask(error, mask)
             if use_error:
+                # when using F_weights, the original code terminaed by Incompatible shapes: [696,3] vs. [2088] zzy 20230617
+                weight = tf.reshape(weight, shape=[-1])
                 loss = tf.reduce_mean(error**2 * weight)
                 self.METRICS[f'METRICS/{tag}_LOSS'] = tf.compat.v1.metrics.mean(loss)
                 self.LOSS.append(loss)
