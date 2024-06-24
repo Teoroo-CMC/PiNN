@@ -33,7 +33,7 @@ default_params = {
     'use_force': False,         # include force in loss function
     'max_force_comp': False,    # if set to float, omit forces components larger than it
     'no_force_comp': False,     # if set to int, use as maximum number of force components for a update
-    'use_f_weight': False,      # scales the loss according to f_weights
+    'use_f_weights': False,     # scales the loss according to f_weights
     ## Stress
     'use_stress': False,        # include stress in Loss function
     ## L2
@@ -127,7 +127,7 @@ def make_metrics(features, pred, params, mode):
             f_mask = tf.scatter_nd(use_ind, tf.fill(tf.shape(use_ind)[:1],True), tf.shape(f_mask))
 
         f_weight = params['f_loss_multiplier']
-        f_weight *= features['f_weight'] if params['use_f_weight'] else 1
+        f_weight *= features['f_weights'] if params['use_f_weights'] else 1
         metrics.add_error('F', f_data, f_pred, mask=f_mask, weight=f_weight)
 
     if params['use_stress']:
