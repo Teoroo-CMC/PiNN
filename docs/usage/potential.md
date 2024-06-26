@@ -43,7 +43,7 @@ descriptions.
 | `use_force`          | `False` | Include force in loss function                                                            |
 | `max_force_comp`     | `False` | if set to float, omit forces components larger than it                                    |
 | `no_force_comp`      | `False` | if set to int, use as maximum number of force component per weight update                 |
-| `use_f_weight`       | `False` | Scale the energy loss according to the `'f_weight'` Tensor in the dataset                 |
+| `use_f_weights`      | `False` | Scale the energy loss according to the `'f_weights'` Tensor in the dataset                |
 | `use_stress`         | `False` | Include stress in loss function                                                           |
 | `use_l2`             | `False` | Include L2 regularization in loss function                                                |
 | `e_loss_multiplier`  | `1`     | Weight of energy loss                                                                     |
