@@ -43,7 +43,7 @@ jobs:
         run: |
           pip install -r requirements-dev.txt
           pip install -r requirements-doc.txt
-          pip install tensorflow==${{ matrix.tf-version }} 'protobuf<3.20'
+          pip install tensorflow==${{ matrix.tf-version }} 'protobuf<3.20' 'numpy<2'
           pip install .
       - name: Test with pytest
         run: pytest --forked tests/
