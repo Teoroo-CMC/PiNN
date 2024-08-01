@@ -55,7 +55,7 @@ class EquiVarLayer(tf.keras.layers.Layer):
     def call(self, tensors):
 
         ind_2, px, i1, diff = tensors
-        
+
         ix = self.pi_layer([ind_2, px])
         ix = self.scale_layer([ix, i1])
         scaled_diff = self.scale_layer([diff[:, :, None], i1])
@@ -63,7 +63,7 @@ class EquiVarLayer(tf.keras.layers.Layer):
         px = self.ip_layer([ind_2, px, ix])
         px = self.pp_layer(px)
         dotted_px = self.dot_layer(px)
-        
+
         return px, ix, dotted_px
 
 
@@ -71,13 +71,13 @@ class GCBlock(tf.keras.layers.Layer):
     def __init__(self, rank, weighted: bool, pp_nodes, pi_nodes, ii_nodes, **kwargs):
         super(GCBlock, self).__init__()
         self.rank = rank
-        self.n_layers = int(rank // 2) + 1
+        self.n_props = int(rank // 2) + 1
         ppx_nodes = [pp_nodes[-1]]
         if rank >= 1:
             ii1_nodes = ii_nodes.copy()
             pp1_nodes = pp_nodes.copy()
-            ii1_nodes[-1] *= self.n_layers
-            pp1_nodes[-1] = ii_nodes[-1] * self.n_layers
+            ii1_nodes[-1] *= self.n_props
+            pp1_nodes[-1] = ii_nodes[-1] * self.n_props
             self.invar_p1_layer = InvarLayer(pp_nodes, pi_nodes, ii1_nodes, **kwargs)
             self.pp_layer = FFLayer(pp1_nodes, **kwargs)
 
@@ -90,27 +90,31 @@ class GCBlock(tf.keras.layers.Layer):
         self.scale3_layer = ScaleLayer()
         self.scale5_layer = ScaleLayer()
 
-    def call(self, tensors):
+    def call(self, tensors, basis):
 
-        ind_2, basis, px, diffs = tensors
+        ind_2 = tensors["ind_2"]
 
-        p1, i1 = self.invar_p1_layer([ind_2, px[0], basis])
+        p1, i1 = self.invar_p1_layer([ind_2, tensors["p1"], basis])
 
-        i1s = tf.split(i1, self.n_layers, axis=-1)
+        i1s = tf.split(i1, self.n_props, axis=-1)
         px_list = [p1]
-        ix_list = [i1]
+        new_tensors = {"i1": i1}
 
         if self.rank >= 3:
             p3, i3, dotted_p3 = self.equivar_p3_layer(
-                [ind_2, px[1], i1s[1], diffs[0]]
+                [ind_2, tensors["p3"], i1s[1], tensors["d3"]]
             )  # NOTE: use same i1 branch for diff_px and px, same result as separated i1
             px_list.append(dotted_p3)
-            ix_list.append(i3)
+            new_tensors["i3"] = i3
+            new_tensors["dotted_p3"] = dotted_p3
 
         if self.rank >= 5:
-            p5, i5, dotted_p5 = self.equivar_p5_layer([ind_2, px[2], i1s[2], diffs[1]])
+            p5, i5, dotted_p5 = self.equivar_p5_layer(
+                [ind_2, tensors["p5"], i1s[2], tensors["d5"]]
+            )
             px_list.append(dotted_p5)
-            ix_list.append(i5)
+            new_tensors["i5"] = i5
+            new_tensors["dotted_p5"] = dotted_p5
 
         p1t1 = self.pp_layer(
             tf.concat(
@@ -119,18 +123,17 @@ class GCBlock(tf.keras.layers.Layer):
             )
         )
 
-        pxt1 = tf.split(p1t1, self.n_layers, axis=-1)
-        pxt1_list = [pxt1[0]]
-
+        pxt1 = tf.split(p1t1, self.n_props, axis=-1)
+        new_tensors["p1"] = pxt1[0]
         if self.rank >= 3:
             p3t1 = self.scale3_layer([p3, pxt1[1]])
-            pxt1_list.append(p3t1)
+            new_tensors["p3"] = p3t1
 
         if self.rank >= 5:
             p5t1 = self.scale5_layer([p5, pxt1[2]])
-            pxt1_list.append(p5t1)
+            new_tensors["p5"] = p5t1
 
-        return pxt1_list, ix_list
+        return new_tensors
 
 
 class PreprocessLayer(tf.keras.layers.Layer):
@@ -192,10 +195,11 @@ class PiNet2(tf.keras.Model):
             n_basis (int): number of basis functions to use
             gamma (float or array): width of gaussian function for gaussian basis
             center (float or array): center of gaussian function for gaussian basis
+            out_extra (dict[str, int]): return extra variables.
             cutoff_type (string): cutoff function to use with the basis.
             act (string): activation function to use
             weighted (bool): whether to use weighted style
-            rank (int[1, 3, 5]): which order of variable to use 
+            rank (int[1, 3, 5]): which order of variable to use
         """
         super(PiNet2, self).__init__()
 
@@ -223,7 +227,9 @@ class PiNet2(tf.keras.Model):
         self.out_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
         self.out_extra = out_extra
         for k, v in out_extra.items():
-            setattr(self, f"{k}_out_layers", [OutLayer(out_nodes, v) for i in range(depth)])
+            setattr(
+                self, f"{k}_out_layers", [OutLayer(out_nodes, v) for i in range(depth)]
+            )
         self.ann_output = ANNOutput(out_pool)
 
     def call(self, tensors):
@@ -250,71 +256,51 @@ class PiNet2(tf.keras.Model):
             output (tensor): output tensor with shape `[n_atoms, out_nodes]`
         """
         tensors = self.preprocess(tensors)
-        if "norm_diff":
-            tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
-            
-            if self.rank >= 3:
-                tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
-            if self.rank >= 5:
-                tensors["p5"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 5, 1])
-                diff = tensors["norm_diff"]
-                x = diff[:, 0]
-                y = diff[:, 1]
-                z = diff[:, 2]
-                x2 = x**2
-                y2 = y**2
-                z2 = z**2
-                tensors["diff_p5"] = tf.stack(
-                    [
-                        2 / 3 * x2 - 1 / 3 * y2 - 1 / 3 * z2,
-                        2 / 3 * y2 - 1 / 3 * x2 - 1 / 3 * z2,
-                        x * y,
-                        x * z,
-                        y * z,
-                    ],
-                    axis=1,
-                )
+        ind_1 = tensors["ind_1"]
+        tensors["d3"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
+        if self.rank >= 3:
+            tensors["p3"] = tf.zeros([tf.shape(ind_1)[0], 3, 1])
+        if self.rank >= 5:
+            tensors["p5"] = tf.zeros([tf.shape(ind_1)[0], 5, 1])
+
+            diff = tensors["d3"]
+            x = diff[:, 0]
+            y = diff[:, 1]
+            z = diff[:, 2]
+            x2 = x**2
+            y2 = y**2
+            z2 = z**2
+            tensors["d5"] = tf.stack(
+                [
+                    2 / 3 * x2 - 1 / 3 * y2 - 1 / 3 * z2,
+                    2 / 3 * y2 - 1 / 3 * x2 - 1 / 3 * z2,
+                    x * y,
+                    x * z,
+                    y * z,
+                ],
+                axis=1,
+            )
 
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
         output = 0.0
-        output_extra = {}
-        for k in self.out_extra:
-            output_extra[k] = 0.0
-        px_list = [tensors["p1"]]
-        diff_list = [tensors["norm_diff"]]
-        if self.rank >= 3:
-            px_list.append(tensors["p3"])
-        if self.rank >= 5:
-            px_list.append(tensors["p5"])
-            diff_list.append(tensors["diff_p5"])
-
+        out_extra = {k: 0.0 for k in self.out_extra}
         for i in range(self.depth):
-            px_list, ix_list = self.gc_blocks[i](
-                [
-                    tensors["ind_2"],
-                    basis,
-                    px_list,
-                    diff_list
-                ]
-            )
-            output = self.out_layers[i]([tensors["ind_1"], px_list[0], output])
+            new_tensors = self.gc_blocks[i](tensors, basis)
+            output = self.out_layers[i]([ind_1, new_tensors["p1"], output])
             for k in self.out_extra:
-                _idx = int(int(k[-1]) // 2)
-                if k.startswith('p'):
-                    output_extra[k] = getattr(self, f"{k}_out_layers")[i]([tensors["ind_1"], px_list[_idx], output_extra[k]])
-                else:
-                    output_extra[k] = getattr(self, f"{k}_out_layers")[i]([tensors["ind_1"], ix_list[_idx], output_extra[k]])
+                out_extra[k] = getattr(self, f"{k}_out_layers")[i](
+                    [ind_1, new_tensors[k], out_extra[k]]
+                )
             if self.rank >= 1:
-                tensors["p1"] = self.res_update1[i]([tensors["p1"], px_list[0]])
+                tensors["p1"] = self.res_update1[i]([tensors["p1"], new_tensors["p1"]])
             if self.rank >= 3:
-                tensors["p3"] = self.res_update3[i]([tensors["p3"], px_list[1]])
+                tensors["p3"] = self.res_update3[i]([tensors["p3"], new_tensors["p3"]])
             if self.rank >= 5:
-                tensors["p5"] = self.res_update5[i]([tensors["p5"], px_list[2]])
+                tensors["p5"] = self.res_update5[i]([tensors["p5"], new_tensors["p5"]])
 
-        output = self.ann_output([tensors["ind_1"], output])
+        output = self.ann_output([ind_1, output])
         if self.out_extra:
-            return output, output_extra
+            return output, out_extra
         else:
             return output
-
