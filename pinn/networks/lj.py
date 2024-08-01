@@ -17,8 +17,8 @@ class LJ(tf.keras.Model):
     def __init__(self, rc=3.0, sigma=1.0, epsilon=1.0):
         super(LJ, self).__init__()
         self.rc = rc
-        self.sigma = sigma
-        self.epsilon = epsilon
+        self.sigma = tf.Variable(sigma, trainable=True)
+        self.epsilon = tf.Variable(sigma, trainable=True)
         self.nl_layer = CellListNL(rc)
 
     def preprocess(self, tensors):
