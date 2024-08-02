@@ -9,6 +9,7 @@ import subprocess
 import click, pinn, os
 from pinn.report import report_log
 from typing import List
+import numpy as np
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 CONTEXT_SETTINGS = dict()
@@ -183,13 +184,55 @@ def log(logdir, tag, fmt):
 
 @click.command(name='report', context_settings=CONTEXT_SETTINGS,
                 options_metavar='[options]', short_help='generate report')
-@click.argument('model_host_path', metavar='model_host_path', nargs=1)
-@click.option('-f', '--filter', metavar='', default='', show_default=True)
+@click.argument('publish_dir', metavar='publish_dir', nargs=1)
+@click.option('-k', '--keys', metavar='', default='', multiple=True)
 @click.option('-l', '--log-name', metavar='', default='eval.log', show_default=True)
-def report(model_host_path:str, filter:List[str], log_name:str='eval.log'):
-    model_host_path = Path(model_host_path)
-    log_paths = model_host_path.glob(f'**/{log_name}')
-    report_log(list(map(str, map(lambda x:x.parent, log_paths))), filter, log_name)
+@click.option('-e', '--energy-factor', metavar='', default=1, help='energy convert factor')
+@click.option('-f', '--force-factor', metavar='', default=0, help='energy convert factor')
+def report(publish_dir:str, keys:List[str], log_name:str, energy_factor:str, force_factor:str):
+    publish_dir = Path(publish_dir)
+    log_paths = publish_dir.glob(f'**/{log_name}')
+    result = {}  # path: [e_mae, f_mae]
+    for log_path in log_paths:
+        if not all(map(lambda key: key in str(log_path.parent.stem), keys)):
+            continue
+        log = np.loadtxt(log_path)
+        e_mae = log[-1, 2]
+        model_name = str(log_path.parent.stem)
+        result[model_name] = {'e_mae': e_mae}
+        if force_factor:
+            f_mae = log[-1, 7]
+            result[model_name]['f_mae'] = f_mae
+    reduced_data = {}
+    for key, value in result.items():
+        prefix, _, _id = key.rpartition('-')
+        if prefix not in reduced_data:
+            reduced_data[prefix] = {
+                'e_mae': []
+            }
+            if force_factor:
+                reduced_data[prefix]['f_mae'] = []
+                reduced_data[prefix]['f_mae'].append(value['f_mae'])
+
+        reduced_data[prefix]['e_mae'].append(value['e_mae'])
+    
+    header = ['name', 'e_mae_mean', 'e_mae_stddev']
+    if force_factor:
+        header.append('f_mae_mean')
+        header.append('f_mae_stddev')
+
+    print('\t'.join(header))
+    for key, value in reduced_data.items():
+        e_mae = np.array(value['e_mae'])
+        if energy_factor:
+            e_mae *= energy_factor
+        if force_factor:
+            f_mae = np.array(value['f_mae'])
+            f_mae *= force_factor
+            print(f'{key}\t{e_mae.mean():.2f}\t{e_mae.std():.2f}\t{f_mae.mean():.2f}\t{f_mae.std():.2f}')
+        print(f'{key}\t{e_mae.mean():.2f}\t{e_mae.std():.2f}')
+        
+
 
 
 main.add_command(convert)

@@ -188,7 +188,6 @@ def _potential_tests(params):
 
     de = e_pred[-1] - e_pred[0]
     int_f = np.trapz(f_pred[:, 0, 0], x=x_a_range)
-    print(f_pred)
     assert np.allclose(de, -int_f, rtol=1e-2)
 
     # Test virial pressure
