@@ -257,7 +257,7 @@ class PiNet2(tf.keras.Model):
         """
         tensors = self.preprocess(tensors)
         ind_1 = tensors["ind_1"]
-        tensors["d3"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
+        tensors["d3"] = tensors["diff"] / tf.linalg.norm(tensors["diff"], axis=-1, keepdims=True)
         if self.rank >= 3:
             tensors["p3"] = tf.zeros([tf.shape(ind_1)[0], 3, 1])
         if self.rank >= 5:
