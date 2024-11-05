@@ -75,13 +75,9 @@ def pol_eem_fn(tensors, params):
     D = make_dummy(atom_rind, nbatch, nmax)
     eta    = E+J
     R = make_R(atom_rind, tensors['coord'], nbatch, nmax)*ang2bohr
-    cell = tensors['cell']*ang2bohr if 'cell' in tensors else None
-    #eta_corr = make_Dfield_eta(eta, R, cell, atom_rind)
     etaInv = tf.linalg.inv(eta+D)-D
-    #etaInv_corr = tf.linalg.inv(eta_corr+D)-D
     egap = 1/tf.einsum('aij->a',etaInv)
     chi    = make_lrf(etaInv)
-    #chi_corr    = make_lrf(etaInv_corr)
 
     alpha = -tf.linalg.einsum('bix,bij,bjy->bxy', R, chi, R)
     return {'alpha':alpha, 'egap': egap, 'chi':chi, 'eta': eta}
@@ -277,10 +273,6 @@ def pol_eem_iso_fn(tensors, params):
     chi    = make_lrf(etaInv)
 
     R = make_R(atom_rind, tensors['coord'], nbatch, nmax)*ang2bohr
-    #cell = tensors['cell']*ang2bohr if 'cell' in tensors else None
-    #eta_corr = make_Dfield_eta(eta, R, cell, atom_rind)
-    #etaInv_corr = tf.linalg.inv(eta_corr+D)-D
-    #chi_corr    = make_lrf(etaInv_corr)
 
     alpha = -tf.linalg.einsum('bix,bij,bjy->bxy', R, chi, R)
     alpha_iso = tf.eye(3,batch_shape=[nbatch])*tf.math.unsorted_segment_sum(p12,tensors['ind_1'],nbatch)[:,None,None]
