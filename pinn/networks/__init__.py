@@ -11,13 +11,11 @@ def get(network_spec):
     from pinn.networks.bpnn import BPNN
     from pinn.networks.lj import LJ
     from pinn.networks.pinet2 import PiNet2
-    from pinn.networks.pinet2_modularized import PiNet2 as NewPiNet2
     implemented_networks = {
-        'PiNet': PiNet,
-        'BPNN': BPNN,
         'LJ': LJ,
-        'PiNet2': PiNet2,
-        'NewPiNet2': NewPiNet2,
+        'BPNN': BPNN,
+        'PiNet': PiNet,
+        'PiNet2': PiNet2    
     }
     if isinstance(network_spec, tf.keras.Model):
         return network_spec

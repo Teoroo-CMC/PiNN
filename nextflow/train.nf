@@ -5,7 +5,7 @@ params.convert_flags = '-o train:950,eval:50'
 params.train_total = 1000
 
 process train {
-  publishDir "models/$name"
+  publishDir "${params.public_dir}/$name"
   label "train"
   tag "$name"
 

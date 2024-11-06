@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
+import numpy as np
 from pinn.layers import (
     CellListNL,
     CutoffFunc,
@@ -10,21 +11,21 @@ from pinn.layers import (
     ANNOutput,
 )
 
-from .pinet import FFLayer, PILayer, IPLayer, ResUpdate
-
+from pinn.networks.pinet import FFLayer, PILayer, IPLayer, ResUpdate
 
 class PIXLayer(tf.keras.layers.Layer):
     R"""`PIXLayer` takes the equalvariant properties ${}^{3}\mathbb{P}_{ix\zeta}$ as input and outputs interactions for each pair ${}^{3}\mathbb{I}_{ijx\zeta}$. The `PIXLayer` has two styles, specified by the `weighted` argument:
 
     `weighted`:
+
     $$
     \begin{aligned}
     {}^{3}\mathbb{I}_{ijx\gamma} = W_{\zeta\gamma}^{'} \mathbf{1}_{j}^{'} {}^{3}\mathbb{P}_{ix\zeta} + W_{\zeta\gamma}^{''} \mathbf{1}_{i}^{''} {}^{3}\mathbb{P}_{jx\zeta}
     \end{aligned}
     $$
 
-
     `non-weighted`:
+
     $$
     \begin{aligned}
     {}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\zeta}
@@ -188,55 +189,188 @@ class OutLayer(tf.keras.layers.Layer):
         output = self.out_units(px) + prev_output
         return output
 
+class InvarLayer(tf.keras.layers.Layer):
+    """`InvarLayer` is used for invariant features with non-linear activation. It consists of `PI-II-IP-PP` layers, which are executed sequentially."
 
-class GCBlock(tf.keras.layers.Layer):
-    def __init__(self, weighted: bool, pp_nodes, pi_nodes, ii_nodes, **kwargs):
-        super(GCBlock, self).__init__()
-        iiargs = kwargs.copy()
-        iiargs.update(use_bias=False)
-        ii_nodes = ii_nodes.copy()
-        ii_nodes[-1] *= 3
-        self.pp1_layer = FFLayer(pp_nodes, **kwargs)
-        self.pi1_layer = PILayer(pi_nodes, **kwargs)
-        self.ii1_layer = FFLayer(ii_nodes, **iiargs)
-        self.ip1_layer = IPLayer()
-
-        self.pp3_layer = FFLayer(pp_nodes, activation=None, use_bias=False)
-        self.pix_layer = PIXLayer(weighted=weighted, **kwargs)
-        self.ii3_layer = FFLayer(ii_nodes, **iiargs)
-        self.ip3_layer = IPLayer()
-
-        self.dot_layer = DotLayer(weighted=weighted)
-
-        self.scale1_layer = ScaleLayer()
-        self.scale2_layer = ScaleLayer()
-        self.scale3_layer = ScaleLayer()
+    """
+    def __init__(self, pp_nodes, pi_nodes, ii_nodes, **kwargs):
+        super().__init__()
+        self.pi_layer = PILayer(pi_nodes, **kwargs)
+        self.ii_layer = FFLayer(ii_nodes, use_bias=False, **kwargs)
+        self.ip_layer = IPLayer()
+        self.pp_layer = FFLayer(pp_nodes, use_bias=False, **kwargs)
 
     def call(self, tensors):
-        ind_2, p1, p3, diff, basis = tensors
+        """
+        InvarLayer take a list of three tensors as input:
 
-        p1 = self.pp1_layer(p1)
-        i1 = self.pi1_layer([ind_2, p1, basis])
-        i1 = self.ii1_layer(i1)
-        i1_1, i1_2, i1_3 = tf.split(i1, 3, axis=-1)
-        p1 = self.ip1_layer([ind_2, p1, i1_2])
+        - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`
+        - p1: scalar tensor with shape `(n_atoms, n_prop)`
+        - basis: interaction tensor with shape `(n_pairs, n_basis)`
 
-        p3 = self.pp3_layer(p3)
-        i3 = self.pix_layer([ind_2, p3])
-        i3 = self.scale1_layer([i3, i1_3])
-        scaled_diff = self.scale2_layer([diff[:, :, None], i1_1])
-        i3 = i3 + scaled_diff
-        p3 = self.ip3_layer([ind_2, p3, i3])
+        Args:
+            tensors (list of tensors): list of `[ind_2, p1, basis]` tensors
 
-        p1t1 = self.dot_layer(p3) + p1
-        p3t1 = self.scale3_layer([p3, p1t1])
+        Returns:
+            p1 (tensor): updated scalar property
+            i1 (tensor): interaction tensor with shape `(n_pairs, n_nodes[-1])`
+        """
+        ind_2, p1, basis = tensors
 
-        return p1t1, p3t1
+        i1 = self.pi_layer([ind_2, p1, basis])
+        i1 = self.ii_layer(i1)
+        p1 = self.ip_layer([ind_2, p1, i1])
+        p1 = self.pp_layer(p1)
+        return p1, i1
+
+
+class EquivarLayer(tf.keras.layers.Layer):
+    """`EquivarLayer` is used for equivariant features without non-linear activation. It includes `PI-II-IP-PP` layers, along with `Scale` and `Dot` layers.
+
+    """
+
+    def __init__(self, n_outs, weighted=False, **kwargs):
+
+        super().__init__()
+
+        kw = kwargs.copy()
+        kw["use_bias"] = False
+        kw["activation"] = None
+
+        self.pi_layer = PIXLayer(weighted=weighted, **kw)
+        self.ii_layer = FFLayer(n_outs, **kwargs)
+        self.ip_layer = IPLayer()
+        self.pp_layer = FFLayer(n_outs, **kw)
+
+        self.scale_layer = ScaleLayer()
+        self.dot_layer = DotLayer(weighted=weighted)
+
+    def call(self, tensors):
+        """
+        EquivarLayer take a list of four tensors as input:
+
+        - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`
+        - px: equivariant tensor with shape `(n_atoms, n_components, n_prop)`
+        - p1: scalar tensor with shape `(n_atoms, n_prop)`
+        - diff: displacement vector with shape `(n_pairs, 3)`
+
+        Args:
+            tensors (list of tensors): list of `[ind_2, p1, basis]` tensors
+
+        Returns:
+            px (tensor): equivariant property with shape `(n_pairs, n_components, n_nodes[-1])`
+            ix (tensor): equivariant interaction with shape `(n_pairs, n_components, n_nodes[-1])`
+            dotted_px (tensor): dotted equivariant property
+        """
+        ind_2, px, i1, diff = tensors
+
+        ix = self.pi_layer([ind_2, px])
+        ix = self.scale_layer([ix, i1])
+        scaled_diff = self.scale_layer([diff[:, :, None], i1])
+        ix = ix + scaled_diff
+        px = self.ip_layer([ind_2, px, ix])
+        px = self.pp_layer(px)
+        dotted_px = self.dot_layer(px)
+
+        return px, ix, dotted_px
+
+
+class GCBlock(tf.keras.layers.Layer):
+    """This class implements the Keras Model for the PiNet2 network."""
+
+    def __init__(self, rank, weighted: bool, pp_nodes, pi_nodes, ii_nodes, **kwargs):
+        super(GCBlock, self).__init__()
+        self.rank = rank
+        self.n_props = int(rank // 2) + 1
+        ppx_nodes = [pp_nodes[-1]]
+        if rank >= 1:
+            ii1_nodes = ii_nodes.copy()
+            pp1_nodes = pp_nodes.copy()
+            ii1_nodes[-1] *= self.n_props
+            pp1_nodes[-1] = ii_nodes[-1] * self.n_props
+            self.invar_p1_layer = InvarLayer(pp_nodes, pi_nodes, ii1_nodes, **kwargs)
+            self.pp_layer = FFLayer(pp1_nodes, **kwargs)
+
+        if rank >= 3:
+            self.equivar_p3_layer = EquivarLayer(ppx_nodes, weighted=weighted, **kwargs)
+
+        if rank >= 5:
+            self.equivar_p5_layer = EquivarLayer(ppx_nodes, weighted=weighted, **kwargs)
+
+        self.scale3_layer = ScaleLayer()
+        self.scale5_layer = ScaleLayer()
+
+    def call(self, tensors, basis):
+        """PiNet2 takes batches atomic data as input, the following keys are
+        required in the input dictionary of tensors:
+
+        - `ind_1`: [sparse indices](layers.md#sparse-indices) for the batched data, with shape `(n_atoms, 1)`;
+        - `elems`: element (atomic numbers) for each atom, with shape `(n_atoms)`;
+        - `coord`: coordintaes for each atom, with shape `(n_atoms, 3)`.
+
+        Optionally, the input dataset can be processed with
+        `PiNet.preprocess(tensors)`, which adds the following tensors to the
+        dictionary:
+
+        - `ind_2`: [sparse indices](layers.md#sparse-indices) for neighbour list, with shape `(n_pairs, 2)`;
+        - `dist`: distances from the neighbour list, with shape `(n_pairs)`;
+        - `diff`: distance vectors from the neighbour list, with shape `(n_pairs, 3)`;
+        - `prop`: initial properties `(n_pairs, n_elems)`;
+
+        Args:
+            tensors (dict of tensors): input tensors
+
+        Returns:
+            output (tensor): output tensor with shape `[n_atoms, out_nodes]`
+        """
+        ind_2 = tensors["ind_2"]
+
+        p1, i1 = self.invar_p1_layer([ind_2, tensors["p1"], basis])
+
+        i1s = tf.split(i1, self.n_props, axis=-1)
+        px_list = [p1]
+        new_tensors = {"i1": i1}
+
+        if self.rank >= 3:
+            p3, i3, dotted_p3 = self.equivar_p3_layer(
+                [ind_2, tensors["p3"], i1s[1], tensors["d3"]]
+            )  # NOTE: use same i1 branch for diff_px and px, same result as separated i1
+            px_list.append(dotted_p3)
+            new_tensors["i3"] = i3
+            new_tensors["dotted_p3"] = dotted_p3
+
+        if self.rank >= 5:
+            p5, i5, dotted_p5 = self.equivar_p5_layer(
+                [ind_2, tensors["p5"], i1s[2], tensors["d5"]]
+            )
+            px_list.append(dotted_p5)
+            new_tensors["i5"] = i5
+            new_tensors["dotted_p5"] = dotted_p5
+
+        p1t1 = self.pp_layer(
+            tf.concat(
+                px_list,
+                axis=-1,
+            )
+        )
+
+        pxt1 = tf.split(p1t1, self.n_props, axis=-1)
+        new_tensors["p1"] = pxt1[0]
+        if self.rank >= 3:
+            p3t1 = self.scale3_layer([p3, pxt1[1]])
+            new_tensors["p3"] = p3t1
+
+        if self.rank >= 5:
+            p5t1 = self.scale5_layer([p5, pxt1[2]])
+            new_tensors["p5"] = p5t1
+
+        return new_tensors
 
 
 class PreprocessLayer(tf.keras.layers.Layer):
-    def __init__(self, atom_types, rc):
+    def __init__(self, rank, atom_types, rc):
         super(PreprocessLayer, self).__init__()
+        self.rank = rank
         self.embed = AtomicOnehot(atom_types)
         self.nl_layer = CellListNL(rc)
 
@@ -250,6 +384,7 @@ class PreprocessLayer(tf.keras.layers.Layer):
             tensors["p1"] = tf.cast(  # difference with pinet: prop->p1
                 self.embed(tensors["elems"]), tensors["coord"].dtype
             )
+
         return tensors
 
 
@@ -270,33 +405,40 @@ class PiNet2(tf.keras.Model):
         ii_nodes=[16, 16],
         out_nodes=[16, 16],
         out_units=1,
+        out_extra={},
         out_pool=False,
         act="tanh",
         depth=4,
         weighted=True,
+        rank=3,
     ):
         """
         Args:
             atom_types (list): elements for the one-hot embedding
-            pp_nodes (list): number of nodes for PPLayer
-            pi_nodes (list): number of nodes for PILayer
-            ii_nodes (list): number of nodes for IILayer
-            out_nodes (list): number of nodes for OutLayer
-            out_pool (str): pool atomic outputs, see ANNOutput
-            depth (int): number of interaction blocks
             rc (float): cutoff radius
+            cutoff_type (string): cutoff function to use with the basis.
             basis_type (string): basis function, can be "polynomial" or "gaussian"
             n_basis (int): number of basis functions to use
             gamma (float or array): width of gaussian function for gaussian basis
             center (float or array): center of gaussian function for gaussian basis
-            cutoff_type (string): cutoff function to use with the basis.
+            pp_nodes (list): number of nodes for PPLayer
+            pi_nodes (list): number of nodes for PILayer
+            ii_nodes (list): number of nodes for IILayer
+            out_nodes (list): number of nodes for OutLayer
+            out_units (int): number of output feature
+            out_extra (dict[str, int]): return extra variables
+            out_pool (str): pool atomic outputs, see ANNOutput
             act (string): activation function to use
+            depth (int): number of interaction blocks
             weighted (bool): whether to use weighted style
+            rank (int[1, 3, 5]): which order of variable to use
         """
         super(PiNet2, self).__init__()
 
         self.depth = depth
-        self.preprocess = PreprocessLayer(atom_types, rc)
+        assert rank in [1, 3, 5], ValueError("rank must be 1, 3, or 5")
+        self.rank = rank
+        self.preprocess = PreprocessLayer(rank, atom_types, rc)
         self.cutoff = CutoffFunc(rc, cutoff_type)
 
         if basis_type == "polynomial":
@@ -304,14 +446,22 @@ class PiNet2(tf.keras.Model):
         elif basis_type == "gaussian":
             self.basis_fn = GaussianBasis(center, gamma, rc, n_basis)
 
-        self.res_update1 = [ResUpdate() for i in range(depth)]
-        self.res_update3 = [ResUpdate() for i in range(depth)]
-        self.gc_blocks = [GCBlock(weighted, [], pi_nodes, ii_nodes, activation=act)]
-        self.gc_blocks += [
-            GCBlock(weighted, pp_nodes, pi_nodes, ii_nodes, activation=act)
-            for i in range(depth - 1)
+        if rank >= 1:
+            self.res_update1 = [ResUpdate() for _ in range(depth)]
+        if rank >= 3:
+            self.res_update3 = [ResUpdate() for _ in range(depth)]
+        if rank >= 5:
+            self.res_update5 = [ResUpdate() for _ in range(depth)]
+        self.gc_blocks = [
+            GCBlock(rank, weighted, pp_nodes, pi_nodes, ii_nodes, activation=act)
+            for _ in range(depth)
         ]
         self.out_layers = [OutLayer(out_nodes, out_units) for i in range(depth)]
+        self.out_extra = out_extra
+        for k, v in out_extra.items():
+            setattr(
+                self, f"{k}_out_layers", [OutLayer(out_nodes, v) for i in range(depth)]
+            )
         self.ann_output = ANNOutput(out_pool)
 
     def call(self, tensors):
@@ -338,18 +488,51 @@ class PiNet2(tf.keras.Model):
             output (tensor): output tensor with shape `[n_atoms, out_nodes]`
         """
         tensors = self.preprocess(tensors)
-        tensors["p3"] = tf.zeros([tf.shape(tensors["ind_1"])[0], 3, 1])
-        tensors["norm_diff"] = tensors["diff"] / tf.linalg.norm(tensors["diff"])
+        ind_1 = tensors["ind_1"]
+        tensors["d3"] = tensors["diff"] / tf.linalg.norm(tensors["diff"], axis=-1, keepdims=True)
+        if self.rank >= 3:
+            tensors["p3"] = tf.zeros([tf.shape(ind_1)[0], 3, 1])
+        if self.rank >= 5:
+            tensors["p5"] = tf.zeros([tf.shape(ind_1)[0], 5, 1])
+
+            diff = tensors["d3"]
+            x = diff[:, 0]
+            y = diff[:, 1]
+            z = diff[:, 2]
+            x2 = x**2
+            y2 = y**2
+            z2 = z**2
+            tensors["d5"] = tf.stack(
+                [
+                    2 / 3 * x2 - 1 / 3 * y2 - 1 / 3 * z2,
+                    2 / 3 * y2 - 1 / 3 * x2 - 1 / 3 * z2,
+                    x * y,
+                    x * z,
+                    y * z,
+                ],
+                axis=1,
+            )
+
         fc = self.cutoff(tensors["dist"])
         basis = self.basis_fn(tensors["dist"], fc=fc)
         output = 0.0
+        out_extra = {k: 0.0 for k in self.out_extra}
         for i in range(self.depth):
-            p1, p3 = self.gc_blocks[i](
-                [tensors["ind_2"], tensors["p1"], tensors["p3"], tensors["diff"], basis]
-            )
-            output = self.out_layers[i]([tensors["ind_1"], p1, output])
-            tensors["p1"] = self.res_update1[i]([tensors["p1"], p1])
-            tensors["p3"] = self.res_update3[i]([tensors["p3"], p3])
+            new_tensors = self.gc_blocks[i](tensors, basis)
+            output = self.out_layers[i]([ind_1, new_tensors["p1"], output])
+            for k in self.out_extra:
+                out_extra[k] = getattr(self, f"{k}_out_layers")[i](
+                    [ind_1, new_tensors[k], out_extra[k]]
+                )
+            if self.rank >= 1:
+                tensors["p1"] = self.res_update1[i]([tensors["p1"], new_tensors["p1"]])
+            if self.rank >= 3:
+                tensors["p3"] = self.res_update3[i]([tensors["p3"], new_tensors["p3"]])
+            if self.rank >= 5:
+                tensors["p5"] = self.res_update5[i]([tensors["p5"], new_tensors["p5"]])
 
-        output = self.ann_output([tensors["ind_1"], output])
-        return output
+        output = self.ann_output([ind_1, output])
+        if self.out_extra:
+            return output, out_extra
+        else:
+            return output

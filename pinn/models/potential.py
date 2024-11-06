@@ -148,11 +148,14 @@ def make_metrics(features, pred, params, mode):
 
 def _get_stress(pred, tensors):
     f_ij = _get_dense_grad(pred, tensors['diff'])
-    s_pred = tf.reduce_sum(
+    pair_to_batch = tf.gather(tensors['ind_1'], tensors['ind_2'][:, 0])
+    s_pred = tf.scatter_nd(
+        pair_to_batch,
         tf.expand_dims(f_ij, 1) *
         tf.expand_dims(tensors['diff'], 2),
-        axis=0, keepdims=True)
-    s_pred /= tf.linalg.det(tensors['cell'])
+        shape=tf.shape(tensors['cell'])
+    )
+    s_pred /= tf.linalg.det(tensors['cell'])[:, None, None]
     return s_pred
 
 
