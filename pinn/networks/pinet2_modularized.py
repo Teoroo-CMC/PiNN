@@ -45,9 +45,13 @@ class EquiVarLayer(tf.keras.layers.Layer):
         kw["use_bias"] = False
         kw["activation"] = None
 
-        self.pp_layer = FFLayer(n_outs, **kw)
+        # self.pp_layer = FFLayer(n_outs, **kw)
+        # self.pi_layer = PIXLayer(weighted=weighted, **kw)
+        # self.ip_layer = IPLayer()
         self.pi_layer = PIXLayer(weighted=weighted, **kw)
+        self.ii_layer = FFLayer(n_outs, **kwargs)
         self.ip_layer = IPLayer()
+        self.pp_layer = FFLayer(n_outs, **kw)
 
         self.scale_layer = ScaleLayer()
         self.dot_layer = DotLayer(weighted=weighted)

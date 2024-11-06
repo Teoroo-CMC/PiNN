@@ -155,3 +155,151 @@ workflow gen_rmd17 {
   emit:
   gen_rmd17_single.out
 }
+
+process gen_mp2018 {
+  publishDir "datasets/public"
+  
+  output:
+  path("mpc.{yml,tfr}")
+
+  script:
+"""
+#!/usr/bin/env python
+
+import requests, zipfile, io, json
+import numpy as np
+from pinn.io.base import list_loader
+from pinn.io import write_tfrecord
+from ase.data import atomic_numbers
+from ase.cell import Cell
+
+mpc_url = "https://figshare.com/ndownloader/files/15087992"
+mpc_bytes = requests.get(mpc_url, allow_redirects=True).content
+mpc_fobj = io.BytesIO(mpc_bytes)
+mpc_fobj.seek(0)
+
+mpc_zip = zipfile.ZipFile(mpc_fobj)
+data_path = mpc_zip.extract('mp.2018.6.1.json')
+with open(data_path) as f:
+    data = json.load(f)
+
+assert len(data) == 69239
+
+@list_loader(pbc=True)
+def load_mpc(datum):
+    struct = datum['structure']
+    energy = datum['formation_energy_per_atom']
+    lines = struct.split('\\n')
+    lines = list(map(lambda line: line.strip(), lines))
+    for line in lines:
+        if '_cell_length_a' in line:
+            a = line.split()[1]
+        if '_cell_length_b' in line:
+            b = line.split()[1]
+        if '_cell_length_c' in line:
+            c = line.split()[1]
+        if '_cell_angle_alpha' in line:
+            alpha = line.split()[1]
+        if '_cell_angle_beta' in line:
+            beta = line.split()[1]
+        if '_cell_angle_gamma' in line:
+            gamma = line.split()[1]
+        if '_cell_volume' in line:
+            volume = line.split()[1]
+    cell = Cell.fromcellpar(list(map(float, [a, b, c, alpha, beta, gamma])))
+    lattice_matrix = cell.array
+    lines = lines[lines.index('_atom_site_occupancy')+1:]
+    lines = filter(lambda line: line, lines)
+    atomtypes = []
+    coords = []
+
+    for line in lines:
+        l = line.split()
+        atomtypes.append(atomic_numbers[l[0]])
+        coords.append(list(map(float, l[3:6])))
+
+    return {
+    'coord': np.array(coords),
+    'elems': np.array(atomtypes),
+    'cell': lattice_matrix,
+    'e_data': np.array(energy) * len(coords)
+  }
+
+mpc_ds = load_mpc(data)
+write_tfrecord('mpc.yml', mpc_ds)
+"""
+}
+
+process gen_mp2021 {
+  publishDir "datasets/public"
+  
+  output:
+  path("mpf.{yml,tfr}")
+
+  script:
+"""
+#!/usr/bin/env python
+
+import requests, zipfile, io, json
+import pickle
+import numpy as np
+from pinn.io.base import list_loader
+from pinn.io import write_tfrecord
+from ase.data import atomic_numbers
+from ase.cell import Cell
+
+mpf_url = "https://figshare.com/ndownloader/articles/19470599/versions/3"
+mpf_bytes = requests.get(mpf_url, allow_redirects=True).content
+mpf_fobj = io.BytesIO(mpf_bytes)
+mpf_fobj.seek(0)
+
+mpf_zip = zipfile.ZipFile(mpf_fobj)
+part1 = mpf_zip.extract('block_0.p')
+part2 = mpf_zip.extract('block_1.p')
+
+with open(part1, 'rb') as f:
+    data1 = pickle.load(f)
+with open(part2, 'rb') as f:
+    data2 = pickle.load(f)
+data = {**data1, **data2}
+
+flatten_data = []
+for datum in data.values():
+    for struct, energy, forces, stress in zip(datum['structure'], datum['energy'], datum['force'], datum['stress']):
+      if np.any(np.linalg.norm(forces, axis=-1) > 100):
+        continue
+      flatten_data.append(
+            {'structure': struct,
+            'energy': energy,
+            'forces': forces, 
+            'stress': stress
+            }
+        )
+
+@list_loader(pbc=True, force=True)
+def load_mpf(datum):
+    struct = datum['structure']
+    energy = datum['energy']
+    forces = datum['forces']
+    stress = datum['stress']
+    cell = struct.lattice.matrix
+    atomtypes = []
+    coords = []
+    for site in struct.sites:
+        atomtypes.append(atomic_numbers[site.specie.name])
+        coords.append([site.x, site.y, site.z])
+
+    return {
+    'coord': np.array(coords),
+    'elems': np.array(atomtypes),
+    'cell': cell,
+    'e_data': np.array(energy),
+    'f_data': np.array(forces),
+    's_data': np.array(stress)
+  }
+
+mpf_ds = load_mpf(flatten_data)
+write_tfrecord('mpf.yml', mpf_ds)
+
+"""
+}

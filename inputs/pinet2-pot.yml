@@ -8,7 +8,7 @@ model:
     log_e_per_atom: true
     e_scale: 1.0
 network:
-  name: PiNet2
+  name: NewPiNet2
   params:
     depth: 5
     rc: 4.5
@@ -19,6 +19,7 @@ network:
     ii_nodes: [64,64,64,64]
     out_nodes: [64]
     weighted: False
+    rank: 5
 optimizer:
   class_name: Adam
   config:

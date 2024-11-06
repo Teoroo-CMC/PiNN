@@ -17,7 +17,7 @@ def get(network_spec):
         'BPNN': BPNN,
         'LJ': LJ,
         'PiNet2': PiNet2,
-        'NewPiNet2': NewPiNet2,
+        'NewPiNet2': NewPiNet2        
     }
     if isinstance(network_spec, tf.keras.Model):
         return network_spec
