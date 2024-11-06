@@ -28,7 +28,7 @@ def report_log(model_paths:List[str], keyword_filter:List[str]=[], log_name:str 
     # groupby name of model
     trials = defaultdict(list) # {name: [path1, path2, ...]}
     get_params = lambda x: tuple(x.split('-')[:-1])
-    for path in model_paths:
+    for path in model_paths.glob("eval.log"):
         path = Path(path)
         params = get_params(path.stem)
 
