@@ -41,6 +41,7 @@ nav:
       - Examples:
           - Custom Data: notebooks/Customizing_dataset.ipynb
           - LJ Potential: notebooks/Learn_LJ_potential.ipynb
+          - ML Potential: notebooks/Build_MLP_Water.ipynb
       - Develop:
           - Layer Debug: notebooks/Layer_debug.ipynb
 watch:
