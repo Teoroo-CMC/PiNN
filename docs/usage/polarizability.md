@@ -1,8 +1,10 @@
 # Polarizability Model
 
-The polarizability model requires the same dictionary as input as the potential model.
-The only difference is the ``model_params`` that can be set. They are listed below
-along with their default values.
+The polarizability module PiNet2-$\chi$ implements different models to predict the charge response kernel (CRK)
+and polarizability tensor by fitting polarizability tensor data [@2020_Shao]. All models output the polarizability tensor $\boldsymbol{\alpha}$ and CRK $\boldsymbol{\chi}$. The polarizability model requires the dictionary as output from the preprocess layer as input. Listed below are the ``model_params`` that can be set. The EEM [@Mortier85] and ACKS2 [@2013_VerstraelenAyersEtAl] models are based on the
+Coulomb kernel and have support for Ewald summation if the Ewald parameters are set and ``cell`` 
+is specified in the input data. The EEM and EtaInv models can in addition to polarizability be 
+trained on the egap. 
 
 | Parameter            | Default | Description                                                                      |
 |----------------------|---------|----------------------------------------------------------------------------------|
@@ -14,3 +16,37 @@ along with their default values.
 | `p_loss_multiplier`  | `1`     | Weight of polarizability loss                                                            |
 | `train_egap` | `0`     | Whether to train on egap data                                                                      |
 | `eval_egap` | `0`     | Whether to return egap predictions                                                                    |
+
+## Model specifications
+
+### pinn.models.pol_models.pol_eem_fn
+::: pinn.models.pol_models.pol_eem_fn
+
+### pinn.models.pol_models.pol_acks2_fn
+::: pinn.models.pol_models.pol_acks2_fn
+
+### pinn.models.pol_models.pol_etainv_fn
+::: pinn.models.pol_models.pol_etainv_fn
+
+### pinn.models.pol_models.pol_local_fn
+::: pinn.models.pol_models.pol_local_fn
+
+### pinn.models.pol_models.pol_localchi_fn
+::: pinn.models.pol_models.pol_localchi_fn
+
+### pinn.models.pol_models.pol_eem_iso_fn
+::: pinn.models.pol_models.pol_eem_iso_fn
+
+### pinn.models.pol_models.pol_acks2_iso_fn
+::: pinn.models.pol_models.pol_acks2_iso_fn
+
+### pinn.models.pol_models.pol_etainv_iso_fn
+::: pinn.models.pol_models.pol_etainv_iso_fn
+
+### pinn.models.pol_models.pol_local_iso_fn
+::: pinn.models.pol_models.pol_local_iso_fn
+
+### pinn.models.pol_models.pol_localchi_iso_fn
+::: pinn.models.pol_models.pol_localchi_iso_fn
+
+\bibliography

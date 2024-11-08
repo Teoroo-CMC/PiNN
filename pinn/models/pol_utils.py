@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This file implements implements helper functions for pol_models.
+"""This file implements implements helper functions for pol_models. The code is updated for PiNet2 from the original PiNet-chi implementation by Yunqi Shao.
 """
 
 import os, pinn, warnings

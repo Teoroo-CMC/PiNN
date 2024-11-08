@@ -7,6 +7,7 @@ All models output the polarizability tensor 'alpha' and CRK 'chi'.
 Implemented models: ACKS2, EEM, EtaInv, Local chi, and Local. 
 For model details see ref. Shao, Y.; Andersson, L.; Knijff, L.; Zhang, C., Finite-field coupling via learning the charge response kernel. Electron. Struct. 2022, 4, 014012. 
 The same models are also implemented with the addition of an atomic polarizability (isotropic) term. 
+The code is upgraded for PiNet2 from the original PiNet-chi implementation by Yunqi Shao. 
 """
 
 from .pol_utils import *
@@ -16,6 +17,24 @@ ang2bohr = 1.8897259886 # convert R-> bohr, all chi, alpha should be interpreted
 
 @export_pol_model('pol_acks2_model')
 def pol_acks2_fn(tensors, params):
+    R"""The ACKS2 model calculates $\boldsymbol{\chi}$ based on the Dyson equation: 
+
+    $$
+    \begin{aligned}
+    \boldsymbol{\chi} = \boldsymbol{\chi}_\mathrm{s}\left[ \mathbf{I} - \boldsymbol{\eta}_\mathrm{e}\boldsymbol{\chi}_\mathrm{s}\right]^{-1}. \\
+    \end{aligned} 
+    $$
+    
+    where $\boldsymbol{\eta}_\mathrm{e}$ is calculated as in the EEM model and $\boldsymbol{\chi}_\mathrm{s}$ is calculated from output interactions $\mathbb{I}_{ij}$:
+    
+    $$
+    \begin{aligned}
+    \boldsymbol{\chi}_s &= |\mathbb{I}|+|\mathbb{I}|^\top -
+    \mathrm{diag}\left(|\mathbb{I}_{ij}|\mathbf{1}+|\mathbb{I}_{ij}|^\top\mathbf{1}\right) \\
+    \mathbb{I}_{ij} &= {}^{1}\mathbb{I}_{ij} + \langle {}^{3}\mathbb{I}_{ijx}, {}^{3}\mathbb{I}_{ijx} \rangle
+    \end{aligned}
+    $$
+    """
     params['network']['params'].update({'out_extra': {'i1':1,'i3':1}})
     network = get_network(params['network'])
     tensors = network.preprocess(tensors)
@@ -54,6 +73,24 @@ def pol_acks2_fn(tensors, params):
 
 @export_pol_model('pol_eem_model')
 def pol_eem_fn(tensors, params):
+    R""" The EEM model calculates $\boldsymbol{\chi}$ based on electronegativity equalization. The matrix 
+    $\boldsymbol{\eta}_\mathrm{e}$ is calculated as
+
+    $$
+    \begin{aligned}
+    (\eta_e)_{ii}&= {}^{1}\mathbb{P}_i + \sqrt{\frac{2\zeta_i}{\pi}} \\
+    (\eta_e)_{ij} &= \frac{\mathrm{erf}\left(R_{ij}\sqrt{\frac{\zeta_i\zeta_j}{\zeta_i+\zeta_j}}\right)}{R_{ij}}  \quad  \mathrm{for}~~i\neq j
+    \end{aligned} 
+    $$
+
+    where $\zeta_i$ are trainable Gaussian parameters. $\boldsymbol{\chi}$ is then calculated as:
+
+    $$
+    \begin{aligned}
+    \boldsymbol{\chi} = -\boldsymbol{\eta}_\mathrm{e}^{-1} + \frac{\boldsymbol{\eta}_\mathrm{e}^{-1}\mathbf{1}\otimes\mathbf{1}^\top\boldsymbol{\eta}_\mathrm{e}^{-1}}{\mathbf{1}^\top\boldsymbol{\eta}_\mathrm{e}^{-1} \mathbf{1}}
+    \end{aligned}
+    $$
+    """
     #params['network']['params'].update({'ppred': 1, 'ipred': 0})
     network = get_network(params['network'])
     tensors = network.preprocess(tensors)
@@ -85,6 +122,24 @@ def pol_eem_fn(tensors, params):
 
 @export_pol_model('pol_etainv_model')
 def pol_etainv_fn(tensors, params):
+    R"""The EtaInv model directly predicts the matrix $\boldsymbol{\eta}^{-1}$ as 
+    
+   $$
+   \begin{aligned}
+   \boldsymbol{\eta}^{-1} = {\mathbf{B}}^\top \mathbf{B} + c \mathbf{I}
+   \end{aligned}
+   $$
+   
+   where c is a small positive constant and $\mathbf{B}$ is the predicted matrix
+   
+   $$
+   \begin{aligned}
+   B_{ii} &= {}^{1}\mathbb{P}_i  \\
+   B_{ij} &= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
+   \mathbb{I}_{ij} &= {}^{1}\mathbb{I}_{ij} + \langle {}^{3}\mathbb{I}_{ijx}, {}^{3}\mathbb{I}_{ijx} \rangle
+   \end{aligned}
+   $$
+   """
     from pinn import get_network
     eps = 0.01  #
     if 'epsilon' in params['model']['params']:
@@ -117,7 +172,7 @@ def pol_etainv_fn(tensors, params):
 
 @export_pol_model('pol_localchi_model')
 def pol_localchi_fn(tensors, params):
-    """ Similar to acks2 model, but construct chi directly instead of chi_s
+    R""" In the Local chi model $\boldsymbol{\chi}$ = $\boldsymbol{\chi}_\mathrm{s}$ as calculated in the ACKS2 model.
     """
     params['network']['params'].update({'out_extra': {'i1':1,'i3':1}})
     network = get_network(params['network'])
@@ -142,6 +197,19 @@ def pol_localchi_fn(tensors, params):
 
 @export_pol_model('pol_local_model')
 def pol_local_fn(tensors, params):
+    R"""The Local model calculates $\boldsymbol{\chi}$ and $\boldsymbol{\alpha}$ as sums of local predictions 
+       $\boldsymbol{\chi}_i$ and $\boldsymbol{\alpha}_i$. Local predictions are calculated as
+
+       $$
+       \begin{aligned}
+       \boldsymbol{\alpha}_i &= - \mathbf{R}^\top \boldsymbol{\chi}_i \mathbf{R}\\
+       \boldsymbol{\chi}_i &= - \boldsymbol{\Delta}_i^\top \mathbb{I}_{i} \mathbb{I}_{i}^\top \boldsymbol{\Delta}_i\\
+       \boldsymbol{\Delta}_i &= \mathbf{I} - \mathbf{1}\otimes\mathbf{e}_i^\top
+       \end{aligned}
+       $$
+
+       where $\mathbf{e}_i$ is the $i$:th standard unit vector. 
+    """
     from tensorflow.math import unsorted_segment_sum
     def _form_triplet(tensors):
         """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
@@ -207,6 +275,16 @@ def pol_local_fn(tensors, params):
 
 @export_pol_model('pol_acks2_iso_model')
 def pol_acks2_iso_fn(tensors, params):
+    R"""ACKS2-model with the adddition of an isotropic term for the polarizability tensor. 
+    
+    $$
+    \begin{aligned}
+    \boldsymbol{\alpha} &= - \mathbf{R}^\top \boldsymbol{\chi} \mathbf{R} +  \alpha_{\textrm{iso}}\mathbf{I}\\
+    \alpha_{\textrm{iso}} &= \sum_i {}^{1}\mathbb{P}_{i} 
+    \end{aligned}
+    $$
+    
+    """
     params['network']['params'].update({'out_extra': {'p1':1,'i1':1,'i3':1}})
     network = get_network(params['network'])
     tensors = network.preprocess(tensors)
@@ -247,6 +325,16 @@ def pol_acks2_iso_fn(tensors, params):
 
 @export_pol_model('pol_eem_iso_model')
 def pol_eem_iso_fn(tensors, params):
+    R"""EEM-model with the addition of an isotropic term for the polarizability tensor. 
+    
+    $$
+    \begin{aligned}
+    \boldsymbol{\alpha} &= - \mathbf{R}^\top \boldsymbol{\chi} \mathbf{R} +  \alpha_{\textrm{iso}}\mathbf{I}\\
+    \alpha_{\textrm{iso}} &= \sum_i {}^{1}\mathbb{P}_{i} 
+    \end{aligned}
+    $$
+    
+    """
     params['network']['params'].update({'out_extra': {'p1':1}})
     network = get_network(params['network'])
     tensors = network.preprocess(tensors)
@@ -281,6 +369,16 @@ def pol_eem_iso_fn(tensors, params):
 
 @export_pol_model('pol_etainv_iso_model')
 def pol_etainv_iso_fn(tensors, params):
+    R"""EtaInv-model with the addition of an isotropic term for the polarizability tensor. 
+    
+    $$
+    \begin{aligned}
+    \boldsymbol{\alpha} &= - \mathbf{R}^\top \boldsymbol{\chi} \mathbf{R} +  \alpha_{\textrm{iso}}\mathbf{I}\\
+    \alpha_{\textrm{iso}} &= \sum_i {}^{1}\mathbb{P}_{i} 
+    \end{aligned}
+    $$
+    
+    """
     from pinn import get_network
     eps = 0.01  #
     if 'epsilon' in params['model']['params']:
@@ -315,7 +413,15 @@ def pol_etainv_iso_fn(tensors, params):
 
 @export_pol_model('pol_localchi_iso_model')
 def pol_localchi_iso_fn(tensors, params):
-    """ Similar to acks2 model, but construct chi directly instead of chi_s
+    R"""Local chi-model with the addition of an isotropic term for the polarizability tensor. 
+    
+    $$
+    \begin{aligned}
+    \boldsymbol{\alpha} &= - \mathbf{R}^\top \boldsymbol{\chi} \mathbf{R} +  \alpha_{\textrm{iso}}\mathbf{I}\\
+    \alpha_{\textrm{iso}} &= \sum_i {}^{1}\mathbb{P}_{i} 
+    \end{aligned}
+    $$
+    
     """
     params['network']['params'].update({'out_extra': {'i1':1,'i3':1}})
     network = get_network(params['network'])
@@ -341,6 +447,16 @@ def pol_localchi_iso_fn(tensors, params):
 
 @export_pol_model('pol_local_iso_model')
 def pol_local_iso_fn(tensors, params):
+    R"""Local model with the addition of an isotropic term for the polarizability tensor. 
+    
+    $$
+    \begin{aligned}
+    \boldsymbol{\alpha} &= - \mathbf{R}^\top \boldsymbol{\chi} \mathbf{R} +  \alpha_{\textrm{iso}}\mathbf{I}\\
+    \alpha_{\textrm{iso}} &= \sum_i {}^{1}\mathbb{P}_{i} 
+    \end{aligned}
+    $$
+    
+    """
     from tensorflow.math import unsorted_segment_sum
     def _form_triplet(tensors):
         """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
