@@ -1,6 +1,6 @@
 # The PiNet2 network
 
-PiNet2 represents the next generation of PiNet, now equipped with equivariant support. This network architecture incorporates graph convolution to iteratively derive atomic scalar and tensor properties from the local environment. One noteworthy aspect of PiNet2 is its utilization of convolution operations that are executed through pairwise functions, whose specific forms are dictated by the pairs themselves, known as pairwise interactions, while also maintaining equivariant features.
+PiNet2 represents the next generation of PiNet, now equipped with equivariant support. PiNet2 shows a significant and cost-effective improvement on energy and force predictions cross different types of datasets ranging from small molecules to liquid electrolytes, as compared to PiNet. The equivariant features turn out to also improve significantly the dipole and polarizability predictions, as demonstrated by the upgraded PiNet2-dipole and PiNet2-$\chi$.
 
 The new modularized PiNet2 supports scalar, vectorial, and tensorial representations. Maximum rank can be specified by using `rank` argument at initialization. Intermediate variables also can be transformed and exposed by using `out_extra`. `out_extra={'p3': 1}` indicates that, in addition to the scalar output, a dictionary will be returned containing the key `p3` with a `Tensor` value shaped as `(..., n_channel=1)`.
 
@@ -10,7 +10,7 @@ The overall architecture of PiNet2 is illustrated with the illustration below:
 
 ![PiNet2 architecture](../tikz/pinet2.svg){width="750"}
 
-"PiNet2 builds upon the structure of PiNet, incorporating vectorial and tensorial equivariables represented by the blue and green nodes. The invariant `P1` is implemented through the `InvarLayer`, while the equivariants `P3` and `P5` utilize the `EquivarLayer` without non-linear activations. Further details on these new layers are provided below."
+PiNet2 builds upon the structure of PiNet, incorporating vectorial and tensorial equivariables represented by the blue and green nodes. The invariant `P1` is implemented through the `InvarLayer`, while the equivariants `P3` and `P5` utilize the `EquivarLayer` without non-linear activations. Further details on these new layers are provided below."
 
 Indices denoted the dimensionality of each variable still following previous the convention:
 

@@ -23,6 +23,7 @@ setup(name='pinn',
       extras_require={'cpu': ['tensorflow-cpu>=2.4'],
                       'gpu': ['tensorflow>=2.4'],
                       'dev': parse_reqs('requirements-dev.txt'),
+                      'doc': parse_reqs('requirements-doc.txt'),
                       'extra': parse_reqs('requirements-extra.txt')},
       entry_points={'console_scripts':
                     ['pinn=pinn.cli:main']}
