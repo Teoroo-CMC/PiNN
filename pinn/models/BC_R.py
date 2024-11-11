@@ -37,7 +37,7 @@ default_params = {
 }
 
 @export_model
-def BC_R_dipole_model_water(features, labels, mode, params):
+def BC_R_dipole_model(features, labels, mode, params):
     """Model function for neural network dipoles"""
     if params['network']['name'] == "PiNet":
         params['network']['params'].update({'out_prop':0, 'out_inter':1})
