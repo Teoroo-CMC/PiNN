@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
-"""This file implements the dipole model
+r"""
+This file implements the atomic dipole model with an oxidation state term (AD(OS)).
 
-Atomic predictions from the network are interpreted as atomic charges. This
-model fits the total dipole of the inputs and predicts both the charges and
-the total dipole.
+Atomic vectorial property predictions from the network are interpreted as atomic dipoles to
+which a dipole contribution is added calculated from the oxidation states of the atoms.
+Note that this model requires the oxidation states to be a part of the dataset.
+The dipole moment is expressed as: 
+
+$$
+\begin{aligned}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{ox}_{i} \cdot \mathbf{r}_{i}
+\end{aligned}
+$$
+
+This model fits the total dipole of the inputs and predicts the total dipole.
+For model details see ref. 
+Li, J., Knijff, L., Zhang, Z., Andersson, L., & Zhang, C. (2024)
+PiNN: equivariant neural network suite for modelling electrochemical systems
 """
 import numpy as np
 import tensorflow as tf
@@ -36,7 +49,16 @@ default_params = {
 
 @export_model
 def AD_OS_dipole_model(features, labels, mode, params):
-    """Model function for neural network dipoles"""
+    r"""The atomic dipole with oxidation state term (AD(OS)) dipole model 
+    constructs the dipole moment from atomic dipole predictions and oxidation
+    state charges:
+
+    $$
+    \begin{aligned}
+    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{ox}_{i} \cdot \mathbf{r}_{i}
+    \end{aligned}
+    $$
+    """
     network = get_network(params['network'])
     model_params = default_params.copy()
     model_params.update(params['model']['params'])

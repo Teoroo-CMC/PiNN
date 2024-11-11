@@ -1,9 +1,24 @@
 # -*- coding: utf-8 -*-
-"""This file implements the dipole model
+r"""This file implements the atomic charge dipole model.
 
-Atomic predictions from the network are interpreted as atomic charges. This
-model fits the total dipole of the inputs and predicts both the charges and
-the total dipole.
+Atomic property predictions from the network are interpreted as atomic charges.
+A charge neutrality constraint is applied to enfore a charge of zero on the 
+charge neutral entity by equivalently spreading the excess charge out over the
+atoms. The dipole moment is expressed as: 
+
+$$
+\begin{aligned}
+\mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}
+\end{aligned}
+$$
+
+This model fits the total dipole of the inputs and predicts both the charges
+and the total dipole.
+For model details see ref. 
+Knijff, L., & Zhang, C. (2021). Machine learning  inference of molecular dipole 
+moment in liquid water. Machine Learning: Science and Technology, 2(3), 03LT03.
+
+This code was later updated to be compatible with PiNet2.
 """
 import numpy as np
 import tensorflow as tf
@@ -23,7 +38,7 @@ default_params = {
     'vector_dipole': False,
     # Enable charge neutrality
     'charge_neutrality': True,
-    # Enable charge neutrality: 
+    # Set what kind of charge neutrality should be enforced: 
     # 'system' for system wide neutrality
     # 'water_molecule' for neutrality per water molecule
     'neutral_unit': 'system',
@@ -42,7 +57,16 @@ default_params = {
 
 @export_model
 def AC_dipole_model(features, labels, mode, params):
-    """Model function for neural network dipoles"""
+    r"""The atomic charge (AC) dipole model constructs the dipole moment from 
+    atomic charge predictions:
+
+    $$
+    \begin{aligned}
+    \mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}
+    \end{aligned}
+    $$
+    """
+
     network = get_network(params['network'])
     model_params = default_params.copy()
     model_params.update(params['model']['params'])

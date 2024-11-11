@@ -1,9 +1,24 @@
 # -*- coding: utf-8 -*-
-"""This file implements the dipole model
+r"""
+This file implements a combination of the atomic dipole dipole model and the bond charge dipole
+model with regularization resulting in the AD+BC(R) dipole model.
 
-Atomic predictions from the network are interpreted as atomic charges. This
-model fits the total dipole of the inputs and predicts both the charges and
-the total dipole.
+Atomic vectorial property predictions from the network are interpreted as atomic dipoles.
+Atomic pairwise interaction predictions from the network are interpreted as bond charges.
+The dipole moment is expressed as: 
+
+$$
+\begin{aligned}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+\end{aligned}
+$$
+
+During the training process, L2-regularization is applied to the atomic pairwise interactions.
+
+This model fits the total dipole of the inputs and predicts the total dipole.
+For model details see ref. 
+Li, J., Knijff, L., Zhang, Z., Andersson, L., & Zhang, C. (2024)
+PiNN: equivariant neural network suite for modelling electrochemical systems
 """
 import numpy as np
 import tensorflow as tf
@@ -38,7 +53,17 @@ default_params = {
 
 @export_model
 def AD_BC_R_dipole_model(features, labels, mode, params):
-    """Model function for neural network dipoles"""
+    r"""The AD+BC(R) constructs the dipole moment from 
+    atomic dipole predictions and atomic pairwise interactions:
+
+    $$
+    \begin{aligned}
+    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+    \end{aligned}
+    $$
+
+    L2-regularization is applied to the atomic pairwise interactions.
+    """
     network = get_network(params['network'])
     model_params = default_params.copy()
     model_params.update(params['model']['params'])

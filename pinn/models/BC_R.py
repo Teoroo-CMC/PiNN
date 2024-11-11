@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
-"""This file implements the dipole model
+r"""
+This file implements the bond charge dipole model with regularization (BC(R)).
 
-Atomic predictions from the network are interpreted as atomic charges. This
-model fits the total dipole of the inputs and predicts both the charges and
-the total dipole.
+Atomic pairwise interaction predictions from the network are interpreted as bond charges.
+The dipole moment is expressed as: 
+
+$$
+\begin{aligned}
+\mu = \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+\end{aligned}
+$$
+
+During the training process, L2-regularization is applied to the atomic pairwise interactions.
+
+This model fits the total dipole of the inputs and predicts the total dipole.
+For model details see ref. 
+Li, J., Knijff, L., Zhang, Z., Andersson, L., & Zhang, C. (2024)
+PiNN: equivariant neural network suite for modelling electrochemical systems
 """
 import numpy as np
 import tensorflow as tf
@@ -38,7 +51,17 @@ default_params = {
 
 @export_model
 def BC_R_dipole_model(features, labels, mode, params):
-    """Model function for neural network dipoles"""
+    r"""The bond charge dipole model with regularization (BC(R))
+    constructs the dipole moment from atomic pairwise interactions:
+
+    $$
+    \begin{aligned}
+    \mu = \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+    \end{aligned}
+    $$
+
+    L2-regularization is applied to the atomic pairwise interactions.
+    """
     if params['network']['name'] == "PiNet":
         params['network']['params'].update({'out_prop':0, 'out_inter':1})
     

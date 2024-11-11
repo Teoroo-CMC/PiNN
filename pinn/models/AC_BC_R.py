@@ -1,9 +1,26 @@
 # -*- coding: utf-8 -*-
-"""This file implements the dipole model
+r"""
+This file implements a combination of the atomic charge dipole model and the bond charge dipole
+model with regularization resulting in the AC+BC(R) dipole model.
 
-Atomic predictions from the network are interpreted as atomic charges. This
-model fits the total dipole of the inputs and predicts both the charges and
-the total dipole.
+Atomic property predictions from the network are interpreted as atomic charges.
+A charge neutrality constraint is applied to enfore a charge of zero on the 
+charge neutral entity by equivalently spreading the excess charge out over the atoms. 
+Atomic pairwise interaction predictions from the network are interpreted as bond charges.
+The dipole moment is expressed as: 
+
+$$
+\begin{aligned}
+\mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+\end{aligned}
+$$
+
+During the training process, L2-regularization is applied to the atomic pairwise interactions.
+
+This model fits the total dipole of the inputs and predicts the total dipole.
+For model details see ref. 
+Li, J., Knijff, L., Zhang, Z., Andersson, L., & Zhang, C. (2024)
+PiNN: equivariant neural network suite for modelling electrochemical systems
 """
 import numpy as np
 import tensorflow as tf
@@ -44,7 +61,17 @@ default_params = {
 
 @export_model
 def AC_BC_R_dipole_model(features, labels, mode, params):
-    """Model function for neural network dipoles"""
+    r"""The AC+BC(R) constructs the dipole moment from 
+    atomic charge predictions and atomic pairwise interactions:
+
+    $$
+    \begin{aligned}
+    \mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+    \end{aligned}
+    $$
+
+    L2-regularization is applied to the atomic pairwise interactions.
+    """
     if params['network']['name'] == "PiNet":
         params['network']['params'].update({'out_prop':1, 'out_inter':1})
     
@@ -72,20 +99,20 @@ def AC_BC_R_dipole_model(features, labels, mode, params):
     nbatch = tf.reduce_max(ind1)+1 
 
     if model_params['charge_neutrality'] == True:
-    if model_params['neutral_unit'] == 'system':
-        q_molecule = tf.math.unsorted_segment_sum(p1, ind1[:, 0], nbatch)
-        N = tf.math.unsorted_segment_sum(tf.ones_like(ind1, tf.float32), ind1, tf.reduce_max(ind1)+1)
-    
-        p_charge = q_molecule/N
-        charge_corr = tf.gather(p_charge, ind1)[:,0]
-        p1 =  p1 - charge_corr
+        if model_params['neutral_unit'] == 'system':
+            q_molecule = tf.math.unsorted_segment_sum(p1, ind1[:, 0], nbatch)
+            N = tf.math.unsorted_segment_sum(tf.ones_like(ind1, tf.float32), ind1, tf.reduce_max(ind1)+1)
+        
+            p_charge = q_molecule/N
+            charge_corr = tf.gather(p_charge, ind1)[:,0]
+            p1 =  p1 - charge_corr
 
-    if model_params['neutral_unit'] == 'water_molecule':
-        q_molecule = tf.math.reduce_sum(tf.reshape(p1,[-1,3]),axis=1)
-  
-        p_charge = q_molecule/3
-        charge_corr = tf.reshape(tf.stack([p_charge, p_charge, p_charge], axis=1), [1,-1])[0,:]
-        p1 =  p1 - charge_corr
+        if model_params['neutral_unit'] == 'water_molecule':
+            q_molecule = tf.math.reduce_sum(tf.reshape(p1,[-1,3]),axis=1)
+    
+            p_charge = q_molecule/3
+            charge_corr = tf.reshape(tf.stack([p_charge, p_charge, p_charge], axis=1), [1,-1])[0,:]
+            p1 =  p1 - charge_corr
 
     p1 = tf.expand_dims(p1, axis=1)
     

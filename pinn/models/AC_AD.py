@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
-"""This file implements the dipole model
+r"""This file implements a combination of the atomic charge (AC) and 
+the atomic dipole (AD) dipole model resulting in the AC+AD dipole model.
 
-Atomic predictions from the network are interpreted as atomic charges. This
-model fits the total dipole of the inputs and predicts both the charges and
-the total dipole.
+Atomic vectorial property predictions from the network are interpreted as 
+atomic dipoles while the atomic scalar predictions are interpreted as atomic
+charges. The dipole moment is expressed as: 
+
+$$
+\begin{aligned}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + {}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}
+
+\end{aligned}
+$$
+
+This model fits the total dipole of the inputs and predicts the total dipole.
+For model details see ref. 
+Li, J., Knijff, L., Zhang, Z., Andersson, L., & Zhang, C. (2024)
+PiNN: equivariant neural network suite for modelling electrochemical systems
 """
 import numpy as np
 import tensorflow as tf
@@ -42,7 +55,15 @@ default_params = {
 
 @export_model
 def AC_AD_dipole_model(features, labels, mode, params):
-    """Model function for neural network dipoles"""
+    r"""The AC+AD  dipole model constructs the dipole moment from 
+    atomic dipole predictions and atomic charge predictions:
+
+    $$
+    \begin{aligned}
+    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + {}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}    
+    \end{aligned}
+    $$
+    """
     network = get_network(params['network'])
     model_params = default_params.copy()
     model_params.update(params['model']['params'])
