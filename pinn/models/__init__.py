@@ -10,7 +10,15 @@ def get(model_spec, **kwargs):
     from pinn.models.dipole import dipole_model
     implemented_models = {
         'potential_model': potential_model,
-        'dipole_model': dipole_model}
+        'dipole_model': dipole_model
+        'AC_dipole_model': AC_dipole_model,
+        'AD_dipole_model': AD_dipole_model,
+        'BC_R_dipole_model': BC_R_dipole_model,
+        'AD_OS_dipole_model': AD_OS_dipole_model,
+        'AC_AD_dipole_model': AC_AD_dipole_model,
+        'AC_BC_R_dipole_model': AC_BC_R_dipole_model,
+        'AD_BC_R_dipole_model': AD_BC_R_dipole_model
+        }
 
     if isinstance(model_spec, str):
         if tf.io.gfile.exists('{}/params.yml'.format(model_spec)):
