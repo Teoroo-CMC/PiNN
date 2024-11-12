@@ -38,7 +38,7 @@ class TestEquivar:
 
     @pytest.mark.parametrize('rank', [1, 3, 5])
     def test_pinet2_refactor(self, mocked_data, rank):
-        from pinn.networks.pinet2_modularized import PiNet2
+        from pinn.networks.pinet2 import PiNet2
 
         pinet = PiNet2(
             rank=rank,
@@ -55,7 +55,7 @@ class TestEquivar:
             tf.debugging.assert_near(energy1, energy2)
 
     def test_pinet2_refactor(self, mocked_data):
-        from pinn.networks.pinet2_modularized import PiNet2
+        from pinn.networks.pinet2 import PiNet2
 
         pinet = PiNet2(
             rank=3,

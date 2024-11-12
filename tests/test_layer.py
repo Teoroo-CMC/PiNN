@@ -4,7 +4,7 @@ import numpy as np
 import numpy.testing as npt
 import random
 from pinn.networks.pinet2 import DotLayer, ScaleLayer, PIXLayer
-from pinn.networks.pinet2_modularized import EquiVarLayer
+from pinn.networks.pinet2 import EquiVarLayer
 from utils import rotate
 
 
