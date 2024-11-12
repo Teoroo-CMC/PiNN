@@ -36,6 +36,7 @@ jobs:
           key: ${{ hashFiles('tests/test_regression.py') }}
       - name: Install PiNN
         run: |
+          pip install numpy==1.26.0
           pip install -r requirements-dev.txt
           pip install -r requirements-doc.txt
           pip install tensorflow==${{ matrix.tf-version }} 'protobuf<3.20'
