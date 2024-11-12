@@ -7,6 +7,8 @@ from pinn.io.qm9 import load_qm9
 from pinn.io.ani import load_ani
 from pinn.io.cp2k import load_cp2k
 from pinn.io.numpy import load_numpy
+from pinn.io.qm7b import load_qm7b
+from pinn.io.qm7b import load_qm7b_file
 
 def load_ds(dataset, fmt='auto', splits=None, shuffle=True, seed=0, **kwargs):
     """This loader tries to guess the format when dataset is a string:

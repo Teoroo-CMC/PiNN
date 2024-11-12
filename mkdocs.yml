@@ -24,6 +24,7 @@ nav:
           - Overview: usage/models.md
           - Potential: usage/potential.md
           - Dipole: usage/dipole.md
+          - Polarizability: usage/polarizability.md
           - Customize: usage/custom_model.md
       - CLI:
           - convert: usage/cli/convert.md

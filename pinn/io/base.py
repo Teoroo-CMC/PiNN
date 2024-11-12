@@ -3,7 +3,7 @@
 
 
 def sparse_batch(batch_size, drop_remainder=False, num_parallel_calls=8,
-                 atomic_props=['f_data', 'q_data', 'f_weights']):
+                 atomic_props=['f_data', 'q_data', 'f_weights', 'oxidation']):
     """This returns a dataset operation that transforms single samples
     into sparse batched samples. The atomic_props must include all
     properties that are defined on an atomic basis besides 'coord' and
