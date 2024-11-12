@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         py-version: ["3.9"]
-        tf-version: ["2.8", "2.9"]
+        tf-version: ["2.11"]
         experimental: [false]
         # include: # test newer versions of TF
         #   - py-version: "3.9"
