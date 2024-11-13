@@ -1,0 +1,299 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Introduction - PiNN</title>
+
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/notebook.css">
+  <link rel="stylesheet" href="css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="css/extra.css" rel="stylesheet">
+  
+    <link href="css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = ".";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="js/mike.js"></script>
+
+  
+    <script src="js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li class="active tab" >
+    <a href=".">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="usage/overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li class="active tab" >
+    <a href=".">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li class="active">
+      <a href="." class="">
+        Introduction
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="changelog/" class="">
+        Changelog
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="migration/" class="">
+        Migration
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="benchmarks/" class="">
+        Benchmarks
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="contribute/" class="">
+        Contribute
+      </a>
+    </li>
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="usage/overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="introduction">Introduction</h1>
+<p>PiNN is a Python library built on top of TensorFlow for building atomic neural
+networks (ANNs). The primary usage of PiNN is to build and train ANN interatomic
+potentials, but PiNN is also capable of predicting physical and chemical
+properties of molecules and materials.</p>
+<h2 id="flexibility">Flexibility</h2>
+<p><img alt="" src="images/implement.png" width="600" /></p>
+<p>PiNN is built with modularized components, and we try to make it as easy as
+possible. You do not have to rewrite everything if you just want to design a new
+network structure, or apply an existing network to new datasets or new
+properties.</p>
+<h2 id="scalability">Scalability</h2>
+<p>PiNN fully adheres to TensorFlow's high-level Estimator and Dataset API. It is
+straightforward to train and predict on different computing platforms (CPU,
+multiple-GPU, cloud, etc.) without explicit programming.</p>
+<h2 id="examples">Examples</h2>
+<p>The quickest way to start with PiNN is to follow our example
+<a href="notebooks/overview/">notebooks</a>. The notebooks provide guides to train a
+simple ANN potential with a public dataset, import your own data or further
+customize the PiNN for your need.</p>
+<h2 id="cite-pinn">Cite PiNN</h2>
+<p>If you find PiNN useful, welcome to cite it as:</p>
+<blockquote>
+<p>Y. Shao, M. Hellström, P. D. Mitev, L. Knijff, and C. Zhang. PiNN: a python
+library for building atomic neural networks of molecules and materials. J.
+Chem. Inf. Model., 60:1184–1193, January 2020. doi:10.1021/acs.jcim.9b00994.</p>
+</blockquote>
+<details class="note">
+<summary>Bibtex</summary>
+<div class="highlight"><pre><span></span><code><span class="nc">@Article</span><span class="p">{</span><span class="nl">2020_ShaoHellstroemEtAl</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{Yunqi Shao and Matti Hellström and Pavlin D. Mitev and Lisanne Knijff and Chao Zhang}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">journal</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">{J. Chem. Inf. Model.}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{{PiNN}: A Python Library for Building Atomic Neural Networks of Molecules and Materials}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">{2020}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">month</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{jan}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">number</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{3}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">pages</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{1184--1193}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">volume</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{60}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">doi</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">{10.1021/acs.jcim.9b00994}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">publisher</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{American Chemical Society ({ACS})}</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="changelog/" title="Changelog" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

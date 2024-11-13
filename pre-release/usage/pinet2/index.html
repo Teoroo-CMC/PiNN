@@ -1,0 +1,3188 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>PiNet2 - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../quick_start/" class="">
+        Quick Start
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > IO </a>
+  
+    
+    <li >
+      <a href="../datasets/" class="">
+        Datasets
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Networks </a>
+  
+    
+    <li >
+      <a href="../networks/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../layers/" class="">
+        Layers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet/" class="">
+        PiNet
+      </a>
+    </li>
+
+  
+    
+    <li class="active">
+      <a href="./" class="">
+        PiNet2
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../bpnn/" class="">
+        BPNN
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Models </a>
+  
+    
+    <li >
+      <a href="../models/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../potential/" class="">
+        Potential
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../dipole/" class="">
+        Dipole
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../custom_model/" class="">
+        Customize
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > CLI </a>
+  
+    
+    <li >
+      <a href="../cli/convert/" class="">
+        convert
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/train/" class="">
+        train
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/log/" class="">
+        log
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/report/" class="">
+        report
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Misc </a>
+  
+    
+    <li >
+      <a href="../optimizers/" class="">
+        Optimizers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../visualize/" class="">
+        Visualize
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="the-pinet2-network">The PiNet2 network</h1>
+<p>PiNet2 represents the next generation of PiNet, now equipped with equivariant support. PiNet2 shows a significant and cost-effective improvement on energy and force predictions cross different types of datasets ranging from small molecules to liquid electrolytes, as compared to PiNet. The equivariant features turn out to also improve significantly the dipole and polarizability predictions, as demonstrated by the upgraded PiNet2-dipole and PiNet2-<span class="arithmatex">\(\chi\)</span>.</p>
+<p>The new modularized PiNet2 supports scalar, vectorial, and tensorial representations. Maximum rank can be specified by using <code>rank</code> argument at initialization. Intermediate variables also can be transformed and exposed by using <code>out_extra</code>. <code>out_extra={'p3': 1}</code> indicates that, in addition to the scalar output, a dictionary will be returned containing the key <code>p3</code> with a <code>Tensor</code> value shaped as <code>(..., n_channel=1)</code>.</p>
+<h2 id="network-architecture">Network architecture</h2>
+<p>The overall architecture of PiNet2 is illustrated with the illustration below:</p>
+<p><img alt="PiNet2 architecture" src="../../tikz/pinet2.svg" width="750" /></p>
+<p>PiNet2 builds upon the structure of PiNet, incorporating vectorial and tensorial equivariables represented by the blue and green nodes. The invariant <code>P1</code> is implemented through the <code>InvarLayer</code>, while the equivariants <code>P3</code> and <code>P5</code> utilize the <code>EquivarLayer</code> without non-linear activations. Further details on these new layers are provided below."</p>
+<p>Indices denoted the dimensionality of each variable still following previous the convention:</p>
+<ul>
+<li><span class="arithmatex">\(b\)</span>: basis function index;</li>
+<li><span class="arithmatex">\(\alpha,\beta,\gamma,\ldots\)</span>: feature channels;</li>
+<li><span class="arithmatex">\(i,j,k,\ldots\)</span>: atom indices;</li>
+<li><span class="arithmatex">\(x,y,z\)</span>: Cartesian coordinate indices.</li>
+</ul>
+<p>The number in the upper left of a variable denotes its dimension. For instance, <span class="arithmatex">\({}^{3}\mathbb{P}^{t}_{ix\zeta}\)</span> represents a property in <span class="arithmatex">\(\mathbb{R}^3\)</span>, where <span class="arithmatex">\(x\)</span> indicates an index for the three spatial coordinates. Here, <span class="arithmatex">\(t\)</span> is an iterator, and <span class="arithmatex">\(t + 1\)</span> increments up to the total number of graph convolution (CG) blocks.</p>
+<h2 id="network-specification">Network specification</h2>
+<h3 id="pinet2pinet2">pinet2.PiNet2</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="pinn.networks.pinet2.PiNet2"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tensorflow.keras.Model">Model</span></code></p>
+
+
+        <p>This class implements the Keras Model for the PiNet network.</p>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PiNet2</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class implements the Keras Model for the PiNet network.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">atom_types</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+        <span class="n">rc</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+        <span class="n">cutoff_type</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span>
+        <span class="n">basis_type</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+        <span class="n">n_basis</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">gamma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pp_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+        <span class="n">pi_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+        <span class="n">ii_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+        <span class="n">out_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+        <span class="n">out_units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">out_extra</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">out_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">act</span><span class="o">=</span><span class="s2">&quot;tanh&quot;</span><span class="p">,</span>
+        <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">weighted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">rank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            atom_types (list): elements for the one-hot embedding</span>
+<span class="sd">            rc (float): cutoff radius</span>
+<span class="sd">            cutoff_type (string): cutoff function to use with the basis.</span>
+<span class="sd">            basis_type (string): basis function, can be &quot;polynomial&quot; or &quot;gaussian&quot;</span>
+<span class="sd">            n_basis (int): number of basis functions to use</span>
+<span class="sd">            gamma (float or array): width of gaussian function for gaussian basis</span>
+<span class="sd">            center (float or array): center of gaussian function for gaussian basis</span>
+<span class="sd">            pp_nodes (list): number of nodes for PPLayer</span>
+<span class="sd">            pi_nodes (list): number of nodes for PILayer</span>
+<span class="sd">            ii_nodes (list): number of nodes for IILayer</span>
+<span class="sd">            out_nodes (list): number of nodes for OutLayer</span>
+<span class="sd">            out_units (int): number of output feature</span>
+<span class="sd">            out_extra (dict[str, int]): return extra variables</span>
+<span class="sd">            out_pool (str): pool atomic outputs, see ANNOutput</span>
+<span class="sd">            act (string): activation function to use</span>
+<span class="sd">            depth (int): number of interaction blocks</span>
+<span class="sd">            weighted (bool): whether to use weighted style</span>
+<span class="sd">            rank (int[1, 3, 5]): which order of variable to use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PiNet2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="k">assert</span> <span class="n">rank</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;rank must be 1, 3, or 5&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span> <span class="o">=</span> <span class="n">PreprocessLayer</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">atom_types</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">=</span> <span class="n">CutoffFunc</span><span class="p">(</span><span class="n">rc</span><span class="p">,</span> <span class="n">cutoff_type</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">basis_type</span> <span class="o">==</span> <span class="s2">&quot;polynomial&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basis_fn</span> <span class="o">=</span> <span class="n">PolynomialBasis</span><span class="p">(</span><span class="n">n_basis</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">basis_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basis_fn</span> <span class="o">=</span> <span class="n">GaussianBasis</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">n_basis</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res_update1</span> <span class="o">=</span> <span class="p">[</span><span class="n">ResUpdate</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res_update3</span> <span class="o">=</span> <span class="p">[</span><span class="n">ResUpdate</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res_update5</span> <span class="o">=</span> <span class="p">[</span><span class="n">ResUpdate</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gc_blocks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">GCBlock</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">weighted</span><span class="p">,</span> <span class="n">pp_nodes</span><span class="p">,</span> <span class="n">pi_nodes</span><span class="p">,</span> <span class="n">ii_nodes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">act</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">OutLayer</span><span class="p">(</span><span class="n">out_nodes</span><span class="p">,</span> <span class="n">out_units</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span> <span class="o">=</span> <span class="n">out_extra</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">out_extra</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">_out_layers&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">OutLayer</span><span class="p">(</span><span class="n">out_nodes</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ann_output</span> <span class="o">=</span> <span class="n">ANNOutput</span><span class="p">(</span><span class="n">out_pool</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;PiNet takes batches atomic data as input, the following keys are</span>
+<span class="sd">        required in the input dictionary of tensors:</span>
+
+<span class="sd">        - `ind_1`: [sparse indices](layers.md#sparse-indices) for the batched data, with shape `(n_atoms, 1)`;</span>
+<span class="sd">        - `elems`: element (atomic numbers) for each atom, with shape `(n_atoms)`;</span>
+<span class="sd">        - `coord`: coordintaes for each atom, with shape `(n_atoms, 3)`.</span>
+
+<span class="sd">        Optionally, the input dataset can be processed with</span>
+<span class="sd">        `PiNet.preprocess(tensors)`, which adds the following tensors to the</span>
+<span class="sd">        dictionary:</span>
+
+<span class="sd">        - `ind_2`: [sparse indices](layers.md#sparse-indices) for neighbour list, with shape `(n_pairs, 2)`;</span>
+<span class="sd">        - `dist`: distances from the neighbour list, with shape `(n_pairs)`;</span>
+<span class="sd">        - `diff`: distance vectors from the neighbour list, with shape `(n_pairs, 3)`;</span>
+<span class="sd">        - `prop`: initial properties `(n_pairs, n_elems)`;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tensors (dict of tensors): input tensors</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            output (tensor): output tensor with shape `[n_atoms, out_nodes]`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tensors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+        <span class="n">ind_1</span> <span class="o">=</span> <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;ind_1&quot;</span><span class="p">]</span>
+        <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;d3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind_1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind_1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;d3&quot;</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">z2</span> <span class="o">=</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;d5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z2</span><span class="p">,</span>
+                    <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z2</span><span class="p">,</span>
+                    <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span>
+                    <span class="n">x</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span>
+                    <span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">fc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">(</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;dist&quot;</span><span class="p">])</span>
+        <span class="n">basis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;dist&quot;</span><span class="p">],</span> <span class="n">fc</span><span class="o">=</span><span class="n">fc</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">out_extra</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">):</span>
+            <span class="n">new_tensors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gc_blocks</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">tensors</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_layers</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">ind_1</span><span class="p">,</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">],</span> <span class="n">output</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span><span class="p">:</span>
+                <span class="n">out_extra</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">_out_layers&quot;</span><span class="p">)[</span><span class="n">i</span><span class="p">](</span>
+                    <span class="p">[</span><span class="n">ind_1</span><span class="p">,</span> <span class="n">new_tensors</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">out_extra</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_update1</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">],</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_update3</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">],</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_update5</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">],</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">]])</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ann_output</span><span class="p">([</span><span class="n">ind_1</span><span class="p">,</span> <span class="n">output</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">out_extra</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">output</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.PiNet2.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">atom_types</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">rc</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">cutoff_type</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span> <span class="n">basis_type</span><span class="o">=</span><span class="s1">&#39;polynomial&#39;</span><span class="p">,</span> <span class="n">n_basis</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pp_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">pi_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">ii_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">out_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">out_units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_extra</span><span class="o">=</span><span class="p">{},</span> <span class="n">out_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">weighted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>atom_types</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>elements for the one-hot embedding</p>
+              </div>
+            </td>
+            <td>
+                  <code>[1, 6, 7, 8]</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>rc</code>
+            </td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>cutoff radius</p>
+              </div>
+            </td>
+            <td>
+                  <code>4.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cutoff_type</code>
+            </td>
+            <td>
+                  <code>string</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>cutoff function to use with the basis.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;f1&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>basis_type</code>
+            </td>
+            <td>
+                  <code>string</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>basis function, can be "polynomial" or "gaussian"</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;polynomial&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_basis</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of basis functions to use</p>
+              </div>
+            </td>
+            <td>
+                  <code>4</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>gamma</code>
+            </td>
+            <td>
+                  <code>float or array</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>width of gaussian function for gaussian basis</p>
+              </div>
+            </td>
+            <td>
+                  <code>3.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>center</code>
+            </td>
+            <td>
+                  <code>float or array</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>center of gaussian function for gaussian basis</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>pp_nodes</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of nodes for PPLayer</p>
+              </div>
+            </td>
+            <td>
+                  <code>[16, 16]</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>pi_nodes</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of nodes for PILayer</p>
+              </div>
+            </td>
+            <td>
+                  <code>[16, 16]</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ii_nodes</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of nodes for IILayer</p>
+              </div>
+            </td>
+            <td>
+                  <code>[16, 16]</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>out_nodes</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of nodes for OutLayer</p>
+              </div>
+            </td>
+            <td>
+                  <code>[16, 16]</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>out_units</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of output feature</p>
+              </div>
+            </td>
+            <td>
+                  <code>1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>out_extra</code>
+            </td>
+            <td>
+                  <code>dict[str, int]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>return extra variables</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>out_pool</code>
+            </td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>pool atomic outputs, see ANNOutput</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>act</code>
+            </td>
+            <td>
+                  <code>string</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>activation function to use</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;tanh&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>depth</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of interaction blocks</p>
+              </div>
+            </td>
+            <td>
+                  <code>4</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>weighted</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>whether to use weighted style</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>rank</code>
+            </td>
+            <td>
+                  <code>int[1, 3, 5]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>which order of variable to use</p>
+              </div>
+            </td>
+            <td>
+                  <code>3</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">atom_types</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="n">rc</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+    <span class="n">cutoff_type</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span>
+    <span class="n">basis_type</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+    <span class="n">n_basis</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pp_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+    <span class="n">pi_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+    <span class="n">ii_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+    <span class="n">out_nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+    <span class="n">out_units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">out_extra</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">out_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">act</span><span class="o">=</span><span class="s2">&quot;tanh&quot;</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">weighted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">rank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        atom_types (list): elements for the one-hot embedding</span>
+<span class="sd">        rc (float): cutoff radius</span>
+<span class="sd">        cutoff_type (string): cutoff function to use with the basis.</span>
+<span class="sd">        basis_type (string): basis function, can be &quot;polynomial&quot; or &quot;gaussian&quot;</span>
+<span class="sd">        n_basis (int): number of basis functions to use</span>
+<span class="sd">        gamma (float or array): width of gaussian function for gaussian basis</span>
+<span class="sd">        center (float or array): center of gaussian function for gaussian basis</span>
+<span class="sd">        pp_nodes (list): number of nodes for PPLayer</span>
+<span class="sd">        pi_nodes (list): number of nodes for PILayer</span>
+<span class="sd">        ii_nodes (list): number of nodes for IILayer</span>
+<span class="sd">        out_nodes (list): number of nodes for OutLayer</span>
+<span class="sd">        out_units (int): number of output feature</span>
+<span class="sd">        out_extra (dict[str, int]): return extra variables</span>
+<span class="sd">        out_pool (str): pool atomic outputs, see ANNOutput</span>
+<span class="sd">        act (string): activation function to use</span>
+<span class="sd">        depth (int): number of interaction blocks</span>
+<span class="sd">        weighted (bool): whether to use weighted style</span>
+<span class="sd">        rank (int[1, 3, 5]): which order of variable to use</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">PiNet2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+    <span class="k">assert</span> <span class="n">rank</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;rank must be 1, 3, or 5&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span> <span class="o">=</span> <span class="n">PreprocessLayer</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">atom_types</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">=</span> <span class="n">CutoffFunc</span><span class="p">(</span><span class="n">rc</span><span class="p">,</span> <span class="n">cutoff_type</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">basis_type</span> <span class="o">==</span> <span class="s2">&quot;polynomial&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis_fn</span> <span class="o">=</span> <span class="n">PolynomialBasis</span><span class="p">(</span><span class="n">n_basis</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">basis_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis_fn</span> <span class="o">=</span> <span class="n">GaussianBasis</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">n_basis</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res_update1</span> <span class="o">=</span> <span class="p">[</span><span class="n">ResUpdate</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res_update3</span> <span class="o">=</span> <span class="p">[</span><span class="n">ResUpdate</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res_update5</span> <span class="o">=</span> <span class="p">[</span><span class="n">ResUpdate</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">gc_blocks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">GCBlock</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">weighted</span><span class="p">,</span> <span class="n">pp_nodes</span><span class="p">,</span> <span class="n">pi_nodes</span><span class="p">,</span> <span class="n">ii_nodes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">act</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">OutLayer</span><span class="p">(</span><span class="n">out_nodes</span><span class="p">,</span> <span class="n">out_units</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span> <span class="o">=</span> <span class="n">out_extra</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">out_extra</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">setattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">_out_layers&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">OutLayer</span><span class="p">(</span><span class="n">out_nodes</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+        <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ann_output</span> <span class="o">=</span> <span class="n">ANNOutput</span><span class="p">(</span><span class="n">out_pool</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.PiNet2.call" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>PiNet takes batches atomic data as input, the following keys are
+required in the input dictionary of tensors:</p>
+<ul>
+<li><code>ind_1</code>: <a href="../layers/#sparse-indices">sparse indices</a> for the batched data, with shape <code>(n_atoms, 1)</code>;</li>
+<li><code>elems</code>: element (atomic numbers) for each atom, with shape <code>(n_atoms)</code>;</li>
+<li><code>coord</code>: coordintaes for each atom, with shape <code>(n_atoms, 3)</code>.</li>
+</ul>
+<p>Optionally, the input dataset can be processed with
+<code>PiNet.preprocess(tensors)</code>, which adds the following tensors to the
+dictionary:</p>
+<ul>
+<li><code>ind_2</code>: <a href="../layers/#sparse-indices">sparse indices</a> for neighbour list, with shape <code>(n_pairs, 2)</code>;</li>
+<li><code>dist</code>: distances from the neighbour list, with shape <code>(n_pairs)</code>;</li>
+<li><code>diff</code>: distance vectors from the neighbour list, with shape <code>(n_pairs, 3)</code>;</li>
+<li><code>prop</code>: initial properties <code>(n_pairs, n_elems)</code>;</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>tensors</code>
+            </td>
+            <td>
+                  <code>dict of tensors</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>input tensors</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>output</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>output tensor with shape <code>[n_atoms, out_nodes]</code></p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;PiNet takes batches atomic data as input, the following keys are</span>
+<span class="sd">    required in the input dictionary of tensors:</span>
+
+<span class="sd">    - `ind_1`: [sparse indices](layers.md#sparse-indices) for the batched data, with shape `(n_atoms, 1)`;</span>
+<span class="sd">    - `elems`: element (atomic numbers) for each atom, with shape `(n_atoms)`;</span>
+<span class="sd">    - `coord`: coordintaes for each atom, with shape `(n_atoms, 3)`.</span>
+
+<span class="sd">    Optionally, the input dataset can be processed with</span>
+<span class="sd">    `PiNet.preprocess(tensors)`, which adds the following tensors to the</span>
+<span class="sd">    dictionary:</span>
+
+<span class="sd">    - `ind_2`: [sparse indices](layers.md#sparse-indices) for neighbour list, with shape `(n_pairs, 2)`;</span>
+<span class="sd">    - `dist`: distances from the neighbour list, with shape `(n_pairs)`;</span>
+<span class="sd">    - `diff`: distance vectors from the neighbour list, with shape `(n_pairs, 3)`;</span>
+<span class="sd">    - `prop`: initial properties `(n_pairs, n_elems)`;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tensors (dict of tensors): input tensors</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        output (tensor): output tensor with shape `[n_atoms, out_nodes]`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tensors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+    <span class="n">ind_1</span> <span class="o">=</span> <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;ind_1&quot;</span><span class="p">]</span>
+    <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;d3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind_1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind_1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;d3&quot;</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;d5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z2</span><span class="p">,</span>
+                <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z2</span><span class="p">,</span>
+                <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span>
+                <span class="n">x</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span>
+                <span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">fc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">(</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;dist&quot;</span><span class="p">])</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;dist&quot;</span><span class="p">],</span> <span class="n">fc</span><span class="o">=</span><span class="n">fc</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">out_extra</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">):</span>
+        <span class="n">new_tensors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gc_blocks</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">tensors</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_layers</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">ind_1</span><span class="p">,</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">],</span> <span class="n">output</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span><span class="p">:</span>
+            <span class="n">out_extra</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">_out_layers&quot;</span><span class="p">)[</span><span class="n">i</span><span class="p">](</span>
+                <span class="p">[</span><span class="n">ind_1</span><span class="p">,</span> <span class="n">new_tensors</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">out_extra</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_update1</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">],</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_update3</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">],</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p3&quot;</span><span class="p">]])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_update5</span><span class="p">[</span><span class="n">i</span><span class="p">]([</span><span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">],</span> <span class="n">new_tensors</span><span class="p">[</span><span class="s2">&quot;p5&quot;</span><span class="p">]])</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ann_output</span><span class="p">([</span><span class="n">ind_1</span><span class="p">,</span> <span class="n">output</span><span class="p">])</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_extra</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">out_extra</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="layer-specifications">Layer specifications</h2>
+<h3 id="pinet2pixlayer">pinet2.PIXLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="pinn.networks.pinet2.PIXLayer"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+
+        <p><code>PIXLayer</code> takes the equalvariant properties <span class="arithmatex">\({}^{3}\mathbb{P}_{ix\zeta}\)</span> as input and outputs interactions for each pair <span class="arithmatex">\({}^{3}\mathbb{I}_{ijx\zeta}\)</span>. The <code>PIXLayer</code> has two styles, specified by the <code>weighted</code> argument:</p>
+<p><code>weighted</code>:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+{}^{3}\mathbb{I}_{ijx\gamma} = W_{\zeta\gamma}^{'} \mathbf{1}_{j}^{'} {}^{3}\mathbb{P}_{ix\zeta} + W_{\zeta\gamma}^{''} \mathbf{1}_{i}^{''} {}^{3}\mathbb{P}_{jx\zeta}
+\end{aligned}
+\]</div>
+<p><code>non-weighted</code>:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+{}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\zeta}
+\end{aligned}
+\]</div>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PIXLayer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;`PIXLayer` takes the equalvariant properties ${}^{3}\mathbb{P}_{ix\zeta}$ as input and outputs interactions for each pair ${}^{3}\mathbb{I}_{ijx\zeta}$. The `PIXLayer` has two styles, specified by the `weighted` argument:</span>
+
+<span class="sd">    `weighted`:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    {}^{3}\mathbb{I}_{ijx\gamma} = W_{\zeta\gamma}^{&#39;} \mathbf{1}_{j}^{&#39;} {}^{3}\mathbb{P}_{ix\zeta} + W_{\zeta\gamma}^{&#39;&#39;} \mathbf{1}_{i}^{&#39;&#39;} {}^{3}\mathbb{P}_{jx\zeta}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+
+<span class="sd">    `non-weighted`:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    {}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\zeta}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighted</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            weighted (bool): style of the layer, should be a bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PIXLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span> <span class="o">=</span> <span class="n">weighted</span>
+
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shapes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wi</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+                <span class="n">shapes</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wj</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+                <span class="n">shapes</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        PILayer take a list of three tensors as input:</span>
+
+<span class="sd">        - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`</span>
+<span class="sd">        - prop: equalvariant tensor with shape `(n_atoms, x, n_prop)`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tensors (list of tensors): list of `[ind_2, prop]` tensors</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            inter (tensor): interaction tensor with shape `(n_pairs, x, n_nodes[-1])`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span> <span class="o">=</span> <span class="n">tensors</span>
+        <span class="n">ind_i</span> <span class="o">=</span> <span class="n">ind_2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">ind_j</span> <span class="o">=</span> <span class="n">ind_2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">px_i</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">ind_i</span><span class="p">)</span>
+        <span class="n">px_j</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">ind_j</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wi</span><span class="p">(</span><span class="n">px_i</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">wj</span><span class="p">(</span><span class="n">px_j</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">px_j</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.PIXLayer.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">weighted</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>weighted</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>style of the layer, should be a bool</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighted</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        weighted (bool): style of the layer, should be a bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">PIXLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span> <span class="o">=</span> <span class="n">weighted</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.PIXLayer.call" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>PILayer take a list of three tensors as input:</p>
+<ul>
+<li>ind_2: <a href="../layers/#sparse-indices">sparse indices</a> of pairs with shape <code>(n_pairs, 2)</code></li>
+<li>prop: equalvariant tensor with shape <code>(n_atoms, x, n_prop)</code></li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>tensors</code>
+            </td>
+            <td>
+                  <code>list of tensors</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of <code>[ind_2, prop]</code> tensors</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>inter</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>interaction tensor with shape <code>(n_pairs, x, n_nodes[-1])</code></p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PILayer take a list of three tensors as input:</span>
+
+<span class="sd">    - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`</span>
+<span class="sd">    - prop: equalvariant tensor with shape `(n_atoms, x, n_prop)`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tensors (list of tensors): list of `[ind_2, prop]` tensors</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        inter (tensor): interaction tensor with shape `(n_pairs, x, n_nodes[-1])`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span> <span class="o">=</span> <span class="n">tensors</span>
+    <span class="n">ind_i</span> <span class="o">=</span> <span class="n">ind_2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">ind_j</span> <span class="o">=</span> <span class="n">ind_2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">px_i</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">ind_i</span><span class="p">)</span>
+    <span class="n">px_j</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">ind_j</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wi</span><span class="p">(</span><span class="n">px_i</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">wj</span><span class="p">(</span><span class="n">px_j</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">px_j</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="pinet2dotlayer">pinet2.DotLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="pinn.networks.pinet2.DotLayer"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+
+        <p><code>DotLayer</code> stands for the dot product( <span class="arithmatex">\(\langle,\rangle\)</span> ). <code>DotLayer</code> has two styles, specified by the <code>weighted</code> argument:</p>
+<p><code>weighted</code>:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+{}^{3}\mathbb{P}_{i\zeta} = \sum_{x\alpha\beta} W_{\beta\zeta}^{'} W_{\alpha\zeta}^{''}  {}^{3}\mathbb{P}_{ix\alpha} {}^{3}\mathbb{P}_{ix\beta}
+\end{aligned}
+\]</div>
+<p><code>non-weighted</code>:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+{}^{3}\mathbb{P}_{i\zeta} = \sum_x {}^{3}\mathbb{P}_{ix\zeta} {}^{3}\mathbb{P}_{ix\zeta}
+\end{aligned}
+\]</div>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DotLayer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;`DotLayer` stands for the dot product( $\langle,\rangle$ ). `DotLayer` has two styles, specified by the `weighted` argument:</span>
+
+<span class="sd">    `weighted`:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    {}^{3}\mathbb{P}_{i\zeta} = \sum_{x\alpha\beta} W_{\beta\zeta}^{&#39;} W_{\alpha\zeta}^{&#39;&#39;}  {}^{3}\mathbb{P}_{ix\alpha} {}^{3}\mathbb{P}_{ix\beta}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+
+<span class="sd">    `non-weighted`:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    {}^{3}\mathbb{P}_{i\zeta} = \sum_x {}^{3}\mathbb{P}_{ix\zeta} {}^{3}\mathbb{P}_{ix\zeta}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighted</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            weighted (bool): style of the layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DotLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span> <span class="o">=</span> <span class="n">weighted</span>
+
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shapes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wi</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">shapes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wj</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">shapes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            tensor (`tensor`): tensor to be dot producted</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tensor: dot producted tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ixr,ixr-&gt;ir&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wi</span><span class="p">(</span><span class="n">tensor</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">wj</span><span class="p">(</span><span class="n">tensor</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ixr,ixr-&gt;ir&quot;</span><span class="p">,</span> <span class="n">tensor</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.DotLayer.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">weighted</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>weighted</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>style of the layer</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighted</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        weighted (bool): style of the layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">DotLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span> <span class="o">=</span> <span class="n">weighted</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.DotLayer.call" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>tensor</code>
+            </td>
+            <td>
+                  <code>`tensor`</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>tensor to be dot producted</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>tensor</code></td>            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dot producted tensor</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        tensor (`tensor`): tensor to be dot producted</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tensor: dot producted tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weighted</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ixr,ixr-&gt;ir&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wi</span><span class="p">(</span><span class="n">tensor</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">wj</span><span class="p">(</span><span class="n">tensor</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ixr,ixr-&gt;ir&quot;</span><span class="p">,</span> <span class="n">tensor</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="pinet2scalelayer">pinet2.ScaleLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="pinn.networks.pinet2.ScaleLayer"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+
+        <p><code>ScaleLayer</code> represents the scaling of a equalvariant property tensor by a scalar, and has no learnable variables. The <code>ScaleLayer</code> takes two tensors as input and outputs a tensor of the same shape as the first input tensor, i.e.:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathbb{X}_{..x\alpha} = \mathbb{X}_{..x\alpha} \mathbb{X}_{..\alpha}
+\end{aligned}
+\]</div>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ScaleLayer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;`ScaleLayer` represents the scaling of a equalvariant property tensor by a scalar, and has no learnable variables. The `ScaleLayer` takes two tensors as input and outputs a tensor of the same shape as the first input tensor, i.e.:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mathbb{X}_{..x\alpha} = \mathbb{X}_{..x\alpha} \mathbb{X}_{..\alpha}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ScaleLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            tensor (list of tensors): list of `[tensor, scalar]` tensors</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tensor: scaled tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">px</span><span class="p">,</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">tensor</span>
+        <span class="k">return</span> <span class="n">px</span> <span class="o">*</span> <span class="n">p1</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.ScaleLayer.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>tensor</code>
+            </td>
+            <td>
+                  <code>list of tensors</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of <code>[tensor, scalar]</code> tensors</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>tensor</code></td>            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>scaled tensor</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        tensor (list of tensors): list of `[tensor, scalar]` tensors</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tensor: scaled tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">px</span><span class="p">,</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">tensor</span>
+    <span class="k">return</span> <span class="n">px</span> <span class="o">*</span> <span class="n">p1</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="pinet2outlayer">pinet2.OutLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="pinn.networks.pinet2.OutLayer"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+
+        <p><code>OutLayer</code> updates the network output with a <code>FFLayer</code> layer, where the
+<code>out_units</code> controls the dimension of outputs. In addition to the <code>FFLayer</code>
+specified by <code>n_nodes</code>, the <code>OutLayer</code> has one additional linear biasless
+layer that scales the outputs, specified by <code>out_units</code>.</p>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OutLayer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;`OutLayer` updates the network output with a `FFLayer` layer, where the</span>
+<span class="sd">    `out_units` controls the dimension of outputs. In addition to the `FFLayer`</span>
+<span class="sd">    specified by `n_nodes`, the `OutLayer` has one additional linear biasless</span>
+<span class="sd">    layer that scales the outputs, specified by `out_units`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_nodes</span><span class="p">,</span> <span class="n">out_units</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            n_nodes (list): dimension of the hidden layers</span>
+<span class="sd">            out_units (int): dimension of the output units</span>
+<span class="sd">            **kwargs (dict): options to be parsed to dense layers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">OutLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_units</span> <span class="o">=</span> <span class="n">out_units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ff_layer</span> <span class="o">=</span> <span class="n">FFLayer</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_units</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+            <span class="n">out_units</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        OutLayer takes a list of three tensors as input:</span>
+
+<span class="sd">        - ind_1: [sparse indices](layers.md#sparse-indices) of atoms with shape `(n_atoms, 2)`</span>
+<span class="sd">        - prop: property tensor with shape `(n_atoms, n_prop)`</span>
+<span class="sd">        - prev_output:  previous output with shape `(n_atoms, out_units)`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tensors (list of tensors): list of [ind_1, prop, prev_output] tensors</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            output (tensor): an updated output tensor with shape `(n_atoms, out_units)`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ind_1</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">prev_output</span> <span class="o">=</span> <span class="n">tensors</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ff_layer</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_units</span><span class="p">(</span><span class="n">px</span><span class="p">)</span> <span class="o">+</span> <span class="n">prev_output</span>
+        <span class="k">return</span> <span class="n">output</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.OutLayer.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">out_units</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_nodes</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dimension of the hidden layers</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>out_units</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dimension of the output units</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>options to be parsed to dense layers</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_nodes</span><span class="p">,</span> <span class="n">out_units</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        n_nodes (list): dimension of the hidden layers</span>
+<span class="sd">        out_units (int): dimension of the output units</span>
+<span class="sd">        **kwargs (dict): options to be parsed to dense layers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">OutLayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out_units</span> <span class="o">=</span> <span class="n">out_units</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ff_layer</span> <span class="o">=</span> <span class="n">FFLayer</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out_units</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+        <span class="n">out_units</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.OutLayer.call" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>OutLayer takes a list of three tensors as input:</p>
+<ul>
+<li>ind_1: <a href="../layers/#sparse-indices">sparse indices</a> of atoms with shape <code>(n_atoms, 2)</code></li>
+<li>prop: property tensor with shape <code>(n_atoms, n_prop)</code></li>
+<li>prev_output:  previous output with shape <code>(n_atoms, out_units)</code></li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>tensors</code>
+            </td>
+            <td>
+                  <code>list of tensors</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of [ind_1, prop, prev_output] tensors</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>output</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>an updated output tensor with shape <code>(n_atoms, out_units)</code></p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    OutLayer takes a list of three tensors as input:</span>
+
+<span class="sd">    - ind_1: [sparse indices](layers.md#sparse-indices) of atoms with shape `(n_atoms, 2)`</span>
+<span class="sd">    - prop: property tensor with shape `(n_atoms, n_prop)`</span>
+<span class="sd">    - prev_output:  previous output with shape `(n_atoms, out_units)`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tensors (list of tensors): list of [ind_1, prop, prev_output] tensors</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        output (tensor): an updated output tensor with shape `(n_atoms, out_units)`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ind_1</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">prev_output</span> <span class="o">=</span> <span class="n">tensors</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ff_layer</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_units</span><span class="p">(</span><span class="n">px</span><span class="p">)</span> <span class="o">+</span> <span class="n">prev_output</span>
+    <span class="k">return</span> <span class="n">output</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="pinet2invarlayer">pinet2.InvarLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="pinn.networks.pinet2.InvarLayer"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+
+        <p><code>InvarLayer</code> is used for invariant features with non-linear activation. It consists of <code>PI-II-IP-PP</code> layers, which are executed sequentially."</p>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvarLayer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;`InvarLayer` is used for invariant features with non-linear activation. It consists of `PI-II-IP-PP` layers, which are executed sequentially.&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pp_nodes</span><span class="p">,</span> <span class="n">pi_nodes</span><span class="p">,</span> <span class="n">ii_nodes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pi_layer</span> <span class="o">=</span> <span class="n">PILayer</span><span class="p">(</span><span class="n">pi_nodes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ii_layer</span> <span class="o">=</span> <span class="n">FFLayer</span><span class="p">(</span><span class="n">ii_nodes</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip_layer</span> <span class="o">=</span> <span class="n">IPLayer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pp_layer</span> <span class="o">=</span> <span class="n">FFLayer</span><span class="p">(</span><span class="n">pp_nodes</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        InvarLayer take a list of three tensors as input:</span>
+
+<span class="sd">        - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`</span>
+<span class="sd">        - p1: scalar tensor with shape `(n_atoms, n_prop)`</span>
+<span class="sd">        - basis: interaction tensor with shape `(n_pairs, n_basis)`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tensors (list of tensors): list of `[ind_2, p1, basis]` tensors</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            p1 (tensor): updated scalar property</span>
+<span class="sd">            i1 (tensor): interaction tensor with shape `(n_pairs, n_nodes[-1])`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ind_2</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="n">tensors</span>
+
+        <span class="n">i1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pi_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">basis</span><span class="p">])</span>
+        <span class="n">i1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ii_layer</span><span class="p">(</span><span class="n">i1</span><span class="p">)</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">i1</span><span class="p">])</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp_layer</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">p1</span><span class="p">,</span> <span class="n">i1</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.InvarLayer.call" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>InvarLayer take a list of three tensors as input:</p>
+<ul>
+<li>ind_2: <a href="../layers/#sparse-indices">sparse indices</a> of pairs with shape <code>(n_pairs, 2)</code></li>
+<li>p1: scalar tensor with shape <code>(n_atoms, n_prop)</code></li>
+<li>basis: interaction tensor with shape <code>(n_pairs, n_basis)</code></li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>tensors</code>
+            </td>
+            <td>
+                  <code>list of tensors</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of <code>[ind_2, p1, basis]</code> tensors</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>p1</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>updated scalar property</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td><code>i1</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>interaction tensor with shape <code>(n_pairs, n_nodes[-1])</code></p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    InvarLayer take a list of three tensors as input:</span>
+
+<span class="sd">    - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`</span>
+<span class="sd">    - p1: scalar tensor with shape `(n_atoms, n_prop)`</span>
+<span class="sd">    - basis: interaction tensor with shape `(n_pairs, n_basis)`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tensors (list of tensors): list of `[ind_2, p1, basis]` tensors</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        p1 (tensor): updated scalar property</span>
+<span class="sd">        i1 (tensor): interaction tensor with shape `(n_pairs, n_nodes[-1])`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ind_2</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="n">tensors</span>
+
+    <span class="n">i1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pi_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">basis</span><span class="p">])</span>
+    <span class="n">i1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ii_layer</span><span class="p">(</span><span class="n">i1</span><span class="p">)</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">i1</span><span class="p">])</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp_layer</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p1</span><span class="p">,</span> <span class="n">i1</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="pinet2equivarlayer">pinet2.EquivarLayer</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="pinn.networks.pinet2.EquivarLayer"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tensorflow.keras.layers.Layer">Layer</span></code></p>
+
+
+        <p><code>EquivarLayer</code> is used for equivariant features without non-linear activation. It includes <code>PI-II-IP-PP</code> layers, along with <code>Scale</code> and <code>Dot</code> layers.</p>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">EquivarLayer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;`EquivarLayer` is used for equivariant features without non-linear activation. It includes `PI-II-IP-PP` layers, along with `Scale` and `Dot` layers.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_outs</span><span class="p">,</span> <span class="n">weighted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="n">kw</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;use_bias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;activation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pi_layer</span> <span class="o">=</span> <span class="n">PIXLayer</span><span class="p">(</span><span class="n">weighted</span><span class="o">=</span><span class="n">weighted</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ii_layer</span> <span class="o">=</span> <span class="n">FFLayer</span><span class="p">(</span><span class="n">n_outs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip_layer</span> <span class="o">=</span> <span class="n">IPLayer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pp_layer</span> <span class="o">=</span> <span class="n">FFLayer</span><span class="p">(</span><span class="n">n_outs</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_layer</span> <span class="o">=</span> <span class="n">ScaleLayer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dot_layer</span> <span class="o">=</span> <span class="n">DotLayer</span><span class="p">(</span><span class="n">weighted</span><span class="o">=</span><span class="n">weighted</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        EquivarLayer take a list of four tensors as input:</span>
+
+<span class="sd">        - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`</span>
+<span class="sd">        - px: equivariant tensor with shape `(n_atoms, n_components, n_prop)`</span>
+<span class="sd">        - p1: scalar tensor with shape `(n_atoms, n_prop)`</span>
+<span class="sd">        - diff: displacement vector with shape `(n_pairs, 3)`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tensors (list of tensors): list of `[ind_2, p1, basis]` tensors</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            px (tensor): equivariant property with shape `(n_pairs, n_components, n_nodes[-1])`</span>
+<span class="sd">            ix (tensor): equivariant interaction with shape `(n_pairs, n_components, n_nodes[-1])`</span>
+<span class="sd">            dotted_px (tensor): dotted equivariant property</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">i1</span><span class="p">,</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">tensors</span>
+
+        <span class="n">ix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pi_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span><span class="p">])</span>
+        <span class="n">ix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_layer</span><span class="p">([</span><span class="n">ix</span><span class="p">,</span> <span class="n">i1</span><span class="p">])</span>
+        <span class="n">scaled_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_layer</span><span class="p">([</span><span class="n">diff</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">i1</span><span class="p">])</span>
+        <span class="n">ix</span> <span class="o">=</span> <span class="n">ix</span> <span class="o">+</span> <span class="n">scaled_diff</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">ix</span><span class="p">])</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp_layer</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
+        <span class="n">dotted_px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dot_layer</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">px</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="n">dotted_px</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pinn.networks.pinet2.EquivarLayer.call" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">call</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>EquivarLayer take a list of four tensors as input:</p>
+<ul>
+<li>ind_2: <a href="../layers/#sparse-indices">sparse indices</a> of pairs with shape <code>(n_pairs, 2)</code></li>
+<li>px: equivariant tensor with shape <code>(n_atoms, n_components, n_prop)</code></li>
+<li>p1: scalar tensor with shape <code>(n_atoms, n_prop)</code></li>
+<li>diff: displacement vector with shape <code>(n_pairs, 3)</code></li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>tensors</code>
+            </td>
+            <td>
+                  <code>list of tensors</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of <code>[ind_2, p1, basis]</code> tensors</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>px</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>equivariant property with shape <code>(n_pairs, n_components, n_nodes[-1])</code></p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td><code>ix</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>equivariant interaction with shape <code>(n_pairs, n_components, n_nodes[-1])</code></p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td><code>dotted_px</code></td>            <td>
+                  <code>tensor</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dotted equivariant property</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/networks/pinet2.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensors</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    EquivarLayer take a list of four tensors as input:</span>
+
+<span class="sd">    - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`</span>
+<span class="sd">    - px: equivariant tensor with shape `(n_atoms, n_components, n_prop)`</span>
+<span class="sd">    - p1: scalar tensor with shape `(n_atoms, n_prop)`</span>
+<span class="sd">    - diff: displacement vector with shape `(n_pairs, 3)`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tensors (list of tensors): list of `[ind_2, p1, basis]` tensors</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        px (tensor): equivariant property with shape `(n_pairs, n_components, n_nodes[-1])`</span>
+<span class="sd">        ix (tensor): equivariant interaction with shape `(n_pairs, n_components, n_nodes[-1])`</span>
+<span class="sd">        dotted_px (tensor): dotted equivariant property</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">i1</span><span class="p">,</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">tensors</span>
+
+    <span class="n">ix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pi_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span><span class="p">])</span>
+    <span class="n">ix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_layer</span><span class="p">([</span><span class="n">ix</span><span class="p">,</span> <span class="n">i1</span><span class="p">])</span>
+    <span class="n">scaled_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_layer</span><span class="p">([</span><span class="n">diff</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">i1</span><span class="p">])</span>
+    <span class="n">ix</span> <span class="o">=</span> <span class="n">ix</span> <span class="o">+</span> <span class="n">scaled_diff</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip_layer</span><span class="p">([</span><span class="n">ind_2</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">ix</span><span class="p">])</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp_layer</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
+    <span class="n">dotted_px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dot_layer</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">px</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="n">dotted_px</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../pinet/" title="PiNet"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../bpnn/" title="BPNN" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

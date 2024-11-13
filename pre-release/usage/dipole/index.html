@@ -1,0 +1,1726 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Dipole - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../quick_start/" class="">
+        Quick Start
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > IO </a>
+  
+    
+    <li >
+      <a href="../datasets/" class="">
+        Datasets
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Networks </a>
+  
+    
+    <li >
+      <a href="../networks/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../layers/" class="">
+        Layers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet/" class="">
+        PiNet
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet2/" class="">
+        PiNet2
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../bpnn/" class="">
+        BPNN
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Models </a>
+  
+    
+    <li >
+      <a href="../models/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../potential/" class="">
+        Potential
+      </a>
+    </li>
+
+  
+    
+    <li class="active">
+      <a href="./" class="">
+        Dipole
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../custom_model/" class="">
+        Customize
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > CLI </a>
+  
+    
+    <li >
+      <a href="../cli/convert/" class="">
+        convert
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/train/" class="">
+        train
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/log/" class="">
+        log
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/report/" class="">
+        report
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Misc </a>
+  
+    
+    <li >
+      <a href="../optimizers/" class="">
+        Optimizers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../visualize/" class="">
+        Visualize
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="dipole-model">Dipole Model</h1>
+<p>The dipole model requires the same dictionary as input as the potential model.
+The only difference is the <code>model_params</code> that can be set. They are listed below
+along with their default values.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>max_dipole</code></td>
+<td><code>False</code></td>
+<td>When set to a number, exclude dipoles above this value in loss function</td>
+</tr>
+<tr>
+<td><code>d_scale</code></td>
+<td><code>1</code></td>
+<td>Dipole unit during training</td>
+</tr>
+<tr>
+<td><code>use_d_per_atom</code></td>
+<td><code>False</code></td>
+<td>Use the per-atom dipole in place of total dipole in loss function</td>
+</tr>
+<tr>
+<td><code>log_d_per_atom</code></td>
+<td><code>True</code></td>
+<td>Log the per-atom dipole error, automatically enabled with <code>use_d_per_atoms=True</code></td>
+</tr>
+<tr>
+<td><code>use_d_weight</code></td>
+<td><code>False</code></td>
+<td>Scale the energy loss according to the <code>'d_weight'</code> Tensor in the dataset</td>
+</tr>
+<tr>
+<td><code>use_l2</code></td>
+<td><code>False</code></td>
+<td>Include L2 regularization in loss</td>
+</tr>
+<tr>
+<td><code>d_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of dipole loss</td>
+</tr>
+<tr>
+<td><code>l2_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of l2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="variants">Variants</h2>
+<p>Since the PiNet2 update several new variants of the dipole model have become available.</p>
+<ul>
+<li>atomic charge (AC) model (<code>AC_dipole_model</code>)</li>
+<li>atomic dipole (AD) model (<code>AD_dipole_model</code>)</li>
+<li>bond charge model (<code>BC_R_dipole_model</code>)</li>
+<li>atomic dipole oxidation state (AD(OS)) model (<code>AD_OS_dipole_model</code>)</li>
+<li>AC+AD model (<code>AC_AD_dipole_model</code>)</li>
+<li>AC+BC(R) (<code>AC_BC_R_dipole_model</code>)</li>
+<li>AD+BC(R) (<code>AD_BC_R_dipole_model</code>)</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<p>Apart from the models containing the atomic dipole (AD), all models are compatible with both PiNet and PiNet2. </p>
+<p>These models can be selected by changing <code>name</code> of the model in <code>model_params</code> (See overview for further instructions.).</p>
+<h2 id="parameters">Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>max_dipole</code></td>
+<td><code>False</code></td>
+<td>When set to a number, exclude dipoles above this value in loss function</td>
+</tr>
+<tr>
+<td><code>d_scale</code></td>
+<td><code>1</code></td>
+<td>Dipole unit during training</td>
+</tr>
+<tr>
+<td><code>d_unit</code></td>
+<td><code>1</code></td>
+<td>Output unit of dipole during prediction</td>
+</tr>
+<tr>
+<td><code>vector_dipole</code></td>
+<td><code>False</code></td>
+<td>Toggle whether to use scalar or vector dipole predictions, should be the same as dipole moment of the dataset</td>
+</tr>
+<tr>
+<td><code>charge_neutrality</code></td>
+<td><code>True</code></td>
+<td>Enable charge neutrality</td>
+</tr>
+<tr>
+<td><code>neutral_unit</code></td>
+<td><code>'system'</code></td>
+<td>If charge neutrality is applied, set the charge neutral unit. Choose <code>'system'</code> for system neutrality, or  <code>'water_molecule'</code> for neutrality per water molecule</td>
+</tr>
+<tr>
+<td><code>regularization</code></td>
+<td><code>True</code></td>
+<td>Enable regularization of the interaction prediction, only available for models containing the 'R' term</td>
+</tr>
+<tr>
+<td><code>use_d_per_atom</code></td>
+<td><code>False</code></td>
+<td>Use the per-atom dipole in place of total dipole in loss function</td>
+</tr>
+<tr>
+<td><code>log_d_per_atom</code></td>
+<td><code>True</code></td>
+<td>Log the per-atom dipole error, automatically enabled with <code>use_d_per_atoms=True</code></td>
+</tr>
+<tr>
+<td><code>use_d_weight</code></td>
+<td><code>False</code></td>
+<td>Scale the energy loss according to the <code>'d_weight'</code> Tensor in the dataset</td>
+</tr>
+<tr>
+<td><code>use_l2</code></td>
+<td><code>False</code></td>
+<td>Include L2 regularization in loss</td>
+</tr>
+<tr>
+<td><code>d_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of dipole loss</td>
+</tr>
+<tr>
+<td><code>l2_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of l2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="model-specifications">Model specifications</h2>
+<h3 id="pinnmodelsacac_dipole_model">pinn.models.AC.AC_dipole_model</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.models.AC.AC_dipole_model"></a>
+    <div class="doc doc-contents first">
+
+        <p>The atomic charge (AC) dipole model constructs the dipole moment from 
+atomic charge predictions:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}
+\end{aligned}
+\]</div>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/models/AC.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">AC_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The atomic charge (AC) dipole model constructs the dipole moment from </span>
+<span class="sd">    atomic charge predictions:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">network</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_1&#39;</span><span class="p">]</span>  <span class="c1"># ind_1 =&gt; id of molecule for each atom</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_2&#39;</span><span class="p">]</span>
+
+    <span class="n">natoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind1</span><span class="p">))</span>
+    <span class="n">nbatch</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> 
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;charge_neutrality&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;neutral_unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;system&#39;</span><span class="p">:</span>
+          <span class="n">q_molecule</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+          <span class="n">N</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">ind1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+          <span class="n">p_charge</span> <span class="o">=</span> <span class="n">q_molecule</span><span class="o">/</span><span class="n">N</span>
+          <span class="n">charge_corr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">p_charge</span><span class="p">,</span> <span class="n">ind1</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">]</span>
+          <span class="n">p1</span> <span class="o">=</span>  <span class="n">p1</span> <span class="o">-</span> <span class="n">charge_corr</span>
+
+      <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;neutral_unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;water_molecule&#39;</span><span class="p">:</span>
+          <span class="n">q_molecule</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">p1</span><span class="p">,[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+          <span class="n">p_charge</span> <span class="o">=</span> <span class="n">q_molecule</span><span class="o">/</span><span class="mi">3</span>
+          <span class="n">charge_corr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">p_charge</span><span class="p">,</span> <span class="n">p_charge</span><span class="p">,</span> <span class="n">p_charge</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">,:]</span>
+          <span class="n">p1</span> <span class="o">=</span>  <span class="n">p1</span> <span class="o">-</span> <span class="n">charge_corr</span>
+
+    <span class="n">q_tot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">q_d</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">*</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]</span>
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">q_d</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;vector_dipole&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dipole</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">tvars</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">trainable_variables</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">tvars</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">dipole</span> <span class="o">/</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_scale&#39;</span><span class="p">]</span>
+        <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dipole&#39;</span><span class="p">:</span> <span class="n">dipole</span><span class="p">,</span>
+            <span class="s1">&#39;charge&#39;</span><span class="p">:</span> <span class="n">q_tot</span><span class="p">,</span>
+            <span class="s1">&#39;charges&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnmodelsadad_dipole_model">pinn.models.AD.AD_dipole_model</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.models.AD.AD_dipole_model"></a>
+    <div class="doc doc-contents first">
+
+        <p>The atomic dipole (AD) dipole model constructs the dipole moment from 
+atomic dipole predictions:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i}
+\end{aligned}
+\]</div>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/models/AD.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">AD_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The atomic dipole (AD) dipole model constructs the dipole moment from </span>
+<span class="sd">    atomic dipole predictions:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mu = \sum_{i}{}^{3}\mathbb{P}_{i}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">p1</span><span class="p">,</span> <span class="n">output_p3</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">output_p3</span><span class="p">[</span><span class="s1">&#39;p3&#39;</span><span class="p">]</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_1&#39;</span><span class="p">]</span>  <span class="c1"># ind_1 =&gt; id of molecule for each atom</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_2&#39;</span><span class="p">]</span>
+
+    <span class="n">natoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind1</span><span class="p">))</span>
+    <span class="n">nbatch</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> 
+
+    <span class="n">atomic_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">atomic_d</span>
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;vector_dipole&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dipole</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">tvars</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">trainable_variables</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">tvars</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">dipole</span> <span class="o">/</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_scale&#39;</span><span class="p">]</span>
+        <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="c1">#&#39;dipole&#39;: dipole,</span>
+            <span class="s1">&#39;atomic_d&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnmodelsbc_rbc_r_dipole_model">pinn.models.BC_R.BC_R_dipole_model</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.models.BC_R.BC_R_dipole_model"></a>
+    <div class="doc doc-contents first">
+
+        <p>The bond charge dipole model with regularization (BC(R))
+constructs the dipole moment from atomic pairwise interactions:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mu = \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+\end{aligned}
+\]</div>
+<p>L2-regularization is applied to the atomic pairwise interactions.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/models/BC_R.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">BC_R_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The bond charge dipole model with regularization (BC(R))</span>
+<span class="sd">    constructs the dipole moment from atomic pairwise interactions:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mu = \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+
+<span class="sd">    L2-regularization is applied to the atomic pairwise interactions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PiNet&quot;</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;out_prop&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;out_inter&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+
+    <span class="n">network</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PiNet2&quot;</span><span class="p">:</span>
+        <span class="n">ppred</span><span class="p">,</span> <span class="n">output_dict</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">ppred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">ppred</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">i1</span> <span class="o">=</span> <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span>
+        <span class="n">i3</span> <span class="o">=</span> <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;i3&#39;</span><span class="p">]</span>
+
+        <span class="n">ipred</span> <span class="o">=</span>  <span class="n">tf</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ixr,ixr-&gt;ir&quot;</span><span class="p">,</span> <span class="n">i3</span><span class="p">,</span> <span class="n">i3</span><span class="p">)</span> <span class="o">+</span> <span class="n">i1</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ppred</span><span class="p">,</span> <span class="n">ipred</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_1&#39;</span><span class="p">]</span>  <span class="c1"># ind_1 =&gt; id of molecule for each atom</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_2&#39;</span><span class="p">]</span>
+
+    <span class="n">natoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind1</span><span class="p">))</span>
+    <span class="n">nbatch</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> 
+
+    <span class="c1"># Compute bond vector</span>
+    <span class="n">disp_r</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;diff&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Compute atomic dipole</span>
+    <span class="n">atomic_d_pairwise</span> <span class="o">=</span> <span class="n">ipred</span> <span class="o">*</span> <span class="n">disp_r</span>
+    <span class="n">atomic_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">atomic_d_pairwise</span><span class="p">,</span> <span class="n">ind2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">natoms</span><span class="p">)</span> 
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">atomic_d</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;vector_dipole&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dipole</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">ipred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">tvars</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">trainable_variables</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">tvars</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">ipred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">dipole</span> <span class="o">/</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_scale&#39;</span><span class="p">]</span>
+        <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dipole&#39;</span><span class="p">:</span> <span class="n">dipole</span><span class="p">,</span>
+            <span class="c1">#&#39;atomic_d&#39;: tf.expand_dims(atomic_d, 0)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnmodelsad_osad_os_dipole_model">pinn.models.AD_OS.AD_OS_dipole_model</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.models.AD_OS.AD_OS_dipole_model"></a>
+    <div class="doc doc-contents first">
+
+        <p>The atomic dipole with oxidation state term (AD(OS)) dipole model 
+constructs the dipole moment from atomic dipole predictions and oxidation
+state charges:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{ox}_{i} \cdot \mathbf{r}_{i}
+\end{aligned}
+\]</div>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/models/AD_OS.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">AD_OS_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The atomic dipole with oxidation state term (AD(OS)) dipole model </span>
+<span class="sd">    constructs the dipole moment from atomic dipole predictions and oxidation</span>
+<span class="sd">    state charges:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{ox}_{i} \cdot \mathbf{r}_{i}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">p1</span><span class="p">,</span> <span class="n">output_p3</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">output_p3</span><span class="p">[</span><span class="s1">&#39;p3&#39;</span><span class="p">]</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_1&#39;</span><span class="p">]</span>  <span class="c1"># ind_1 =&gt; id of molecule for each atom</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_2&#39;</span><span class="p">]</span>
+
+    <span class="n">natoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind1</span><span class="p">))</span>
+    <span class="n">nbatch</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> 
+
+    <span class="n">ox</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;oxidation&#39;</span><span class="p">]</span>
+    <span class="n">ox</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">ox</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">q_tot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">ox</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">q_d</span> <span class="o">=</span> <span class="n">ox</span> <span class="o">*</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]</span>
+    <span class="n">mol_q_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">q_d</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">atomic_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">a_dipole</span> <span class="o">=</span> <span class="n">q_d</span> <span class="o">+</span> <span class="n">p3</span>
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">mol_q_d</span> <span class="o">+</span> <span class="n">atomic_d</span>
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;vector_dipole&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dipole</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">tvars</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">trainable_variables</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">tvars</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">dipole</span> <span class="o">/</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_scale&#39;</span><span class="p">]</span>
+        <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dipole&#39;</span><span class="p">:</span> <span class="n">dipole</span><span class="p">,</span>
+            <span class="c1">#&#39;charge&#39;: q_tot</span>
+            <span class="c1">#&#39;atomic_d&#39;: tf.expand_dims(a_dipole, 0)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnmodelsac_adac_ad_dipole_model">pinn.models.AC_AD.AC_AD_dipole_model</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.models.AC_AD.AC_AD_dipole_model"></a>
+    <div class="doc doc-contents first">
+
+        <p>The AC+AD  dipole model constructs the dipole moment from 
+atomic dipole predictions and atomic charge predictions:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + {}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}    
+\end{aligned}
+\]</div>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/models/AC_AD.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">AC_AD_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The AC+AD  dipole model constructs the dipole moment from </span>
+<span class="sd">    atomic dipole predictions and atomic charge predictions:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + {}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i}    </span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">p1</span><span class="p">,</span> <span class="n">output_p3</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">output_p3</span><span class="p">[</span><span class="s1">&#39;p3&#39;</span><span class="p">]</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_1&#39;</span><span class="p">]</span>  <span class="c1"># ind_1 =&gt; id of molecule for each atom</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_2&#39;</span><span class="p">]</span>
+
+    <span class="n">natoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind1</span><span class="p">))</span>
+    <span class="n">nbatch</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> 
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;charge_neutrality&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;neutral_unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;system&#39;</span><span class="p">:</span>
+          <span class="n">q_molecule</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+          <span class="n">N</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">ind1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+          <span class="n">p_charge</span> <span class="o">=</span> <span class="n">q_molecule</span><span class="o">/</span><span class="n">N</span>
+          <span class="n">charge_corr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">p_charge</span><span class="p">,</span> <span class="n">ind1</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">]</span>
+          <span class="n">p1</span> <span class="o">=</span>  <span class="n">p1</span> <span class="o">-</span> <span class="n">charge_corr</span>
+
+      <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;neutral_unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;water_molecule&#39;</span><span class="p">:</span>
+          <span class="n">q_molecule</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">p1</span><span class="p">,[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+          <span class="n">p_charge</span> <span class="o">=</span> <span class="n">q_molecule</span><span class="o">/</span><span class="mi">3</span>
+          <span class="n">charge_corr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">p_charge</span><span class="p">,</span> <span class="n">p_charge</span><span class="p">,</span> <span class="n">p_charge</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">,:]</span>
+          <span class="n">p1</span> <span class="o">=</span>  <span class="n">p1</span> <span class="o">-</span> <span class="n">charge_corr</span>
+
+    <span class="n">q_tot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">q_d</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">*</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]</span>
+    <span class="n">mol_q_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">q_d</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">atomic_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">a_dipole</span> <span class="o">=</span> <span class="n">q_d</span> <span class="o">+</span> <span class="n">p3</span>
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">mol_q_d</span> <span class="o">+</span> <span class="n">atomic_d</span>
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;vector_dipole&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dipole</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">tvars</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">trainable_variables</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">tvars</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">dipole</span> <span class="o">/</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_scale&#39;</span><span class="p">]</span>
+        <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dipole&#39;</span><span class="p">:</span> <span class="n">dipole</span><span class="p">,</span>
+            <span class="s1">&#39;charge&#39;</span><span class="p">:</span> <span class="n">q_tot</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnmodelsac_bc_rac_bc_r_dipole_model">pinn.models.AC_BC_R.AC_BC_R_dipole_model</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.models.AC_BC_R.AC_BC_R_dipole_model"></a>
+    <div class="doc doc-contents first">
+
+        <p>The AC+BC(R) constructs the dipole moment from 
+atomic charge predictions and atomic pairwise interactions:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+\end{aligned}
+\]</div>
+<p>L2-regularization is applied to the atomic pairwise interactions.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/models/AC_BC_R.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">AC_BC_R_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The AC+BC(R) constructs the dipole moment from </span>
+<span class="sd">    atomic charge predictions and atomic pairwise interactions:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mu = \sum_{i}{}^{1}\mathbb{P}_{i} \cdot \mathbf{r}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+
+<span class="sd">    L2-regularization is applied to the atomic pairwise interactions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PiNet&quot;</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;out_prop&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;out_inter&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+
+    <span class="n">network</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PiNet2&quot;</span><span class="p">:</span>
+        <span class="n">p1</span><span class="p">,</span> <span class="n">output_dict</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="n">i1</span> <span class="o">=</span> <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span>
+        <span class="n">i3</span> <span class="o">=</span> <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;i3&#39;</span><span class="p">]</span>
+
+        <span class="n">ipred</span> <span class="o">=</span>  <span class="n">tf</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ixr,ixr-&gt;ir&quot;</span><span class="p">,</span> <span class="n">i3</span><span class="p">,</span> <span class="n">i3</span><span class="p">)</span> <span class="o">+</span> <span class="n">i1</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p1</span><span class="p">,</span> <span class="n">ipred</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_1&#39;</span><span class="p">]</span>  <span class="c1"># ind_1 =&gt; id of molecule for each atom</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_2&#39;</span><span class="p">]</span>
+
+    <span class="n">natoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind1</span><span class="p">))</span>
+    <span class="n">nbatch</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> 
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;charge_neutrality&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;neutral_unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;system&#39;</span><span class="p">:</span>
+            <span class="n">q_molecule</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">ind1</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">p_charge</span> <span class="o">=</span> <span class="n">q_molecule</span><span class="o">/</span><span class="n">N</span>
+            <span class="n">charge_corr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">p_charge</span><span class="p">,</span> <span class="n">ind1</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">p1</span> <span class="o">=</span>  <span class="n">p1</span> <span class="o">-</span> <span class="n">charge_corr</span>
+
+        <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;neutral_unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;water_molecule&#39;</span><span class="p">:</span>
+            <span class="n">q_molecule</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">p1</span><span class="p">,[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">p_charge</span> <span class="o">=</span> <span class="n">q_molecule</span><span class="o">/</span><span class="mi">3</span>
+            <span class="n">charge_corr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">p_charge</span><span class="p">,</span> <span class="n">p_charge</span><span class="p">,</span> <span class="n">p_charge</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">,:]</span>
+            <span class="n">p1</span> <span class="o">=</span>  <span class="n">p1</span> <span class="o">-</span> <span class="n">charge_corr</span>
+
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">q_tot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">q_d_a</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">*</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]</span>
+    <span class="n">q_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">q_d_a</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="c1"># Compute bond vector</span>
+    <span class="n">disp_r</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;diff&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Compute atomic dipole</span>
+    <span class="n">atomic_d_pairwise</span> <span class="o">=</span> <span class="n">ipred</span> <span class="o">*</span> <span class="n">disp_r</span>
+    <span class="n">atomic_d_a</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">atomic_d_pairwise</span><span class="p">,</span> <span class="n">ind2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">natoms</span><span class="p">)</span> 
+    <span class="n">atomic_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">atomic_d_a</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">a_dipole</span> <span class="o">=</span> <span class="n">q_d_a</span> <span class="o">+</span> <span class="n">atomic_d_a</span>
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">q_d</span> <span class="o">+</span> <span class="n">atomic_d</span>
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;vector_dipole&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dipole</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">ipred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">tvars</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">trainable_variables</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">tvars</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">q_tot</span><span class="p">,</span> <span class="n">ipred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">dipole</span> <span class="o">/</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_scale&#39;</span><span class="p">]</span>
+        <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dipole&#39;</span><span class="p">:</span> <span class="n">dipole</span><span class="p">,</span>
+            <span class="c1">#&#39;charge&#39;: q_tot</span>
+            <span class="c1">#&#39;atomic_d&#39;: tf.expand_dims(a_dipole, 0)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnmodelsad_bc_rad_bc_r_dipole_model">pinn.models.AD_BC_R.AD_BC_R_dipole_model</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.models.AD_BC_R.AD_BC_R_dipole_model"></a>
+    <div class="doc doc-contents first">
+
+        <p>The AD+BC(R) constructs the dipole moment from 
+atomic dipole predictions and atomic pairwise interactions:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}
+\end{aligned}
+\]</div>
+<p>L2-regularization is applied to the atomic pairwise interactions.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/models/AD_BC_R.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">AD_BC_R_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The AD+BC(R) constructs the dipole moment from </span>
+<span class="sd">    atomic dipole predictions and atomic pairwise interactions:</span>
+
+<span class="sd">    $$</span>
+<span class="sd">    \begin{aligned}</span>
+<span class="sd">    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + \sum_{ij}{}^{1}\mathbb{I}_{ij} \cdot \mathbf{r}_{ij}</span>
+<span class="sd">    \end{aligned}</span>
+<span class="sd">    $$</span>
+
+<span class="sd">    L2-regularization is applied to the atomic pairwise interactions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">ppred</span><span class="p">,</span> <span class="n">output_dict</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;p3&#39;</span><span class="p">]</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">i1</span> <span class="o">=</span> <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span>
+    <span class="n">i3</span> <span class="o">=</span> <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;i3&#39;</span><span class="p">]</span>
+
+    <span class="n">ipred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ixr,ixr-&gt;ir&quot;</span><span class="p">,</span> <span class="n">i3</span><span class="p">,</span> <span class="n">i3</span><span class="p">)</span> <span class="o">+</span> <span class="n">i1</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_1&#39;</span><span class="p">]</span>  <span class="c1"># ind_1 =&gt; id of molecule for each atom</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;ind_2&#39;</span><span class="p">]</span>
+
+    <span class="n">natoms</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ind1</span><span class="p">))</span>
+    <span class="n">nbatch</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">ind1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> 
+
+    <span class="n">p3_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="c1"># Compute bond vector</span>
+    <span class="n">disp_r</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;diff&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Compute atomic dipole</span>
+    <span class="n">atomic_d_pairwise</span> <span class="o">=</span> <span class="n">ipred</span> <span class="o">*</span> <span class="n">disp_r</span>
+    <span class="n">atomic_d_a</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">atomic_d_pairwise</span><span class="p">,</span> <span class="n">ind2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">natoms</span><span class="p">)</span> 
+    <span class="n">atomic_d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">unsorted_segment_sum</span><span class="p">(</span><span class="n">atomic_d_a</span><span class="p">,</span> <span class="n">ind1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nbatch</span><span class="p">)</span>
+
+    <span class="n">a_dipole</span> <span class="o">=</span> <span class="n">p3</span> <span class="o">+</span> <span class="n">atomic_d_a</span>
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">p3_d</span> <span class="o">+</span> <span class="n">atomic_d</span>
+
+    <span class="k">if</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;vector_dipole&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dipole</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">ipred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">tvars</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">trainable_variables</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">tvars</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dipole</span><span class="p">,</span> <span class="n">ipred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">),</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dipole</span> <span class="o">=</span> <span class="n">dipole</span> <span class="o">/</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_scale&#39;</span><span class="p">]</span>
+        <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dipole&#39;</span><span class="p">:</span> <span class="n">dipole</span><span class="p">,</span>
+            <span class="c1">#&#39;charge&#39;: q_tot</span>
+            <span class="c1">#&#39;atomic_d&#39;: tf.expand_dims(a_dipole, 0)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../potential/" title="Potential"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../polarizability/" title="Polarizability" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

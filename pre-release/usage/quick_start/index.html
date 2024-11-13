@@ -1,0 +1,470 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Quick Start - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+    <li class="active">
+      <a href="./" class="">
+        Quick Start
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > IO </a>
+  
+    
+    <li >
+      <a href="../datasets/" class="">
+        Datasets
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Networks </a>
+  
+    
+    <li >
+      <a href="../networks/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../layers/" class="">
+        Layers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet/" class="">
+        PiNet
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet2/" class="">
+        PiNet2
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../bpnn/" class="">
+        BPNN
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Models </a>
+  
+    
+    <li >
+      <a href="../models/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../potential/" class="">
+        Potential
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../dipole/" class="">
+        Dipole
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../custom_model/" class="">
+        Customize
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > CLI </a>
+  
+    
+    <li >
+      <a href="../cli/convert/" class="">
+        convert
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/train/" class="">
+        train
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/log/" class="">
+        log
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/report/" class="">
+        report
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Misc </a>
+  
+    
+    <li >
+      <a href="../optimizers/" class="">
+        Optimizers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../visualize/" class="">
+        Visualize
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="quick-start">Quick start</h1>
+<h2 id="installation">Installation</h2>
+<p><strong>using pip</strong></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git<span class="w"> </span>-b<span class="w"> </span>TF2
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>PiNN<span class="o">[</span>gpu<span class="o">]</span>
+pinn<span class="w"> </span>-h
+</code></pre></div>
+<p>Extra dependencies can be specified:</p>
+<ul>
+<li><code>[gpu]</code> or <code>[cpu]</code>: cpu or gpu version of TensorFlow</li>
+<li><code>[dev]</code>: development requirements for testing</li>
+<li><code>[doc]</code>: documentation requirements</li>
+<li><code>[extra]</code>: extra requirements (Jupyter, pymatgen, etc) </li>
+</ul>
+<p><strong>using container</strong> </p>
+<p>PiNN provides two built docker images, which can be converted to singularity
+images without much effort:</p>
+<div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>build<span class="w"> </span>pinn.sif<span class="w"> </span>docker://teoroo/pinn:master-gpu
+./pinn.sif<span class="w"> </span>-h
+</code></pre></div>
+<ul>
+<li><code>:latest-cpu</code> is much smaller, it comes without GPU support</li>
+<li><code>:latest-gpu</code> is the version with GPU support</li>
+</ul>
+<p>Extra dependencies like <code>Jupyter</code> are included in the image, for a quick 
+development environment:</p>
+<div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>run<span class="w"> </span>pinn.sif<span class="w"> </span>jupyter<span class="w"> </span>notebook
+</code></pre></div>
+<h2 id="configuration">Configuration</h2>
+<p>In PiNN, a model consists of two essential parts, the network and the model. The
+network specifies the neural network architecture used to product atomistic
+predictions from the input (coordinates and elements information). While the
+model interprets the predictions as physical quantities.</p>
+<p>In PiNN, the parameters for a model is saved as a <code>yaml</code> formatted parameter
+file. A minimal example of model parameter file looks like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pinet_potential</span>
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">potential_model</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">use_force</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">network</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PiNet</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">atom_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p>In addition to the network and the model, the training algorithm should be specified
+as such:
+<div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span>
+</code></pre></div></p>
+<h2 id="using-the-cli">Using the CLI</h2>
+<p>PiNN provides a CLI for training and simple dataset operations:</p>
+<div class="highlight"><pre><span></span><code>pinn<span class="w"> </span>convert<span class="w"> </span>data.traj<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;trian:8,eval:2&#39;</span>
+pinn<span class="w"> </span>train<span class="w"> </span>-d<span class="w"> </span>model<span class="w"> </span>-t<span class="w"> </span>train.yml<span class="w"> </span>-e<span class="w"> </span>eval.yml<span class="w"> </span>-b<span class="w"> </span><span class="m">30</span><span class="w"> </span>--train-steps<span class="w"> </span><span class="m">100000</span><span class="w"> </span>params.yml
+</code></pre></div>
+<p>The above command takes a trajectory file <code>data.traj</code>, and splits it into two
+datasets. Then it takes the parameters from <code>params.yml</code>, and trains a model
+in the <code>model</code> directory.</p>
+<h2 id="monitoring">Monitoring</h2>
+<p>PiNN uses TensorFlow as a backend for training, which means the training log can 
+be monitored in real time using Tensorboard:
+<div class="highlight"><pre><span></span><code>tensorboard<span class="w"> </span>--log-dir<span class="w"> </span>model<span class="w"> </span>--port<span class="w"> </span><span class="m">6006</span>
+</code></pre></div></p>
+<p>Or with the log inspector of PiNN:
+<div class="highlight"><pre><span></span><code>pinn<span class="w"> </span>log<span class="w"> </span>model
+</code></pre></div></p>
+<h2 id="using-the-model">Using the model</h2>
+<p>The simplest use case for PiNN models is to use them as ASE calculators. A calculator
+can be initialized from the model directory.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pinn</span>
+<span class="n">calc</span> <span class="o">=</span> <span class="n">pinn</span><span class="o">.</span><span class="n">get_calc</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+</code></pre></div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../overview/" title="Overview"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../datasets/" title="Datasets" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

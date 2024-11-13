@@ -1,0 +1,534 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Potential - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../quick_start/" class="">
+        Quick Start
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > IO </a>
+  
+    
+    <li >
+      <a href="../datasets/" class="">
+        Datasets
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Networks </a>
+  
+    
+    <li >
+      <a href="../networks/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../layers/" class="">
+        Layers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet/" class="">
+        PiNet
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet2/" class="">
+        PiNet2
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../bpnn/" class="">
+        BPNN
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Models </a>
+  
+    
+    <li >
+      <a href="../models/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li class="active">
+      <a href="./" class="">
+        Potential
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../dipole/" class="">
+        Dipole
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../custom_model/" class="">
+        Customize
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > CLI </a>
+  
+    
+    <li >
+      <a href="../cli/convert/" class="">
+        convert
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/train/" class="">
+        train
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/log/" class="">
+        log
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/report/" class="">
+        report
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Misc </a>
+  
+    
+    <li >
+      <a href="../optimizers/" class="">
+        Optimizers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../visualize/" class="">
+        Visualize
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="potential-model">Potential Model</h1>
+<h2 id="atomic-dress">Atomic dress</h2>
+<p>The absolute value of total energy from ab-initio calculations can often be very
+large. To avoid numerical problems, it is common practice to assign a constant
+atomic energy (dress) to each type of atom, such that the average energy is
+shifted to zero. Such an atomic dress can be generated with
+<code>pinn.utils.get_atomic_dress</code></p>
+<h2 id="loss-function">Loss function</h2>
+<p>The loss function in potential model is defined as following:</p>
+<div class="arithmatex">\[
+L = w_e \cdot \mathrm{MSE}(e) + w_f \cdot \mathrm{MSE}(f) + w_s \cdot \mathrm{MSE} (s) + \mathrm{regularization}
+\]</div>
+<p>Loss terms are mean squared errors of:</p>
+<ul>
+<li><span class="arithmatex">\(e\)</span>: energies</li>
+<li><span class="arithmatex">\(f\)</span>: forces components</li>
+<li><span class="arithmatex">\(s\)</span>: stress tensor components</li>
+</ul>
+<p>It is assumed that the energy, force and stress labels are labelled as
+<code>"e_data"</code>, <code>"f_data"</code>, <code>"s_data"</code> in the training set respectively, if they are
+to be used in the loss function.</p>
+<h2 id="parameters">Parameters</h2>
+<p>Below is a list of additional parameters of the potential model and their
+descriptions.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>e_dress</code></td>
+<td><code>{}</code></td>
+<td>Atomic Dress</td>
+</tr>
+<tr>
+<td><code>e_scale</code></td>
+<td><code>1</code></td>
+<td>The energy scaling during training, this variable defines the energy unit during training</td>
+</tr>
+<tr>
+<td><code>e_unit</code></td>
+<td><code>1</code></td>
+<td>Unit of the input energies, this variable will be used in the ASE calculator</td>
+</tr>
+<tr>
+<td><code>max_energy</code></td>
+<td><code>False</code></td>
+<td>When set to a number, exclude energies above this value in loss function</td>
+</tr>
+<tr>
+<td><code>use_e_per_atom</code></td>
+<td><code>False</code></td>
+<td>Use the per-atom energy in place of total energy in loss function</td>
+</tr>
+<tr>
+<td><code>log_e_per_atom</code></td>
+<td><code>True</code></td>
+<td>Log the per-atom energy error, automatically enabled with <code>use_e_per_atoms=True</code></td>
+</tr>
+<tr>
+<td><code>use_e_weight</code></td>
+<td><code>False</code></td>
+<td>Scale the energy loss according to the <code>'e_weight'</code> Tensor in the dataset</td>
+</tr>
+<tr>
+<td><code>use_force</code></td>
+<td><code>False</code></td>
+<td>Include force in loss function</td>
+</tr>
+<tr>
+<td><code>max_force_comp</code></td>
+<td><code>False</code></td>
+<td>if set to float, omit forces components larger than it</td>
+</tr>
+<tr>
+<td><code>no_force_comp</code></td>
+<td><code>False</code></td>
+<td>if set to int, use as maximum number of force component per weight update</td>
+</tr>
+<tr>
+<td><code>use_f_weight</code></td>
+<td><code>False</code></td>
+<td>Scale the energy loss according to the <code>'f_weight'</code> Tensor in the dataset</td>
+</tr>
+<tr>
+<td><code>use_stress</code></td>
+<td><code>False</code></td>
+<td>Include stress in loss function</td>
+</tr>
+<tr>
+<td><code>use_l2</code></td>
+<td><code>False</code></td>
+<td>Include L2 regularization in loss function</td>
+</tr>
+<tr>
+<td><code>e_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of energy loss</td>
+</tr>
+<tr>
+<td><code>f_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of force loss</td>
+</tr>
+<tr>
+<td><code>s_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of stress loss</td>
+</tr>
+<tr>
+<td><code>l2_loss_multiplier</code></td>
+<td><code>1</code></td>
+<td>Weight of l2 loss</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ase-calculator">ASE calculator</h2>
+<p>A calculator can be created from a model as simple as:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.get_calc</span>
+<span class="n">calc</span> <span class="o">=</span> <span class="n">get_calc</span><span class="p">(</span><span class="s1">&#39;/path/to/model/&#39;</span><span class="p">)</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="units">Units</h3>
+<p>Following the convention of ASE, the output unit is eV for energy, eV/Å for
+forces and eV/Å³ for stress tensor. Since PiNN does not know about the unit in
+the dataset, a <code>to_eV</code> parameter is given to convert from the dataset unit to eV
+(this optional is not necessary if e_unit is set in the parameters).</p>
+<h3 id="available-results">Available results</h3>
+<ul>
+<li><code>energy</code>: total energy</li>
+<li><code>forces</code>: forces</li>
+<li><code>energies</code>: atomic contribution to the energy</li>
+<li><code>stress</code>: stress tensor</li>
+</ul>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../models/" title="Overview"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../dipole/" title="Dipole" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>
