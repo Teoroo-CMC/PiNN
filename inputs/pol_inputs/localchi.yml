@@ -3,7 +3,7 @@ model:
   params: {}
 model_dir: model
 network:
-  name: NewPiNet2
+  name: PiNet2
   params:
     atom_types:
     - 1
