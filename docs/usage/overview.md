@@ -37,4 +37,4 @@ Checkout [quick start](quick_start.md) to get started. See the
 
 If you are interested in a specific application, e.g. fitting a machine-learned
 potential, read the available options of the [potential model](potential.md) and
-network (likely [PiNet](pinet.md)) you'd like to use.
+network (likely [PiNet2](pinet2.md)) you'd like to use.
