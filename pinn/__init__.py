@@ -20,3 +20,20 @@ def get_calc(model_spec, **kwargs):
     else:
         model = get_model(model_spec)
     return  PiNN_calc(model, **kwargs)
+
+def get_available_networks():
+    print("  - PiNet")
+    print("  - PiNet2")
+    print("  - BPNN")
+    print("  - LJ")
+
+def get_available_models():
+    print("  - potential_model")
+    print("  - dipole_model")
+    print("  - AC_dipole_model")
+    print("  - AD_dipole_model")
+    print("  - BC_R_dipole_model")
+    print("  - AD_OS_dipole_model")
+    print("  - AC_AD_dipole_model")
+    print("  - AC_BC_R_dipole_model")
+    print("  - AD_BC_R_dipole_model")
