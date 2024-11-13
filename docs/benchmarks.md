@@ -11,6 +11,8 @@ models are accessible from the shared [box folder].
 
 ## Latest benchmarks (v2.0.0)
 
+We have introduced equivariant features (P3 and P5) into the second-generation of PiNet. PiNet2-P3 shows a significant and cost-effective improvement on energy and force predictions across different types of datasets ranging from small molecules to crystalline materials, as compared to PiNet.
+
 ### QM9[@2014_RamakrishnanDraletal]
 
 PiNet2-P3 Energy MAE: 8.0(std:0.1) meV
