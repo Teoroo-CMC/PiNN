@@ -33,7 +33,7 @@ of PiNN.
 ## What to read
 
 Checkout [quick start](quick_start.md) to get started. See the
-[notebook](../notebooks/overview.md) examples for more examples.
+[notebook](../notebooks/overview.md) examples for more examples. More details and available parameters can be found in tab `Usage`. To integrate `PiNN` with workflow, parameters of `model` and `network`  can be set by using `yaml` format configuration file, and template can be found in their `Usage` page, respectly. 
 
 If you are interested in a specific application, e.g. fitting a machine-learned
 potential, read the available options of the [potential model](potential.md) and
