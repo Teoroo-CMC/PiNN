@@ -21,6 +21,27 @@ Indices denoted the dimensionality of each variable still following previous the
 
 The number in the upper left of a variable denotes its dimension. For instance, ${}^{3}\mathbb{P}^{t}_{ix\zeta}$ represents a property in $\mathbb{R}^3$, where $x$ indicates an index for the three spatial coordinates. Here, $t$ is an iterator, and $t + 1$ increments up to the total number of graph convolution (CG) blocks.
 
+The parameters for `PiNet2` are outlined in the network specification and can be applied in the configuration file as shown in the following snippet:
+
+```
+"network": {
+    "name": "PiNet2",
+    "params": {
+        "atom_types": [1, 8],
+        "basis_type": "gaussian",
+        "depth": 5,
+        "ii_nodes": [16, 16, 16, 16],
+        "n_basis": 10,
+        "out_nodes": [16],
+        "pi_nodes": [16],
+        "pp_nodes": [16, 16, 16, 16],
+        "rank": 3,
+        "rc": 6.0,
+        "weighted": False
+    }
+},
+```
+
 ## Network specification
 
 ### pinet2.PiNet2
