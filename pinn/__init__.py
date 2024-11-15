@@ -22,12 +22,14 @@ def get_calc(model_spec, **kwargs):
     return  PiNN_calc(model, **kwargs)
 
 def get_available_networks():
+    print("Available networks:")
     print("  - PiNet")
     print("  - PiNet2")
     print("  - BPNN")
     print("  - LJ")
 
 def get_available_models():
+    print("Available models:")
     print("  - potential_model")
     print("  - dipole_model")
     print("  - AC_dipole_model")
