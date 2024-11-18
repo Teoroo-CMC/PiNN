@@ -478,6 +478,11 @@ example:</p>
 <td><code>load_cp2k</code></td>
 <td>Loader for <a href="https://www.cp2k.org/">CP2K</a> output (experimental)</td>
 </tr>
+<tr>
+<td>deepmd-kit</td>
+<td><code>load_deepmd</code></td>
+<td>Loader for <a href="https://docs.deepmodeling.com/projects/deepmd/en/latest/data/system.html">deepmk-kit</a> input</td>
+</tr>
 </tbody>
 </table>
 <h2 id="api-documentation">API documentation</h2>
@@ -1728,6 +1733,317 @@ specify the data to read and where it is read from.</p>
 
     <span class="k">return</span> <span class="n">_frame_loader</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_list</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]))),</span>
                          <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnioload_deepmd">pinn.io.load_deepmd</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.io.load_deepmd"></a>
+    <div class="doc doc-contents first">
+
+        <p>This is loader for deepmd input data. It takes a dict of key and file path or a directory path which contains the data files. If <code>type_map</code> is provided, it will be used to convert the type id to atomic numbers.</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>data source</th>
+<th>provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>coord</code></td>
+<td><code>path/coord.raw</code></td>
+<td><code>coord</code></td>
+</tr>
+<tr>
+<td><code>force</code></td>
+<td><code>path/force.raw</code></td>
+<td><code>f_data</code></td>
+</tr>
+<tr>
+<td><code>energy</code></td>
+<td><code>path/energy.raw</code></td>
+<td><code>e_data</code></td>
+</tr>
+<tr>
+<td><code>virial</code></td>
+<td><code>path/virial.raw</code></td>
+<td><code>s_data</code></td>
+</tr>
+<tr>
+<td><code>box</code></td>
+<td><code>path/box.raw</code></td>
+<td><code>cell</code></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>path/type.raw</code></td>
+<td><code>elems</code></td>
+</tr>
+</tbody>
+</table>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>files</code>
+            </td>
+            <td>
+                  <code>dict | <span title="pathlib.Path">Path</span> | str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>input files</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>type_map</code>
+            </td>
+            <td>
+                  <code>dict | <span title="pathlib.Path">Path</span> | str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>mapping of type id to atomic number</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>pbc</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>flag of periodic boundary condition</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/deepmd.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_deepmd</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is loader for deepmd input data. It takes a dict of key and file path or a directory path which contains the data files. If `type_map` is provided, it will be used to convert the type id to atomic numbers.</span>
+
+<span class="sd">    | key        | data source         | provides         |</span>
+<span class="sd">    |------------|---------------------|------------------|</span>
+<span class="sd">    | `coord`    | `path/coord.raw`      | `coord`  |</span>
+<span class="sd">    | `force`    | `path/force.raw`      | `f_data`      |</span>
+<span class="sd">    | `energy`   | `path/energy.raw`      | `e_data`      |</span>
+<span class="sd">    | `virial`   | `path/virial.raw`      | `s_data`      |</span>
+<span class="sd">    | `box`     | `path/box.raw` | `cell`           |</span>
+<span class="sd">    | `type`    | `path/type.raw` | `elems`           |</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        files (dict | Path | str): input files</span>
+<span class="sd">        type_map (dict | Path | str): mapping of type id to atomic number</span>
+<span class="sd">        pbc (bool): flag of periodic boundary condition</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">,</span> <span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+        <span class="n">fdict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">,</span> <span class="s1">&#39;force&#39;</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="s1">&#39;virial&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="s1">&#39;elems&#39;</span><span class="p">]:</span>
+            <span class="n">fdict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">.raw&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">key</span> <span class="ow">in</span> <span class="n">fdict_or_fpath</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">,</span> <span class="s1">&#39;force&#39;</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="s1">&#39;virial&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="s1">&#39;elems&#39;</span><span class="p">]])</span>
+        <span class="n">fdict</span> <span class="o">=</span> <span class="n">fdict_or_fpath</span>
+
+    <span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">chemical_symbols</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">])</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;force&#39;</span><span class="p">])</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">])</span>
+    <span class="c1"># stress = np.loadtxt(fdict[&#39;virial&#39;])</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;cell&#39;</span><span class="p">])</span>
+    <span class="n">elem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;elems&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">type_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">)):</span>
+            <span class="n">type_map_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">)</span> <span class="o">/</span> <span class="s1">&#39;type_map.raw&#39;</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="n">type_map_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">type_map</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">type_map_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">type_map_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="c1"># assume type.raw is incremental integers starting from 0</span>
+            <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">chemical_symbols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()):</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">)}</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">type_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">elem</span><span class="p">[</span><span class="n">elem</span> <span class="o">==</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># DeePMD .raw files use units of Å and eV. [https://docs.deepmodeling.com/projects/deepmd/en/latest/data/system.html]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">)):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">coord</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s1">&#39;f_data&#39;</span><span class="p">:</span> <span class="n">force</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="n">energy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="c1"># &#39;s_data&#39;: stress[i],</span>
+            <span class="s1">&#39;cell&#39;</span><span class="p">:</span> <span class="n">cell</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">elem</span>
+        <span class="p">})</span>
+
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;elems&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="s1">&#39;int32&#39;</span><span class="p">,</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]},</span>
+    <span class="s1">&#39;cell&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="s1">&#39;coord&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="s1">&#39;float&#39;</span><span class="p">,</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[]},</span>
+    <span class="s1">&#39;f_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="c1"># &#39;s_data&#39;: {&#39;dtype&#39;: &#39;float&#39;, &#39;shape&#39;: [3, 3]},</span>
+<span class="p">}</span>
+
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_frame_loader</span><span class="p">(</span><span class="n">datum</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datum</span>
+
+    <span class="k">return</span> <span class="n">_frame_loader</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
