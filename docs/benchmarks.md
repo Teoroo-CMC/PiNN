@@ -11,6 +11,8 @@ models are accessible from the shared [box folder].
 
 ## Latest benchmarks (v2.0.0)
 
+We have introduced equivariant features (P3 and P5) into the second-generation of PiNet. PiNet2-P3 shows a significant and cost-effective improvement on energy and force predictions across different types of datasets ranging from small molecules to crystalline materials, as compared to PiNet.
+
 ### QM9[@2014_RamakrishnanDraletal]
 
 PiNet2-P3 Energy MAE: 8.0(std:0.1) meV
@@ -38,7 +40,11 @@ PiNet2-P3 Energy MAE: 8.0(std:0.1) meV
 | Toluene             | 23 (1)        | 2.2 (4)         | 27.8 (4)      | 3.3 (4)         |
 | Uracil              | 25 (2)        | 3.9 (8)         | 30 (3)        | 5.2 (1)         |
 
+<<<<<<< HEAD
+### Materials Project
+=======
 ### Material Project
+>>>>>>> 21136081fc2bf06796d4798cb7e54d427f864303
 
 #### MPF.2021.2.8[@2022.Chen4zb]
 

@@ -30,7 +30,7 @@ def test_pol_eem():
     params = {
         'model_dir': testpath,
         'network': {
-            'name': 'NewPiNet2',
+            'name': 'PiNet2',
             'params': network_params},
         'model': {
             'name': 'pol_eem_model',
@@ -54,7 +54,7 @@ def test_pol_acks2():
     params = {
         'model_dir': testpath,
         'network': {
-            'name': 'NewPiNet2',
+            'name': 'PiNet2',
             'params': network_params},
         'model': {
             'name': 'pol_acks2_model',
@@ -78,7 +78,7 @@ def test_pol_etainv():
     params = {
         'model_dir': testpath,
         'network': {
-            'name': 'NewPiNet2',
+            'name': 'PiNet2',
             'params': network_params},
         'model': {
             'name': 'pol_etainv_model',
@@ -102,7 +102,7 @@ def test_pol_local():
     params = {
         'model_dir': testpath,
         'network': {
-            'name': 'NewPiNet2',
+            'name': 'PiNet2',
             'params': network_params},
         'model': {
             'name': 'pol_local_model',
@@ -123,7 +123,7 @@ def pre_fn(tensors):
     }
     params = {
         'network': {
-            'name': 'NewPiNet2',
+            'name': 'PiNet2',
             'params': network_params}}
     with tf.name_scope("PRE") as scope:
         network = get_network(params['network'])

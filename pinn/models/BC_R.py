@@ -21,7 +21,7 @@ PiNN: equivariant neural network suite for modelling electrochemical systems
 import numpy as np
 import tensorflow as tf
 from pinn import get_network
-from pinn.utils import pi_named, make_indices
+from pinn.utils import pi_named
 from pinn.models.base import export_model, get_train_op, MetricsCollector
 
 default_params = {
