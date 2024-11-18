@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def load_deepmd(fdict_or_fpath, type_map=None, pbc=True):
+def load_deepmd(fdict_or_fpath, type_map=None, pbc=True, shuffle=True, seed=0):
 
     """This is loader for deepmd input data. It takes a dict of key and file path or a directory path which contains the data files. If type_map is provided, it will be used to convert the type id to atomic numbers.
 
@@ -21,21 +21,21 @@ def load_deepmd(fdict_or_fpath, type_map=None, pbc=True):
     """
     if isinstance(fdict_or_fpath, (Path, str)):
         fdict = {}
-        for key in ['coord', 'force', 'energy', 'virial', 'cell', 'elems']:
+        for key in ['coord', 'force', 'energy', 'virial', 'box', 'elems']:
             fdict[key] = Path(fdict_or_fpath) / f'{key}.raw'
     else:
-        assert all([key in fdict_or_fpath for key in ['coord', 'force', 'energy', 'virial', 'cell', 'elems']])
+        assert all([key in fdict_or_fpath for key in ['coord', 'force', 'energy', 'virial', 'box', 'elems']])
         fdict = fdict_or_fpath
 
     from ase.data import chemical_symbols
     import numpy as np
     from pinn.io import list_loader
 
-    coord = np.loadtxt(fdict['coord']).reshape((..., -1, 3))
-    force = np.loadtxt(fdict['force']).reshape((..., -1, 3))
+    coord = np.loadtxt(fdict['coord'])
+    force = np.loadtxt(fdict['force'])
     energy = np.loadtxt(fdict['energy'])
     # stress = np.loadtxt(fdict['virial'])
-    cell = np.loadtxt(fdict['cell']).reshape((..., -1, 3))
+    cell = np.loadtxt(fdict['cell'])
     elem = np.loadtxt(fdict['elems'], dtype=int)
 
     if type_map is not None:
@@ -61,7 +61,7 @@ def load_deepmd(fdict_or_fpath, type_map=None, pbc=True):
             'e_data': energy[i],
             # 's_data': stress[i],
             'cell': cell[i],
-            'elems': elem[i]
+            'elems': elem
         })
 
     ds_spec = {
@@ -70,11 +70,11 @@ def load_deepmd(fdict_or_fpath, type_map=None, pbc=True):
     'coord':  {'dtype':  'float','shape': [None, 3]},
     'e_data': {'dtype': 'float', 'shape': []},
     'f_data': {'dtype': 'float', 'shape': [None, 3]},
-    's_data': {'dtype': 'float', 'shape': [3, 3]},
+    # 's_data': {'dtype': 'float', 'shape': [3, 3]},
 }
 
     @list_loader(ds_spec=ds_spec, pbc=pbc)
     def _frame_loader(datum):
         return datum
     
-    return _frame_loader(data)
+    return _frame_loader(data, shuffle=shuffle, seed=seed)
