@@ -3,7 +3,7 @@ from pathlib import Path
 
 def load_deepmd(fdict_or_fpath, type_map=None, pbc=True, shuffle=True, seed=0):
 
-    """This is loader for deepmd input data. It takes a dict of key and file path or a directory path which contains the data files. If type_map is provided, it will be used to convert the type id to atomic numbers.
+    """This is loader for deepmd input data. It takes a dict of key and file path or a directory path which contains the data files. If `type_map` is provided, it will be used to convert the type id to atomic numbers.
 
     | key        | data source         | provides         |
     |------------|---------------------|------------------|
@@ -16,6 +16,8 @@ def load_deepmd(fdict_or_fpath, type_map=None, pbc=True, shuffle=True, seed=0):
 
     Args:
         files (dict | Path | str): input files
+        type_map (dict | Path | str): mapping of type id to atomic number
+        pbc (bool): flag of periodic boundary condition
         shuffle (bool): shuffle the dataset (only used when splitting)
         seed (int): random seed for shuffling
     """

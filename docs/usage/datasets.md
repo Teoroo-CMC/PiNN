@@ -96,6 +96,7 @@ An example notebook on preparing a custom dataset is
 | qm9    | `load_qm9`      | A xyz-like file format used in the QM9[@2014_RamakrishnanDralEtAl] dataset                                         |
 | ani    | `load_ani`      | HD5-based format used in the ANI-1[@2017_SmithIsayevEtAl] dataset                                                  |
 | cp2k   | `load_cp2k`     | Loader for [CP2K](https://www.cp2k.org/) output (experimental)                                                     |
+| deepmd-kit | `load_deepmd` | Loader for [deepmk-kit](https://docs.deepmodeling.com/projects/deepmd/en/latest/data/system.html) input | 
 
 ## API documentation
 
@@ -123,5 +124,8 @@ An example notebook on preparing a custom dataset is
 
 ### pinn.io.load_cp2k
 ::: pinn.io.load_cp2k
+
+### pinn.io.load_deepmd
+::: pinn.io.load_deepmd
 
 \bibliography
