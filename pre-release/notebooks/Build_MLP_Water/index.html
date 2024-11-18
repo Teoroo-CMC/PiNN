@@ -346,7 +346,39 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="configure-the-model-architecture-and-parameters">Configure the model architecture and parameters</h2>
-<p>Three different model architectures are supplied in the PiNN package, i.e., Behler−Parrinello neural network (BPNN, <a href="https://doi.org/10.1103/PhysRevLett.98.146401">Phys. Rev. Lett. 2007, 98, 146401</a>), PiNet (<a href="https://doi.org/10.1021/acs.jcim.9b00994">J. Chem. Inf. Model. 2020, 60, 1184−1193</a>), and PiNet2-P3. The BPNN and PiNet only involve invariant features, whereas PiNet2-P3 incorporates equivariant information as well. Generally speaking, the training loss of PiNet2-P3 is lower than that of BPNN/PiNet. Before training the MLPs, it is essential to define the model architecture and set corresponding parameters. In this case, we will use PiNet2-P3 as an example.</p>
+<p>Three different model architectures are supplied in the PiNN package, i.e., Behler−Parrinello neural network (BPNN, <a href="https://doi.org/10.1103/PhysRevLett.98.146401">Phys. Rev. Lett. 2007, 98, 146401</a>), PiNet (<a href="https://doi.org/10.1021/acs.jcim.9b00994">J. Chem. Inf. Model. 2020, 60, 1184−1193</a>), and PiNet2-P3. The BPNN and PiNet only involve invariant features, whereas PiNet2-P3 incorporates equivariant information as well. Generally speaking, the training loss of PiNet2-P3 is lower than that of BPNN/PiNet. Before training the MLPs, it is essential to define the model architecture and set corresponding parameters. In this case, we will use PiNet2-P3 as an example. You can also use following functions to know which networks and models are available.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pinn</span>
+<span class="n">pinn</span><span class="o">.</span><span class="n">get_available_networks</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Available networks:
+  - PiNet
+  - PiNet2
+  - BPNN
+  - LJ
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can find detailed information about the parameters of both the <code>model</code> and the <code>network</code> on their respective pages under the <code>Usage</code> tab. These sections provide comprehensive guidance on how to configure and implement them effectively for your specific applications. Here is the configuration file for training water model:</p>
 </div>
 </div>
 </div>
@@ -368,7 +400,7 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
         <span class="s2">&quot;use_e_per_atom&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;use_force&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,}},</span>
     <span class="s2">&quot;network&quot;</span><span class="p">:</span>
-      <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NewPiNet2&quot;</span><span class="p">,</span>
+      <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;PiNet2&quot;</span><span class="p">,</span>
       <span class="s2">&quot;params&quot;</span><span class="p">:</span>
         <span class="p">{</span><span class="s2">&quot;atom_types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
         <span class="s2">&quot;basis_type&quot;</span><span class="p">:</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>

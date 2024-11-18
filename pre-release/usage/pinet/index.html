@@ -373,7 +373,7 @@
     <div id="content">
       <h1 id="the-pinet-network">The PiNet network</h1>
 <p>The PiNet network implements the network architecture described in our
-paper.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> The network architecture features the
+paper.[@2020_ShaoHellstroemEtAl] The network architecture features the
 graph-convolution which recursively generates atomic properties from local
 environment. One distinctive feature of PiNet is that the convolution operation
 is realized with pairwise functions whose form are determined by the pair,
@@ -410,6 +410,22 @@ each pair of atoms, indexed by <span class="arithmatex">\(i,j\)</span>; <span cl
 feature vectors indexed by <span class="arithmatex">\(i\)</span> for the atom, and <span class="arithmatex">\(\alpha\)</span> for the channel. The
 equations that explain each of the above layers and the hyperparameters
 available for the PiNet network are detailed below.</p>
+<p>The parameters for <code>PiNet</code> are outlined in the network specification and can be applied in the configuration file as shown in the following snippet:</p>
+<div class="highlight"><pre><span></span><code>&quot;network&quot;: {
+    &quot;name&quot;: &quot;PiNet&quot;,
+    &quot;params&quot;: {
+        &quot;atom_types&quot;: [1, 8],
+        &quot;basis_type&quot;: &quot;gaussian&quot;,
+        &quot;depth&quot;: 5,
+        &quot;ii_nodes&quot;: [16, 16, 16, 16],
+        &quot;n_basis&quot;: 10,
+        &quot;out_nodes&quot;: [16],
+        &quot;pi_nodes&quot;: [16],
+        &quot;pp_nodes&quot;: [16, 16, 16, 16],
+        &quot;rc&quot;: 6.0,
+    }
+},
+</code></pre></div>
 <h2 id="network-specification">Network specification</h2>
 <h3 id="pinetpinet">pinet.PiNet</h3>
 
@@ -2933,13 +2949,6 @@ layer that scales the outputs, specified by <code>out_units</code>.</p>
 
     </div>
 
-</div><div class="footnote">
-<hr />
-<ol>
-<li id="fn:1">
-<p><sup>1</sup> Y. Shao, M. Hellström, P.D. Mitev, L. Knijff, and C. Zhang, “<a href="https://doi.org/10.1021/acs.jcim.9b00994">PiNN: A python library for building atomic neural networks of molecules and materials</a>,” J. Chem. Inf. Model. <strong>60</strong>, 1184–1193 (2020).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
-</li>
-</ol>
 </div>
     </div>
 

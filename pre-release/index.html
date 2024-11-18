@@ -235,10 +235,7 @@
 
     <div id="content">
       <h1 id="introduction">Introduction</h1>
-<p>PiNN is a Python library built on top of TensorFlow for building atomic neural
-networks (ANNs). The primary usage of PiNN is to build and train ANN interatomic
-potentials, but PiNN is also capable of predicting physical and chemical
-properties of molecules and materials.</p>
+<p>PiNN stands for pair-wise interaction neural network, a Python library built on top of TensorFlow for performing atomistic ML tasks. Besides training ML interatomic potentials, PiNN can also predict physical and chemical properties of molecules and materials (e.g. dipole moment and polarizability). It can be used together with the adaptive learn-on-the-fly plugin PiNNAcLe<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> and the heterogeneous electrode plugin PiNNwall<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> for modelling electrochemical systems.</p>
 <h2 id="flexibility">Flexibility</h2>
 <p><img alt="" src="images/implement.png" width="600" /></p>
 <p>PiNN is built with modularized components, and we try to make it as easy as
@@ -277,6 +274,17 @@ Chem. Inf. Model., 60:1184–1193, January 2020. doi:10.1021/acs.jcim.9b00994.</
 <span class="p">}</span>
 </code></pre></div>
 </details>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><sup>1</sup> Y. Shao, and C. Zhang, “<a href="https://arxiv.org/abs/2409.08886">PiNNAcLe: Adaptive learn-on-the-fly algorithm for machine-learning potential</a>,” (2024).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><sup>1</sup> T. Dufils, L. Knijff, Y. Shao, and C. Zhang, “<a href="https://doi.org/10.1021/acs.jctc.3c00359">PiNNwall: Heterogeneous electrode models from integrating machine learning and atomistic simulation</a>,” Journal of Chemical Theory and Computation <strong>19</strong>(15), 5199–5209 (2023).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
     </div>
 
   </div>

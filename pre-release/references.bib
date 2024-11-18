@@ -49,16 +49,19 @@
   language = {en},
 }
 
-@Article{2020_ShaoHellstroemEtAl,
-  author    = {Y. Shao and M. Hellström and P. D. Mitev and L. Knijff and C. Zhang},
-  journal   = {J. Chem. Inf. Model.},
-  title     = {{PiNN}: A Python Library for Building Atomic Neural Networks of Molecules and Materials},
-  year      = {2020},
-  month     = jan,
-  pages     = {1184--1193},
-  volume    = {60},
-  doi       = {10.1021/acs.jcim.9b00994},
-  publisher = {American Chemical Society ({ACS})},
+@article{Shao_2022,
+doi = {10.1088/2516-1075/ac59ca},
+url = {https://dx.doi.org/10.1088/2516-1075/ac59ca},
+year = {2022},
+month = {mar},
+publisher = {IOP Publishing},
+volume = {4},
+number = {1},
+pages = {014012},
+author = {Yunqi Shao and Linnéa Andersson and Lisanne Knijff and Chao Zhang},
+title = {Finite-field coupling via learning the charge response kernel},
+journal = {Electronic Structure},
+abstract = {Response of the electronic density at the electrode–electrolyte interface to the external field (potential) is fundamental in electrochemistry. In density-functional theory, this is captured by the so-called charge response kernel (CRK). Projecting the CRK to its atom-condensed form is an essential step for obtaining the response charge of atoms. In this work, the atom-condensed CRK is learnt from the molecular polarizability using machine learning (ML) models and subsequently used for the response-charge prediction under an external field (potential). As the machine-learnt CRK shows a physical scaling of polarizability over the molecular size and does not (necessarily) require the matrix-inversion operation in practice, this opens up a viable and efficient route for introducing finite-field coupling in the atomistic simulation of electrochemical systems powered by ML models.}
 }
 
 @InProceedings{2016_HeZhangEtAl,
@@ -159,5 +162,34 @@ URL = {
     eprint = {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/5.0070931/13381878/204108\_1\_online.pdf},
 }
 
+@misc{shao2024pinnacleadaptivelearnontheflyalgorithm,
+      title={PiNNAcLe: Adaptive Learn-On-The-Fly Algorithm for Machine-Learning Potential}, 
+      author={Yunqi Shao and Chao Zhang},
+      year={2024},
+      eprint={2409.08886},
+      archivePrefix={arXiv},
+      primaryClass={cond-mat.stat-mech},
+      url={https://arxiv.org/abs/2409.08886}, 
+}
+
+@article{PiNNwall,
+author = {Dufils, Thomas and Knijff, Lisanne and Shao, Yunqi and Zhang, Chao},
+title = {PiNNwall: Heterogeneous Electrode Models from Integrating Machine Learning and Atomistic Simulation},
+journal = {Journal of Chemical Theory and Computation},
+volume = {19},
+number = {15},
+pages = {5199-5209},
+year = {2023},
+doi = {10.1021/acs.jctc.3c00359},
+    note ={PMID: 37477645},
+
+URL = { 
+  https://doi.org/10.1021/acs.jctc.3c00359
+},
+eprint = {   
+  https://doi.org/10.1021/acs.jctc.3c00359
+}
+
+}
 
 

@@ -373,7 +373,7 @@
     <div id="content">
       <h1 id="polarizability-model">Polarizability Model</h1>
 <p>The polarizability module PiNet2-<span class="arithmatex">\(\chi\)</span> implements different models to predict the charge response kernel (CRK)
-and polarizability tensor by fitting polarizability tensor data [@2020_Shao]. All models output the polarizability tensor <span class="arithmatex">\(\boldsymbol{\alpha}\)</span> and CRK <span class="arithmatex">\(\boldsymbol{\chi}\)</span>. The polarizability model requires the dictionary as output from the preprocess layer as input. Listed below are the <code>model_params</code> that can be set. The EEM <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">1</a></sup> and ACKS2 <sup id="fnref:3"><a class="footnote-ref" href="#fn:3">2</a></sup> models are based on the
+and polarizability tensor by fitting polarizability tensor data <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. All models output the polarizability tensor <span class="arithmatex">\(\boldsymbol{\alpha}\)</span> and CRK <span class="arithmatex">\(\boldsymbol{\chi}\)</span>. The polarizability model requires the dictionary as output from the preprocess layer as input. Listed below are the <code>model_params</code> that can be set. The EEM <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> and ACKS2 <sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup> models are based on the
 Coulomb kernel and have support for Ewald summation if the Ewald parameters are set and <code>cell</code> 
 is specified in the input data. The EEM and EtaInv models can in addition to polarizability be 
 trained on the egap. </p>
@@ -1666,11 +1666,14 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 </div><div class="footnote">
 <hr />
 <ol>
+<li id="fn:1">
+<p><sup>1</sup> Y. Shao, L. Andersson, L. Knijff, and C. Zhang, “<a href="https://doi.org/10.1088/2516-1075/ac59ca">Finite-field coupling via learning the charge response kernel</a>,” Electronic Structure <strong>4</strong>(1), 014012 (2022).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
 <li id="fn:2">
-<p><sup>1</sup> W.J. Mortier, K. Van Genechten, and J. Gasteiger, “<a href="https://pubs.acs.org/doi/10.1021/ja00290a017">Electronegativity equalization: Application and parametrization</a>,” J. Am. Chem. Soc. <strong>107</strong>(4), 829–835 (1985).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p><sup>1</sup> W.J. Mortier, K. Van Genechten, and J. Gasteiger, “<a href="https://pubs.acs.org/doi/10.1021/ja00290a017">Electronegativity equalization: Application and parametrization</a>,” J. Am. Chem. Soc. <strong>107</strong>(4), 829–835 (1985).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:3">
-<p><sup>1</sup> T. Verstraelen, P.W. Ayers, V.V. Speybroeck, and M. Waroquier, “<a href="https://doi.org/10.1063/1.4791569">ACKS2: Atom-condensed kohn-sham DFT approximated to second order</a>,” J. Chem. Phys. <strong>138</strong>(7), 074108 (2013).&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+<p><sup>1</sup> T. Verstraelen, P.W. Ayers, V.V. Speybroeck, and M. Waroquier, “<a href="https://doi.org/10.1063/1.4791569">ACKS2: Atom-condensed kohn-sham DFT approximated to second order</a>,” J. Chem. Phys. <strong>138</strong>(7), 074108 (2013).&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

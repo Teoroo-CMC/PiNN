@@ -386,6 +386,24 @@
 <li><span class="arithmatex">\(x,y,z\)</span>: Cartesian coordinate indices.</li>
 </ul>
 <p>The number in the upper left of a variable denotes its dimension. For instance, <span class="arithmatex">\({}^{3}\mathbb{P}^{t}_{ix\zeta}\)</span> represents a property in <span class="arithmatex">\(\mathbb{R}^3\)</span>, where <span class="arithmatex">\(x\)</span> indicates an index for the three spatial coordinates. Here, <span class="arithmatex">\(t\)</span> is an iterator, and <span class="arithmatex">\(t + 1\)</span> increments up to the total number of graph convolution (CG) blocks.</p>
+<p>The parameters for <code>PiNet2</code> are outlined in the network specification and can be applied in the configuration file as shown in the following snippet:</p>
+<div class="highlight"><pre><span></span><code>&quot;network&quot;: {
+    &quot;name&quot;: &quot;PiNet2&quot;,
+    &quot;params&quot;: {
+        &quot;atom_types&quot;: [1, 8],
+        &quot;basis_type&quot;: &quot;gaussian&quot;,
+        &quot;depth&quot;: 5,
+        &quot;ii_nodes&quot;: [16, 16, 16, 16],
+        &quot;n_basis&quot;: 10,
+        &quot;out_nodes&quot;: [16],
+        &quot;pi_nodes&quot;: [16],
+        &quot;pp_nodes&quot;: [16, 16, 16, 16],
+        &quot;rank&quot;: 3,
+        &quot;rc&quot;: 6.0,
+        &quot;weighted&quot;: False
+    }
+},
+</code></pre></div>
 <h2 id="network-specification">Network specification</h2>
 <h3 id="pinet2pinet2">pinet2.PiNet2</h3>
 
