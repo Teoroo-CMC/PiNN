@@ -1,3 +1,9 @@
+# Migrating to PiNN 2.x
+
+Since version 2.x, a modularized design, **PiNet2**, has been implemented for equivariant atomistic potential training. **PiNet2** is compatible with **PiNet1**, and you can use the `rank` parameter to specify the desired feature order. To use PiNet, you can either call `pinet` or use `pinet2(rank=2)`—both are functionally equivalent. However, trained models are not interchangeable between the two, meaning you will need to retrain your model if switching versions.
+
+A workflow using [Nextflow](https://www.nextflow.io/docs/latest/index.html) is also integrated, enabling model training on clusters via SLURM or other resource management systems. Examples can be found in the `nextflow.config` file and the [notebook](./notebooks/More_on_training.ipynb).
+
 # Migrating to PiNN 1.x (TF2)
 
 Since version 1.x, PiNN switched to TensorFlow 2 as a backend, this introduces

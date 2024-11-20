@@ -5,7 +5,7 @@
 PiNN follows the [PEP 440] scheme of versioning. Specifically, the
 versions are tagged as `major.minor.micro`.  `micro` updates with same
 `minor` version are expected to be backward-compactible, i.e., the
-models trained on old micro version can be used newer ones.  `minor`
+models trained on old `micro` version can be used newer ones.  `minor`
 updates can break backward-compatibility, if this happens it should be
 documented in this change log.
 
