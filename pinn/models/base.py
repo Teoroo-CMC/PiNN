@@ -90,8 +90,6 @@ def get_train_op(optimizer, metrics, tvars, separate_errors=False):
     optimizer.iterations = tf.compat.v1.train.get_or_create_global_step()
     nvars = np.sum([np.prod(var.shape) for var in tvars])
     print(f'{nvars} trainable vaiables, training with {tvars[0].dtype.name} precision.')
-    with open('n_trainable', 'w') as f:
-        f.write(f'{nvars}')
 
     if not (isinstance(optimizer, EKF) or isinstance(optimizer, gEKF)):
         loss_list =  metrics.LOSS
