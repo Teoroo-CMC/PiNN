@@ -1,6 +1,6 @@
 # Dipole Model
 
-The dipole model[@Shao_2022] requires the same dictionary as input as the potential model.
+The dipole model[@Knijff_2021] requires the same dictionary as input as the potential model.
 The only difference is the ``model_params`` that can be set. They are listed below
 along with their default values.
 
