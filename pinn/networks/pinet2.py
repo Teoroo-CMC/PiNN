@@ -136,7 +136,7 @@ class ScaleLayer(tf.keras.layers.Layer):
     def __init__(self, **kwargs):
         super(ScaleLayer, self).__init__()
 
-    def __call__(self, tensor):
+    def call(self, tensor):
         """
         Args:
             tensor (list of tensors): list of `[tensor, scalar]` tensors
