@@ -807,8 +807,8 @@ atomic dipole predictions:</p>
         <span class="n">dipole</span> <span class="o">*=</span> <span class="n">model_params</span><span class="p">[</span><span class="s1">&#39;d_unit&#39;</span><span class="p">]</span>
 
         <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="c1">#&#39;dipole&#39;: dipole,</span>
-            <span class="s1">&#39;atomic_d&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="s1">&#39;dipole&#39;</span><span class="p">:</span> <span class="n">dipole</span>
+            <span class="c1">#&#39;atomic_d&#39;: tf.expand_dims(p3, 0)</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
             <span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
