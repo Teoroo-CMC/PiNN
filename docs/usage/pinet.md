@@ -46,6 +46,25 @@ feature vectors indexed by $i$ for the atom, and $\alpha$ for the channel. The
 equations that explain each of the above layers and the hyperparameters
 available for the PiNet network are detailed below.
 
+The parameters for `PiNet` are outlined in the network specification and can be applied in the configuration file as shown in the following snippet:
+
+```
+"network": {
+    "name": "PiNet",
+    "params": {
+        "atom_types": [1, 8],
+        "basis_type": "gaussian",
+        "depth": 5,
+        "ii_nodes": [16, 16, 16, 16],
+        "n_basis": 10,
+        "out_nodes": [16],
+        "pi_nodes": [16],
+        "pp_nodes": [16, 16, 16, 16],
+        "rc": 6.0,
+    }
+},
+```
+
 ## Network specification
 
 ### pinet.PiNet

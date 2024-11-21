@@ -162,7 +162,7 @@ def test_input_yml():
             },
         },
         "network": {
-            "name": "NewPiNet2",
+            "name": "PiNet2",
             "params": {
                 "depth": 5,
                 "rc": 4.5,
