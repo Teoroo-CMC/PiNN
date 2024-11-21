@@ -93,8 +93,8 @@ def AD_dipole_model(features, labels, mode, params):
         dipole *= model_params['d_unit']
 
         predictions = {
-            #'dipole': dipole,
-            'atomic_d': tf.expand_dims(p3, 0)
+            'dipole': dipole
+            #'atomic_d': tf.expand_dims(p3, 0)
         }
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
