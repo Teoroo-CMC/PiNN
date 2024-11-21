@@ -234,7 +234,10 @@
     </div>
 
     <div id="content">
-      <h1 id="migrating-to-pinn-1x-tf2">Migrating to PiNN 1.x (TF2)</h1>
+      <h1 id="migrating-to-pinn-2x">Migrating to PiNN 2.x</h1>
+<p>Since version 2.x, a modularized design, <strong>PiNet2</strong>, has been implemented for equivariant atomistic potential training. <strong>PiNet2</strong> is compatible with <strong>PiNet1</strong>, and you can use the <code>rank</code> parameter to specify the desired feature order. To use PiNet, you can either call <code>pinet</code> or use <code>pinet2(rank=2)</code>—both are functionally equivalent. However, trained models are not interchangeable between the two, meaning you will need to retrain your model if switching versions.</p>
+<p>A workflow using <a href="https://www.nextflow.io/docs/latest/index.html">Nextflow</a> is also integrated, enabling model training on clusters via SLURM or other resource management systems. Examples can be found in the <code>nextflow.config</code> file and the <a href="../notebooks/More_on_training/">notebook</a>.</p>
+<h1 id="migrating-to-pinn-1x-tf2">Migrating to PiNN 1.x (TF2)</h1>
 <p>Since version 1.x, PiNN switched to TensorFlow 2 as a backend, this introduces
 changes to the API. This document provides information for the changes and
 guides for migration.</p>
@@ -269,7 +272,7 @@ interpret the predictions of PiNN networks as physical quantities and interface
 them to atomic simulation packages.</p>
 <p><strong>Models</strong>:
 new helper function <code>export_mode</code> and class <code>MetricsCollector</code> are implemented to
-simplify the implementation of models, see the source of <a href="https://github.com/Teoroo-CMC/PiNN/blob/TF2/pinn/models/dipole.py">dipole
+simplify the implementation of models, see the source of <a href="https://github.com/Roy-Kid/PiNN/blob/master/pinn/models/dipole.py">dipole
 model</a> for an
 example.</p>
 <h2 id="breaking-changes">Breaking changes</h2>

@@ -431,6 +431,33 @@ pinn<span class="w"> </span>train<span class="w"> </span>-d<span class="w"> </sp
 <p>The above command takes a trajectory file <code>data.traj</code>, and splits it into two
 datasets. Then it takes the parameters from <code>params.yml</code>, and trains a model
 in the <code>model</code> directory.</p>
+<h2 id="using-nextflow">Using nextflow</h2>
+<p>Nextflow enables parallel training of multiple models on a cluster, maximizing the efficient use of computational resources. Follow the steps below to get started:</p>
+<ol>
+<li>
+<p><strong>Install Nextflow</strong><br />
+   Ensure Nextflow is installed. You can find the installation instructions in the <a href="https://www.nextflow.io/docs/latest/install.html">Nextflow documentation</a>.</p>
+</li>
+<li>
+<p><strong>Set Up Configuration</strong><br />
+   Configure your cluster settings in the <code>nextflow.config</code> file. Examples are provided in this file to help you get started.</p>
+</li>
+<li>
+<p><strong>Define Your Data Pipeline</strong><br />
+   Add your data-loading pipeline in <code>nextflow/datasets.nf</code>.</p>
+</li>
+<li>
+<p><strong>Prepare Your Workflow</strong><br />
+   Define your workflow in <code>nextflow/main.nf</code>. For most tasks, you can reuse the existing processes provided.</p>
+</li>
+<li>
+<p><strong>Run the Workflow</strong><br />
+   Execute the workflow with the following command:<br />
+   <div class="highlight"><pre><span></span><code>nextflow<span class="w"> </span>run<span class="w"> </span>/path/nextflow.config<span class="w"> </span>-profile<span class="w"> </span>alvis,pinet2_qm9_dipole<span class="w"> </span>-w<span class="w"> </span>/path/work_dir
+</code></pre></div></p>
+</li>
+</ol>
+<p>Nextflow will now run in the foreground. To avoid interruptions if you close the terminal, it’s recommended to run Nextflow in a <code>tmux</code> session or use the <code>-bg</code> option to run it in the background. For more details, refer to the <a href="https://www.nextflow.io/docs/latest/reference/cli.html">CLI reference</a>.</p>
 <h2 id="monitoring">Monitoring</h2>
 <p>PiNN uses TensorFlow as a backend for training, which means the training log can 
 be monitored in real time using Tensorboard:
