@@ -1,0 +1,554 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Custom Data - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../usage/overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../usage/overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > Tutorials </a>
+  
+    
+    <li >
+      <a href="../Quick_tour/" class="">
+        Quick Start
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../More_on_training/" class="">
+        Training Tips
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Examples </a>
+  
+    
+    <li class="active">
+      <a href="./" class="">
+        Custom Data
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../Learn_LJ_potential/" class="">
+        LJ Potential
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../Build_MLP_Water/" class="">
+        ML Potential
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Develop </a>
+  
+    
+    <li >
+      <a href="../Layer_debug/" class="">
+        Layer Debug
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="customizing-dataset">Customizing dataset <a href="https://colab.research.google.com/github/Teoroo-CMC/PiNN/blob/master/docs/notebooks/Customizing_dataset.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="c1"># Install PiNN</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="data-list-dataset">Data list dataset</h2>
+<p>Suppose your dataset can be represented as a list and each data point can 
+be accessed separately with some function.</p>
+<p>The list dataset descriptor helps you to transform your reader function to 
+a dataset loader, with handy options to split your dataset.
+The list can be your list of filenames of structures, or identifiers to 
+retrieve your data points, e.g. ID from some online database.</p>
+<p>The advantage of this approach is that you only need to write the reader for 
+one data point, 
+and you can get the tensorflow dataset objects with reasonably optimized IO.
+Later, it's also easy to convert your dataset into the TFRecord format 
+if you need to train on the cloud or further improve the performance.</p>
+<p>We'll demonstrate with a list of ASE atoms.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="n">datalist</span> <span class="o">=</span> <span class="p">[</span><span class="n">Atoms</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">]]</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For the purpose of training ANN potentials, you typically need to provide the 
+elements, coordinates and potential energy of a struture. </p>
+<p>Your reader function should take one list element as input, 
+and return a dictionary consisting of:</p>
+<ul>
+<li><code>'atoms'</code>: the elements of shape [n_atoms]</li>
+<li><code>'coord'</code>: the coordinates of shape [n_atoms, 3]</li>
+<li><code>'e_data'</code>: a single number</li>
+</ul>
+<p>After you have got your reader function, decorate it with the <code>list_loader</code>
+decorator to transform it into a dataset loader.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+
+<span class="nd">@list_loader</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">load_ase_list</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">datum</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
+            <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span>
+            <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">datum</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That's it, you've got your customized dataset!</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ase_list</span><span class="p">(</span><span class="n">datalist</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">tensors</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0}
+{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0}
+{'elems': array([79], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0}
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="force-and-cell">Force and cell</h2>
+<p>By default, the list loader expects the loader to return the elements, coordinates and 
+total energy of each structure. It is also usual to have nuclei forces and pbc in the training data.</p>
+<p>The default behavior of list_loader can be changed with the <code>pbc</code> and <code>force</code> options.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="nd">@list_loader</span><span class="p">(</span><span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_ase_list</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
+            <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span>
+            <span class="s1">&#39;cell&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[:],</span> <span class="c1"># get full cell from ASE</span>
+            <span class="s1">&#39;f_data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">),</span>
+            <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ase_list</span><span class="p">(</span><span class="n">datalist</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">tensors</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.],
+       [0., 0., 0.],
+       [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)}
+{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.],
+       [0., 0., 0.],
+       [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)}
+{'elems': array([79], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.],
+       [0., 0., 0.],
+       [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)}
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="dataset-spec">Dataset Spec</h2>
+<p>For even more complex dataset structures, you can instead supply a dataset specification
+to build your list loader.
+Note that the dataset is always expected to be 
+a dictionary of tensors.</p>
+<p>For example, we add a molecular weight entry to the dataset here.
+The format dict should provide the shape and datatype of each 
+entry. 
+In the case that a certain dimension is unknow, e.g. the number of atoms,
+use <code>None</code> as the dimension.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>   <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]},</span>
+    <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[]},</span>
+    <span class="s1">&#39;mw_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
+
+<span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_ase_list</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
+            <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span>
+            <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;mw_data&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_masses</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">data</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ase_list</span><span class="p">(</span><span class="n">datalist</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">tensors</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 63.546}
+{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 107.8682}
+{'elems': array([79], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 196.96657}
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="loading-trajectories">Loading trajectories</h2>
+<p>It's rather common to have trajectories as training data. 
+However, trajectories are harder to handle compared to lists as 
+it's not trivial how many data points there are and how they should be split.</p>
+<p>One solution is to load all the data into the memory once.
+A more sophisticated solution is to quickly scan through the dataset and 
+get a list of "positions" which can be used to read a particular frame.</p>
+<p>You might want to look into <code>pinn.io.runner</code> or <code>pinn.io.cp2k</code>
+if you would like to implement something like that.</p>
+</div>
+</div>
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../More_on_training/" title="Training Tips"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../Learn_LJ_potential/" title="LJ Potential" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

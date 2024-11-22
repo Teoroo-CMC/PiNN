@@ -1,0 +1,506 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Quick Start - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../usage/overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../usage/overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > Tutorials </a>
+  
+    
+    <li class="active">
+      <a href="./" class="">
+        Quick Start
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../More_on_training/" class="">
+        Training Tips
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Examples </a>
+  
+    
+    <li >
+      <a href="../Customizing_dataset/" class="">
+        Custom Data
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../Learn_LJ_potential/" class="">
+        LJ Potential
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../Build_MLP_Water/" class="">
+        ML Potential
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Develop </a>
+  
+    
+    <li >
+      <a href="../Layer_debug/" class="">
+        Layer Debug
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="quick-tour-with-qm9">Quick tour with QM9 <a href="https://colab.research.google.com/github/Teoroo-CMC/PiNN/blob/master/docs/notebooks/Quick_tour.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></h1>
+<p>This notebook showcases a simple example of training a neural network potential on the QM9 dataset with PiNN.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="c1"># Install PiNN &amp;amp; download QM9 dataset</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+<span class="err">!</span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">dsgdb9nsd</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">ndownloader</span><span class="o">.</span><span class="n">figshare</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="mi">3195389</span> <span class="o">|</span> <span class="n">tar</span> <span class="n">xj</span> <span class="o">-</span><span class="n">C</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">dsgdb9nsd</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">ase.collections</span> <span class="kn">import</span> <span class="n">g2</span>
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_qm9</span><span class="p">,</span> <span class="n">sparse_batch</span>
+<span class="kn">from</span> <span class="nn">pinn</span> <span class="kn">import</span> <span class="n">get_model</span><span class="p">,</span> <span class="n">get_calc</span>
+<span class="c1"># CPU is used for documentation generation, feel free to use your GPU!</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> 
+<span class="c1"># We heavily use indexed slices to do sparse summations,</span>
+<span class="c1"># which causes tensorflow to complain, </span>
+<span class="c1"># we believe it&#39;s safe to ignore this warning.</span>
+<span class="n">index_warning</span> <span class="o">=</span> <span class="s1">&#39;Converting sparse IndexedSlices&#39;</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">index_warning</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="getting-the-dataset">Getting the dataset</h2>
+<p>PiNN adapts TensorFlow's dataset API to handle different datasets.</p>
+<p>For this and the following notebooks the QM9 dataset (https://doi.org/10.6084/m9.figshare.978904) is used.<br />
+To follow the notebooks, download the dataset and change the directory accordingly.</p>
+<p>The dataset will be automatically split into subsets according to the split_ratio.<br />
+Note that to use the dataset with the estimator, the datasets should be a function, instead of a dataset object.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/tmp/dsgdb9nsd/*.xyz&#39;</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">load_qm9</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+<span class="n">train</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">test</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="defining-the-model">Defining the model</h2>
+<p>In PiNN, models are defined at two levels: models and networks. </p>
+<ul>
+<li>A model (model_fn) defines the target, loss and training detail.</li>
+<li>A network defines the structure of the neural network.</li>
+</ul>
+<p>In this example, we will use the potential model, and the PiNet network.
+The configuration of a model is stored in a nested dictionary as shown below.
+Available options of the network and model can be found in the documentation.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">PiNet_QM9</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/PiNet_QM9&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PiNet&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s1">&#39;depth&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                  <span class="s1">&#39;rc&#39;</span><span class="p">:</span><span class="mf">4.0</span><span class="p">,</span>
+                  <span class="s1">&#39;atom_types&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+              <span class="p">},</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;potential_model&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">1e-3</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="configuring-the-training-process">Configuring the training process</h2>
+<p>The defined model is indeed a <a href="https://www.tensorflow.org/api_docs/python/tf/estimator/Estimator">tf.Estimator</a> object, thus, the training can be easily controlled</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">train_spec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">TrainSpec</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">eval_spec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EvalSpec</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="train-and-evaluate">Train and evaluate</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_spec</span><span class="p">,</span> <span class="n">eval_spec</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="using-the-model">Using the model</h2>
+<p>The trained model can be used as an ASE calculator.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ase.collections</span> <span class="kn">import</span> <span class="n">g2</span>
+<span class="kn">from</span> <span class="nn">pinn</span> <span class="kn">import</span> <span class="n">get_calc</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/PiNet_QM92&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PiNet&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s1">&#39;depth&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                  <span class="s1">&#39;rc&#39;</span><span class="p">:</span><span class="mf">4.0</span><span class="p">,</span>
+                  <span class="s1">&#39;atom_types&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+              <span class="p">},</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;potential_model&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">1e-3</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">calc</span> <span class="o">=</span> <span class="n">get_calc</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">]</span>
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">g2</span><span class="p">[</span><span class="s1">&#39;C2H4&#39;</span><span class="p">]</span>
+<span class="n">atoms</span><span class="o">.</span><span class="n">set_calculator</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
+<span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">(),</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="conclusion">Conclusion</h2>
+<p>You have trained your first PiNN model, though the accuracy is not so satisfying
+(RMSE=21 Hartree!). Also, the training speed is slow as it's limited by the IO and 
+pre-processing of data.  </p>
+<p>We will show in following notebooks that:</p>
+<ul>
+<li>Proper scaling of the energy will improve the accuracy of the model.</li>
+<li>The training speed can be enhanced by caching and pre-processing the data.</li>
+</ul>
+</div>
+</div>
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../overview/" title="Overview"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../More_on_training/" title="Training Tips" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

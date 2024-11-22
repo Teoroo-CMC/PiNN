@@ -1,0 +1,113 @@
+\documentclass[tikz,convert=pdf2svg]{standalone}
+
+\definecolor{mcdb}{HTML}{004488}
+\definecolor{mcdr}{HTML}{994455}
+\definecolor{mcdy}{HTML}{997700}
+\definecolor{mclb}{HTML}{6699CC}
+\definecolor{mclr}{HTML}{EE99AA}
+\definecolor{mcly}{HTML}{EECC66}
+
+\usetikzlibrary{shapes,arrows,positioning}
+\usepackage[fira]{fontsetup}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=mcdr,
+  filecolor=mcdr,
+  urlcolor=mcdr,
+}
+
+\begin{document}
+\begin{tikzpicture}[
+  hide/.style={text=gray,draw=gray},
+  ops/.style={fill=white,>=stealth,thick},
+  var/.style={rectangle,draw,thick,fill=white,minimum width=.5cm, minimum height=.5cm},
+  link/.style={thick, ->},
+  layer/.style={circle, draw,thick,fill=mclr,minimum size=.5cm,inner sep=0},
+  mlp/.pic={\draw[thick] (-135:0.25) ..controls (0,-.2) and (0,.2)..(45:0.25);},
+  pi/.pic={
+    \draw[thick] (-.25,0)--(0,0)
+    (0,0)..controls  (60:.15) .. ( 45:.25)
+    (0,0)..controls (-60:.15) .. (-45:.25);
+    \draw[thick,fill=white] (0,0) circle (.05cm);},
+  ip/.pic={
+    \draw[thick] (-.25,0)--(.25,0)
+    (0,0)..controls ( 120:.15) .. ( 135:.25)
+    (0,0)..controls (-120:.15) .. (-135:.25);
+    \draw[thick,fill=white] (0,0) circle (.05cm);},
+  ]
+
+  % block lines
+  \draw[black!30,densely dotted] (3,3.5)--(3,-1) (5,3.5)--(5,-2)
+                        (7,3.5)--(7,-1) (9,3.5)--(9,-1);
+  \draw[black!30,thick] (-3,3.5)--(-3,-2) (0,3.5)--(0,-2)
+               (1,3.5)--(1,-2) (11,3.5)--(11,-2)
+               (12,3.5)--(12,-2) (15,3.5)--(15,-2);
+
+  % block/layer annotations
+  \draw[<->,ops] (-3,-1.5)--(0,-1.5);
+  \draw[<->,ops] (1,-1.5)--(5,-1.5);
+  \draw[<->,ops] (5,-1.5)--(11,-1.5);
+  \draw[<->,ops] (12,-1.5)--(15,-1.5);
+  \node[ops,text=mcdb] at (-1.5,-.75) {\texttt{AtomicOneHot}};
+  \node[ops,text=mcdb,align=center] at (-1.5, 2.5) {\texttt{NeighborList}\\\&\,\texttt{RadialBasis}};
+  \node[ops,text=mcdr] at (2,-.75) {\texttt{PILayer}};
+  \node[ops,text=mcdr] at (4,-.75) {\texttt{IILayer}};
+  \node[ops,text=mcdr] at (6,-.75) {\texttt{IPLayer}};
+  \node[ops,text=mcdr,inner sep=0] at (8,-0.75) {\texttt{ResUpdate}};
+  \node[ops,text=mcdr] at (10,-0.75) {\texttt{PPLayer}};
+  \node[ops,text=mcdr] at (13.5,-0.75) {\texttt{OutLayer}};
+  \node[ops] at (-1.5,-1.5) {\textbf{Preprocess}};
+  \node[ops] at (3,-1.5) {\textbf{PI operation}};
+  \node[ops] at (8,-1.5) {\textbf{IP operation}};
+  \node[ops] at (13.5,-1.5) {\textbf{Output}};
+
+  % Graph representation
+  \node[var] at (1,0.5)  (v0) {$\mathbb{P}^{t}_{i\alpha}$};
+  \node[var] at (3,2.5)  (v1) {$\mathbb{I}'_{ij\beta}$};
+  \node[var] at (5,2.5)  (v2) {$\mathbb{I}^{t}_{ij\gamma}$};
+  \node[var] at (7,1.5)  (v3) {$\mathbb{P}'_{i\gamma}$};
+  \node[var] at (9,0.5)  (v4) {$\mathbb{P}''_{i\gamma}$};
+  \node[var] at (11,0.5) (v5) {$\mathbb{P}^{t+1}_{i\delta}$};
+  \node[var] at (15,1.5) (v6) {$\mathbb{P}^{\mathrm{out}}_{i\epsilon}$};
+  \node[var] at (-3,1.5) (v7) {$r_{ix}$};
+  \node[var] at (-3,0.5) (v8) {$Z_{i}$};
+  \node[var] at (0,1.5)  (v9) {$e_{ijb}$};
+  \node[var] at (0,0.5) (v10) {$\mathbb{P}^{0}_{i\alpha}$};
+
+  \draw (2,1.5) node[layer] (l0) {} pic {pi};
+  \draw (4,2.5) node[layer] (l1) {} pic {mlp};
+  \draw (6,1.5) node[layer] (l2) {} pic {ip};
+  \draw (8,0.5) node[layer] (l3) {$+$};
+  \draw (10,0.5) node[layer] (l4) {} pic {mlp} ;
+  \draw (13.25,1.5)node[layer] (l5) {} pic {mlp} ;
+  \node[layer, right=0 of l5] (l6) {$+$};
+  \draw[link] (v0)--(l0);
+  \draw[link] (v1)--(l1);
+  \draw[link] (v2)--(l2);
+  \draw[link] (v3)--(l3);
+  \draw[link] (v0)--(l3);
+  \draw[link] (v4)--(l4);
+  \draw[link] (v4)--(9,1.5)--(l5);
+  \draw[link] (l0)--(v1);
+  \draw[link] (l1)--(v2);
+  \draw[link] (l2)--(v3);
+  \draw[link] (l3)--(v4);
+  \draw[link] (l4)--(v5);
+  \draw[link] (l6)--(v6);
+
+  \draw[link] (v8)--(v10);
+  \draw[link] (v10)--(v0);
+  \draw[link] (v7)--(v9);
+  \draw[link] (v9)--(l0);
+
+  \draw[link] (v5)--++(0,-.75)-|(v0);
+
+\end{tikzpicture}
+\end{document}
+
+%%% Local Variables:
+%%% coding: utf-8
+%%% mode: latex
+%%% TeX-engine: xetex
+%%% End:

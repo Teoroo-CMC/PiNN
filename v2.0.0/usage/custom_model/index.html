@@ -1,0 +1,449 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Customize - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../quick_start/" class="">
+        Quick Start
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > IO </a>
+  
+    
+    <li >
+      <a href="../datasets/" class="">
+        Datasets
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Networks </a>
+  
+    
+    <li >
+      <a href="../networks/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../layers/" class="">
+        Layers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet/" class="">
+        PiNet
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet2/" class="">
+        PiNet2
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../bpnn/" class="">
+        BPNN
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Models </a>
+  
+    
+    <li >
+      <a href="../models/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../potential/" class="">
+        Potential
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../dipole/" class="">
+        Dipole
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li class="active">
+      <a href="./" class="">
+        Customize
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > CLI </a>
+  
+    
+    <li >
+      <a href="../cli/convert/" class="">
+        convert
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/train/" class="">
+        train
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/log/" class="">
+        log
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/report/" class="">
+        report
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Misc </a>
+  
+    
+    <li >
+      <a href="../optimizers/" class="">
+        Optimizers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../visualize/" class="">
+        Visualize
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="writing-a-pinn-model">Writing a PiNN model</h1>
+<p>Below is a simplified version of the potential model as a template to implement
+new models. See also the API Documentation of the helper functions.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.models.base</span> <span class="kn">import</span> <span class="n">export_model</span><span class="p">,</span> <span class="n">get_train_op</span><span class="p">,</span> <span class="n">MetricsCollector</span>
+
+<span class="nd">@export_model</span>
+<span class="k">def</span> <span class="nf">simple_potential_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Model function for neural network potentials&quot;&quot;&quot;</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">pinn</span><span class="o">.</span><span class="n">get_network</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">])</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">model_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model_params&#39;</span><span class="p">])</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">connect_dist_grad</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="n">train_op</span> <span class="o">=</span> <span class="n">get_train_op</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;optimizer&#39;</span><span class="p">],</span>
+                                <span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">,</span> <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">LOSS</span><span class="p">,</span>
+                                          <span class="n">eval_metric_ops</span><span class="o">=</span><span class="n">metrics</span><span class="o">.</span><span class="n">METRICS</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">PREDICT</span><span class="p">:</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="n">pred</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">make_metrics</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">MetricsCollector</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+    <span class="n">e_pred</span> <span class="o">=</span> <span class="n">pred</span>
+    <span class="n">e_data</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;e_data&#39;</span><span class="p">]</span>
+    <span class="n">e_mask</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">e_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;max_energy&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;max_energy&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">e_weight</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;e_loss_multiplier&#39;</span><span class="p">]</span>
+    <span class="n">e_weight</span> <span class="o">*=</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;e_weight&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;use_e_weight&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">metrics</span><span class="o">.</span><span class="n">add_error</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">e_data</span><span class="p">,</span> <span class="n">e_pred</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">e_mask</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">e_weight</span><span class="p">,</span>
+                      <span class="n">use_error</span><span class="o">=</span><span class="p">(</span><span class="ow">not</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;use_e_per_atom&#39;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">metrics</span>
+</code></pre></div>
+<p>In the above code, the optimizer is defined by a model function, a more detailed
+introduction to Estimators and model functions can be found in the TensorFlow 1
+documentation.</p>
+<p>The <code>MetricsCollector</code> object is a helper object in PiNN to handle different
+forms of errors. It helps to apply customized weights to errors, filter them and
+keep appropriate logs during the training and evaluation phases, see the API
+documentation for more details.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Models created in this way will not be accessible from the PiNN CLI and
+<code>pinn.get_model</code> (they must be created by a <code>model_fn(params)</code> call in a
+python script). A mechanism to include custom models might be available in a
+future version.</p>
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../polarizability/" title="Polarizability"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../cli/convert/" title="convert" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

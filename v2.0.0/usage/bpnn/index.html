@@ -1,0 +1,518 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>BPNN - PiNN</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <link rel="stylesheet" href="../../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../../css/extra.css" rel="stylesheet">
+  
+    <link href="../../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "../..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../../js/mike.js"></script>
+
+  
+    <script src="../../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="../.."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li  class="tab" >
+    <a href="../..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li class="active tab" >
+    <a href="../overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href="../overview/" class="">
+        Overview
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../quick_start/" class="">
+        Quick Start
+      </a>
+    </li>
+
+                 
+                   
+  <a class="nav-title" > IO </a>
+  
+    
+    <li >
+      <a href="../datasets/" class="">
+        Datasets
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Networks </a>
+  
+    
+    <li >
+      <a href="../networks/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../layers/" class="">
+        Layers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet/" class="">
+        PiNet
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../pinet2/" class="">
+        PiNet2
+      </a>
+    </li>
+
+  
+    
+    <li class="active">
+      <a href="./" class="">
+        BPNN
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Models </a>
+  
+    
+    <li >
+      <a href="../models/" class="">
+        Overview
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../potential/" class="">
+        Potential
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../dipole/" class="">
+        Dipole
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../custom_model/" class="">
+        Customize
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > CLI </a>
+  
+    
+    <li >
+      <a href="../cli/convert/" class="">
+        convert
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/train/" class="">
+        train
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/log/" class="">
+        log
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../cli/report/" class="">
+        report
+      </a>
+    </li>
+
+  
+
+                 
+                   
+  <a class="nav-title" > Misc </a>
+  
+    
+    <li >
+      <a href="../optimizers/" class="">
+        Optimizers
+      </a>
+    </li>
+
+  
+    
+    <li >
+      <a href="../visualize/" class="">
+        Visualize
+      </a>
+    </li>
+
+  
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="the-behler-parrinello-neural-network">The Behler-Parrinello Neural Network</h1>
+<h2 id="introduction">Introduction</h2>
+<p>Behler-Parrinello Neural Network<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> (BPNN) is an ANN
+architecture developed by Jörg Behler and Micheler Parrinello. It features the
+description of atomic environments with the so called symmetry functions (SFs)
+and the usage of element specific neural network for atomic energies.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The symmetry functions (SFs) are defined according to the Behler's
+tutorial review on neural network potentials in 2015.<sup id="fnref2:2"><a class="footnote-ref" href="#fn:2">2</a></sup> Note
+that the naming of symmetry functions is different in the original paper.
+<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+</div>
+<h2 id="parameters">Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sf_spec</td>
+<td></td>
+<td>symmetry function specification</td>
+</tr>
+<tr>
+<td>nn_spec</td>
+<td></td>
+<td>neural network specification</td>
+</tr>
+<tr>
+<td>rc</td>
+<td></td>
+<td>cutoff radius</td>
+</tr>
+<tr>
+<td>act</td>
+<td><code>'tanh'</code></td>
+<td>actication function</td>
+</tr>
+<tr>
+<td>cutoff_type</td>
+<td><code>'f1'</code></td>
+<td>'f1' or 'f2' <sup id="fnref:f2"><a class="footnote-ref" href="#fn:f2">3</a></sup></td>
+</tr>
+<tr>
+<td>fp_range</td>
+<td><code>[]</code></td>
+<td>speficies the range of atomic fingerprints, see below</td>
+</tr>
+<tr>
+<td>fp_scale</td>
+<td><code>False</code></td>
+<td>scales the atomic fingerprints according to fp_range</td>
+</tr>
+<tr>
+<td>preprocess</td>
+<td><code>False</code></td>
+<td>run in preprocess mode</td>
+</tr>
+<tr>
+<td>use_jacobian</td>
+<td><code>True</code></td>
+<td>compute Jacobians of fps w.r.t coordiniates to speed up force training</td>
+</tr>
+<tr>
+<td>out_units</td>
+<td>1</td>
+<td>dimension of outputs</td>
+</tr>
+<tr>
+<td>out_pool</td>
+<td><code>False</code></td>
+<td><code>min</code>, <code>max</code> or <code>sum</code>, pool atomic outputs to give global predictions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-sf_spec">Example <code>sf_spec</code></h2>
+<div class="highlight"><pre><span></span><code><span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;G2&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> 
+  <span class="s1">&#39;Rs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">],</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">]},</span>
+ <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;G2&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s1">&#39;Rs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">],</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">]},</span>
+ <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;G4&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="s1">&#39;lambd&#39;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;zeta&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">],</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">]}]</span>
+</code></pre></div>
+<h2 id="preprocessing-the-sfs">Preprocessing the SFs</h2>
+<p>The computation of angular BP symmetry functions is costly, especially when
+training a BPNN potential with force labels. The process can be greatly
+accelerated by caching the SFs and the derivative of those SFs with respect to
+the input coordinates.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Write a preprocessed </span>
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">write_tfrecord</span> 
+<span class="n">ds</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># load dataset here</span>
+<span class="n">bpnn</span> <span class="o">=</span> <span class="n">BPNN</span><span class="p">(</span><span class="o">**</span><span class="n">network_params</span><span class="p">)</span>
+<span class="n">write_tfrecord</span><span class="p">(</span><span class="s1">&#39;ds_pre.yml&#39;</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">bpnn</span><span class="o">.</span><span class="n">preprocess</span><span class="p">))</span>
+</code></pre></div>
+<p>It's worth noting that the SFs can occupy large disk space. To work around this,
+you can cache the pre-computed SFs in memory or (when that's not feasible) in a
+scratch file with TensorFlow's dataset API.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Caching the dataset in memory</span>
+<span class="n">ds_cached</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">bpnn</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span> 
+<span class="c1"># Or in a local scratch file </span>
+<span class="n">ds_cached</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">bpnn</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="s1">&#39;/tmp/scratch&#39;</span><span class="p">)</span> 
+</code></pre></div>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><sup>1</sup> J. Behler, and M. Parrinello, “<a href="https://doi.org/10.1103/physrevlett.98.146401">Generalized neural-network representation of high-dimensional potential-energy surfaces</a>,” Phys. Rev. Lett. <strong>98</strong>, (2007).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><sup>1</sup> J. Behler, “<a href="https://doi.org/10.1002/qua.24890">Constructing high-dimensional neural network potentials: A tutorial review</a>,” Int. J. Quantum Chem. <strong>115</strong>, 1032–1050 (2015).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:f2">
+<p>The f2 cutoff function is scaled by a factor of <span class="arithmatex">\(\mathrm{tanh}(1)^{-3}\)</span> as
+compared to the original form in <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>, so that the function
+asymptotically equals 1 when <span class="arithmatex">\(r_{ij}\)</span> approaches <span class="arithmatex">\(0\)</span>.&#160;<a class="footnote-backref" href="#fnref:f2" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../pinet2/" title="PiNet2"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../models/" title="Overview" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>
