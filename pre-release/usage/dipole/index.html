@@ -538,8 +538,7 @@ atomic charge predictions:</p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/AC.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 58</span>
-<span class="normal"> 59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 59</span>
 <span class="normal"> 60</span>
 <span class="normal"> 61</span>
 <span class="normal"> 62</span>
@@ -609,7 +608,8 @@ atomic charge predictions:</p>
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="normal">129</span>
+<span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
 <span class="k">def</span> <span class="nf">AC_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The atomic charge (AC) dipole model constructs the dipole moment from </span>
 <span class="sd">    atomic charge predictions:</span>
@@ -705,8 +705,7 @@ atomic dipole predictions:</p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/AD.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 47</span>
-<span class="normal"> 48</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 48</span>
 <span class="normal"> 49</span>
 <span class="normal"> 50</span>
 <span class="normal"> 51</span>
@@ -758,7 +757,8 @@ atomic dipole predictions:</p>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
-<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="normal">100</span>
+<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
 <span class="k">def</span> <span class="nf">AD_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The atomic dipole (AD) dipole model constructs the dipole moment from </span>
 <span class="sd">    atomic dipole predictions:</span>
@@ -837,8 +837,7 @@ constructs the dipole moment from atomic pairwise interactions:</p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/BC_R.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 52</span>
-<span class="normal"> 53</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 53</span>
 <span class="normal"> 54</span>
 <span class="normal"> 55</span>
 <span class="normal"> 56</span>
@@ -908,7 +907,8 @@ constructs the dipole moment from atomic pairwise interactions:</p>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="normal">123</span>
+<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
 <span class="k">def</span> <span class="nf">BC_R_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The bond charge dipole model with regularization (BC(R))</span>
 <span class="sd">    constructs the dipole moment from atomic pairwise interactions:</span>
@@ -1005,8 +1005,7 @@ state charges:</p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/AD_OS.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 50</span>
-<span class="normal"> 51</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 51</span>
 <span class="normal"> 52</span>
 <span class="normal"> 53</span>
 <span class="normal"> 54</span>
@@ -1069,7 +1068,8 @@ state charges:</p>
 <span class="normal">111</span>
 <span class="normal">112</span>
 <span class="normal">113</span>
-<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
 <span class="k">def</span> <span class="nf">AD_OS_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The atomic dipole with oxidation state term (AD(OS)) dipole model </span>
 <span class="sd">    constructs the dipole moment from atomic dipole predictions and oxidation</span>
@@ -1158,8 +1158,7 @@ atomic dipole predictions and atomic charge predictions:</p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/AC_AD.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 56</span>
-<span class="normal"> 57</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 57</span>
 <span class="normal"> 58</span>
 <span class="normal"> 59</span>
 <span class="normal"> 60</span>
@@ -1234,7 +1233,8 @@ atomic dipole predictions and atomic charge predictions:</p>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="normal">132</span>
+<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
 <span class="k">def</span> <span class="nf">AC_AD_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The AC+AD  dipole model constructs the dipole moment from </span>
 <span class="sd">    atomic dipole predictions and atomic charge predictions:</span>
@@ -1336,8 +1336,7 @@ atomic charge predictions and atomic pairwise interactions:</p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/AC_BC_R.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 62</span>
-<span class="normal"> 63</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 63</span>
 <span class="normal"> 64</span>
 <span class="normal"> 65</span>
 <span class="normal"> 66</span>
@@ -1433,7 +1432,8 @@ atomic charge predictions and atomic pairwise interactions:</p>
 <span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
-<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="normal">159</span>
+<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
 <span class="k">def</span> <span class="nf">AC_BC_R_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The AC+BC(R) constructs the dipole moment from </span>
 <span class="sd">    atomic charge predictions and atomic pairwise interactions:</span>
@@ -1556,8 +1556,7 @@ atomic dipole predictions and atomic pairwise interactions:</p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/AD_BC_R.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 54</span>
-<span class="normal"> 55</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 55</span>
 <span class="normal"> 56</span>
 <span class="normal"> 57</span>
 <span class="normal"> 58</span>
@@ -1626,7 +1625,8 @@ atomic dipole predictions and atomic pairwise interactions:</p>
 <span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
-<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_model</span>
 <span class="k">def</span> <span class="nf">AD_BC_R_dipole_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The AD+BC(R) constructs the dipole moment from </span>
 <span class="sd">    atomic dipole predictions and atomic pairwise interactions:</span>
