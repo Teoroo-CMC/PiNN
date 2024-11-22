@@ -20,6 +20,7 @@ import tensorflow as tf
 from pinn import get_network
 from pinn.utils import pi_named
 from pinn.models.base import export_model, get_train_op, MetricsCollector
+from pinn.utils import count_atoms
 
 default_params = {
     ### Scaling and units

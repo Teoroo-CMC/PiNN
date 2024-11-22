@@ -49,7 +49,7 @@ them to atomic simulation packages.
 **Models**:
 new helper function `export_mode` and class `MetricsCollector` are implemented to
 simplify the implementation of models, see the source of [dipole
-model](https://github.com/Roy-Kid/PiNN/blob/master/pinn/models/dipole.py) for an
+model](https://github.com/Teoroo-CMC/PiNN/blob/master/pinn/models/dipole.py) for an
 example.
 
 ## Breaking changes
