@@ -674,7 +674,13 @@ done
 <div class="input">
 
 <div class="highlight"><pre><span></span><code><span class="err">!</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ase</span>
-<span class="err">!</span> <span class="n">cp</span> <span class="o">../</span><span class="n">water</span><span class="o">.</span><span class="n">xyz</span> <span class="o">./</span><span class="n">MLP_Water</span><span class="o">/</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="k">with</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/Teoroo-CMC/PiNN/refs/heads/master/docs/notebooks/MLP_Water/water.xyz&quot;</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;water.xyz&quot;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+<span class="err">!</span> <span class="n">cp</span> <span class="n">water</span><span class="o">.</span><span class="n">xyz</span> <span class="n">MLP_Water</span>
 </code></pre></div>
 
 </div>
