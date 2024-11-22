@@ -6,9 +6,10 @@ model is also capable of fitting and predicting forces and stresses.
 """
 import numpy as np
 import tensorflow as tf
+
 from pinn import get_network
-from pinn.utils import pi_named, atomic_dress, connect_dist_grad
-from pinn.models.base import export_model, get_train_op, MetricsCollector
+from pinn.models.base import MetricsCollector, export_model, get_train_op
+from pinn.utils import atomic_dress, connect_dist_grad, pi_named
 
 default_params = {
     ### Scaling and units # The loss function will be MSE((pred - label) * scale)

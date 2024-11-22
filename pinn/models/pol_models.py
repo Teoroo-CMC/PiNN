@@ -15,15 +15,19 @@ The code is upgraded for PiNet2 from the original PiNet-chi implementation by Yu
 """This file implements implements helper functions for pol_models. The code is updated for PiNet2 from the original PiNet-chi implementation by Yunqi Shao.
 """
 
-import os, pinn, warnings
+import os
+import warnings
+
+import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+
+import pinn
 import pinn.networks
-import matplotlib.pyplot as plt
 from pinn import get_network
-from pinn.utils import pi_named
-from pinn.models.base import export_model, get_train_op, MetricsCollector
 from pinn.models import implemented_models
+from pinn.models.base import MetricsCollector, export_model, get_train_op
+from pinn.utils import pi_named
 
 index_warning = 'Converting sparse IndexedSlices'
 deprecate_warning = 'deprecated'
@@ -212,9 +216,10 @@ def make_E(atom_rind, coord, sigma, nbatch, nmax, cell=None,
 
     """
     from itertools import product
+
     from numpy import pi
+
     from pinn.layers import CellListNL
-    from tensorflow.math import erfc, erf
 
     # Compute E with Ewald sum, only perform when all arguments are available
     if not ((cell is None) or (kmax is None) or (eta is None) or (rc is None)):
@@ -226,7 +231,7 @@ def make_E(atom_rind, coord, sigma, nbatch, nmax, cell=None,
         _, pair_rind = make_indices({'ind_1':ind_1, 'ind_2':ind_2, 'coord':coord})
         etafac = 1./(np.sqrt(2)*eta)
         sigfac = 1/tf.sqrt(2*tf.reduce_sum(tf.gather(sigma**2,nl['ind_2']),axis=1))
-        ES = tf.scatter_nd(pair_rind, (erfc(rnorm*etafac)-erfc(rnorm*sigfac))/rnorm,
+        ES = tf.scatter_nd(pair_rind, (tf.math.erfc(rnorm*etafac)-tf.math.erfc(rnorm*sigfac))/rnorm,
                            [nbatch, nmax, nmax])
         # EL: exp(-k^2eta^2/2)(cos(kr_i)cos(kr_j)+sin(kr_i)sin(kr_j))/k^2, k!=0
         kvects = [np.arange(-kmax,kmax+1, dtype='float32') for i in range(3)]
@@ -265,7 +270,7 @@ def make_E(atom_rind, coord, sigma, nbatch, nmax, cell=None,
     r_ij = tf.where(tf.math.is_nan(r_ij), tf.zeros_like(r_ij), r_ij)
     sigma2 = tf.scatter_nd(atom_rind, sigma**2 , [nbatch, nmax])
     gamma_ij = tf.sqrt(sigma2[:,None,:]+sigma2[:,:,None])
-    E = tf.math.divide_no_nan(erf(r_ij/gamma_ij/tf.sqrt(2.)), r_ij)
+    E = tf.math.divide_no_nan(tf.math.erf(r_ij/gamma_ij/tf.sqrt(2.)), r_ij)
     E_diag = tf.scatter_nd(atom_rind, 1/tf.sqrt(pi)/sigma, [nbatch, nmax])
     return tf.linalg.set_diag(E, E_diag)
 
@@ -624,7 +629,6 @@ def pol_local_fn(tensors, params):
 
        where $\mathbf{e}_i$ is the $i$:th standard unit vector. 
     """
-    from tensorflow.math import unsorted_segment_sum
     def _form_triplet(tensors):
         """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
         p_iind = tensors['ind_2'][:, 0]
@@ -655,9 +659,9 @@ def pol_local_fn(tensors, params):
     ind2 = tensors['ind_2']
     diff = tensors['diff']*ang2bohr
     # tmp -> n_atoms x n_pred x 3 -> local "basis" for polarizability
-    tmp = unsorted_segment_sum(tf.einsum('pc,px->pcx', ipred, diff), ind2[:,0], natoms)
+    tmp = tf.math.unsorted_segment_sum(tf.einsum('pc,px->pcx', ipred, diff), ind2[:,0], natoms)
     alpha_i = tf.einsum('pcx,pcy->pxy', tmp, tmp)
-    alpha = unsorted_segment_sum(alpha_i, ind1, nbatch)
+    alpha = tf.math.unsorted_segment_sum(alpha_i, ind1, nbatch)
     # chi is a bit more expensive to get :(
     aind = tf.cumsum(tf.ones_like(ind1))     # "absolute" pos of atom in batch
     amax = tf.shape(ind1)[0]
@@ -871,7 +875,6 @@ def pol_local_iso_fn(tensors, params):
     $$
     
     """
-    from tensorflow.math import unsorted_segment_sum
     def _form_triplet(tensors):
         """Returns triplet indices [ij, jk], where r_ij, r_jk < r_c"""
         p_iind = tensors['ind_2'][:, 0]
@@ -902,9 +905,9 @@ def pol_local_iso_fn(tensors, params):
     ind2 = tensors['ind_2']
     diff = tensors['diff']*ang2bohr
     # tmp -> n_atoms x n_pred x 3 -> local "basis" for polarizability
-    tmp = unsorted_segment_sum(tf.einsum('pc,px->pcx', ipred, diff), ind2[:,0], natoms)
+    tmp = tf.math.unsorted_segment_sum(tf.einsum('pc,px->pcx', ipred, diff), ind2[:,0], natoms)
     alpha_i = tf.einsum('pcx,pcy->pxy', tmp, tmp)
-    alpha = unsorted_segment_sum(alpha_i, ind1, nbatch)
+    alpha = tf.math.unsorted_segment_sum(alpha_i, ind1, nbatch)
     alpha_iso = tf.eye(3,batch_shape=[nbatch])*tf.math.unsorted_segment_sum(ppred,ind1,nbatch)[:,None,None]
     alpha += alpha_iso
     # chi is a bit more expensive to get :(
