@@ -239,9 +239,30 @@
 <p>PiNN follows the <a href="https://peps.python.org/pep-0440/">PEP 440</a> scheme of versioning. Specifically, the
 versions are tagged as <code>major.minor.micro</code>.  <code>micro</code> updates with same
 <code>minor</code> version are expected to be backward-compactible, i.e., the
-models trained on old micro version can be used newer ones.  <code>minor</code>
+models trained on old <code>micro</code> version can be used newer ones.  <code>minor</code>
 updates can break backward-compatibility, if this happens it should be
 documented in this change log.</p>
+<h2 id="v2xy">v2.x.y</h2>
+<h3 id="v200">v2.0.0</h3>
+<ul>
+<li>New Network:<ul>
+<li>PiNet2: new equivariant neural network;</li>
+</ul>
+</li>
+<li>New Models:<ul>
+<li>PiNet-dipole: dipole moment prediction model;</li>
+<li>PiNet-<span class="arithmatex">\(\chi\)</span>: machine learning charge response kernel model;</li>
+</ul>
+</li>
+<li>New workflow:<ul>
+<li>nextflow: training pipeline is now managed by <a href="https://www.nextflow.io/docs/latest/index.html">Nextflow</a></li>
+</ul>
+</li>
+<li>New tools:<ul>
+<li><code>pinn report</code>: extract results from work directory or model folder</li>
+</ul>
+</li>
+</ul>
 <h2 id="v1xy">v1.x.y</h2>
 <h3 id="v110">v1.1.0</h3>
 <ul>

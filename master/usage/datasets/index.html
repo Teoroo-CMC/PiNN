@@ -272,6 +272,14 @@
   
     
     <li >
+      <a href="../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li >
       <a href="../custom_model/" class="">
         Customize
       </a>
@@ -470,22 +478,25 @@ example:</p>
 <td><code>load_cp2k</code></td>
 <td>Loader for <a href="https://www.cp2k.org/">CP2K</a> output (experimental)</td>
 </tr>
+<tr>
+<td>deepmd-kit</td>
+<td><code>load_deepmd</code></td>
+<td>Loader for <a href="https://docs.deepmodeling.com/projects/deepmd/en/latest/data/system.html">deepmk-kit</a> input</td>
+</tr>
 </tbody>
 </table>
 <h2 id="api-documentation">API documentation</h2>
 <h3 id="pinnioload_ds">pinn.io.load_ds</h3>
 
 
-
 <div class="doc doc-object doc-function">
 
 
 
+<a id="pinn.io.load_ds"></a>
+    <div class="doc doc-contents first">
 
-
-  <div class="doc doc-contents first">
-  
-      <p>This loader tries to guess the format when dataset is a string:</p>
+        <p>This loader tries to guess the format when dataset is a string:</p>
 <ul>
 <li><code>load_tfrecoard</code> if it ends with '.yml'</li>
 <li><code>load_runner</code> if it ends with '.data'</li>
@@ -494,320 +505,625 @@ example:</p>
 <p>If the <code>fmt</code> is specified, the loader will use a corresponsing dataset loader.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>dataset</code>
+            </td>
+            <td>
+                  <code>Dataset</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dataset a file or input for a loader according to <code>fmt</code></p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>fmt</code>
+            </td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dataset format, see avialable formats.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;auto&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>splits</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>key-val pairs specifying the ratio of subsets</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>extra arguments to loaders</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>dataset</code></td>
-          <td>
-                <code>Dataset</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>dataset a file or input for a loader according to <code>fmt</code></p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>fmt</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>dataset format, see avialable formats.</p>
-            </div>
-          </td>
-          <td>
-                <code>&#39;auto&#39;</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>splits</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>key-val pairs specifying the ratio of subsets</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>shuffle</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>shuffle the dataset (only used when splitting)</p>
-            </div>
-          </td>
-          <td>
-                <code>True</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>seed</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>random seed for shuffling</p>
-            </div>
-          </td>
-          <td>
-                <code>0</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>**kwargs</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>extra arguments to loaders</p>
-            </div>
-          </td>
-          <td>
-                <code>{}</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/__init__.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_ds</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This loader tries to guess the format when dataset is a string:</span>
 
-  </div>
+<span class="sd">    - `load_tfrecoard` if it ends with &#39;.yml&#39;</span>
+<span class="sd">    - `load_runner` if it ends with &#39;.data&#39;</span>
+<span class="sd">    - try to load it with `load_ase`</span>
+
+<span class="sd">    If the `fmt` is specified, the loader will use a corresponsing dataset loader.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (Dataset): dataset a file or input for a loader according to `fmt`</span>
+<span class="sd">        fmt (str): dataset format, see avialable formats.</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">        **kwargs (dict): extra arguments to loaders</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loaders</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tfr&#39;</span><span class="p">:</span>    <span class="n">load_tfrecord</span><span class="p">,</span>
+               <span class="s1">&#39;runner&#39;</span><span class="p">:</span> <span class="n">load_runner</span><span class="p">,</span>
+               <span class="s1">&#39;ase&#39;</span><span class="p">:</span>    <span class="n">load_ase</span><span class="p">,</span>
+               <span class="s1">&#39;qm9&#39;</span><span class="p">:</span>    <span class="n">load_qm9</span><span class="p">,</span>
+               <span class="s1">&#39;ani&#39;</span><span class="p">:</span>    <span class="n">load_ani</span><span class="p">,</span>
+               <span class="s1">&#39;cp2k&#39;</span><span class="p">:</span>   <span class="n">load_cp2k</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">fmt</span><span class="o">==</span><span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.yml&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">load_tfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.data&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">load_runner</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">load_ase</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">loaders</span><span class="p">[</span><span class="n">fmt</span><span class="p">](</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
 
 </div><h3 id="pinnioload_tfrecord">pinn.io.load_tfrecord</h3>
-
 
 
 <div class="doc doc-object doc-function">
 
 
 
+<a id="pinn.io.load_tfrecord"></a>
+    <div class="doc doc-contents first">
 
-
-  <div class="doc doc-contents first">
-  
-      <p>Load tfrecord dataset.</p>
+        <p>Load tfrecord dataset.</p>
 <p>Note that the splits given by <code>load_tfrecord</code> should be the same
 as other dataset loaders. However, the sequence is not guaranteed
 with <code>shuffle=True</code>.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>dataset</code>
+            </td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>filename of the .yml metadata file to be loaded.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>splits</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>key-val pairs specifying the ratio of subsets</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>dataset</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>filename of the .yml metadata file to be loaded.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>splits</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>key-val pairs specifying the ratio of subsets</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>shuffle</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>shuffle the dataset (only used when splitting)</p>
-            </div>
-          </td>
-          <td>
-                <code>True</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>seed</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>random seed for shuffling</p>
-            </div>
-          </td>
-          <td>
-                <code>0</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/tfr.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_tfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load tfrecord dataset.</span>
 
-  </div>
+<span class="sd">    Note that the splits given by `load_tfrecord` should be the same</span>
+<span class="sd">    as other dataset loaders. However, the sequence is not guaranteed</span>
+<span class="sd">    with `shuffle=True`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">       dataset (str): filename of the .yml metadata file to be loaded.</span>
+<span class="sd">       splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">       shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">       seed (int): random seed for shuffling</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">yaml</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">from</span> <span class="nn">pinn.io.base</span> <span class="kn">import</span> <span class="n">split_list</span>
+    <span class="kn">from</span> <span class="nn">tensorflow.python.lib.io.file_io</span> <span class="kn">import</span> <span class="n">FileIO</span>
+    <span class="c1"># dataset</span>
+    <span class="k">with</span> <span class="n">FileIO</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">ds_spec</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">format_dict</span> <span class="o">=</span> <span class="n">ds_spec</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">]</span>
+
+    <span class="n">dtypes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">format_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;dtype&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">format_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+    <span class="n">shapes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">format_dict</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">format_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+    <span class="n">feature_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">([],</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dtypes</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">example</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">parse_single_example</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="n">feature_dict</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">converter</span><span class="p">(</span><span class="n">tensors</span><span class="p">):</span>
+        <span class="n">tensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">parse_tensor</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                   <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tensors</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">set_shape</span><span class="p">(</span><span class="n">shapes</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tensors</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">tensors</span>
+    <span class="n">tfr</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;tfr&#39;</span><span class="p">])</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TFRecordDataset</span><span class="p">(</span><span class="n">tfr</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">converter</span><span class="p">)</span>
+    <span class="c1"># tfr splitter</span>
+    <span class="k">if</span> <span class="n">splits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dataset</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_sample</span> <span class="o">=</span> <span class="n">ds_spec</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;n_sample&#39;</span><span class="p">]</span>
+        <span class="n">splits</span> <span class="o">=</span> <span class="n">split_list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">))),</span>
+                            <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">splitted</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">zip</span><span class="p">((</span>
+            <span class="n">dataset</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="n">n_sample</span><span class="p">)))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_any</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">)))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">d</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">splits</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+            <span class="n">splitted</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">splitted</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">splitted</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
 
 </div><h3 id="pinnioload_ase">pinn.io.load_ase</h3>
 
 
-
 <div class="doc doc-object doc-function">
 
 
 
+<a id="pinn.io.load_ase"></a>
+    <div class="doc doc-contents first">
+
+        <p>Loads a ASE trajectory</p>
 
 
-  <div class="doc doc-contents first">
-  
-      <p>Loads a ASE trajectory</p>
-
-
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
         <tr>
-          <td><code>dataset</code></td>
-          <td>
-                <code>str | <span title="pinn.io.ase.io.trajectory">trajectory</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>a filename or trajectory</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr>
-          <td><code>splits</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>key-val pairs specifying the ratio of subsets</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>shuffle</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>shuffle the dataset (only used when splitting)</p>
-            </div>
-          </td>
-          <td>
-                <code>True</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>seed</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>random seed for shuffling</p>
-            </div>
-          </td>
-          <td>
-                <code>0</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>dataset</code>
+            </td>
+            <td>
+                  <code>str | <span title="pinn.io.ase.io.trajectory">trajectory</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>a filename or trajectory</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>splits</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>key-val pairs specifying the ratio of subsets</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  </div>
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/ase.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_ase</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads a ASE trajectory</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (str|ase.io.trajectory): a filename or trajectory</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="n">_ase_spec</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_ase_loader</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="n">datum</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
+            <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="s1">&#39;cell&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;cell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[:]</span>
+
+        <span class="k">if</span> <span class="s1">&#39;e_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;e_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;f_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;f_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;q_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;q_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_charges</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;d_data&#39;</span> <span class="ow">in</span> <span class="n">ds_spec</span><span class="p">:</span>
+            <span class="n">datum</span><span class="p">[</span><span class="s1">&#39;d_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_dipole_moment</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">datum</span>
+
+    <span class="k">return</span> <span class="n">_ase_loader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
 
 </div><h3 id="pinnioload_runner">pinn.io.load_runner</h3>
 
 
-
 <div class="doc doc-object doc-function">
 
 
 
+<a id="pinn.io.load_runner"></a>
+    <div class="doc doc-contents first">
 
-
-  <div class="doc doc-contents first">
-  
-      <p>Loads runner formatted trajectory
+        <p>Loads runner formatted trajectory
 Args:
     flist (str): one or a list of runner formatted trajectory(s)
     splits (dict): key-val pairs specifying the ratio of subsets
     shuffle (bool): shuffle the dataset (only used when splitting)
     seed (int): random seed for shuffling</p>
 
-  </div>
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/runner.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_runner</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads runner formatted trajectory</span>
+<span class="sd">    Args:</span>
+<span class="sd">        flist (str): one or a list of runner formatted trajectory(s)</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">flist</span> <span class="o">=</span> <span class="p">[</span><span class="n">flist</span><span class="p">]</span>
+    <span class="n">frame_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">flist</span><span class="p">:</span>
+        <span class="n">frame_list</span> <span class="o">+=</span> <span class="n">_gen_frame_list</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_frame_loader</span><span class="p">(</span><span class="n">frame_list</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
 
 </div><h3 id="pinnioload_qm9">pinn.io.load_qm9</h3>
-
 
 
 <div class="doc doc-object doc-function">
 
 
 
+<a id="pinn.io.load_qm9"></a>
+    <div class="doc doc-contents first">
 
-
-  <div class="doc doc-contents first">
-  
-      <p>Loads the QM9 dataset</p>
+        <p>Loads the QM9 dataset</p>
 <p>QM9 provides a variety of labels, but typically we are only
 training on one target, e.g. U0. A <code>label_map</code> option is
 offered to choose the output dataset structure, by default, it
@@ -820,208 +1136,396 @@ i.e. <code>label_map={'e_data': 'U0'}</code>.</p>
 <p>Desciptions of those tags can be found in QM9's description file.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>flist</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of QM9-formatted data files.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>splits</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>key-val pairs specifying the ratio of subsets</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>label_map</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dictionary mapping labels to output datasets</p>
+              </div>
+            </td>
+            <td>
+                  <code>{&#39;e_data&#39;: &#39;U0&#39;}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>flist</code></td>
-          <td>
-                <code>list</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>list of QM9-formatted data files.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>splits</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>key-val pairs specifying the ratio of subsets</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>shuffle</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>shuffle the dataset (only used when splitting)</p>
-            </div>
-          </td>
-          <td>
-                <code>True</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>seed</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>random seed for shuffling</p>
-            </div>
-          </td>
-          <td>
-                <code>0</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>label_map</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>dictionary mapping labels to output datasets</p>
-            </div>
-          </td>
-          <td>
-                <code>{&#39;e_data&#39;: &#39;U0&#39;}</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/qm9.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_qm9</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">label_map</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="s1">&#39;U0&#39;</span><span class="p">},</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the QM9 dataset</span>
 
-  </div>
+<span class="sd">    QM9 provides a variety of labels, but typically we are only</span>
+<span class="sd">    training on one target, e.g. U0. A ``label_map`` option is</span>
+<span class="sd">    offered to choose the output dataset structure, by default, it</span>
+<span class="sd">    only takes &quot;U0&quot; and maps that to &quot;e_data&quot;,</span>
+<span class="sd">    i.e. `label_map={&#39;e_data&#39;: &#39;U0&#39;}`.</span>
+
+<span class="sd">    Other available labels are</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    [&#39;tag&#39;, &#39;index&#39;, &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;mu&#39;, &#39;alpha&#39;, &#39;homo&#39;, &#39;lumo&#39;,</span>
+<span class="sd">     &#39;gap&#39;, &#39;r2&#39;, &#39;zpve&#39;, &#39;U0&#39;, &#39;U&#39;, &#39;H&#39;, &#39;G&#39;, &#39;Cv&#39;]</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    Desciptions of those tags can be found in QM9&#39;s description file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        flist (list): list of QM9-formatted data files.</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">        label_map (dict): dictionary mapping labels to output datasets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">from</span> <span class="nn">pinn.io.base</span> <span class="kn">import</span> <span class="n">list_loader</span>
+    <span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">atomic_numbers</span>
+
+    <span class="n">_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tag&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;homo&#39;</span><span class="p">,</span> <span class="s1">&#39;lumo&#39;</span><span class="p">,</span> <span class="s1">&#39;gap&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="s1">&#39;zpve&#39;</span><span class="p">,</span> <span class="s1">&#39;U0&#39;</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;Cv&#39;</span><span class="p">]</span>
+    <span class="n">_label_ind</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_labels</span><span class="p">)}</span>
+
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">_qm9_spec</span><span class="p">(</span><span class="n">label_map</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">_qm9_loader</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">elems</span> <span class="o">=</span> <span class="p">[</span><span class="n">atomic_numbers</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;*^&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]]</span>
+                 <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="n">elems</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elems</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">elems</span><span class="p">,</span> <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">coord</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">label_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">_label_ind</span><span class="p">[</span><span class="n">v</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">_qm9_loader</span><span class="p">(</span><span class="n">flist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
 
 </div><h3 id="pinnioload_ani">pinn.io.load_ani</h3>
 
 
-
 <div class="doc doc-object doc-function">
 
 
 
+<a id="pinn.io.load_ani"></a>
+    <div class="doc doc-contents first">
+
+        <p>Loads the ANI-1 dataset</p>
 
 
-  <div class="doc doc-contents first">
-  
-      <p>Loads the ANI-1 dataset</p>
-
-
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
         <tr>
-          <td><code>filelist</code></td>
-          <td>
-                <code>list</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>filenames of ANI-1 h5 files.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr>
-          <td><code>split</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>key-val pairs specifying the ratio of subsets</p>
-            </div>
-          </td>
-          <td>
-                <code>False</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>shuffle</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>shuffle the dataset (only used when splitting)</p>
-            </div>
-          </td>
-          <td>
-                <code>True</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>seed</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>random seed for shuffling</p>
-            </div>
-          </td>
-          <td>
-                <code>0</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>cycle_length</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>number of parallel threads to read h5 file</p>
-            </div>
-          </td>
-          <td>
-                <code>4</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>filelist</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>filenames of ANI-1 h5 files.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>split</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>key-val pairs specifying the ratio of subsets</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cycle_length</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of parallel threads to read h5 file</p>
+              </div>
+            </td>
+            <td>
+                  <code>4</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  </div>
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/ani.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_ani</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cycle_length</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the ANI-1 dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filelist (list): filenames of ANI-1 h5 files.</span>
+<span class="sd">        split (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">        cycle_length (int): number of parallel threads to read h5 file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">h5py</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">from</span> <span class="nn">pinn.io.base</span> <span class="kn">import</span> <span class="n">split_list</span>
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>   <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]},</span>
+        <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">floatx</span><span class="p">(),</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+        <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">floatx</span><span class="p">(),</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
+    <span class="c1"># Load the list of samples</span>
+    <span class="n">sample_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">:</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="n">k1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="n">k1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k2</span> <span class="ow">in</span> <span class="n">samples</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">sample_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">)))</span>
+    <span class="c1"># Generate dataset from sample list</span>
+
+    <span class="k">def</span> <span class="nf">generator_fn</span><span class="p">(</span><span class="n">samplelist</span><span class="p">):</span> <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_generator</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">_ani_generator</span><span class="p">(</span><span class="n">samplelist</span><span class="p">),</span> <span class="n">output_signature</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">)</span><span class="o">.</span><span class="n">interleave</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">cycle_length</span><span class="o">=</span><span class="n">cycle_length</span><span class="p">)</span>
+    <span class="c1"># Generate nested dataset</span>
+    <span class="n">subsets</span> <span class="o">=</span> <span class="n">split_list</span><span class="p">(</span><span class="n">sample_list</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="n">split</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">splitted</span> <span class="o">=</span> <span class="n">map_nested</span><span class="p">(</span><span class="n">generator_fn</span><span class="p">,</span> <span class="n">subsets</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">splitted</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
 
 </div><h3 id="pinnioload_cp2k">pinn.io.load_cp2k</h3>
 
 
-
 <div class="doc doc-object doc-function">
 
 
 
+<a id="pinn.io.load_cp2k"></a>
+    <div class="doc doc-contents first">
 
-
-  <div class="doc doc-contents first">
-  
-      <p>This is a experimental loader for CP2K data</p>
+        <p>This is a experimental loader for CP2K data</p>
 <p>It takes data from different sources, the CP2K output file and dat files,
 which will be specified in the files dictionary. A list of "keys" is used to
 specify the data to read and where it is read from.</p>
@@ -1058,92 +1562,491 @@ specify the data to read and where it is read from.</p>
 </table>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>files</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>input files</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>keys</code>
+            </td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>data to read</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>splits</code>
+            </td>
+            <td>
+                  <code>dict</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>key-val pairs specifying the ratio of subsets</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>files</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>input files</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>keys</code></td>
-          <td>
-                <code>list</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>data to read</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>splits</code></td>
-          <td>
-                <code>dict</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>key-val pairs specifying the ratio of subsets</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>shuffle</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>shuffle the dataset (only used when splitting)</p>
-            </div>
-          </td>
-          <td>
-                <code>True</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>seed</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>random seed for shuffling</p>
-            </div>
-          </td>
-          <td>
-                <code>0</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/cp2k.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_cp2k</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a experimental loader for CP2K data</span>
 
-  </div>
+<span class="sd">    It takes data from different sources, the CP2K output file and dat files,</span>
+<span class="sd">    which will be specified in the files dictionary. A list of &quot;keys&quot; is used to</span>
+<span class="sd">    specify the data to read and where it is read from.</span>
+
+<span class="sd">    | key        | data source         | provides         |</span>
+<span class="sd">    |------------|---------------------|------------------|</span>
+<span class="sd">    | `force`    | `files[&#39;out&#39;]`      | `f_data`         |</span>
+<span class="sd">    | `energy`   | `files[&#39;out&#39;]`      | `e_data`         |</span>
+<span class="sd">    | `stress`   | `files[&#39;out&#39;]`      | `coord`, `elems` |</span>
+<span class="sd">    | `cell_dat` | `files[&#39;cell_dat&#39;]` | `cell`           |</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        files (dict): input files</span>
+<span class="sd">        keys (list): data to read</span>
+<span class="sd">        splits (dict): key-val pairs specifying the ratio of subsets</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">provides</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="n">ds_spec</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="n">formats</span><span class="p">[</span><span class="n">name</span><span class="p">]})</span>
+
+    <span class="n">all_list</span> <span class="o">=</span> <span class="n">_gen_list</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
+
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_frame_loader</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">all_list</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loaders</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">return</span> <span class="n">_frame_loader</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_list</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">]))),</span>
+                         <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h3 id="pinnioload_deepmd">pinn.io.load_deepmd</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pinn.io.load_deepmd"></a>
+    <div class="doc doc-contents first">
+
+        <p>This is loader for deepmd input data. It takes a dict of key and file path or a directory path which contains the data files. If <code>type_map</code> is provided, it will be used to convert the type id to atomic numbers.</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>data source</th>
+<th>provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>coord</code></td>
+<td><code>path/coord.raw</code></td>
+<td><code>coord</code></td>
+</tr>
+<tr>
+<td><code>force</code></td>
+<td><code>path/force.raw</code></td>
+<td><code>f_data</code></td>
+</tr>
+<tr>
+<td><code>energy</code></td>
+<td><code>path/energy.raw</code></td>
+<td><code>e_data</code></td>
+</tr>
+<tr>
+<td><code>virial</code></td>
+<td><code>path/virial.raw</code></td>
+<td><code>s_data</code></td>
+</tr>
+<tr>
+<td><code>box</code></td>
+<td><code>path/box.raw</code></td>
+<td><code>cell</code></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>path/type.raw</code></td>
+<td><code>elems</code></td>
+</tr>
+</tbody>
+</table>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>files</code>
+            </td>
+            <td>
+                  <code>dict | <span title="pathlib.Path">Path</span> | str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>input files</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>type_map</code>
+            </td>
+            <td>
+                  <code>dict | <span title="pathlib.Path">Path</span> | str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>mapping of type id to atomic number</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>pbc</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>flag of periodic boundary condition</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shuffle</code>
+            </td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>shuffle the dataset (only used when splitting)</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>seed</code>
+            </td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>random seed for shuffling</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>pinn/io/deepmd.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_deepmd</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is loader for deepmd input data. It takes a dict of key and file path or a directory path which contains the data files. If `type_map` is provided, it will be used to convert the type id to atomic numbers.</span>
+
+<span class="sd">    | key        | data source         | provides         |</span>
+<span class="sd">    |------------|---------------------|------------------|</span>
+<span class="sd">    | `coord`    | `path/coord.raw`      | `coord`  |</span>
+<span class="sd">    | `force`    | `path/force.raw`      | `f_data`      |</span>
+<span class="sd">    | `energy`   | `path/energy.raw`      | `e_data`      |</span>
+<span class="sd">    | `virial`   | `path/virial.raw`      | `s_data`      |</span>
+<span class="sd">    | `box`     | `path/box.raw` | `cell`           |</span>
+<span class="sd">    | `type`    | `path/type.raw` | `elems`           |</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        files (dict | Path | str): input files</span>
+<span class="sd">        type_map (dict | Path | str): mapping of type id to atomic number</span>
+<span class="sd">        pbc (bool): flag of periodic boundary condition</span>
+<span class="sd">        shuffle (bool): shuffle the dataset (only used when splitting)</span>
+<span class="sd">        seed (int): random seed for shuffling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">,</span> <span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+        <span class="n">fdict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">,</span> <span class="s1">&#39;force&#39;</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="s1">&#39;virial&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="s1">&#39;elems&#39;</span><span class="p">]:</span>
+            <span class="n">fdict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">.raw&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">key</span> <span class="ow">in</span> <span class="n">fdict_or_fpath</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">,</span> <span class="s1">&#39;force&#39;</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="s1">&#39;virial&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="s1">&#39;elems&#39;</span><span class="p">]])</span>
+        <span class="n">fdict</span> <span class="o">=</span> <span class="n">fdict_or_fpath</span>
+
+    <span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">chemical_symbols</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;coord&#39;</span><span class="p">])</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;force&#39;</span><span class="p">])</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">])</span>
+    <span class="c1"># stress = np.loadtxt(fdict[&#39;virial&#39;])</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;cell&#39;</span><span class="p">])</span>
+    <span class="n">elem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;elems&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">type_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">)):</span>
+            <span class="n">type_map_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fdict_or_fpath</span><span class="p">)</span> <span class="o">/</span> <span class="s1">&#39;type_map.raw&#39;</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="n">type_map_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">type_map</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">type_map_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">type_map_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="c1"># assume type.raw is incremental integers starting from 0</span>
+            <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">chemical_symbols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()):</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">)}</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">type_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">elem</span><span class="p">[</span><span class="n">elem</span> <span class="o">==</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># DeePMD .raw files use units of Å and eV. [https://docs.deepmodeling.com/projects/deepmd/en/latest/data/system.html]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord</span><span class="p">)):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="n">coord</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s1">&#39;f_data&#39;</span><span class="p">:</span> <span class="n">force</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="n">energy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="c1"># &#39;s_data&#39;: stress[i],</span>
+            <span class="s1">&#39;cell&#39;</span><span class="p">:</span> <span class="n">cell</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">elem</span>
+        <span class="p">})</span>
+
+    <span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;elems&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="s1">&#39;int32&#39;</span><span class="p">,</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]},</span>
+    <span class="s1">&#39;cell&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="s1">&#39;coord&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="s1">&#39;float&#39;</span><span class="p">,</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[]},</span>
+    <span class="s1">&#39;f_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="c1"># &#39;s_data&#39;: {&#39;dtype&#39;: &#39;float&#39;, &#39;shape&#39;: [3, 3]},</span>
+<span class="p">}</span>
+
+    <span class="nd">@list_loader</span><span class="p">(</span><span class="n">ds_spec</span><span class="o">=</span><span class="n">ds_spec</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_frame_loader</span><span class="p">(</span><span class="n">datum</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datum</span>
+
+    <span class="k">return</span> <span class="n">_frame_loader</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
 
 </div><div class="footnote">
 <hr />

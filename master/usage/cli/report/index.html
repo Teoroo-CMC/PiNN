@@ -272,6 +272,14 @@
   
     
     <li >
+      <a href="../../polarizability/" class="">
+        Polarizability
+      </a>
+    </li>
+
+  
+    
+    <li >
       <a href="../../custom_model/" class="">
         Customize
       </a>
@@ -379,14 +387,29 @@
 </thead>
 <tbody>
 <tr>
-<td><code>--fliter [-f]</code></td>
+<td><code>--keys [-f]</code></td>
 <td>``</td>
-<td>only print keywords in model path</td>
+<td>only print results that keywords in model path</td>
 </tr>
 <tr>
-<td><code>--l [-l]</code></td>
+<td><code>--l [--log-name]</code></td>
 <td><code>'eval.log'</code></td>
 <td>log file name</td>
+</tr>
+<tr>
+<td><code>-e [--energy-factor]</code></td>
+<td>1</td>
+<td>energy scale factor, for unit conversion</td>
+</tr>
+<tr>
+<td><code>-f [--force-factor]</code></td>
+<td>1</td>
+<td>forces scale factor, for unit conversion</td>
+</tr>
+<tr>
+<td><code>-w [--is_workdir]</code></td>
+<td>False</td>
+<td>try to extract results from work directory</td>
 </tr>
 </tbody>
 </table>

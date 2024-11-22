@@ -235,10 +235,7 @@
 
     <div id="content">
       <h1 id="introduction">Introduction</h1>
-<p>PiNN is a Python library built on top of TensorFlow for building atomic neural
-networks (ANNs). The primary usage of PiNN is to build and train ANN interatomic
-potentials, but PiNN is also capable of predicting physical and chemical
-properties of molecules and materials.</p>
+<p>PiNN stands for pair-wise interaction neural network, a Python library built on top of TensorFlow for performing atomistic ML tasks. Besides training ML interatomic potentials, PiNN can also predict physical and chemical properties of molecules and materials (e.g. dipole moment and polarizability). It can be used together with the adaptive learn-on-the-fly plugin PiNNAcLe<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> and the heterogeneous electrode plugin PiNNwall<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> for modelling electrochemical systems.</p>
 <h2 id="flexibility">Flexibility</h2>
 <p><img alt="" src="images/implement.png" width="600" /></p>
 <p>PiNN is built with modularized components, and we try to make it as easy as
@@ -257,26 +254,56 @@ customize the PiNN for your need.</p>
 <h2 id="cite-pinn">Cite PiNN</h2>
 <p>If you find PiNN useful, welcome to cite it as:</p>
 <blockquote>
-<p>Y. Shao, M. Hellström, P. D. Mitev, L. Knijff, and C. Zhang. PiNN: a python
-library for building atomic neural networks of molecules and materials. J.
-Chem. Inf. Model., 60:1184–1193, January 2020. doi:10.1021/acs.jcim.9b00994.</p>
+<p>Li J, Knijff L, Zhang Z-Y, Andersson L, Zhang C. PiNN: equivariant neural network suite for modelling electrochemical systems. ChemRxiv. 2024; doi:10.26434/chemrxiv-2024-zfvrz This content is a preprint and has not been peer-reviewed.</p>
 </blockquote>
 <details class="note">
 <summary>Bibtex</summary>
-<div class="highlight"><pre><span></span><code><span class="nc">@Article</span><span class="p">{</span><span class="nl">2020_ShaoHellstroemEtAl</span><span class="p">,</span>
-<span class="w">  </span><span class="na">author</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{Yunqi Shao and Matti Hellström and Pavlin D. Mitev and Lisanne Knijff and Chao Zhang}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">journal</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">{J. Chem. Inf. Model.}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">title</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{{PiNN}: A Python Library for Building Atomic Neural Networks of Molecules and Materials}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">year</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">{2020}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">month</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{jan}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">number</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{3}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">pages</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{1184--1193}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">volume</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{60}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">doi</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">{10.1021/acs.jcim.9b00994}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">publisher</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{American Chemical Society ({ACS})}</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="nc">@UNPUBLISHED</span><span class="p">{</span><span class="nl">Li2024-wa</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;{PiNN}: equivariant neural network suite for modelling</span>
+<span class="s">              electrochemical systems&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;Li, Jichen and Knijff, Lisanne and Zhang, Zhan-Yun and Andersson,</span>
+<span class="s">              Linn{\&#39;e}a and Zhang, Chao&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">abstract</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;Electrochemical energy storage and conversion play an</span>
+<span class="s">              increasingly important role in electrification and sustainable</span>
+<span class="s">              development across the globe. A key challenge therein is to</span>
+<span class="s">              understand, control, and design electrochemical energy materials</span>
+<span class="s">              at atomistic precision. This requires inputs from molecular</span>
+<span class="s">              modelling powered by machine learning (ML) techniques. In this</span>
+<span class="s">              work, we have upgraded our pairwise interaction neural network</span>
+<span class="s">              Python package PiNN via introducing equivariant features to the</span>
+<span class="s">              PiNet2 architecture for fitting potential energy surfaces along</span>
+<span class="s">              with PiNet2-dipole for dipole and charge predictions as well as</span>
+<span class="s">              PiNet2-chi for generating atom-condensed charge response kernels.</span>
+<span class="s">              By benchmarking publicly accessible datasets of small molecules,</span>
+<span class="s">              crystalline materials, and liquid electrolytes, we found that the</span>
+<span class="s">              equivariant PiNet2 shows significant improvements over the</span>
+<span class="s">              original PiNet architecture and provides a state-of-the-art</span>
+<span class="s">              overall performance. Furthermore, leveraging on plug-ins such as</span>
+<span class="s">              PiNNAcLe for an adaptive learn-on-the-fly workflow in generating</span>
+<span class="s">              ML potentials and PiNNwall for modelling heterogeneous electrodes</span>
+<span class="s">              under external bias, we expect PiNN to serve as a versatile and</span>
+<span class="s">              high-performing ML-accelerated platform for molecular modelling</span>
+<span class="s">              of electrochemical systems.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">journal</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;ChemRxiv&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">month</span><span class="w">    </span><span class="p">=</span><span class="w">  </span><span class="nv">nov</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="w">     </span><span class="p">=</span><span class="w">  </span><span class="m">2024</span><span class="p">,</span>
+<span class="w">  </span><span class="na">keywords</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;Machine learning;Molecular dynamics;Liquid electrolyte;Ion</span>
+<span class="s">              transport;proton transfer;double layer;supercapacitor&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">language</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;en&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 </details>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><sup>1</sup> Y. Shao, and C. Zhang, “<a href="https://arxiv.org/abs/2409.08886">PiNNAcLe: Adaptive learn-on-the-fly algorithm for machine-learning potential</a>,” arXiv:2409.08886, (2024).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><sup>1</sup> T. Dufils, L. Knijff, Y. Shao, and C. Zhang, “<a href="https://doi.org/10.1021/acs.jctc.3c00359">PiNNwall: Heterogeneous electrode models from integrating machine learning and atomistic simulation</a>,” J. Chem. Theory Comput. <strong>19</strong>(15), 5199–5209 (2023).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
     </div>
 
   </div>

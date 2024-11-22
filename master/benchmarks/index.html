@@ -239,10 +239,198 @@
 <p>PiNN collects a small set of benchmarks that are continuously tested
 against (see <a href="../changelog/#conventions">version convention</a>). The benchmark datasets and trained
 models are accessible from the shared <a href="https://uppsala.box.com/v/teoroo-cmc-pinn-data">box folder</a>.</p>
-<h2 id="latest-benchmarks-v120dev0">Latest benchmarks (v1.2.0.dev0)</h2>
-<h3 id="qm91">QM9<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></h3>
+<h2 id="latest-benchmarks-v200">Latest benchmarks (v2.0.0)</h2>
+<p>We have introduced equivariant features (P3 and P5) into the second-generation of PiNet. PiNet2-P3 shows a significant and cost-effective improvement on energy and force predictions across different types of datasets ranging from small molecules to crystalline materials, as compared to PiNet.</p>
+<h3 id="qm9">QM9<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></h3>
+<p>PiNet2-P3 Energy MAE: 8.0(std:0.1) meV</p>
+<h3 id="md17">MD17<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></h3>
+<table>
+<thead>
+<tr>
+<th><em>Forces Only</em> / <em>Energy &amp; Forces</em></th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Energy (meV)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Aspirin</td>
+<td>-</td>
+<td>-</td>
+<td>17 (3)</td>
+<td>5.1 (8)</td>
+</tr>
+<tr>
+<td>Ethanol</td>
+<td>-</td>
+<td>-</td>
+<td>1.2 (2)</td>
+<td>1.1 (3)</td>
+</tr>
+<tr>
+<td>Malonaldehyde</td>
+<td>-</td>
+<td>-</td>
+<td>3.7 (9)</td>
+<td>1.4 (5)</td>
+</tr>
+<tr>
+<td>Naphthalene</td>
+<td>-</td>
+<td>-</td>
+<td>8.0 (7)</td>
+<td>1.4 (7)</td>
+</tr>
+<tr>
+<td>Salicylic acid</td>
+<td>-</td>
+<td>-</td>
+<td>8.2 (6)</td>
+<td>2.3 (8)</td>
+</tr>
+<tr>
+<td>Toluene</td>
+<td>-</td>
+<td>-</td>
+<td>7 (2)</td>
+<td>1.1 (3)</td>
+</tr>
+<tr>
+<td>Uracil</td>
+<td>-</td>
+<td>-</td>
+<td>30 (3)</td>
+<td>5.2 (1)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Force (meV/Å)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Aspirin</td>
+<td>47.7 (6)</td>
+<td>11.9 (7)</td>
+<td>54 (3)</td>
+<td>17 (1)</td>
+</tr>
+<tr>
+<td>Ethanol</td>
+<td>6.3 (8)</td>
+<td>5.2 (2)</td>
+<td>7.8 (2)</td>
+<td>6.1 (9)</td>
+</tr>
+<tr>
+<td>Malonaldehyde</td>
+<td>14 (1)</td>
+<td>7.1 (5)</td>
+<td>14.4 (9)</td>
+<td>7.5 (6)</td>
+</tr>
+<tr>
+<td>Naphthalene</td>
+<td>31 (1)</td>
+<td>1.9 (1)</td>
+<td>33 (2)</td>
+<td>2.9 (1)</td>
+</tr>
+<tr>
+<td>Salicylic acid</td>
+<td>42 (2)</td>
+<td>6.1 (8)</td>
+<td>44 (2)</td>
+<td>8.3 (4)</td>
+</tr>
+<tr>
+<td>Toluene</td>
+<td>23 (1)</td>
+<td>2.2 (4)</td>
+<td>27.8 (4)</td>
+<td>3.3 (4)</td>
+</tr>
+<tr>
+<td>Uracil</td>
+<td>25 (2)</td>
+<td>3.9 (8)</td>
+<td>30 (3)</td>
+<td>5.2 (1)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="materials-project">Materials Project</h3>
+<h4 id="mpf202128">MPF.2021.2.8<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Energy only</strong></th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+<th>PiNet2-P5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Energy (meV)</td>
+<td>35(4)</td>
+<td>35(4)</td>
+<td>32.2(4)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Energy &amp; Force</strong></th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+<th>PiNet2-P5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Energy (meV)</td>
+<td>42.0 (8)</td>
+<td>36(1)</td>
+<td>34.9 (7)</td>
+</tr>
+<tr>
+<td>Force (meV/Å)</td>
+<td>89(1)</td>
+<td>73(1)</td>
+<td>70(2)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mp-crystal-201861">MP-crystal-2018.6.1<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></h4>
+<p>PiNet     Energy MAE: 29.5(std:0.5) meV/atom</p>
+<p>PiNet2-P3 Energy MAE: 29  (std:1 )  meV/atom</p>
+<p>PiNet2-P3 Energy MAE: 27.7(std:0.5) meV/atom</p>
+<h2 id="performance">Performance</h2>
+<p>The training and inference computational costs were evaluated on an NVIDIA A100 GPU using the MPF.2021.2.8 dataset:</p>
+<p><img alt="performance_benchmark" src="../images/benchmark.png" width="750" /></p>
+<h2 id="previous-benchmarks-v120dev0">Previous benchmarks (v1.2.0.dev0)</h2>
+<h3 id="qm9_1">QM9<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></h3>
 <p>Energy MAE: 15.0(std:0.83) meV.</p>
-<h3 id="md172">MD17<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></h3>
+<h3 id="md17_1">MD17<sup id="fnref2:2"><a class="footnote-ref" href="#fn:2">2</a></sup></h3>
 <ul>
 <li>aspirin:   Energy MAE: 19.47(std:9.31) meV; Force MAE: 13.65(std:1.19) meV/Å.</li>
 <li>ethanol:   Energy MAE: 2.62(std:0.38) meV;  Force MAE: 1.98(std:0.08) meV/Å.</li>
@@ -274,10 +462,16 @@ nextflow run . -profile alvis
 <hr />
 <ol>
 <li id="fn:1">
-<p><sup>1</sup> R. Ramakrishnan, P.O. Dral, M. Rupp, and O.A. von Lilienfeld, “<a href="https://doi.org/10.1038/sdata.2014.22">Quantum chemistry structures and properties of 134 kilo molecules</a>,” Sci. Data <strong>1</strong>, 140022 (2014).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p><sup>1</sup> R. Ramakrishnan, P.O. Dral, M. Rupp, and O.A. von Lilienfeld, “<a href="https://doi.org/10.1038/sdata.2014.22">Quantum chemistry structures and properties of 134 kilo molecules</a>,” Sci. Data <strong>1</strong>, 140022 (2014).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:2">
-<p><sup>1</sup> S. Chmiela, A. Tkatchenko, H.E. Sauceda, I. Poltavsky, K.T. Schütt, and K.-R. Müller, “<a href="https://doi.org/10.1126/sciadv.1603015">Machine learning of accurate energy-conserving molecular force fields</a>,” Sci. Adv. <strong>3</strong>(5), (2017).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+<p><sup>1</sup> S. Chmiela, A. Tkatchenko, H.E. Sauceda, I. Poltavsky, K.T. Schütt, and K.-R. Müller, “<a href="https://doi.org/10.1126/sciadv.1603015">Machine learning of accurate energy-conserving molecular force fields</a>,” Sci. Adv. <strong>3</strong>(5), (2017).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><sup>1</sup> C. Chen, and S.P. Ong, “<a href="https://www.nature.com/articles/s43588-022-00349-3"><span class="nocase">A universal graph deep learning interatomic potential for the periodic table</span></a>,” Nat. Comput. Sci. <strong>2</strong>(11), 718–728 (2022).&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p><sup>1</sup> C. Chen, W. Ye, Y. Zuo, C. Zheng, and S.P. Ong, “<a href="https://doi.org/10.1021/acs.chemmater.9b01294">Graph networks as a universal machine learning framework for molecules and crystals</a>,” Chem. Mater. <strong>31</strong>(9), 3564–3572 (2019).&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
