@@ -275,7 +275,7 @@ def _dipole_tests(params):
         500).apply(sparse_batch(50))
 
     def test(): return load_numpy(data).apply(sparse_batch(10))
-    train_spec = tf.estimator.TrainSpec(input_fn=train, max_steps=1e3)
+    train_spec = tf.estimator.TrainSpec(input_fn=train, max_steps=1e2)
     eval_spec = tf.estimator.EvalSpec(input_fn=test, steps=100)
 
     model = pinn.get_model(params)
