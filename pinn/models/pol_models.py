@@ -23,8 +23,6 @@ import matplotlib.pyplot as plt
 from pinn import get_network
 from pinn.utils import pi_named
 from pinn.models.base import export_model, get_train_op, MetricsCollector
-from pinn.models.potential import potential_model
-from pinn.models.dipole import dipole_model
 from pinn.models import implemented_models
 
 index_warning = 'Converting sparse IndexedSlices'
