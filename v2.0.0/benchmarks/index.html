@@ -1,0 +1,499 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Benchmarks - PiNN</title>
+
+  <link rel="stylesheet" href="../css/theme.css">
+  <link rel="stylesheet" href="../css/notebook.css">
+  <link rel="stylesheet" href="../css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="../assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="../css/extra.css" rel="stylesheet">
+  
+    <link href="../css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="../css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="../css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = "..";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="../js/mike.js"></script>
+
+  
+    <script src="../js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href=".."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li class="active tab" >
+    <a href="..">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../usage/overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="../svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="../svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="../svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li class="active tab" >
+    <a href="..">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li >
+      <a href=".." class="">
+        Introduction
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../changelog/" class="">
+        Changelog
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../migration/" class="">
+        Migration
+      </a>
+    </li>
+
+                 
+                   
+    <li class="active">
+      <a href="./" class="">
+        Benchmarks
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="../contribute/" class="">
+        Contribute
+      </a>
+    </li>
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../usage/overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="../notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="benchmarks">Benchmarks</h1>
+<h2 id="about-the-benchmark">About the benchmark</h2>
+<p>PiNN collects a small set of benchmarks that are continuously tested
+against (see <a href="../changelog/#conventions">version convention</a>). The benchmark datasets and trained
+models are accessible from the shared <a href="https://uppsala.box.com/v/teoroo-cmc-pinn-data">box folder</a>.</p>
+<h2 id="latest-benchmarks-v200">Latest benchmarks (v2.0.0)</h2>
+<p>We have introduced equivariant features (P3 and P5) into the second-generation of PiNet. PiNet2-P3 shows a significant and cost-effective improvement on energy and force predictions across different types of datasets ranging from small molecules to crystalline materials, as compared to PiNet.</p>
+<h3 id="qm9">QM9<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></h3>
+<p>PiNet2-P3 Energy MAE: 8.0(std:0.1) meV</p>
+<h3 id="md17">MD17<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></h3>
+<table>
+<thead>
+<tr>
+<th><em>Forces Only</em> / <em>Energy &amp; Forces</em></th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Energy (meV)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Aspirin</td>
+<td>-</td>
+<td>-</td>
+<td>17 (3)</td>
+<td>5.1 (8)</td>
+</tr>
+<tr>
+<td>Ethanol</td>
+<td>-</td>
+<td>-</td>
+<td>1.2 (2)</td>
+<td>1.1 (3)</td>
+</tr>
+<tr>
+<td>Malonaldehyde</td>
+<td>-</td>
+<td>-</td>
+<td>3.7 (9)</td>
+<td>1.4 (5)</td>
+</tr>
+<tr>
+<td>Naphthalene</td>
+<td>-</td>
+<td>-</td>
+<td>8.0 (7)</td>
+<td>1.4 (7)</td>
+</tr>
+<tr>
+<td>Salicylic acid</td>
+<td>-</td>
+<td>-</td>
+<td>8.2 (6)</td>
+<td>2.3 (8)</td>
+</tr>
+<tr>
+<td>Toluene</td>
+<td>-</td>
+<td>-</td>
+<td>7 (2)</td>
+<td>1.1 (3)</td>
+</tr>
+<tr>
+<td>Uracil</td>
+<td>-</td>
+<td>-</td>
+<td>30 (3)</td>
+<td>5.2 (1)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Force (meV/Å)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Aspirin</td>
+<td>47.7 (6)</td>
+<td>11.9 (7)</td>
+<td>54 (3)</td>
+<td>17 (1)</td>
+</tr>
+<tr>
+<td>Ethanol</td>
+<td>6.3 (8)</td>
+<td>5.2 (2)</td>
+<td>7.8 (2)</td>
+<td>6.1 (9)</td>
+</tr>
+<tr>
+<td>Malonaldehyde</td>
+<td>14 (1)</td>
+<td>7.1 (5)</td>
+<td>14.4 (9)</td>
+<td>7.5 (6)</td>
+</tr>
+<tr>
+<td>Naphthalene</td>
+<td>31 (1)</td>
+<td>1.9 (1)</td>
+<td>33 (2)</td>
+<td>2.9 (1)</td>
+</tr>
+<tr>
+<td>Salicylic acid</td>
+<td>42 (2)</td>
+<td>6.1 (8)</td>
+<td>44 (2)</td>
+<td>8.3 (4)</td>
+</tr>
+<tr>
+<td>Toluene</td>
+<td>23 (1)</td>
+<td>2.2 (4)</td>
+<td>27.8 (4)</td>
+<td>3.3 (4)</td>
+</tr>
+<tr>
+<td>Uracil</td>
+<td>25 (2)</td>
+<td>3.9 (8)</td>
+<td>30 (3)</td>
+<td>5.2 (1)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="materials-project">Materials Project</h3>
+<h4 id="mpf202128">MPF.2021.2.8<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Energy only</strong></th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+<th>PiNet2-P5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Energy (meV)</td>
+<td>35(4)</td>
+<td>35(4)</td>
+<td>32.2(4)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Energy &amp; Force</strong></th>
+<th>PiNet</th>
+<th>PiNet2-P3</th>
+<th>PiNet2-P5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Energy (meV)</td>
+<td>42.0 (8)</td>
+<td>36(1)</td>
+<td>34.9 (7)</td>
+</tr>
+<tr>
+<td>Force (meV/Å)</td>
+<td>89(1)</td>
+<td>73(1)</td>
+<td>70(2)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mp-crystal-201861">MP-crystal-2018.6.1<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></h4>
+<p>PiNet     Energy MAE: 29.5(std:0.5) meV/atom</p>
+<p>PiNet2-P3 Energy MAE: 29  (std:1 )  meV/atom</p>
+<p>PiNet2-P3 Energy MAE: 27.7(std:0.5) meV/atom</p>
+<h2 id="performance">Performance</h2>
+<p>The training and inference computational costs were evaluated on an NVIDIA A100 GPU using the MPF.2021.2.8 dataset:</p>
+<p><img alt="performance_benchmark" src="../images/benchmark.png" width="750" /></p>
+<h2 id="previous-benchmarks-v120dev0">Previous benchmarks (v1.2.0.dev0)</h2>
+<h3 id="qm9_1">QM9<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></h3>
+<p>Energy MAE: 15.0(std:0.83) meV.</p>
+<h3 id="md17_1">MD17<sup id="fnref2:2"><a class="footnote-ref" href="#fn:2">2</a></sup></h3>
+<ul>
+<li>aspirin:   Energy MAE: 19.47(std:9.31) meV; Force MAE: 13.65(std:1.19) meV/Å.</li>
+<li>ethanol:   Energy MAE: 2.62(std:0.38) meV;  Force MAE: 1.98(std:0.08) meV/Å.</li>
+<li>uracil:    Energy MAE: 7.44(std:4.00) meV;  Force MAE: 6.72(std:0.07) meV/Å.</li>
+</ul>
+<h2 id="reproducing-the-benchmark">Reproducing the benchmark</h2>
+<p>To manually run the benchmarks with the latest version of PiNN you
+will need to have <a href="https://www.nextflow.io/">Nextflow</a> and <a href="https://docs.sylabs.io/guides/latest/user-guide/">Singularity</a> installed.</p>
+<div class="highlight"><pre><span></span><code>nextflow run teoroo-cmc/pinn -r master
+</code></pre></div>
+<h2 id="for-developers">For developers</h2>
+<p>Install PiNN in editable mode and run the benchmark
+from the <code>PiNN</code> folder.  You will probably need to set up the
+development environments on an HPC cluster (e.g. ALVIS):</p>
+<div class="highlight"><pre><span></span><code>ml<span class="w"> </span>TensorFlow/2.6.0-foss-2021a-CUDA-11.3.1
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="nv">$HOME</span>/pinn-tf26
+<span class="nb">source</span><span class="w"> </span><span class="nv">$HOME</span>/pinn-tf26/bin/activate
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>PiNN
+<span class="nb">cd</span><span class="w"> </span>PiNN
+</code></pre></div>
+<p>And run the benchmark using a corresponding profile:</p>
+<div class="highlight"><pre><span></span><code>export SLURM_ACCOUNT=NAISS2023-5-282
+export SALLOC_ACCOUNT=$SLURM_ACCOUNT
+export SBATCH_ACCOUNT=$SLURM_ACCOUNT
+nextflow run . -profile alvis
+</code></pre></div>
+<p>Adjust the scheduler setup in <code>nextflow.config</code> if needed.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><sup>1</sup> R. Ramakrishnan, P.O. Dral, M. Rupp, and O.A. von Lilienfeld, “<a href="https://doi.org/10.1038/sdata.2014.22">Quantum chemistry structures and properties of 134 kilo molecules</a>,” Sci. Data <strong>1</strong>, 140022 (2014).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><sup>1</sup> S. Chmiela, A. Tkatchenko, H.E. Sauceda, I. Poltavsky, K.T. Schütt, and K.-R. Müller, “<a href="https://doi.org/10.1126/sciadv.1603015">Machine learning of accurate energy-conserving molecular force fields</a>,” Sci. Adv. <strong>3</strong>(5), (2017).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><sup>1</sup> C. Chen, and S.P. Ong, “<a href="https://www.nature.com/articles/s43588-022-00349-3"><span class="nocase">A universal graph deep learning interatomic potential for the periodic table</span></a>,” Nat. Comput. Sci. <strong>2</strong>(11), 718–728 (2022).&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p><sup>1</sup> C. Chen, W. Ye, Y. Zuo, C. Zheng, and S.P. Ong, “<a href="https://doi.org/10.1021/acs.chemmater.9b01294">Graph networks as a universal machine learning framework for molecules and crystals</a>,” Chem. Mater. <strong>31</strong>(9), 3564–3572 (2019).&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+      <a href="../migration/" title="Migration"><span>«</span> Previous</a>
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="../contribute/" title="Contribute" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>

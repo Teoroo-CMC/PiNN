@@ -1,0 +1,326 @@
+<!--
+  This Basic theme serves as an example for how to create other
+  themes by demonstrating the features with minimal HTML and CSS.
+  Comments like this will be through the code to explain briefly
+  what each feature is and point you to the MkDocs documentation
+  to find out more.
+-->
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!--
+    The page_title contains the title for a page as shown in the navigation.
+    Site name contains the name as defined in the mkdocs.yml
+  -->
+  <title>Introduction - PiNN</title>
+
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/notebook.css">
+  <link rel="stylesheet" href="css/pygments.css">
+  <link rel="icon" href="data:,">
+  
+    <link href="assets/_mkdocstrings.css" rel="stylesheet">
+  
+    <link href="css/extra.css" rel="stylesheet">
+  
+    <link href="css/ansi-colours.css" rel="stylesheet">
+  
+    <link href="css/jupyter-cells.css" rel="stylesheet">
+  
+    <link href="css/pandas-dataframe.css" rel="stylesheet">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,600;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <script>
+    var base_url = ".";
+    $(document).ready(function(){
+          $('table').wrap('<div class="table-wrapper"></div>');
+    });
+  </script>
+
+  <script src="js/mike.js"></script>
+
+  
+    <script src="js/mathjax.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.3/tex-chtml-nofont.js"></script>
+  
+
+</head>
+
+<body>
+  <header class="header">
+    <ul>
+      <li id="logo">
+        <a href="."><span>Pi</span>NN</a>
+      </li>
+      
+      
+  
+  <li class="active tab" >
+    <a href=".">
+      Home
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="usage/overview/">
+      Usage
+    </a>
+  </li>
+
+      
+      
+  
+  <li  class="tab" >
+    <a href="notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+      
+      <li class="tools">
+        
+          <a id="nav-toggle" class="tool" onclick="nav_toggle()">
+        
+          <svg><use xlink:href="svg/sprite.svg#menu-2"></use></svg>
+        </a>
+        <script>
+           function nav_toggle() {
+               var bar = document.getElementById("tab-bar");
+               if (bar.style.display === "none") {
+                   bar.style.display = "block";
+               } else {
+                   bar.style.display = "none";
+               }
+           }
+          function nav_reset() {
+              var bar = document.getElementById("tab-bar");
+              if (window.innerWidth>950){
+                  bar.style.display = "block";
+              } else {
+                  bar.style.display = "none";
+              }
+          }
+          window.onresize = nav_reset;
+        </script>
+        
+        <a class="tool">
+          <svg><use xlink:href="svg/sprite.svg#tag"></use></svg>
+          <div class="version"></div>
+        </a>
+        
+        
+        <a class="tool" href="https://github.com/teoroo-cmc/pinn/">
+          <svg><use xlink:href="svg/sprite.svg#brand-github"></use></svg>
+          <span>teoroo-cmc/pinn</span>
+        </a>
+        
+      </li>
+    </ul>
+  </header>
+
+
+  <div id="main">
+    <div id="tab-bar">
+      <ul>
+      
+       
+  
+  <li class="active tab" >
+    <a href=".">
+      Home
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+                 
+                   
+    <li class="active">
+      <a href="." class="">
+        Introduction
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="changelog/" class="">
+        Changelog
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="migration/" class="">
+        Migration
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="benchmarks/" class="">
+        Benchmarks
+      </a>
+    </li>
+
+                 
+                   
+    <li >
+      <a href="contribute/" class="">
+        Contribute
+      </a>
+    </li>
+
+                 
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="usage/overview/">
+      Usage
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+       
+  
+  <li  class="tab" >
+    <a href="notebooks/overview/">
+      Notebooks
+    </a>
+  </li>
+
+         
+           <div class="nav-bar">
+             <ul>
+               
+             </ul>
+           </div>
+         
+      
+      </ul>
+    </div>
+
+    <div id="content">
+      <h1 id="introduction">Introduction</h1>
+<p>PiNN stands for pair-wise interaction neural network, a Python library built on top of TensorFlow for performing atomistic ML tasks. Besides training ML interatomic potentials, PiNN can also predict physical and chemical properties of molecules and materials (e.g. dipole moment and polarizability). It can be used together with the adaptive learn-on-the-fly plugin PiNNAcLe<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> and the heterogeneous electrode plugin PiNNwall<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> for modelling electrochemical systems.</p>
+<h2 id="flexibility">Flexibility</h2>
+<p><img alt="" src="images/implement.png" width="600" /></p>
+<p>PiNN is built with modularized components, and we try to make it as easy as
+possible. You do not have to rewrite everything if you just want to design a new
+network structure, or apply an existing network to new datasets or new
+properties.</p>
+<h2 id="scalability">Scalability</h2>
+<p>PiNN fully adheres to TensorFlow's high-level Estimator and Dataset API. It is
+straightforward to train and predict on different computing platforms (CPU,
+multiple-GPU, cloud, etc.) without explicit programming.</p>
+<h2 id="examples">Examples</h2>
+<p>The quickest way to start with PiNN is to follow our example
+<a href="notebooks/overview/">notebooks</a>. The notebooks provide guides to train a
+simple ANN potential with a public dataset, import your own data or further
+customize the PiNN for your need.</p>
+<h2 id="cite-pinn">Cite PiNN</h2>
+<p>If you find PiNN useful, welcome to cite it as:</p>
+<blockquote>
+<p>Li J, Knijff L, Zhang Z-Y, Andersson L, Zhang C. PiNN: equivariant neural network suite for modelling electrochemical systems. ChemRxiv. 2024; doi:10.26434/chemrxiv-2024-zfvrz This content is a preprint and has not been peer-reviewed.</p>
+</blockquote>
+<details class="note">
+<summary>Bibtex</summary>
+<div class="highlight"><pre><span></span><code><span class="nc">@UNPUBLISHED</span><span class="p">{</span><span class="nl">Li2024-wa</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;{PiNN}: equivariant neural network suite for modelling</span>
+<span class="s">              electrochemical systems&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;Li, Jichen and Knijff, Lisanne and Zhang, Zhan-Yun and Andersson,</span>
+<span class="s">              Linn{\&#39;e}a and Zhang, Chao&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">abstract</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;Electrochemical energy storage and conversion play an</span>
+<span class="s">              increasingly important role in electrification and sustainable</span>
+<span class="s">              development across the globe. A key challenge therein is to</span>
+<span class="s">              understand, control, and design electrochemical energy materials</span>
+<span class="s">              at atomistic precision. This requires inputs from molecular</span>
+<span class="s">              modelling powered by machine learning (ML) techniques. In this</span>
+<span class="s">              work, we have upgraded our pairwise interaction neural network</span>
+<span class="s">              Python package PiNN via introducing equivariant features to the</span>
+<span class="s">              PiNet2 architecture for fitting potential energy surfaces along</span>
+<span class="s">              with PiNet2-dipole for dipole and charge predictions as well as</span>
+<span class="s">              PiNet2-chi for generating atom-condensed charge response kernels.</span>
+<span class="s">              By benchmarking publicly accessible datasets of small molecules,</span>
+<span class="s">              crystalline materials, and liquid electrolytes, we found that the</span>
+<span class="s">              equivariant PiNet2 shows significant improvements over the</span>
+<span class="s">              original PiNet architecture and provides a state-of-the-art</span>
+<span class="s">              overall performance. Furthermore, leveraging on plug-ins such as</span>
+<span class="s">              PiNNAcLe for an adaptive learn-on-the-fly workflow in generating</span>
+<span class="s">              ML potentials and PiNNwall for modelling heterogeneous electrodes</span>
+<span class="s">              under external bias, we expect PiNN to serve as a versatile and</span>
+<span class="s">              high-performing ML-accelerated platform for molecular modelling</span>
+<span class="s">              of electrochemical systems.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">journal</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;ChemRxiv&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">month</span><span class="w">    </span><span class="p">=</span><span class="w">  </span><span class="nv">nov</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="w">     </span><span class="p">=</span><span class="w">  </span><span class="m">2024</span><span class="p">,</span>
+<span class="w">  </span><span class="na">keywords</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;Machine learning;Molecular dynamics;Liquid electrolyte;Ion</span>
+<span class="s">              transport;proton transfer;double layer;supercapacitor&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="na">language</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;en&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><sup>1</sup> Y. Shao, and C. Zhang, “<a href="https://arxiv.org/abs/2409.08886">PiNNAcLe: Adaptive learn-on-the-fly algorithm for machine-learning potential</a>,” arXiv:2409.08886, (2024).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><sup>1</sup> T. Dufils, L. Knijff, Y. Shao, and C. Zhang, “<a href="https://doi.org/10.1021/acs.jctc.3c00359">PiNNwall: Heterogeneous electrode models from integrating machine learning and atomistic simulation</a>,” J. Chem. Theory Comput. <strong>19</strong>(15), 5199–5209 (2023).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div>
+
+  </div>
+
+  <div class="page">
+    <div class="page-prev">
+      
+    </div>
+    <div class="page-next">
+      
+      <a href="changelog/" title="Changelog" />Next <span>»</span></a>
+      
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with <a href="https://www.mkdocs.org">mkdocs</a> and the <a href="https://github.com/yqshao/mkdocs-flux-theme">flux</a> theme.
+  </div>
+</body>
+</html>
