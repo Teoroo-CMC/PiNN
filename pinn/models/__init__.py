@@ -1,31 +1,32 @@
 # -*- coding: utf-8 -*-
 
+from pinn.models.potential import potential_model
+from pinn.models.dipole import dipole_model
+from pinn.models.AC import AC_dipole_model
+from pinn.models.AD import AD_dipole_model
+from pinn.models.BC_R import BC_R_dipole_model
+from pinn.models.AD_OS import AD_OS_dipole_model
+from pinn.models.AC_AD import AC_AD_dipole_model
+from pinn.models.AC_BC_R import AC_BC_R_dipole_model
+from pinn.models.AD_BC_R import AD_BC_R_dipole_model
+implemented_models = {
+    'potential_model': potential_model,
+    'dipole_model': dipole_model,
+    'AC_dipole_model': AC_dipole_model,
+    'AD_dipole_model': AD_dipole_model,
+    'BC_R_dipole_model': BC_R_dipole_model,
+    'AD_OS_dipole_model': AD_OS_dipole_model,
+    'AC_AD_dipole_model': AC_AD_dipole_model,
+    'AC_BC_R_dipole_model': AC_BC_R_dipole_model,
+    'AD_BC_R_dipole_model': AD_BC_R_dipole_model
+    }
+
 def get(model_spec, **kwargs):
     import yaml, os
     import numpy as np
     import tensorflow as tf
     from tensorflow.python.lib.io.file_io import FileIO
     from datetime import datetime
-    from pinn.models.potential import potential_model
-    from pinn.models.dipole import dipole_model
-    from pinn.models.AC import AC_dipole_model
-    from pinn.models.AD import AD_dipole_model
-    from pinn.models.BC_R import BC_R_dipole_model
-    from pinn.models.AD_OS import AD_OS_dipole_model
-    from pinn.models.AC_AD import AC_AD_dipole_model
-    from pinn.models.AC_BC_R import AC_BC_R_dipole_model
-    from pinn.models.AD_BC_R import AD_BC_R_dipole_model
-    implemented_models = {
-        'potential_model': potential_model,
-        'dipole_model': dipole_model,
-        'AC_dipole_model': AC_dipole_model,
-        'AD_dipole_model': AD_dipole_model,
-        'BC_R_dipole_model': BC_R_dipole_model,
-        'AD_OS_dipole_model': AD_OS_dipole_model,
-        'AC_AD_dipole_model': AC_AD_dipole_model,
-        'AC_BC_R_dipole_model': AC_BC_R_dipole_model,
-        'AD_BC_R_dipole_model': AD_BC_R_dipole_model
-        }
 
     if isinstance(model_spec, str):
         if tf.io.gfile.exists('{}/params.yml'.format(model_spec)):
