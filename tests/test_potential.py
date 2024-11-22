@@ -9,7 +9,7 @@ from shutil import rmtree
 from ase import Atoms
 
 @pytest.mark.forked
-def test_pinn_potential():
+def test_pinet_potential():
     testpath = tempfile.mkdtemp()
     network_params = {
         'ii_nodes': [8, 8],
@@ -36,6 +36,63 @@ def test_pinn_potential():
     _potential_tests(params)
     rmtree(testpath)
 
+@pytest.mark.forked
+def test_pinet2_p3_potential():
+    testpath = tempfile.mkdtemp()
+    network_params = {
+        'ii_nodes': [8, 8],
+        'pi_nodes': [8, 8],
+        'pp_nodes': [8, 8],
+        'out_nodes': [8, 8],
+        'depth': 3,
+        'rc': 5.,
+        'n_basis': 5,
+        'atom_types': [1],
+        'rank': 3
+    }
+    params = {
+        'model_dir': testpath,
+        'network': {
+            'name': 'PiNet2',
+            'params': network_params},
+        'model': {
+            'name': 'potential_model',
+            'params': {
+                'use_force': True,
+                'e_dress': {1: 0.5},
+                'e_scale': 5.0,
+                'e_unit': 2.0}}}
+    _potential_tests(params)
+    rmtree(testpath)
+
+@pytest.mark.forked
+def test_pinet2_p5_potential():
+    testpath = tempfile.mkdtemp()
+    network_params = {
+        'ii_nodes': [8, 8],
+        'pi_nodes': [8, 8],
+        'pp_nodes': [8, 8],
+        'out_nodes': [8, 8],
+        'depth': 3,
+        'rc': 5.,
+        'n_basis': 5,
+        'atom_types': [1],
+        'rank': 5
+    }
+    params = {
+        'model_dir': testpath,
+        'network': {
+            'name': 'PiNet2',
+            'params': network_params},
+        'model': {
+            'name': 'potential_model',
+            'params': {
+                'use_force': True,
+                'e_dress': {1: 0.5},
+                'e_scale': 5.0,
+                'e_unit': 2.0}}}
+    _potential_tests(params)
+    rmtree(testpath)
 
 @pytest.mark.forked
 def test_bpnn_potential():
@@ -188,7 +245,6 @@ def _potential_tests(params):
 
     de = e_pred[-1] - e_pred[0]
     int_f = np.trapz(f_pred[:, 0, 0], x=x_a_range)
-    print(f_pred)
     assert np.allclose(de, -int_f, rtol=1e-2)
 
     # Test virial pressure

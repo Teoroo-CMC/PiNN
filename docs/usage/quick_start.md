@@ -78,6 +78,30 @@ The above command takes a trajectory file `data.traj`, and splits it into two
 datasets. Then it takes the parameters from `params.yml`, and trains a model
 in the `model` directory.
 
+## Using nextflow
+
+Nextflow enables parallel training of multiple models on a cluster, maximizing the efficient use of computational resources. Follow the steps below to get started:
+
+1. **Install Nextflow**  
+   Ensure Nextflow is installed. You can find the installation instructions in the [Nextflow documentation](https://www.nextflow.io/docs/latest/install.html).
+
+2. **Set Up Configuration**  
+   Configure your cluster settings in the `nextflow.config` file. Examples are provided in this file to help you get started.
+
+3. **Define Your Data Pipeline**  
+   Add your data-loading pipeline in `nextflow/datasets.nf`.
+
+4. **Prepare Your Workflow**  
+   Define your workflow in `nextflow/main.nf`. For most tasks, you can reuse the existing processes provided.
+
+5. **Run the Workflow**  
+   Execute the workflow with the following command:  
+   ```bash
+   nextflow run /path/nextflow.config -profile alvis,pinet2_qm9_dipole -w /path/work_dir
+   ```
+
+Nextflow will now run in the foreground. To avoid interruptions if you close the terminal, it’s recommended to run Nextflow in a `tmux` session or use the `-bg` option to run it in the background. For more details, refer to the [CLI reference](https://www.nextflow.io/docs/latest/reference/cli.html).
+
 ## Monitoring
 PiNN uses TensorFlow as a backend for training, which means the training log can 
 be monitored in real time using Tensorboard:

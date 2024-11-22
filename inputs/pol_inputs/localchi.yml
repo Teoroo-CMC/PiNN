@@ -1,0 +1,45 @@
+model:
+  name: pol_localchi_model
+  params: {}
+model_dir: model
+network:
+  name: PiNet2
+  params:
+    atom_types:
+    - 1
+    - 6
+    - 7
+    - 8
+    - 16
+    - 17
+    basis_type: gaussian
+    depth: 5
+    ii_nodes:
+    - 32
+    - 32
+    - 32
+    - 32
+    n_basis: 20
+    out_extra:
+      i1: 1
+      i3: 1
+    out_nodes:
+    - 32
+    pi_nodes:
+    - 32
+    pp_nodes:
+    - 32
+    - 32
+    - 32
+    - 32
+    rc: 4.5
+optimizer:
+  class_name: Adam
+  config:
+    global_clipnorm: 0.01
+    learning_rate:
+      class_name: ExponentialDecay
+      config:
+        decay_rate: 0.994
+        decay_steps: 10000
+        initial_learning_rate: 0.0003

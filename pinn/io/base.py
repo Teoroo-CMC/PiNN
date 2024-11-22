@@ -3,7 +3,7 @@
 
 
 def sparse_batch(batch_size, drop_remainder=False, num_parallel_calls=8,
-                 atomic_props=['f_data', 'q_data', 'f_weights']):
+                 atomic_props=['f_data', 'q_data', 'f_weights', 'oxidation']):
     """This returns a dataset operation that transforms single samples
     into sparse batched samples. The atomic_props must include all
     properties that are defined on an atomic basis besides 'coord' and
@@ -66,7 +66,7 @@ def split_list(data, splits={'train': 8, 'test': 2}, shuffle=True, seed=0):
     return splitted
 
 
-def list_loader(pbc=False, force=False, ds_spec=None):
+def list_loader(pbc=False, force=False, stress=False, ds_spec=None):
     """Decorator for building dataset loaders"""
     from functools import wraps
     import tensorflow as tf
@@ -80,6 +80,8 @@ def list_loader(pbc=False, force=False, ds_spec=None):
             ds_spec['cell'] = {'dtype':  'float', 'shape': [3, 3]}
         if force:
             ds_spec['f_data'] = {'dtype':  'float', 'shape': [None, 3]}
+        if stress:
+            ds_spec['s_data'] = {'dtype':  'float', 'shape': [3, 3]}
     ds_spec = {k: tf.TensorSpec(**v) for k,v in ds_spec.items()}
     def decorator(func):
         @wraps(func)

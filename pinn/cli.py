@@ -9,6 +9,8 @@ import subprocess
 import click, pinn, os
 from pinn.report import report_log
 from typing import List
+import numpy as np
+from collections import defaultdict
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 CONTEXT_SETTINGS = dict()
@@ -38,7 +40,7 @@ def convert(filename, fmt, output, shuffle, seed, total):
     """
     from pinn.io import load_ds, write_tfrecord
     assert total >= -1, \
-        ValueError('Total used data must greater than 0')
+        ValueError('Total used data must greater than 0, -1 to retrieve all data')
     if ':' not in output: # single output
         ds = load_ds(filename, fmt=fmt)
         write_tfrecord(f'output.yml', ds.take(total))
@@ -74,9 +76,10 @@ def convert(filename, fmt, output, shuffle, seed, total):
 @click.option('--max-ckpts', metavar='', default=1, type=int, show_default=True)
 @click.option('--early-stop', metavar='', type=str, default=None, help="[default: None]")
 @click.option('--init/--no-init', metavar='', default=False, show_default=True)
+@click.option('--eval-bs', metavar='', type=int, default=None, help="default same with train batch size")
 def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
           scratch_dir, train_steps, eval_steps, shuffle_buffer,
-          max_ckpts, log_every, ckpt_every, early_stop, init):
+          max_ckpts, log_every, ckpt_every, early_stop, init, eval_bs):
     """Train a model with PiNN.
 
     See the documentation for more detailed descriptions of the options
@@ -102,10 +105,12 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
     if init:
         ds = load_tfrecord(train_ds)
         init_params(params, ds)
+    if eval_bs is None:
+        eval_bs = batch
 
     if scratch_dir is not None:
         scratch_dir = mkdtemp(prefix='pinn', dir=scratch_dir)
-    def _dataset_fn(fname):
+    def _dataset_fn(fname, batch):
         dataset = load_tfrecord(fname)
         if batch is not None:
             dataset = dataset.apply(sparse_batch(batch))
@@ -124,8 +129,8 @@ def train(params, model_dir, train_ds, eval_ds, batch, cache, preprocess,
             dataset = dataset.cache(cache_dir)
         return dataset
 
-    train_fn = lambda: _dataset_fn(train_ds).repeat().shuffle(shuffle_buffer)
-    eval_fn = lambda: _dataset_fn(eval_ds)
+    train_fn = lambda: _dataset_fn(train_ds, batch).repeat().shuffle(shuffle_buffer)
+    eval_fn = lambda: _dataset_fn(eval_ds, eval_bs)
     config = tf.estimator.RunConfig(keep_checkpoint_max=max_ckpts,
                                     log_step_count_steps=log_every,
                                     save_summary_steps=log_every,
@@ -183,14 +188,58 @@ def log(logdir, tag, fmt):
 
 @click.command(name='report', context_settings=CONTEXT_SETTINGS,
                 options_metavar='[options]', short_help='generate report')
-@click.argument('model_host_path', metavar='model_host_path', nargs=1)
-@click.option('-f', '--filter', metavar='', default='', show_default=True)
+@click.argument('publish_dir', metavar='publish_dir', nargs=1)
+@click.option('-k', '--keys', metavar='', default='', multiple=True)
 @click.option('-l', '--log-name', metavar='', default='eval.log', show_default=True)
-def report(model_host_path:str, filter:List[str], log_name:str='eval.log'):
-    model_host_path = Path(model_host_path)
-    log_paths = model_host_path.glob(f'**/{log_name}')
-    report_log(list(map(str, map(lambda x:x.parent, log_paths))), filter, log_name)
+@click.option('-e', '--energy-factor', metavar='', default=1, help='energy convert factor', type=float)
+@click.option('-f', '--force-factor', metavar='', default=0, help='energy convert factor', type=float)
+@click.option('-w', '--is_workdir', metavar='', default=False, help='extract result directly from nextflow work directory')
+def report(publish_dir:str, keys:List[str], log_name:str, energy_factor:str, force_factor:str, is_workdir: bool):
+    publish_dir = Path(publish_dir)
+    log_paths = publish_dir.glob(f'**/{log_name}')
+    result = {}  # path: [e_mae, f_mae]
+    for log_path in log_paths:
+        if is_workdir:
+            dirlist = [d for d in log_path.parent.iterdir() if d.is_dir()]
+            if len(dirlist) > 1:
+                raise ValueError('can not make a guess', dirlist)
+            model_name = str(dirlist[0])
+        else:
+            model_name = str(log_path.parent.stem)
+        if not all(map(lambda key: key in model_name, keys)):
+            continue
+        with open(log_path) as f:
+            header = f.readline()
+        fields = header.split()[1:]  # skip #
+        log = np.loadtxt(log_path)
+        e_mae = log[-1, 2]
+        result[model_name] = {field: log[-1, i] for i, field in enumerate(fields)}
+    reduced_data = defaultdict(dict)
+    for key, value in result.items():
+        prefix, _, _id = key.split('/')[-1].rpartition('-')
+        for k, v in value.items():
+            if k not in reduced_data[prefix]:
+                reduced_data[prefix][k] = []
+            reduced_data[prefix][k].append(v)
 
+    print('\t'.join(fields))
+    for prefix, data in reduced_data.items():
+        msg = {'model': prefix.split('/')[-1]}
+        for key, value in data.items():
+            if key == 'Step':
+                msg['Step'] = str(int(value[0]))
+            elif key == 'checkpoint_path':
+                continue
+            else:
+                vv = np.array(value)
+                if key.startswith("E"):
+                    vv *= energy_factor
+                elif key.startswith("F"):
+                    vv *= force_factor
+                msg[f'{key}_MEAN'] = f"{float(vv.mean()):.4f}"
+                msg[f'{key}_STD'] = f"{float(vv.std()):.4f}"
+
+        print(msg)
 
 main.add_command(convert)
 main.add_command(train)

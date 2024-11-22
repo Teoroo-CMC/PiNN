@@ -1,12 +1,7 @@
 model:
-  name: potential_model
+  name: AC_dipole_model
   params:
-    use_force: true
-    e_loss_multiplier: 1.0
-    f_loss_multiplier: 10.0
-    use_e_per_atom: false
-    log_e_per_atom: true
-    e_scale: 1.0
+    d_scale: 1.0
 network:
   name: PiNet2
   params:
@@ -18,7 +13,9 @@ network:
     pp_nodes: [64,64,64,64]
     ii_nodes: [64,64,64,64]
     out_nodes: [64]
-    weighted: True
+    weighted: False
+    atom_types: [1, 6, 7, 8, 9]
+    rank: 3
 optimizer:
   class_name: Adam
   config:

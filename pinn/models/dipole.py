@@ -7,9 +7,10 @@ the total dipole.
 """
 import numpy as np
 import tensorflow as tf
+
 from pinn import get_network
-from pinn.utils import pi_named
-from pinn.models.base import export_model, get_train_op, MetricsCollector
+from pinn.models.base import MetricsCollector, export_model, get_train_op
+from pinn.utils import count_atoms, pi_named
 
 default_params = {
     ### Scaling and units
@@ -33,7 +34,7 @@ default_params = {
 def dipole_model(features, labels, mode, params):
     """Model function for neural network dipoles"""
     network = get_network(params['network'])
-    model_params = default_params
+    model_params = default_params.copy()
     model_params.update(params['model']['params'])
 
     features = network.preprocess(features)
@@ -77,7 +78,7 @@ def make_metrics(features, d_pred, q_pred, params, mode):
 
     d_data = features['d_data']
     q_data = tf.zeros_like(q_pred)
-    d_data *= model_params['d_scale']
+    d_data *= params['d_scale']
     d_mask = tf.abs(d_data) > params['max_dipole'] if params['max_dipole'] else None
     d_weight = params['d_loss_multiplier']
     d_weight *= features['d_weight'] if params['use_d_weight'] else 1

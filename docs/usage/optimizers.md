@@ -25,7 +25,7 @@ optimizer:
 ```
 
 
-## EKF
+## EKF[@EFK_optimizers]
 
 The extended Kalman filter (EKF) is an alternative way to estimate the optimal
 weights in neural networks. The EKF has long been used in combination with
