@@ -2,18 +2,19 @@
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/Teoroo-CMC/PiNN/build_and_test.yml?branch=master&label=build&style=flat-square)
 
-PiNN<sup>[1](#fn1)</sup> is a Python library built on top of TensorFlow for
-building atomic neural network potentials. The PiNN library also provides
-elemental layers and abstractions to implement various atomic neural networks.
+PiNN<sup>[1](#fn1),[2](#fn2)</sup> is a pair-wise interaction neural network Python library built on top of TensorFlow. The PiNN library provides elemental layers and abstractions to implement various atomic neural networks.
 
-The code is currently maintained by Yunqi Shao at Uppsala University.
+This project was initiated by [Yunqi Shao][yqshao]. The code is currently maintained by the [TeC group][tec] at Uppsala University.
+
+[yqshao]:https://github.com/yqshao
+[tec]:https://tec-group.github.io/
 
 ## Requirements
 
 - Python >= 3.7
 - [ASE](https://wiki.fysik.dtu.dk/ase/) >= 3.19
 - [PyYAML](https://pyyaml.org/) > 3.01
-- [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[2](#fn2)</sup> and <=2.9<sup>[3](#fn3)</sup>
+- [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[3](#fn3)</sup> and <=2.9<sup>[4](#fn4)</sup>
 
 ## Installation
 
@@ -44,18 +45,21 @@ Since PiNN 1.0 the documentation is hosted on [Github pages](https://teoroo-cmc.
 
 - CP2K format
 - RuNNer format
-- ANI-1 dataset
-- QM9 dataset
+- ANI-1 format
+- QM9 format
+- DeePMD-kit format
 
 ### Implemented Networks
 
 - PiNet
 - Behler-Parrinello Neural Network
+- PiNet2
 
 ### Implemented models
 
 - Potential model
 - Dipole model
+- Polarizability model
 
 ## Community
 
@@ -76,18 +80,20 @@ Please follow the procedure below before you open a new issue.
   (platform, Python and TensorFlow version etc.).
 
 If you would like to add some new features via pull request, please
-discuss with the main developer (Yunqi Shao) first to see whether it
-fits the scope and aims of this project.
+discuss with us first to see whether it fits the scope and aims of this project.
 
 ## References and notes
 
 <a name="fn1">[1]</a> Shao, Y.; Hellström, M.; Mitev, P. D.; Knijff, L.; Zhang,
 C. PiNN: A Python Library for Building Atomic Neural Networks of Molecules and
-Materials. arXiv:1910.03376 [cond-mat, physics:physics] 2019.
+Materials. J. Chem. Inf. Model., 2020, 60, 3: 1184. 
 
-<a name="fn2">[2]</a> TensorFlow is not installed automatically by default.
+<a name="fn2">[2]</a> Li, J.; Knijff, L.; Zhang, Z.-Y.; Andersson, L.; Zhang,
+C. PiNN: Equivariant Neural Network Suite for Modelling Electrochemical Systems. ChemRxiv, 2024, DOI: 10.26434/chemrxiv-2024-zfvrz.
+
+<a name="fn3">[3]</a> TensorFlow is not installed automatically by default.
 Since TF 2.0 the GPU support is included in the stable release, ``pip install
 tensorflow>=2.4`` should be suitable for most user. 
 
-<a name="fn3">[3]</a> Currently the code is not compatible with TF 2.10 and above,
+<a name="fn4">[4]</a> Currently the code is not compatible with TF 2.10 and above,
 see [Issue #7](https://github.com/Teoroo-CMC/PiNN/issues/7) for details or updates.
