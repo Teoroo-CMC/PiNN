@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 
 with open('pinn/__init__.py') as f:
     version = re.search("__version__ = '(.*)'", f.read()).group(1)
+    print(version)
 
 def parse_reqs(filename):
     with open(filename) as f:
