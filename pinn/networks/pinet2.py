@@ -24,6 +24,12 @@ class PIXLayer(tf.keras.layers.Layer):
     \end{aligned}
     $$
 
+    $$
+    \begin{aligned}
+    {}^{5}\mathbb{I}_{ijxy\gamma} = W_{\zeta\gamma}^{'} \mathbf{1}_{j}^{'} {}^{5}\mathbb{P}_{ixy\zeta} + W_{\zeta\gamma}^{''} \mathbf{1}_{i}^{''} {}^{5}\mathbb{P}_{jxy\zeta}
+    \end{aligned}
+    $$
+
     `non-weighted`:
 
     $$
@@ -32,6 +38,11 @@ class PIXLayer(tf.keras.layers.Layer):
     \end{aligned}
     $$
 
+    $$
+    \begin{aligned}
+    {}^{5}\mathbb{I}_{ijxy\zeta} = \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\zeta}
+    \end{aligned}
+    $$
     """
 
     def __init__(self, weighted: bool, **kwargs):
@@ -87,11 +98,23 @@ class DotLayer(tf.keras.layers.Layer):
     \end{aligned}
     $$
 
+    $$
+    \begin{aligned}
+    {}^{5}\mathbb{P}_{i\zeta} = \sum_{xy\alpha\beta} W_{\beta\zeta}^{'} W_{\alpha\zeta}^{''}  {}^{5}\mathbb{P}_{ixy\alpha} {}^{5}\mathbb{P}_{ixy\beta}
+    \end{aligned}
+    $$
+
     `non-weighted`:
 
     $$
     \begin{aligned}
     {}^{3}\mathbb{P}_{i\zeta} = \sum_x {}^{3}\mathbb{P}_{ix\zeta} {}^{3}\mathbb{P}_{ix\zeta}
+    \end{aligned}
+    $$
+
+    $$
+    \begin{aligned}
+    {}^{5}\mathbb{P}_{i\zeta} = \sum_{xy} {}^{5}\mathbb{P}_{ixy\zeta} {}^{5}\mathbb{P}_{ixy\zeta}
     \end{aligned}
     $$
     """
