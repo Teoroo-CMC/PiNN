@@ -90,11 +90,3 @@ def report_md17():
         F_MAE = np.array(v)[:,1] * kcalpermol2meV
         print(f"- {k+':':10s} Energy MAE={np.mean(E_MAE):.2f}(std:{np.std(E_MAE):.2f}) meV; "
               f"Force MAE={np.mean(F_MAE):.2f}(std:{np.std(F_MAE):.2f}) meV/Å.")
-
-def main():
-    # report_qm9()
-    # report_md17()
-    report_all('rmd17', 'aspirin')
-
-if __name__ == "__main__":
-    main()

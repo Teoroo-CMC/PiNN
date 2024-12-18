@@ -193,11 +193,12 @@ def log(logdir, tag, fmt):
 @click.option('-l', '--log-name', metavar='', default='eval.log', show_default=True)
 @click.option('-e', '--energy-factor', metavar='', default=1, help='energy convert factor', type=float)
 @click.option('-f', '--force-factor', metavar='', default=0, help='energy convert factor', type=float)
-@click.option('-w', '--is_workdir', metavar='', default=False, help='extract result directly from nextflow work directory')
+@click.option('-w', '--is_workdir', is_flag=True, default=False, help='extract result directly from nextflow work directory')
 def report(publish_dir:str, keys:List[str], log_name:str, energy_factor:str, force_factor:str, is_workdir: bool):
     publish_dir = Path(publish_dir)
     log_paths = publish_dir.glob(f'**/{log_name}')
     result = {}  # path: [e_mae, f_mae]
+    fields = []
     for log_path in log_paths:
         if is_workdir:
             dirlist = [d for d in log_path.parent.iterdir() if d.is_dir()]
@@ -221,8 +222,9 @@ def report(publish_dir:str, keys:List[str], log_name:str, energy_factor:str, for
             if k not in reduced_data[prefix]:
                 reduced_data[prefix][k] = []
             reduced_data[prefix][k].append(v)
+    if not fields:
+        raise FileNotFoundError("None matched record found")
 
-    print('\t'.join(fields))
     for prefix, data in reduced_data.items():
         msg = {'model': prefix.split('/')[-1]}
         for key, value in data.items():
