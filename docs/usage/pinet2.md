@@ -41,6 +41,7 @@ The parameters for `PiNet2` are outlined in the network specification and can be
     }
 },
 ```
+The weighted flag indicates the inclusion of an additional trainable weight matrix in both the `DotLayer` and `PIXLayer`, by default is `False`. The detailed equations for these layers are provided below. 
 
 ## Network specification
 
