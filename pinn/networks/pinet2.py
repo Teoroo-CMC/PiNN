@@ -20,13 +20,13 @@ class PIXLayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    {}^{3}\mathbb{I}_{ijx\gamma} = W_{\zeta\gamma}^{'} \mathbf{1}_{j}^{'} {}^{3}\mathbb{P}_{ix\zeta} + W_{\zeta\gamma}^{''} \mathbf{1}_{i}^{''} {}^{3}\mathbb{P}_{jx\zeta}
+    {}^{3}\mathbb{I}_{ijx\gamma} = W_{\gamma\gamma} \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\gamma} + W_{\gamma\gamma}^{'} \mathbf{1}_{i}^{'} {}^{3}\mathbb{P}_{jx\gamma}
     \end{aligned}
     $$
 
     $$
     \begin{aligned}
-    {}^{5}\mathbb{I}_{ijxy\gamma} = W_{\zeta\gamma}^{'} \mathbf{1}_{j}^{'} {}^{5}\mathbb{P}_{ixy\zeta} + W_{\zeta\gamma}^{''} \mathbf{1}_{i}^{''} {}^{5}\mathbb{P}_{jxy\zeta}
+    {}^{5}\mathbb{I}_{ijxy\gamma} = W_{\gamma\gamma} \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\gamma} + W_{\gamma\gamma}^{'} \mathbf{1}_{i}^{'} {}^{5}\mathbb{P}_{jxy\gamma}
     \end{aligned}
     $$
 
@@ -34,13 +34,13 @@ class PIXLayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    {}^{3}\mathbb{I}_{ijx\zeta} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\zeta}
+    {}^{3}\mathbb{I}_{ijx\gamma} = \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\gamma}
     \end{aligned}
     $$
 
     $$
     \begin{aligned}
-    {}^{5}\mathbb{I}_{ijxy\zeta} = \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\zeta}
+    {}^{5}\mathbb{I}_{ijxy\gamma} = \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\gamma}
     \end{aligned}
     $$
     """
@@ -88,19 +88,20 @@ class PIXLayer(tf.keras.layers.Layer):
 
 
 class DotLayer(tf.keras.layers.Layer):
+
     R"""`DotLayer` stands for the dot product( $\langle,\rangle$ ). `DotLayer` has two styles, specified by the `weighted` argument:
 
     `weighted`:
 
     $$
     \begin{aligned}
-    {}^{3}\mathbb{P}_{i\zeta} = \sum_{x\alpha\beta} W_{\beta\zeta}^{'} W_{\alpha\zeta}^{''}  {}^{3}\mathbb{P}_{ix\alpha} {}^{3}\mathbb{P}_{ix\beta}
+    {}^{3}\mathbb{P}_{i\gamma} = \sum_{x} W_{\gamma\gamma} W_{\gamma\gamma}^{'}  {}^{3}\mathbb{P}_{ix\gamma} {}^{3}\mathbb{P}_{ix\gamma}
     \end{aligned}
     $$
 
     $$
     \begin{aligned}
-    {}^{5}\mathbb{P}_{i\zeta} = \sum_{xy\alpha\beta} W_{\beta\zeta}^{'} W_{\alpha\zeta}^{''}  {}^{5}\mathbb{P}_{ixy\alpha} {}^{5}\mathbb{P}_{ixy\beta}
+    {}^{5}\mathbb{P}_{i\gamma} = \sum_{xy} W_{\gamma\gamma} W_{\gamma\gamma}^{'}  {}^{5}\mathbb{P}_{ixy\gamma} {}^{5}\mathbb{P}_{ixy\gamma}
     \end{aligned}
     $$
 
@@ -108,13 +109,13 @@ class DotLayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    {}^{3}\mathbb{P}_{i\zeta} = \sum_x {}^{3}\mathbb{P}_{ix\zeta} {}^{3}\mathbb{P}_{ix\zeta}
+    {}^{3}\mathbb{P}_{i\gamma} = \sum_x {}^{3}\mathbb{P}_{ix\gamma} {}^{3}\mathbb{P}_{ix\gamma}
     \end{aligned}
     $$
 
     $$
     \begin{aligned}
-    {}^{5}\mathbb{P}_{i\zeta} = \sum_{xy} {}^{5}\mathbb{P}_{ixy\zeta} {}^{5}\mathbb{P}_{ixy\zeta}
+    {}^{5}\mathbb{P}_{i\gamma} = \sum_{xy} {}^{5}\mathbb{P}_{ixy\gamma} {}^{5}\mathbb{P}_{ixy\gamma}
     \end{aligned}
     $$
     """
@@ -138,7 +139,7 @@ class DotLayer(tf.keras.layers.Layer):
             tensor (`tensor`): tensor to be dot producted
 
         Returns:
-            tensor: dot producted tensor
+            tensor (`tensor`): dot producted tensor
         """
         if self.weighted:
             return tf.einsum("ixr,ixr->ir", self.wi(tensor), self.wj(tensor))
@@ -151,7 +152,7 @@ class ScaleLayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    \mathbb{X}_{..x\alpha} = \mathbb{X}_{..x\alpha} \mathbb{X}_{..\alpha}
+    \mathbb{X}_{..x\alpha}^{\prime} = \mathbb{X}_{..x\alpha} \mathbb{X}_{..\alpha}
     \end{aligned}
     $$
     """
@@ -165,7 +166,7 @@ class ScaleLayer(tf.keras.layers.Layer):
             tensor (list of tensors): list of `[tensor, scalar]` tensors
 
         Returns:
-            tensor: scaled tensor
+            tensor (`tensor`): scaled tensor
         """
         px, p1 = tensor
         return px * p1[:, None, :]
@@ -304,13 +305,15 @@ class GCBlock(tf.keras.layers.Layer):
     def __init__(self, rank, weighted: bool, pp_nodes, pi_nodes, ii_nodes, **kwargs):
         super(GCBlock, self).__init__()
         self.rank = rank
+        # n_props: number of properties
+        # rank 1 -> 1, rank 3 -> 2, rank 5 -> 3
         self.n_props = int(rank // 2) + 1
         ppx_nodes = [pp_nodes[-1]]
         if rank >= 1:
             ii1_nodes = ii_nodes.copy()
             pp1_nodes = pp_nodes.copy()
-            ii1_nodes[-1] *= self.n_props
-            pp1_nodes[-1] = ii_nodes[-1] * self.n_props
+            ii1_nodes[-1] *= self.n_props  # for first split
+            pp1_nodes[-1] = ii_nodes[-1] * self.n_props  # second split
             self.invar_p1_layer = InvarLayer(pp_nodes, pi_nodes, ii1_nodes, **kwargs)
             self.pp_layer = FFLayer(pp1_nodes, **kwargs)
 
@@ -370,8 +373,8 @@ class GCBlock(tf.keras.layers.Layer):
             new_tensors["i5"] = i5
             new_tensors["dotted_p5"] = dotted_p5
 
-        p1t1 = self.pp_layer(
-            tf.concat(
+        p1t1 = self.pp_layer(  # 1P''(i3r) -> fflayer -> 1P'(i3r)
+            tf.concat(  # 1P''(i3r) := [1P' 3P' 5P']
                 px_list,
                 axis=-1,
             )

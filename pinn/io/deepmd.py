@@ -15,7 +15,7 @@ def load_deepmd(fdict_or_fpath, type_map=None, pbc=True, shuffle=True, seed=0):
     | `type`    | `path/type.raw` | `elems`           |
 
     Args:
-        files (dict | Path | str): input files
+        fdict_or_fpath (dict | Path | str): input files
         type_map (dict | Path | str): mapping of type id to atomic number
         pbc (bool): flag of periodic boundary condition
         shuffle (bool): shuffle the dataset (only used when splitting)

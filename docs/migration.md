@@ -1,6 +1,6 @@
 # Migrating to PiNN 2.x
 
-Since version 2.x, a modularized design, **PiNet2**, has been implemented for equivariant atomistic potential training. **PiNet2** is compatible with **PiNet1**, and you can use the `rank` parameter to specify the desired feature order. To use PiNet, you can either call `pinet` or use `pinet2(rank=2)`—both are functionally equivalent. However, trained models are not interchangeable between the two, meaning you will need to retrain your model if switching versions.
+Since version 2.x, a modularized design, **PiNet2**, has been implemented for equivariant atomistic potential training. **PiNet2** is compatible with **PiNet1**, and you can use the `rank` parameter to specify the desired feature order. To use PiNet, you can either call `pinet` or use `pinet2(rank=3)`—both are functionally equivalent. However, trained models are not interchangeable between the two, meaning you will need to retrain your model if switching versions.
 
 A workflow using [Nextflow](https://www.nextflow.io/docs/latest/index.html) is also integrated, enabling model training on clusters via SLURM or other resource management systems. Examples can be found in the `nextflow.config` file and the [notebook](./notebooks/More_on_training.ipynb).
 
@@ -31,7 +31,7 @@ an experimental extended Kalman filter (EKF) optimizer is implemented.
 - Documentation is now built with mkdocs.
 - Documentation is moved to Github pages.
 - Continuous integration is moved to Github Actions.
-- The Docker Hub repo is now [teoroo/pinn](https://hub.docker.com/repository/docker/teoroo/pinn).
+- The Docker Hub repo is now [teo@uu/pinn](https://hub.docker.com/r/teoroo/pinn).
 
 **Datasets**: dataset loaders should be most compatible with PiNN 0.x. With the
 TF2 update, dataset may be inspected interactively with eager execution.
@@ -47,7 +47,7 @@ interpret the predictions of PiNN networks as physical quantities and interface
 them to atomic simulation packages.
 
 **Models**:
-new helper function `export_mode` and class `MetricsCollector` are implemented to
+new helper function `export_model` and class `MetricsCollector` are implemented to
 simplify the implementation of models, see the source of [dipole
 model](https://github.com/Teoroo-CMC/PiNN/blob/master/pinn/models/dipole.py) for an
 example.
