@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-from pinn.utils import pi_named, connect_dist_grad
 from pinn.layers import (
     CellListNL,
     CutoffFunc,

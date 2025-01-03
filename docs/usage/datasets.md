@@ -18,7 +18,7 @@ a `.tfr` file holds the data. For example:
 from glob import glob
 from pinn.io import load_ds, write_tfrecord
 from pinn.io import write_tfrecord
-filelist = glob('/home/yunqi/datasets/QM9/dsgdb9nsd/*.xyz')
+filelist = glob('{DATASET_PATH}/QM9/dsgdb9nsd/*.xyz')
 dataset = load_ds(filelist, fmt='qm9', splits={'train':8, 'test':2})['train']
 write_tfrecord('train.yml', train_set)
 train_ds = load_ds('train.yml')

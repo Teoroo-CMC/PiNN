@@ -121,7 +121,8 @@ def _gen_frame_list(fname):
 
 def load_runner(flist, splits=None, shuffle=True, seed=0):
     """
-    Loads runner formatted trajectory
+    Loads runner formatted trajectory. Bohr is converted to Angstrom automatically.
+
     Args:
         flist (str): one or a list of runner formatted trajectory(s)
         splits (dict): key-val pairs specifying the ratio of subsets

@@ -30,9 +30,9 @@ customize the PiNN for your need.
 
 If you find PiNN useful, welcome to cite it as:
 
-> [1] Li J, Knijff L, Zhang Z-Y, Andersson L, Zhang C. PiNN: equivariant neural network suite for modelling electrochemical systems. ChemRxiv. 2024; doi:10.26434/chemrxiv-2024-zfvrz This content is a preprint and has not been peer-reviewed.
+> [1] Li J, Knijff L, Zhang Z-Y, Andersson L, Zhang C. PiNN: equivariant neural network suite for modelling electrochemical systems. ChemRxiv. 2024; doi:10.26434/chemrxiv-2024-zfvrz
 
-> [2] Y. Shao, M. Hellström, P. D. Mitev, L. Knijff, and C. Zhang. PiNN: a python library for building atomic neural networks of molecules and materials. J. Chem. Inf. Model., 60:1184–1193, January 2020. doi:10.1021/acs.jcim.9b00994.
+> [2] Y. Shao, M. Hellström, P. D. Mitev, L. Knijff, and C. Zhang. PiNN: a python library for building atomic neural networks of molecules and materials. J. Chem. Inf. Model., 60:1184-1193, January 2020. doi:10.1021/acs.jcim.9b00994.
 
 ??? note "Bibtex"
     ```bibtex

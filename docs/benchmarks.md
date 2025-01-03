@@ -20,9 +20,8 @@ PiNet2-P3 Energy MAE: 8.0(std:0.1) meV
 ### MD17[@2017_ChmielaTkatchenkoEtAl]
 
 
-| *Forces Only* / *Energy & Forces*  | PiNet         | PiNet2-P3       | PiNet         | PiNet2-P3       |
+| **Energy (meV)**  |PiNet (Forces only) | PiNet2-P3 (Forces only) | PiNet | PiNet2-P3  |
 |---------------------|---------------|-----------------|---------------|-----------------|
-| **Energy (meV)**    |               |                 |               |                 |
 | Aspirin             | -             | -               | 17 (3)        | 5.1 (8)         |
 | Ethanol             | -             | -               | 1.2 (2)       | 1.1 (3)         |
 | Malonaldehyde       | -             | -               | 3.7 (9)       | 1.4 (5)         |
@@ -30,8 +29,9 @@ PiNet2-P3 Energy MAE: 8.0(std:0.1) meV
 | Salicylic acid      | -             | -               | 8.2 (6)       | 2.3 (8)         |
 | Toluene             | -             | -               | 7 (2)         | 1.1 (3)         |
 | Uracil              | -             | -               | 30 (3)        | 5.2 (1)         |
-|                     |               |                 |               |                 |
-| **Force (meV/Å)**   |               |                 |               |                 |
+
+| **Force (meV/Å)**   |PiNet (Forces only) | PiNet2-P3 (Forces only) | PiNet | PiNet2-P3  |
+|---------------------|---------------|-----------------|---------------|-----------------|
 | Aspirin             | 47.7 (6)      | 11.9 (7)        | 54 (3)        | 17 (1)          |
 | Ethanol             | 6.3 (8)       | 5.2 (2)         | 7.8 (2)       | 6.1 (9)         |
 | Malonaldehyde       | 14 (1)        | 7.1 (5)         | 14.4 (9)      | 7.5 (6)         |

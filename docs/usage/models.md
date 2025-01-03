@@ -67,7 +67,7 @@ model = pinn.get_model('pinet_potential')
 The PiNN model is a TensorFlow estimator, to train the model in a python script:
 
 ```Python
-filelist = glob('/home/yunqi/datasets/QM9/dsgdb9nsd/*.xyz')
+filelist = glob('{DATASET_PATH}/QM9/dsgdb9nsd/*.xyz')
 dataset = lambda: load_qm9(filelist, splits={'train':8, 'test':2})
 train = lambda: dataset()['train'].repeat().shuffle(1000).apply(sparse_batch(100))
 test = lambda: dataset()['test'].repeat().apply(sparse_batch(100))
