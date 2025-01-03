@@ -26,11 +26,11 @@ cd PiNN && pip install -e .
 ```
 
 Or use the [docker
-image](https://cloud.docker.com/repository/docker/teoroo/pinn/tags). If you use
+image](https://hub.docker.com/r/tecatuu/pinn/tags). If you use
 singularity, you can build a singularity image directly from the docker image:
 
 ``` sh
-singularity build pinn.sif docker://teoroo/pinn:master-gpu (or master-cpu)
+singularity build pinn.sif docker://tecatuu/pinn:master-gpu (or master-cpu)
 singularity exec pinn.sif jupyter notebook # this starts a jupyter notebook server
 ./pinn.sif --help # this invokes the pinn CLI
 ```
