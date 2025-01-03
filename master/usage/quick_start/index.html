@@ -388,12 +388,12 @@ pinn<span class="w"> </span>-h
 <p><strong>using container</strong> </p>
 <p>PiNN provides two built docker images, which can be converted to singularity
 images without much effort:</p>
-<div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>build<span class="w"> </span>pinn.sif<span class="w"> </span>docker://teoroo/pinn:master-gpu
+<div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>build<span class="w"> </span>pinn.sif<span class="w"> </span>docker://tecatuu/pinn:master-gpu
 ./pinn.sif<span class="w"> </span>-h
 </code></pre></div>
 <ul>
-<li><code>:latest-cpu</code> is much smaller, it comes without GPU support</li>
-<li><code>:latest-gpu</code> is the version with GPU support</li>
+<li><code>:master-cpu</code> is much smaller, it comes without GPU support</li>
+<li><code>:master-gpu</code> is the version with GPU support</li>
 </ul>
 <p>Extra dependencies like <code>Jupyter</code> are included in the image, for a quick 
 development environment:</p>
