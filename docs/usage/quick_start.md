@@ -22,12 +22,12 @@ PiNN provides two built docker images, which can be converted to singularity
 images without much effort:
 
 ```bash
-singularity build pinn.sif docker://teoroo/pinn:master-gpu
+singularity build pinn.sif docker://tecatuu/pinn:master-gpu
 ./pinn.sif -h
 ```
 
-- `:latest-cpu` is much smaller, it comes without GPU support
-- `:latest-gpu` is the version with GPU support
+- `:master-cpu` is much smaller, it comes without GPU support
+- `:master-gpu` is the version with GPU support
 
 Extra dependencies like `Jupyter` are included in the image, for a quick 
 development environment:

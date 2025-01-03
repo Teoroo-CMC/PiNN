@@ -19,6 +19,7 @@ network:
     pp_nodes: [64,64,64,64]
     ii_nodes: [64,64,64,64]
     out_nodes: [64]
+    weighted: False
     rank: 3
 optimizer:
   class_name: Adam
