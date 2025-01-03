@@ -31,7 +31,7 @@ an experimental extended Kalman filter (EKF) optimizer is implemented.
 - Documentation is now built with mkdocs.
 - Documentation is moved to Github pages.
 - Continuous integration is moved to Github Actions.
-- The Docker Hub repo is now [teo@uu/pinn](https://hub.docker.com/r/tecatuu/pinn).
+- The Docker Hub repo is now [tec@uu/pinn](https://hub.docker.com/r/tecatuu/pinn).
 
 **Datasets**: dataset loaders should be most compatible with PiNN 0.x. With the
 TF2 update, dataset may be inspected interactively with eager execution.
