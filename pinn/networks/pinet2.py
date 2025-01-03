@@ -435,7 +435,7 @@ class PiNet2(tf.keras.Model):
         out_pool=False,
         act="tanh",
         depth=4,
-        weighted=True,
+        weighted=False,
         rank=3,
     ):
         """
