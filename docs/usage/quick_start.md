@@ -97,10 +97,14 @@ Nextflow enables parallel training of multiple models on a cluster, maximizing t
 5. **Run the Workflow**  
    Execute the workflow with the following command:  
    ```bash
-   nextflow run /path/nextflow.config -profile alvis,pinet2_qm9_dipole -w /path/work_dir
+   nextflow run /path/nextflow.config -profile pinet2_qm9_dipole -w /path/work_dir
    ```
-
-Nextflow will now run in the foreground. To avoid interruptions if you close the terminal, it’s recommended to run Nextflow in a `tmux` session or use the `-bg` option to run it in the background. For more details, refer to the [CLI reference](https://www.nextflow.io/docs/latest/reference/cli.html).
+   The profile settings in `nextflow.config` are composable. For example, if you want to use a Docker image on the HPC `alvis` to run the `pinet2_qm9_dipole` workflow, you can use the following command:
+   ```bash
+   nextflow run /path/nextflow.config -profile pinet2_qm9_dipole,alvis,docker -w /path/work_dir
+   ```
+   This command will automatically pull the Docker image and submit the SLURM tasks.
+   Nextflow will now run in the foreground. To avoid interruptions if you close the terminal, it’s recommended to run Nextflow in a `tmux` session or use the `-bg` option to run it in the background. For more details, refer to the [CLI reference](https://www.nextflow.io/docs/latest/reference/cli.html).
 
 ## Monitoring
 PiNN uses TensorFlow as a backend for training, which means the training log can 
