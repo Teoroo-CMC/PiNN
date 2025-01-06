@@ -2,8 +2,7 @@
 """This file implements loaders for the QM7b dataset.
 """
 
-import os, re, warnings
-from pinn.io import sparse_batch
+import re
 from pinn.io import list_loader
 import tensorflow as tf
 import numpy as np
@@ -16,7 +15,7 @@ ds_spec = {
 
 def get_frame_list(fname):
     import mmap, re
-    r = re.compile(b'\n\d')
+    r = re.compile(r'\n\d')
     with open(fname) as f:
         m = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
         indices = [match.span()[0]+1 for match in r.finditer(m)]
