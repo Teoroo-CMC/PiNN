@@ -18,7 +18,6 @@ The code is upgraded for PiNet2 from the original PiNet-chi implementation by Yu
 import os
 import warnings
 
-import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
@@ -335,6 +334,7 @@ def make_Dfield_eta(eta, R, cell, atom_rind):
     return A_Dfield
 
 def pol_corr_plot(pol_pred, pol_data):
+    import matplotlib.pyplot as plt
     f, axs = plt.subplots(2, 2,
                           gridspec_kw={
                               'wspace': 0, 'hspace':0,
@@ -376,6 +376,7 @@ def pol_corr_plot(pol_pred, pol_data):
     axs[1,0].set_ylabel('$\\alpha$ predictions [bohr$^3$]')
 
 def egap_corr_plot(data,pred,name,xmin=0.1,xmax=0.4):
+    import matplotlib.pyplot as plt
     f, axs = plt.subplots(2, 2,
                           gridspec_kw={
                               'wspace': 0, 'hspace':0,

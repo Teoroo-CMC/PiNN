@@ -37,7 +37,7 @@ process gen_qm9 {
   _labels = ['tag', 'index', 'A', 'B', 'C', 'mu', 'alpha', 'homo',
              'lumo', 'gap', 'r2', 'zpve', 'U0', 'U', 'H', 'G', 'Cv']
   _label_ind = {k: i for i, k in enumerate(_labels)}
-  label_map  = {'e_data': 'U0'}
+  label_map  = {'e_data': 'U0', 'd_data': 'mu'}
   
   @list_loader(ds_spec=_qm9_spec(label_map))
   def load_qm9_tar(name):
@@ -295,7 +295,7 @@ def load_mpf(datum):
     'cell': cell,
     'e_data': np.array(energy),
     'f_data': np.array(forces),
-    's_data': np.array(stress)
+    # 's_data': np.array(stress)
   }
 
 mpf_ds = load_mpf(flatten_data)

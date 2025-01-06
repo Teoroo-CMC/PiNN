@@ -9,7 +9,7 @@ The dipole moment is expressed as:
 
 $$
 \begin{aligned}
-\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{ox}_{i} \cdot \mathbf{r}_{i}
+\mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{\mathrm{os}}_{i} \cdot \mathbf{r}_{i}
 \end{aligned}
 $$
 
@@ -56,7 +56,7 @@ def AD_OS_dipole_model(features, labels, mode, params):
 
     $$
     \begin{aligned}
-    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{ox}_{i} \cdot \mathbf{r}_{i}
+    \mu = \sum_{i}{}^{3}\mathbb{P}_{i} + q^{\mathrm{os}}_{i} \cdot \mathbf{r}_{i}
     \end{aligned}
     $$
     """
