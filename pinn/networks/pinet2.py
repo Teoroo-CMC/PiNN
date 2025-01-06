@@ -34,13 +34,13 @@ class PIXLayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    {}^{3}\mathbb{I}_{ijx\gamma} = W_{i} \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\gamma} + W_{j}^{'} \mathbf{1}_{i}^{'} {}^{3}\mathbb{P}_{jx\gamma}
+    {}^{3}\mathbb{I}_{ijx\gamma} = W_{\gamma\gamma} \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\gamma} + W_{\gamma\gamma}^{'} \mathbf{1}_{i}^{'} {}^{3}\mathbb{P}_{jx\gamma}
     \end{aligned}
     $$
 
     $$
     \begin{aligned}
-    {}^{5}\mathbb{I}_{ijxy\gamma} = W_{i} \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\gamma} + W_{j}^{'} \mathbf{1}_{i}^{'} {}^{5}\mathbb{P}_{jxy\gamma}
+    {}^{5}\mathbb{I}_{ijxy\gamma} = W_{\gamma\gamma} \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\gamma} + W_{\gamma\gamma}^{'} \mathbf{1}_{i}^{'} {}^{5}\mathbb{P}_{jxy\gamma}
     \end{aligned}
     $$
     """
@@ -109,13 +109,13 @@ class DotLayer(tf.keras.layers.Layer):
 
     $$
     \begin{aligned}
-    {}^{3}\mathbb{P}_{i\gamma} = \sum_{x} W_{i} W_{i}^{'}  {}^{3}\mathbb{P}_{ix\gamma} {}^{3}\mathbb{P}_{ix\gamma}
+    {}^{3}\mathbb{P}_{i\gamma} = \sum_{x} W_{\gamma\gamma}   {}^{3}\mathbb{P}_{ix\gamma} W_{\gamma\gamma}^{'} {}^{3}\mathbb{P}_{ix\gamma}
     \end{aligned}
     $$
 
     $$
     \begin{aligned}
-    {}^{5}\mathbb{P}_{i\gamma} = \sum_{xy} W_{i} W_{i}^{'}  {}^{5}\mathbb{P}_{ixy\gamma} {}^{5}\mathbb{P}_{ixy\gamma}
+    {}^{5}\mathbb{P}_{i\gamma} = \sum_{xy} W_{\gamma\gamma}   {}^{5}\mathbb{P}_{ixy\gamma} W_{\gamma\gamma}^{'} {}^{5}\mathbb{P}_{ixy\gamma}
     \end{aligned}
     $$
 
