@@ -456,8 +456,7 @@ trained on the egap. </p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">493</span>
-<span class="normal">494</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">494</span>
 <span class="normal">495</span>
 <span class="normal">496</span>
 <span class="normal">497</span>
@@ -502,7 +501,8 @@ trained on the egap. </p>
 <span class="normal">536</span>
 <span class="normal">537</span>
 <span class="normal">538</span>
-<span class="normal">539</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_eem_model&#39;</span><span class="p">)</span>
+<span class="normal">539</span>
+<span class="normal">540</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_eem_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_eem_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot; The EEM model calculates $\boldsymbol{\chi}$ based on electronegativity equalization. The matrix </span>
 <span class="sd">    $\boldsymbol{\eta}_\mathrm{e}$ is calculated as</span>
@@ -580,8 +580,7 @@ trained on the egap. </p>
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">437</span>
-<span class="normal">438</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">438</span>
 <span class="normal">439</span>
 <span class="normal">440</span>
 <span class="normal">441</span>
@@ -633,7 +632,8 @@ trained on the egap. </p>
 <span class="normal">487</span>
 <span class="normal">488</span>
 <span class="normal">489</span>
-<span class="normal">490</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_acks2_model&#39;</span><span class="p">)</span>
+<span class="normal">490</span>
+<span class="normal">491</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_acks2_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_acks2_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;The ACKS2 model calculates $\boldsymbol{\chi}$ based on the Dyson equation: </span>
 
@@ -718,8 +718,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">542</span>
-<span class="normal">543</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">543</span>
 <span class="normal">544</span>
 <span class="normal">545</span>
 <span class="normal">546</span>
@@ -765,7 +764,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">586</span>
 <span class="normal">587</span>
 <span class="normal">588</span>
-<span class="normal">589</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_etainv_model&#39;</span><span class="p">)</span>
+<span class="normal">589</span>
+<span class="normal">590</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_etainv_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_etainv_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;The EtaInv model directly predicts the matrix $\boldsymbol{\eta}^{-1}$ as </span>
 
@@ -840,8 +840,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">617</span>
-<span class="normal">618</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">618</span>
 <span class="normal">619</span>
 <span class="normal">620</span>
 <span class="normal">621</span>
@@ -915,7 +914,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">689</span>
 <span class="normal">690</span>
 <span class="normal">691</span>
-<span class="normal">692</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_local_model&#39;</span><span class="p">)</span>
+<span class="normal">692</span>
+<span class="normal">693</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_local_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_local_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;The Local model calculates $\boldsymbol{\chi}$ and $\boldsymbol{\alpha}$ as sums of local predictions </span>
 <span class="sd">       $\boldsymbol{\chi}_i$ and $\boldsymbol{\alpha}_i$. Local predictions are calculated as</span>
@@ -1009,8 +1009,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">592</span>
-<span class="normal">593</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">593</span>
 <span class="normal">594</span>
 <span class="normal">595</span>
 <span class="normal">596</span>
@@ -1031,7 +1030,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">611</span>
 <span class="normal">612</span>
 <span class="normal">613</span>
-<span class="normal">614</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_localchi_model&#39;</span><span class="p">)</span>
+<span class="normal">614</span>
+<span class="normal">615</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_localchi_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_localchi_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot; In the Local chi model $\boldsymbol{\chi}$ = $\boldsymbol{\chi}_\mathrm{s}$ as calculated in the ACKS2 model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1078,8 +1078,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">744</span>
-<span class="normal">745</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">745</span>
 <span class="normal">746</span>
 <span class="normal">747</span>
 <span class="normal">748</span>
@@ -1120,7 +1119,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">783</span>
 <span class="normal">784</span>
 <span class="normal">785</span>
-<span class="normal">786</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_eem_iso_model&#39;</span><span class="p">)</span>
+<span class="normal">786</span>
+<span class="normal">787</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_eem_iso_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_eem_iso_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;EEM-model with the addition of an isotropic term for the polarizability tensor. </span>
 
@@ -1187,8 +1187,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">694</span>
-<span class="normal">695</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">695</span>
 <span class="normal">696</span>
 <span class="normal">697</span>
 <span class="normal">698</span>
@@ -1235,7 +1234,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">739</span>
 <span class="normal">740</span>
 <span class="normal">741</span>
-<span class="normal">742</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_acks2_iso_model&#39;</span><span class="p">)</span>
+<span class="normal">742</span>
+<span class="normal">743</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_acks2_iso_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_acks2_iso_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;ACKS2-model with the adddition of an isotropic term for the polarizability tensor. </span>
 
@@ -1308,8 +1308,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">788</span>
-<span class="normal">789</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">789</span>
 <span class="normal">790</span>
 <span class="normal">791</span>
 <span class="normal">792</span>
@@ -1350,7 +1349,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">827</span>
 <span class="normal">828</span>
 <span class="normal">829</span>
-<span class="normal">830</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_etainv_iso_model&#39;</span><span class="p">)</span>
+<span class="normal">830</span>
+<span class="normal">831</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_etainv_iso_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_etainv_iso_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;EtaInv-model with the addition of an isotropic term for the polarizability tensor. </span>
 
@@ -1417,8 +1417,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">866</span>
-<span class="normal">867</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">867</span>
 <span class="normal">868</span>
 <span class="normal">869</span>
 <span class="normal">870</span>
@@ -1491,7 +1490,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">937</span>
 <span class="normal">938</span>
 <span class="normal">939</span>
-<span class="normal">940</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_local_iso_model&#39;</span><span class="p">)</span>
+<span class="normal">940</span>
+<span class="normal">941</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_local_iso_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_local_iso_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;Local model with the addition of an isotropic term for the polarizability tensor. </span>
 
@@ -1590,8 +1590,7 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 
             <details class="quote">
               <summary>Source code in <code>pinn/models/pol_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">832</span>
-<span class="normal">833</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">833</span>
 <span class="normal">834</span>
 <span class="normal">835</span>
 <span class="normal">836</span>
@@ -1622,7 +1621,8 @@ B_{ij} &amp;= \mathbb{I}_{ij},  \quad  \mathrm{for}~~i\neq j \nonumber \\
 <span class="normal">861</span>
 <span class="normal">862</span>
 <span class="normal">863</span>
-<span class="normal">864</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_localchi_iso_model&#39;</span><span class="p">)</span>
+<span class="normal">864</span>
+<span class="normal">865</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@export_pol_model</span><span class="p">(</span><span class="s1">&#39;pol_localchi_iso_model&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">pol_localchi_iso_fn</span><span class="p">(</span><span class="n">tensors</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">R</span><span class="sd">&quot;&quot;&quot;Local chi-model with the addition of an isotropic term for the polarizability tensor. </span>
 

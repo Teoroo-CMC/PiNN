@@ -453,11 +453,15 @@ in the <code>model</code> directory.</p>
 <li>
 <p><strong>Run the Workflow</strong><br />
    Execute the workflow with the following command:<br />
-   <div class="highlight"><pre><span></span><code>nextflow<span class="w"> </span>run<span class="w"> </span>/path/nextflow.config<span class="w"> </span>-profile<span class="w"> </span>alvis,pinet2_qm9_dipole<span class="w"> </span>-w<span class="w"> </span>/path/work_dir
-</code></pre></div></p>
+   <div class="highlight"><pre><span></span><code>nextflow<span class="w"> </span>run<span class="w"> </span>/path/nextflow.config<span class="w"> </span>-profile<span class="w"> </span>pinet2_qm9_dipole<span class="w"> </span>-w<span class="w"> </span>/path/work_dir
+</code></pre></div>
+   The profile settings in <code>nextflow.config</code> are composable. For example, if you want to use a Docker image on the HPC <code>alvis</code> to run the <code>pinet2_qm9_dipole</code> workflow, you can use the following command:
+   <div class="highlight"><pre><span></span><code>nextflow<span class="w"> </span>run<span class="w"> </span>/path/nextflow.config<span class="w"> </span>-profile<span class="w"> </span>pinet2_qm9_dipole,alvis,docker<span class="w"> </span>-w<span class="w"> </span>/path/work_dir
+</code></pre></div>
+   This command will automatically pull the Docker image and submit the SLURM tasks.
+   Nextflow will now run in the foreground. To avoid interruptions if you close the terminal, it’s recommended to run Nextflow in a <code>tmux</code> session or use the <code>-bg</code> option to run it in the background. For more details, refer to the <a href="https://www.nextflow.io/docs/latest/reference/cli.html">CLI reference</a>.</p>
 </li>
 </ol>
-<p>Nextflow will now run in the foreground. To avoid interruptions if you close the terminal, it’s recommended to run Nextflow in a <code>tmux</code> session or use the <code>-bg</code> option to run it in the background. For more details, refer to the <a href="https://www.nextflow.io/docs/latest/reference/cli.html">CLI reference</a>.</p>
 <h2 id="monitoring">Monitoring</h2>
 <p>PiNN uses TensorFlow as a backend for training, which means the training log can 
 be monitored in real time using Tensorboard:
