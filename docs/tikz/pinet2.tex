@@ -31,7 +31,7 @@
   \tikzmath{ \ylegend = -3; };
   
   % block lines
-  \fill[fill=blue!5] (\xpii, -1.38) rectangle (\xt1, 8.8);
+  \fill[fill=blue!5] (\xpip, -1.38) rectangle (\xt1, 8.8);
   \node[ops,fill=blue!5] at (25.5, 8.0) {\textbf{GC Block}};
   \draw[black!30,densely dotted] (\xpip,9)--(\xpip,-2.1) (\xpii,9)--(\xpii,-2.1)
                         (\xipi,9)--(\xipi,-2.1) (\xipp,9)--(\xipp,-2.1);
@@ -93,9 +93,9 @@
 
 
   
-  \node[var] at (\xpii,2)  (i1) {${}^{1}\mathbb{I}^{}_{ij\beta}$};
-  \node[var] at (\xpii,4)  (i3) {${}^{3}\mathbb{I}^{}_{ijx\gamma}$};
-  \node[var] at (\xpii,6)  (i5) {${}^{5}\mathbb{I}^{}_{ijxy\gamma}$};
+  \node[var] at (\xpii,2)  (i1) {${}^{1}\mathbb{I}^{'}_{ij\beta}$};
+  \node[var] at (\xpii,4)  (i3) {${}^{3}\mathbb{I}^{'}_{ijx\gamma}$};
+  \node[var] at (\xpii,6)  (i5) {${}^{5}\mathbb{I}^{'}_{ijxy\gamma}$};
 
   \draw[link] (pi_p1)--(i1);
   \draw[link] (pi_p3)--(i3);
@@ -138,9 +138,9 @@
   \draw[link] (r5ij)--(scale_r5);
 
   
-  \node[var] at (\xipi,2)  (i1') {${}^{1}\mathbb{I}^{'}_{ij\gamma}$};
-  \node[var] at (\xipi,4)  (i3') {${}^{3}\mathbb{I}^{'}_{ijx\gamma}$};
-  \node[var] at (\xipi,6)  (i5') {${}^{5}\mathbb{I}^{'}_{ijxy\gamma}$};
+  \node[var] at (\xipi,2)  (i1') {${}^{1}\mathbb{I}^{t}_{ij\gamma}$};
+  \node[var] at (\xipi,4)  (i3') {${}^{3}\mathbb{I}^{t}_{ijx\gamma}$};
+  \node[var] at (\xipi,6)  (i5') {${}^{5}\mathbb{I}^{t}_{ijxy\gamma}$};
 
   \draw[link] (scale_i5)--(add_i5);
   \draw[link] (split)--(i1');
