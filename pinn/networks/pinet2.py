@@ -14,23 +14,9 @@ from pinn.layers import (
 from pinn.networks.pinet import FFLayer, PILayer, IPLayer, ResUpdate
 
 class PIXLayer(tf.keras.layers.Layer):
-    R"""`PIXLayer` takes the equalvariant properties ${}^{3}\mathbb{P}_{ix\zeta}$ as input and outputs interactions for each pair ${}^{3}\mathbb{I}_{ijx\zeta}$. The `PIXLayer` has two styles, specified by the `weighted` argument:
+    r"""`PIXLayer` takes the equalvariant properties ${}^{3}\mathbb{P}_{ix\zeta}$ as input and outputs interactions for each pair ${}^{3}\mathbb{I}_{ijx\zeta}$. The `PIXLayer` has two styles, specified by the `weighted` argument. The weight matrix $W$ is initialized randomly using the `glorot_uniform` initializer.
 
-    `weighted`:
-
-    $$
-    \begin{aligned}
-    {}^{3}\mathbb{I}_{ijx\gamma} = W_{\gamma\gamma} \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\gamma} + W_{\gamma\gamma}^{'} \mathbf{1}_{i}^{'} {}^{3}\mathbb{P}_{jx\gamma}
-    \end{aligned}
-    $$
-
-    $$
-    \begin{aligned}
-    {}^{5}\mathbb{I}_{ijxy\gamma} = W_{\gamma\gamma} \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\gamma} + W_{\gamma\gamma}^{'} \mathbf{1}_{i}^{'} {}^{5}\mathbb{P}_{jxy\gamma}
-    \end{aligned}
-    $$
-
-    `non-weighted`:
+    `non-weighted` (default):
 
     $$
     \begin{aligned}
@@ -41,6 +27,20 @@ class PIXLayer(tf.keras.layers.Layer):
     $$
     \begin{aligned}
     {}^{5}\mathbb{I}_{ijxy\gamma} = \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\gamma}
+    \end{aligned}
+    $$
+
+    `weighted` (experimental):
+
+    $$
+    \begin{aligned}
+    {}^{3}\mathbb{I}_{ijx\gamma} = W_{i} \mathbf{1}_{j} {}^{3}\mathbb{P}_{ix\gamma} + W_{j}^{'} \mathbf{1}_{i}^{'} {}^{3}\mathbb{P}_{jx\gamma}
+    \end{aligned}
+    $$
+
+    $$
+    \begin{aligned}
+    {}^{5}\mathbb{I}_{ijxy\gamma} = W_{i} \mathbf{1}_{j} {}^{5}\mathbb{P}_{ixy\gamma} + W_{j}^{'} \mathbf{1}_{i}^{'} {}^{5}\mathbb{P}_{jxy\gamma}
     \end{aligned}
     $$
     """
@@ -89,23 +89,9 @@ class PIXLayer(tf.keras.layers.Layer):
 
 class DotLayer(tf.keras.layers.Layer):
 
-    R"""`DotLayer` stands for the dot product( $\langle,\rangle$ ). `DotLayer` has two styles, specified by the `weighted` argument:
+    r"""`DotLayer` stands for the dot product $\langle,\rangle$. `DotLayer` has two styles, specified by the `weighted` argument. The weight matrix $W$ is initialized randomly using the `glorot_uniform` initializer.
 
-    `weighted`:
-
-    $$
-    \begin{aligned}
-    {}^{3}\mathbb{P}_{i\gamma} = \sum_{x} W_{\gamma\gamma} W_{\gamma\gamma}^{'}  {}^{3}\mathbb{P}_{ix\gamma} {}^{3}\mathbb{P}_{ix\gamma}
-    \end{aligned}
-    $$
-
-    $$
-    \begin{aligned}
-    {}^{5}\mathbb{P}_{i\gamma} = \sum_{xy} W_{\gamma\gamma} W_{\gamma\gamma}^{'}  {}^{5}\mathbb{P}_{ixy\gamma} {}^{5}\mathbb{P}_{ixy\gamma}
-    \end{aligned}
-    $$
-
-    `non-weighted`:
+    `non-weighted` (default):
 
     $$
     \begin{aligned}
@@ -118,6 +104,21 @@ class DotLayer(tf.keras.layers.Layer):
     {}^{5}\mathbb{P}_{i\gamma} = \sum_{xy} {}^{5}\mathbb{P}_{ixy\gamma} {}^{5}\mathbb{P}_{ixy\gamma}
     \end{aligned}
     $$
+
+    `weighted` (experimental):
+
+    $$
+    \begin{aligned}
+    {}^{3}\mathbb{P}_{i\gamma} = \sum_{x} W_{i} W_{i}^{'}  {}^{3}\mathbb{P}_{ix\gamma} {}^{3}\mathbb{P}_{ix\gamma}
+    \end{aligned}
+    $$
+
+    $$
+    \begin{aligned}
+    {}^{5}\mathbb{P}_{i\gamma} = \sum_{xy} W_{i} W_{i}^{'}  {}^{5}\mathbb{P}_{ixy\gamma} {}^{5}\mathbb{P}_{ixy\gamma}
+    \end{aligned}
+    $$
+
     """
 
     def __init__(self, weighted: bool, **kwargs):
@@ -148,7 +149,7 @@ class DotLayer(tf.keras.layers.Layer):
 
 
 class ScaleLayer(tf.keras.layers.Layer):
-    R"""`ScaleLayer` represents the scaling of a equalvariant property tensor by a scalar, and has no learnable variables. The `ScaleLayer` takes two tensors as input and outputs a tensor of the same shape as the first input tensor, i.e.:
+    r"""`ScaleLayer` represents the scaling of a equalvariant property tensor by a scalar, and has no learnable variables. The `ScaleLayer` takes two tensors as input and outputs a tensor of the same shape as the first input tensor, i.e.:
 
     $$
     \begin{aligned}
