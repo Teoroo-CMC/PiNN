@@ -84,12 +84,12 @@ discuss with us first to see whether it fits the scope and aims of this project.
 
 ## References and notes
 
-<a name="fn1">[1]</a> Shao, Y.; Hellström, M.; Mitev, P. D.; Knijff, L.; Zhang,
-C. PiNN: A Python Library for Building Atomic Neural Networks of Molecules and
-Materials. J. Chem. Inf. Model., 2020, 60, 3: 1184. 
+<a name="fn2">[1]</a> Li, J.; Knijff, L.; Zhang, Z.-Y.; Andersson, L.; Zhang,
+C. PiNN: Equivariant Neural Network Suite for Modelling Electrochemical Systems. J. Chem. Theory Comput., 2025, 21: 1382.
 
-<a name="fn2">[2]</a> Li, J.; Knijff, L.; Zhang, Z.-Y.; Andersson, L.; Zhang,
-C. PiNN: Equivariant Neural Network Suite for Modelling Electrochemical Systems. ChemRxiv, 2024, DOI: 10.26434/chemrxiv-2024-zfvrz.
+<a name="fn1">[2]</a> Shao, Y.; Hellström, M.; Mitev, P. D.; Knijff, L.; Zhang,
+C. PiNN: A Python Library for Building Atomic Neural Networks of Molecules and
+Materials. J. Chem. Inf. Model., 2020, 60: 1184. 
 
 <a name="fn3">[3]</a> TensorFlow is not installed automatically by default.
 Since TF 2.0 the GPU support is included in the stable release, ``pip install
