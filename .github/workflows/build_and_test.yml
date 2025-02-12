@@ -14,22 +14,12 @@ jobs:
         py-version: ["3.9", "3.10"]
         tf-version: ["2.8", "2.9"]
         experimental: [false]
-        # exclude:
-        #   - py-version: "3.9"
-        #     tf-version: "2.4"
-        # include: # test newer versions of TF
-        #   - py-version: "3.9"
-        #     tf-version: "2.10"
-        #     experimental: true
-        #   - py-version: "3.9"
-        #     tf-version: "2.13"
-        #     experimental: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Set up Python ${{ matrix.py-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.py-version }}
           cache: "pip"
@@ -53,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: Get Tag
         run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Login to Docker Hub
@@ -67,12 +57,12 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_REPO }}:${{ env.TAG }}-cpu
   build-cpu-to-now-org:
-    name: Build docker (cpu)
+    name: Build docker (cpu) - new
     needs: pytest
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: Get Tag
         run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Login to Docker Hub
@@ -91,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: Get Tag
         run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Login to Docker Hub
@@ -106,12 +96,12 @@ jobs:
           file: Dockerfile.gpu
           tags: ${{ secrets.DOCKERHUB_REPO }}:${{ env.TAG }}-gpu
   build-gpu-to-now-org:
-    name: Build docker (gpu)
+    name: Build docker (gpu) - new
     needs: pytest
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: Get Tag
         run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Login to Docker Hub
@@ -131,11 +121,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # see https://github.com/jimporter/mike/issues/28
       - name: Set up Python 3.9
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
           python-version: 3.9
           cache: "pip"

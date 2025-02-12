@@ -1,8 +1,8 @@
-# PiNN: a Python library for building atomic neural networks
+# PiNN: Pair-wise interaction Neural Network
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/Teoroo-CMC/PiNN/build_and_test.yml?branch=master&label=build&style=flat-square)
 
-PiNN<sup>[1](#fn1),[2](#fn2)</sup> is a pair-wise interaction neural network Python library built on top of TensorFlow. The PiNN library provides elemental layers and abstractions to implement various atomic neural networks.
+PiNN<sup>[1](#fn1),[2](#fn2)</sup> is a pair-wise interaction neural network Python library built on top of TensorFlow. The PiNN library provides elemental layers and abstractions to implement various atomic neural networks. It can be used together with plugins [PiNNAcLe](https://github.com/Teoroo-CMC/PiNNAcLe) for the adaptive learn-on-the-fly workflow and [PiNNwall](https://github.com/Teoroo-CMC/PiNNwall) for molecular simulation of electrode/electrolyte interfaces.
 
 This project was initiated by [Yunqi Shao][yqshao]. The code is currently maintained by the [TeC group][tec] at Uppsala University.
 
@@ -16,13 +16,30 @@ This project was initiated by [Yunqi Shao][yqshao]. The code is currently mainta
 - [PyYAML](https://pyyaml.org/) > 3.01
 - [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[3](#fn3)</sup> and <=2.9<sup>[4](#fn4)</sup>
 
-## Installation
+## Install from source code
 
-Install from source code::
+Then clone the repository:
 
 ``` sh
-git clone https://github.com/Teoroo-CMC/PiNN.git 
-cd PiNN && pip install -e .
+git clone https://github.com/Teoroo-CMC/PiNN.git
+cd PiNN
+```
+
+We recommend to install PiNN in a virtual environment.
+Create a virtual environment using `venv` or `conda`:
+
+``` sh
+python -m venv pinn
+source pinn/bin/activate
+```
+or
+``` sh
+conda env create -f environment.yml
+```
+then install PiNN from source code:
+
+``` sh
+pip install -e .
 ```
 
 Or use the [docker
@@ -51,8 +68,8 @@ Since PiNN 1.0 the documentation is hosted on [Github pages](https://teoroo-cmc.
 
 ### Implemented Networks
 
-- PiNet
 - Behler-Parrinello Neural Network
+- PiNet
 - PiNet2
 
 ### Implemented models

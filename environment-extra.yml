@@ -1,0 +1,9 @@
+name: pinn
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - h5py
+  - pymatgen
+  - phonopy
+  - nglview=3.1.2
