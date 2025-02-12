@@ -8,15 +8,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        py-version: ["3.8", "3.9", "3.10"]
+        experimental: [false]
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
         with:
           fetch-depth: 0 # see https://github.com/jimporter/mike/issues/28
-      - name: Set up Python 3.9
+      - name: Set up Python ${{ matrix.py-version }}
         uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: ${{ matrix.py-version }}
           cache: "pip"
           cache-dependency-path: "requirements*.txt"
       - name: Install PiNN

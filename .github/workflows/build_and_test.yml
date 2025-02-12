@@ -14,16 +14,6 @@ jobs:
         py-version: ["3.9", "3.10"]
         tf-version: ["2.8", "2.9"]
         experimental: [false]
-        # exclude:
-        #   - py-version: "3.9"
-        #     tf-version: "2.4"
-        # include: # test newer versions of TF
-        #   - py-version: "3.9"
-        #     tf-version: "2.10"
-        #     experimental: true
-        #   - py-version: "3.9"
-        #     tf-version: "2.13"
-        #     experimental: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
