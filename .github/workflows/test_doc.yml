@@ -1,0 +1,30 @@
+name: Test Documentation Build
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # see https://github.com/jimporter/mike/issues/28
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
+      - name: Install PiNN
+        run: |
+          pip install tensorflow==2.8 'protobuf<3.20'
+          pip install -r requirements-dev.txt
+          pip install -r requirements-doc.txt
+          pip install .
+      - name: Deploy docs
+        run: |
+          mkdocs build
