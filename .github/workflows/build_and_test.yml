@@ -11,7 +11,7 @@ jobs:
     name: "PYtest (Py${{ matrix.py-version }}-TF${{ matrix.tf-version }}${{ matrix.experimental && '-exp' || '' }})"
     strategy:
       matrix:
-        py-version: ["3.8", "3.9", "3.10"]
+        py-version: ["3.9", "3.10"]
         tf-version: ["2.8", "2.9"]
         experimental: [false]
         # exclude:
