@@ -30,45 +30,23 @@ customize the PiNN for your need.
 
 If you find PiNN useful, welcome to cite it as:
 
-> [1] Li J, Knijff L, Zhang Z-Y, Andersson L, Zhang C. PiNN: equivariant neural network suite for modelling electrochemical systems. ChemRxiv. 2024; doi:10.26434/chemrxiv-2024-zfvrz
+> [1] Li, J.; Knijff, L.; Zhang, Z.-Y.; Andersson, L.; Zhang, C. PiNN: Equivariant Neural Network Suite for Modelling Electrochemical Systems. J. Chem. Theory Comput., 2025, 21: 1382.
 
-> [2] Y. Shao, M. Hellström, P. D. Mitev, L. Knijff, and C. Zhang. PiNN: a python library for building atomic neural networks of molecules and materials. J. Chem. Inf. Model., 60:1184-1193, January 2020. doi:10.1021/acs.jcim.9b00994.
+> [2] Shao, Y.; Hellström, M.; Mitev, P. D.; Knijff, L.; Zhang, C. PiNN: A Python Library for Building Atomic Neural Networks of Molecules and Materials. J. Chem. Inf. Model., 2020, 60: 1184.
 
 ??? note "Bibtex"
     ```bibtex
-    @UNPUBLISHED{Li2024-wa,
-      title    = "{PiNN}: equivariant neural network suite for modelling
-                  electrochemical systems",
-      author   = "Li, Jichen and Knijff, Lisanne and Zhang, Zhan-Yun and Andersson,
-                  Linn{\'e}a and Zhang, Chao",
-      abstract = "Electrochemical energy storage and conversion play an
-                  increasingly important role in electrification and sustainable
-                  development across the globe. A key challenge therein is to
-                  understand, control, and design electrochemical energy materials
-                  at atomistic precision. This requires inputs from molecular
-                  modelling powered by machine learning (ML) techniques. In this
-                  work, we have upgraded our pairwise interaction neural network
-                  Python package PiNN via introducing equivariant features to the
-                  PiNet2 architecture for fitting potential energy surfaces along
-                  with PiNet2-dipole for dipole and charge predictions as well as
-                  PiNet2-chi for generating atom-condensed charge response kernels.
-                  By benchmarking publicly accessible datasets of small molecules,
-                  crystalline materials, and liquid electrolytes, we found that the
-                  equivariant PiNet2 shows significant improvements over the
-                  original PiNet architecture and provides a state-of-the-art
-                  overall performance. Furthermore, leveraging on plug-ins such as
-                  PiNNAcLe for an adaptive learn-on-the-fly workflow in generating
-                  ML potentials and PiNNwall for modelling heterogeneous electrodes
-                  under external bias, we expect PiNN to serve as a versatile and
-                  high-performing ML-accelerated platform for molecular modelling
-                  of electrochemical systems.",
-      journal  = "ChemRxiv",
-      month    =  nov,
-      year     =  2024,
-      keywords = "Machine learning;Molecular dynamics;Liquid electrolyte;Ion
-                  transport;proton transfer;double layer;supercapacitor",
-      language = "en"
-    }
+      @article{doi:10.1021/acs.jctc.4c01570,
+      author  = {Li, Jichen and Knijff, Lisanne and Zhang, Zhan-Yun and Andersson, Linn{\'e}a and Zhang, Chao},
+      journal = {J. Chem. Theory Comput.},
+      title   = {{PiNN}: Equivariant Neural Network Suite for Modeling Electrochemical Systems},
+      volume  = {21},
+      number  = {3},
+      pages   = {1382-1395},
+      year    = {2025},
+      doi     = {10.1021/acs.jctc.4c01570},
+      URL     = {https://doi.org/10.1021/acs.jctc.4c01570}
+      }
     ```
     ```bibtex
     @Article{2020_ShaoHellstroemEtAl,
