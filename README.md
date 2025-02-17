@@ -1,8 +1,8 @@
-# PiNN: a Python library for building atomic neural networks
+# PiNN: Pair-wise interaction Neural Network
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/Teoroo-CMC/PiNN/build_and_test.yml?branch=master&label=build&style=flat-square)
 
-PiNN<sup>[1](#fn1),[2](#fn2)</sup> is a pair-wise interaction neural network Python library built on top of TensorFlow. The PiNN library provides elemental layers and abstractions to implement various atomic neural networks.
+PiNN<sup>[1](#fn1),[2](#fn2)</sup> is a pair-wise interaction neural network Python library built on top of TensorFlow. The PiNN library provides elemental layers and abstractions to implement various atomic neural networks. It can be used together with plugins [PiNNAcLe](https://doi.org/10.48550/arXiv.2409.08886) for the adaptive learn-on-the-fly workflow and [PiNNwall](https://doi.org/10.1021/acs.jctc.3c00359) for molecular simulations of electrode/electrolyte interfaces.
 
 This project was initiated by [Yunqi Shao][yqshao]. The code is currently maintained by the [TeC group][tec] at Uppsala University.
 
@@ -51,8 +51,8 @@ Since PiNN 1.0 the documentation is hosted on [Github pages](https://teoroo-cmc.
 
 ### Implemented Networks
 
-- PiNet
 - Behler-Parrinello Neural Network
+- PiNet
 - PiNet2
 
 ### Implemented models
