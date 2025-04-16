@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from pinn.models.apt import apt_model
 from pinn.models.AC import AC_dipole_model
 from pinn.models.AC_AD import AC_AD_dipole_model
 from pinn.models.AC_BC_R import AC_BC_R_dipole_model
@@ -19,7 +20,8 @@ implemented_models = {
     'AD_OS_dipole_model': AD_OS_dipole_model,
     'AC_AD_dipole_model': AC_AD_dipole_model,
     'AC_BC_R_dipole_model': AC_BC_R_dipole_model,
-    'AD_BC_R_dipole_model': AD_BC_R_dipole_model
+    'AD_BC_R_dipole_model': AD_BC_R_dipole_model,
+    'apt_model': apt_model
     }
 
 def get(model_spec, **kwargs):
