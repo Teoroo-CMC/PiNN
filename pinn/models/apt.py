@@ -48,6 +48,7 @@ def apt_model(features, labels, mode, params):
         return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
 def apt_function(features,network):
+    # This will crash if nbatch>1
     p1, output_dict = network(features)
     p3 = output_dict['p3']
     p3 = tf.squeeze(p3, axis=-1)
@@ -63,10 +64,10 @@ def apt_function(features,network):
     apt_outer = tf.math.unsorted_segment_sum(apt_outer_pair, ind2[:, 0], natoms)
     i = tf.eye(3,batch_shape=[natoms])
     apt_iso = tf.linalg.set_diag(i,p3)
-    apt_iso = tf.reshape(apt_iso,[nbatch,384,3,3])
-    apt_outer = tf.reshape(apt_outer,[nbatch,384,3,3])
+    apt_iso = tf.reshape(apt_iso,[nbatch,natoms,3,3])
+    apt_outer = tf.reshape(apt_outer,[nbatch,natoms,3,3])
     apt = apt_iso + apt_outer
-    qcorr = tf.reduce_sum(apt,axis=1,keepdims=True)/384
+    qcorr = tf.reduce_sum(apt,axis=1,keepdims=True)/tf.cast(natoms,tf.float32)
     apt -= qcorr 
 
     return {'apt': apt, 'apt_outer': apt_outer, 'apt_iso': apt_iso}

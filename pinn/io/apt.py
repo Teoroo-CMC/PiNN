@@ -11,6 +11,7 @@ ds_spec = {
     'elems': {'dtype':  tf.int32,   'shape': [None]},
     'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
     'apt': {'dtype': tf.float32, 'shape': [None, 3, 3]},
+    'd_data': {'dtype':tf.float32, 'shape': [3]},
     'cell': {'dtype':tf.float32, 'shape': [3,3]}}
 
 
@@ -22,17 +23,34 @@ def get_frame_list(fname):
         indices = [match.span()[0]+1 for match in r.finditer(m)]
     return [0]+indices
 
-def load_apt(filename, **kwargs):
+def get_dipole_list(nfr):
+    lst = []
+    for i in range(nfr):
+        lst.append(i)
+    return lst
+
+# If box is None the box size of the APT dataset is used
+def load_apt(filename, skip=[], dipolefile=None, box=None, **kwargs):
     @list_loader(ds_spec=ds_spec)
     def frame_loader(frame):
         from ase.data import atomic_numbers
+        dipole = np.zeros([3])
+        if dipolefile != None:
+            frame,dframe = frame
+            with open(dipolefile,"r") as df:
+                lines=df.readlines()
+                arr=lines[dframe].split()
+                dipole[0],dipole[1],dipole[2] = float(arr[0]),float(arr[1]),float(arr[2])
         f = open(filename, "r")
         f.seek(frame)
         natoms = int(f.readline())
         coordlist = np.zeros([natoms,3])
         apt = np.zeros([natoms,3,3])
         elems = np.zeros([natoms])
-        cell = np.array([[15.667,0,0],[0,15.667,0],[0,0,15.667]])
+        if box is None:
+            cell = np.array([[15.667,0,0],[0,15.667,0],[0,0,15.667]])
+        else: 
+            cell = np.array([[box[0],0,0],[0,box[1],0],[0,0,box[2]]])
         line = f.readline()
         for i in range(natoms):
             line = f.readline()
@@ -45,6 +63,11 @@ def load_apt(filename, **kwargs):
                 for k in range(3):
                     apt[i,j,k] = float(arr[ind])
                     ind+=1
-        return {'elems': elems, 'coord': coordlist, 'apt': apt, 'cell': cell}
+        return {'elems': elems, 'coord': coordlist, 'apt': apt, 'd_data': dipole, 'cell': cell}
     frames = get_frame_list(filename)
+    for ind in skip:
+        frames.pop(ind)
+    if dipolefile != None:
+        dipoleframes = get_dipole_list(len(frames)+len(skip))
+        frames = list(zip(frames, dipoleframes))
     return frame_loader(frames, **kwargs)

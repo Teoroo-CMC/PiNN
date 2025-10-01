@@ -21,6 +21,7 @@ from pinn import get_network
 from pinn.utils import pi_named
 from pinn.models.base import export_model, get_train_op, MetricsCollector
 from pinn.utils import count_atoms
+from pinn.models.potential import _get_dense_grad
 
 default_params = {
     ### Scaling and units
@@ -38,11 +39,14 @@ default_params = {
     'log_d_per_atom': False,  # log d_per_atom and its distribution
                              # ^- this is forcely done if use_d_per_atom
     'use_d_weight': False,   # scales the loss according to d_weight
+    'use_gradient': False,
+    'transpose': False,
     # L2 loss
     'use_l2': False,
     # Loss function multipliers
     'd_loss_multiplier': 1.0,
-    'q_loss_multiplier': 1.0
+    'q_loss_multiplier': 1.0,
+    'apt_loss_multiplier': 1.0
 }
 
 @export_model
@@ -97,6 +101,19 @@ def AD_dipole_model(features, labels, mode, params):
             'dipole': dipole
             #'atomic_d': tf.expand_dims(p3, 0)
         }
+        if model_params['use_gradient']:
+            apt_pred_0 = _get_dense_grad(dipole[:,0], features['coord'])
+            apt_pred_1 = _get_dense_grad(dipole[:,1], features['coord'])
+            apt_pred_2 = _get_dense_grad(dipole[:,2], features['coord'])
+            if model_params['transpose']:
+                apt_pred = tf.stack([apt_pred_0,apt_pred_1,apt_pred_2],axis=0)
+            else:
+                apt_pred = tf.stack([apt_pred_0,apt_pred_1,apt_pred_2],axis=1)
+            apt_pred = tf.expand_dims(apt_pred,axis=0)
+            apt_pred_0 = tf.expand_dims(apt_pred_0,axis=0)
+            apt_pred_1 = tf.expand_dims(apt_pred_1,axis=0)
+            predictions.update({'apt': apt_pred,'apt_0': apt_pred_0,'apt_1': apt_pred_1})
+
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
 
@@ -128,5 +145,16 @@ def make_metrics(features, d_pred, params, mode):
         l2_loss = l2_loss * params['l2_loss_multiplier']
         metrics.METRICS['METRICS/L2_LOSS'] = l2_loss
         metrics.LOSS.append(l2_loss)
+
+    if params['use_gradient']:
+        apt_pred_0 = _get_dense_grad(d_pred[:,0], features['coord'])
+        apt_pred_1 = _get_dense_grad(d_pred[:,1], features['coord'])
+        apt_pred_2 = _get_dense_grad(d_pred[:,2], features['coord'])
+        apt_pred = tf.stack([apt_pred_0,apt_pred_1,apt_pred_2],axis=1)
+        apt_pred = tf.expand_dims(apt_pred,axis=0)
+        apt_data = features['apt']
+
+        apt_weight = params['apt_loss_multiplier']
+        metrics.add_error('apt', apt_data, apt_pred, weight=apt_weight)
 
     return metrics
