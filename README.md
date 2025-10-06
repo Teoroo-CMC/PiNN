@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/Teoroo-CMC/PiNN/build_and_test.yml?branch=master&label=build&style=flat-square)
 
-PiNN<sup>[1](#fn1),[2](#fn2)</sup> is a pair-wise interaction neural network Python library built on top of TensorFlow. The PiNN library provides elemental layers and abstractions to implement various atomic neural networks. It can be used together with plugins [PiNNAcLe](https://doi.org/10.48550/arXiv.2409.08886) for the adaptive learn-on-the-fly workflow and [PiNNwall](https://doi.org/10.1021/acs.jctc.3c00359) for molecular simulation of electrode/electrolyte interfaces.
+PiNN<sup>[1](#fn1),[2](#fn2)</sup> is a pair-wise interaction neural network Python library built on top of TensorFlow. The PiNN library provides elemental layers and abstractions to implement various atomic neural networks. It can be used together with plugins [PiNNAcLe](https://github.com/Teoroo-CMC/PiNNAcLe) for the adaptive learn-on-the-fly workflow and [PiNNwall](https://github.com/Teoroo-CMC/PiNNwall) for molecular simulation of electrode/electrolyte interfaces.
 
 This project was initiated by [Yunqi Shao][yqshao]. The code is currently maintained by the [TeC group][tec] at Uppsala University.
 
