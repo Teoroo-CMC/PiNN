@@ -9,16 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         py-version: ["3.8", "3.9", "3.10"]
-        experimental: [false]
     steps:
       - name: Checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # see https://github.com/jimporter/mike/issues/28
       - name: Set up Python ${{ matrix.py-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.py-version }}
           cache: "pip"
