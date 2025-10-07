@@ -391,14 +391,14 @@ following block in the <code>params.yml</code> file.</p>
 <span class="w">        </span><span class="nt">decay_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.994</span>
 <span class="w">    </span><span class="nt">clipnorm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span>
 </code></pre></div>
-<h2 id="ekf">EKF<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">2</a></sup></h2>
+<h2 id="ekf">EKF<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></h2>
 <p>The extended Kalman filter (EKF) is an alternative way to estimate the optimal
 weights in neural networks. The EKF has long been used in combination with
 atomic neural networks to approximate PES. EKF typically converges much faster
 than a Stochastic Gradient Descent (SGD) based optimizer with more computation
 cost per step.</p>
 <p>Below is a recommended setup for using Kalman Filter in a PiNN model, which is
-also available as <code>pinn.optimizers.default_kalman</code>.<sup id="fnref:ekf"><a class="footnote-ref" href="#fn:ekf">1</a></sup></p>
+also available as <code>pinn.optimizers.default_kalman</code>.<sup id="fnref:ekf"><a class="footnote-ref" href="#fn:ekf">2</a></sup></p>
 <div class="highlight"><pre><span></span><code><span class="nt">optimizer</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span>
 <span class="w">  </span><span class="nt">config</span><span class="p">:</span>
@@ -412,16 +412,16 @@ also available as <code>pinn.optimizers.default_kalman</code>.<sup id="fnref:ekf
 <div class="footnote">
 <hr />
 <ol>
+<li id="fn:1">
+<p><sup>1</sup> Y. Shao, F.M. Dietrich, C. Nettelblad, and C. Zhang, “<a href="https://doi.org/10.1063/5.0070931">Training algorithm matters for the performance of neural network potential: A case study of adam and the kalman filter optimizers</a>,” J. Chem. Phys. <strong>155</strong>(20), 204108 (2021).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
 <li id="fn:ekf">
 <p>Note that the EKF implemented in PiNN is not a standard TensorFlow Optimizer
 object, therefore, you can not use it directly as a regular optimizer, e.g.
 <code>opt.minimize(loss)</code> in combination with the Keras models. This is mainly
 due to the fact that <code>EFK</code> uses the error Jacobian rather than a scalar loss
 function as input. Further updates might improve the API for better
-consistency.&#160;<a class="footnote-backref" href="#fnref:ekf" title="Jump back to footnote 1 in the text">&#8617;</a></p>
-</li>
-<li id="fn:1">
-<p><sup>1</sup> Y. Shao, F.M. Dietrich, C. Nettelblad, and C. Zhang, “<a href="https://doi.org/10.1063/5.0070931">Training algorithm matters for the performance of neural network potential: A case study of adam and the kalman filter optimizers</a>,” J. Chem. Phys. <strong>155</strong>(20), 204108 (2021).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+consistency.&#160;<a class="footnote-backref" href="#fnref:ekf" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
