@@ -11,7 +11,6 @@ jobs:
     strategy:
       matrix:
         py-version: ["3.8", "3.9", "3.10"]
-        experimental: [false]
     steps:
       - name: Checkout master
         uses: actions/checkout@v5
