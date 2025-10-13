@@ -12,8 +12,10 @@ ds_spec = {
     'coord': {'dtype':  tf.float32, 'shape': [None, 3]},
     'apt': {'dtype': tf.float32, 'shape': [None, 3, 3]},
     'd_data': {'dtype':tf.float32, 'shape': [3]},
-    'cell': {'dtype':tf.float32, 'shape': [3,3]}}
+    'cell': {'dtype':tf.float32, 'shape': [3,3]},
+    'oxidation': {'dtype':  tf.float32, 'shape': [None]} }
 
+ox_dict = {'Na': 1, 'Cl':-1, 'O':-2, 'H':1}
 
 def get_frame_list(fname):
     import mmap, re
@@ -47,6 +49,7 @@ def load_apt(filename, skip=[], dipolefile=None, box=None, **kwargs):
         coordlist = np.zeros([natoms,3])
         apt = np.zeros([natoms,3,3])
         elems = np.zeros([natoms])
+        ox = np.zeros([natoms])
         if box is None:
             cell = np.array([[15.667,0,0],[0,15.667,0],[0,0,15.667]])
         else: 
@@ -58,12 +61,13 @@ def load_apt(filename, skip=[], dipolefile=None, box=None, **kwargs):
             arr = line.split()
             coordlist[i,:] = float(arr[1]),float(arr[2]),float(arr[3])
             elems[i] = atomic_numbers[arr[0]] 
+            ox[i] = ox_dict[arr[0]]
             ind = 4
             for j in range(3):
                 for k in range(3):
                     apt[i,j,k] = float(arr[ind])
                     ind+=1
-        return {'elems': elems, 'coord': coordlist, 'apt': apt, 'd_data': dipole, 'cell': cell}
+        return {'elems': elems, 'coord': coordlist, 'apt': apt, 'd_data': dipole, 'cell': cell, 'oxidation': ox}
     frames = get_frame_list(filename)
     for ind in skip:
         frames.pop(ind)
