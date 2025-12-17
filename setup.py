@@ -20,7 +20,7 @@ setup(name='pinn',
       install_requires=['ase~=3.22.0',
                         'click~=7.0',
                         'pyyaml~=6.0.1',
-                        'numpy<2',]
+                        'numpy<2'],
       python_requires='>=3.8',
       extras_require={'cpu': ['tensorflow-cpu>=2.6,<=2.9', 'protobuf<3.20'],
                       'gpu': ['tensorflow>=2.6,<=2.9', 'protobuf<3.20'],
