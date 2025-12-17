@@ -18,11 +18,29 @@ This project was initiated by [Yunqi Shao][yqshao]. The code is currently mainta
 
 ## Installation
 
-Install from source code::
+We recommend to install PiNN in a virtual environment.
+Create a virtual environment using `venv` or `conda`:
+
+``` sh
+python -m venv pinn
+source pinn/bin/activate
+```
+or
+``` sh
+conda env create -f environment.yml
+```
+
+Then clone the repository if you need to modify the code:
 
 ``` sh
 git clone https://github.com/Teoroo-CMC/PiNN.git 
 cd PiNN && pip install -e .
+```
+
+install directly from URL for usage only:
+
+``` sh
+pip install git+https://github.com/Teoroo-CMC/PiNN.git
 ```
 
 Or use the [docker

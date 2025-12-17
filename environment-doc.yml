@@ -1,0 +1,15 @@
+name: pinn
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip:
+    - mike==1.1.2
+    - mkdocs==1.5.3
+    - mkdocs-flux==0.0.6
+    - pygments==2.16.1
+    - pymdown-extensions==10.2.1
+    - mkdocs-bibtex==2.11.0
+    - "mkdocstrings[python]==0.26.1"
+    - pypandoc-binary==1.12
+    - mknotebooks==0.8.0
