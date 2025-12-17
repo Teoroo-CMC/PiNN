@@ -16,7 +16,14 @@ This project was initiated by [Yunqi Shao][yqshao]. The code is currently mainta
 - [PyYAML](https://pyyaml.org/) > 3.01
 - [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[3](#fn3)</sup> and <=2.9<sup>[4](#fn4)</sup>
 
-## Installation
+## Install from source code
+
+Then clone the repository:
+
+``` sh
+git clone https://github.com/Teoroo-CMC/PiNN.git
+cd PiNN
+```
 
 We recommend to install PiNN in a virtual environment.
 Create a virtual environment using `venv` or `conda`:
@@ -29,18 +36,10 @@ or
 ``` sh
 conda env create -f environment.yml
 ```
-
-Then clone the repository if you need to modify the code:
-
-``` sh
-git clone https://github.com/Teoroo-CMC/PiNN.git 
-cd PiNN && pip install -e .
-```
-
-install directly from URL for usage only:
+then install PiNN from source code:
 
 ``` sh
-pip install git+https://github.com/Teoroo-CMC/PiNN.git
+pip install -e .
 ```
 
 Or use the [docker
