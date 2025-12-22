@@ -15,7 +15,7 @@ import io, os, pytest, requests, tarfile
 from glob import glob
 
 compat_version = 'v1.1'
-compat_url = 'https://www.dropbox.com/scl/fi/isevisxxc4ts3nf7v0guy/v1.1_datasets.tar?rlkey=7sigw34vcjuia0vt45g13gzml&dl=0'
+compat_url = 'https://www.dropbox.com/scl/fi/isevisxxc4ts3nf7v0guy/v1.1_datasets.tar?rlkey=7sigw34vcjuia0vt45g13gzml&dl=1'
 cache_path = os.path.expanduser(f'~/.cache/pinn/regression/{compat_version}')
 
 if not os.path.exists(cache_path):
