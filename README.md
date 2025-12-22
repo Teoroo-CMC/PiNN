@@ -16,35 +16,28 @@ This project was initiated by [Yunqi Shao][yqshao]. The code is currently mainta
 - [PyYAML](https://pyyaml.org/) > 3.01
 - [TensorFlow](https://www.tensorflow.org/install) >= 2.4<sup>[3](#fn3)</sup> and <=2.9<sup>[4](#fn4)</sup>
 
-## Install from source code
+## Installation
 
-Then clone the repository:
+We recommend two ways to install PiNN.
 
+1) You need to first create a virtual environment:
 ``` sh
 git clone https://github.com/Teoroo-CMC/PiNN.git
 cd PiNN
 ```
 
-We recommend to install PiNN in a virtual environment.
-Create a virtual environment using `venv` or `conda`:
-
-``` sh
-python -m venv pinn
-source pinn/bin/activate
-```
-or
 ``` sh
 conda env create -f environment.yml
 ```
-then install PiNN from source code:
+After activating the pinn environment, then install PiNN using the following command:
 
 ``` sh
 pip install -e .
 ```
 
-Or use the [docker
-image](https://hub.docker.com/r/tecatuu/pinn/tags). If you use
-singularity, you can build a singularity image directly from the docker image:
+2) Alternatively, you can use the [docker
+image](https://hub.docker.com/r/tecatuu/pinn/tags) to contain the environment. If you prefer
+singularity, you need build a singularity image from the docker image:
 
 ``` sh
 singularity build pinn.sif docker://tecatuu/pinn:master-gpu (or master-cpu)
