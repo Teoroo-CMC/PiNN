@@ -4,7 +4,7 @@
 evaluation matches what is saved in the evaluation log.
 
 Versioned regression test data is stored at:
-https://uppsala.app.box.com/v/teoroo-cmc-pinn-data
+https://www.dropbox.com/scl/fo/tkq0zumunvofp7dckfta5/AC_WcVOW-ihchdKTTVOHrno?rlkey=6nz86x7eflli58rlajfspzf8v&dl=0 
 
 Upon a breaking change, a new set of reference model and dataset
 should be generated, and the url for the test should be updated.
@@ -15,7 +15,7 @@ import io, os, pytest, requests, tarfile
 from glob import glob
 
 compat_version = 'v1.1'
-compat_url = 'https://www.dropbox.com/scl/fi/z8rlsvaw1j3zrm3qz8zvi/v1.1_regression.tar?rlkey=molyf01kvme2n77th1x7yld1c&dl=0'
+compat_url = 'https://www.dropbox.com/scl/fi/isevisxxc4ts3nf7v0guy/v1.1_datasets.tar?rlkey=7sigw34vcjuia0vt45g13gzml&dl=0'
 cache_path = os.path.expanduser(f'~/.cache/pinn/regression/{compat_version}')
 
 if not os.path.exists(cache_path):
