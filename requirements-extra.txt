@@ -1,4 +1,4 @@
 h5py
-pymatgen
-phonopy
+pymatgen==2023.5.10
+phonopy==2.30.0
 nglview==3.1.2
