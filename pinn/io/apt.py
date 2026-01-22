@@ -32,7 +32,7 @@ def get_dipole_list(nfr):
     return lst
 
 # If box is None the box size of the APT dataset is used
-def load_apt(filename, skip=[], dipolefile=None, box=None, **kwargs):
+def load_apt(filename, dipolefile=None, box=None, **kwargs):
     @list_loader(ds_spec=ds_spec)
     def frame_loader(frame):
         from ase.data import atomic_numbers
@@ -57,7 +57,6 @@ def load_apt(filename, skip=[], dipolefile=None, box=None, **kwargs):
         line = f.readline()
         for i in range(natoms):
             line = f.readline()
-            #print(line)
             arr = line.split()
             coordlist[i,:] = float(arr[1]),float(arr[2]),float(arr[3])
             elems[i] = atomic_numbers[arr[0]] 
@@ -69,9 +68,7 @@ def load_apt(filename, skip=[], dipolefile=None, box=None, **kwargs):
                     ind+=1
         return {'elems': elems, 'coord': coordlist, 'apt': apt, 'd_data': dipole, 'cell': cell, 'oxidation': ox}
     frames = get_frame_list(filename)
-    for ind in skip:
-        frames.pop(ind)
     if dipolefile != None:
-        dipoleframes = get_dipole_list(len(frames)+len(skip))
+        dipoleframes = get_dipole_list(len(frames))
         frames = list(zip(frames, dipoleframes))
     return frame_loader(frames, **kwargs)
