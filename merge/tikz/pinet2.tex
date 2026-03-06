@@ -1,0 +1,248 @@
+\def\scale{2}
+\Large 
+\begin{tikzpicture}[
+  hide/.style={text=gray,draw=gray},
+  ops/.style={fill=white,>=stealth,thick},
+  var/.style={rectangle,draw,thick,fill=white,minimum width=.6*\scale cm, minimum height=.4*\scale cm},
+  link/.style={thick, ->},
+  line/.style={thick},
+  layer/.style={circle, draw,thick,fill=mclr,minimum size=0.5*\scale cm,inner sep=0},
+  mlp/.pic={\draw[thick] (-135:0.25*\scale) ..controls (0,-.2*\scale) and (0,.2*\scale)..(45:0.25*\scale);},
+  pi/.pic={
+    \draw[thick] (-.25*\scale,0)--(0,0)
+    (0,0)..controls  (60:.15*\scale) .. ( 45:.25*\scale)
+    (0,0)..controls (-60:.15*\scale) .. (-45:.25*\scale);
+    \draw[thick,fill=white] (0,0) circle (.07*\scale cm);},
+  ip/.pic={
+    \draw[thick] (-.25*\scale,0)--(.25*\scale,0)
+    (0,0)..controls ( 120:.15*\scale) .. ( 135:.25*\scale)
+    (0,0)..controls (-120:.15*\scale) .. (-135:.25*\scale);
+    \draw[thick,fill=white] (0,0) circle (.05*\scale cm);},
+  ]
+
+  \tikzmath{ \xpip = 3.0; };
+  \tikzmath{ \xpii = \xpip + 3.0; };
+  \tikzmath{ \xipi = \xpii + 9.0; };
+  \tikzmath{ \xip = \xipi + 1.5; };
+  \tikzmath{ \xipp = \xip + 1.7; };
+  \tikzmath{ \xpir = \xipp + 4; };
+  \tikzmath{ \xt1 = \xpir + 5.0; };
+  \tikzmath{ \xout = \xt1 + 4.0; };
+  \tikzmath{ \ylegend = -3; };
+  
+  % block lines
+  \fill[fill=blue!5] (\xpip, -1.38) rectangle (\xt1, 8.8);
+  \node[ops,fill=blue!5] at (25.5, 8.0) {\textbf{GC Block}};
+  \draw[black!30,densely dotted] (\xpip,9)--(\xpip,-2.1) (\xpii,9)--(\xpii,-2.1)
+                        (\xipi,9)--(\xipi,-2.1) (\xipp,9)--(\xipp,-2.1);
+  \draw[black!30,thick] (-3,9)--(-3,-2.1) (0,9)--(0,-2.1)
+               (\xpip,9)--(\xpip,-2.1) (\xt1,9)--(\xt1,-2.1)
+               (\xt1+0.8,9)--(\xt1+0.8,-2.1) (\xout,9)--(\xout,-2.1);
+
+  % block/layer annotations
+  \draw[<->,ops] (-3,-1.75)--(0,-1.75);
+  \draw[<->,ops] (\xpip,-1.75)--(\xipi,-1.75);
+  \draw[<->,ops] (\xipi,-1.75)--(\xt1,-1.75);
+  \draw[<->,ops] (\xt1+0.8,-1.75)--(\xout,-1.75);
+  \node[ops,text=mcdb] at (-1.5,-1.0) {\texttt{AtomicOneHot}};
+  \node[ops,text=mcdb,align=center] at (-1.5, 5.5) {\texttt{NeighborList}\\\&\,\texttt{RadialBasis}};
+  % \node[ops,text=mcdr] at (3,-1.75) {\texttt{PILayer}};
+  % \node[ops,text=mcdr] at (6.5,-1.75) {\texttt{IILayer}};
+  % \node[ops,text=mcdr] at (10,-1.75) {\texttt{IPLayer}};
+  % \node[ops,text=mcdr,inner sep=0] at (12.5,-1.75) {\texttt{ResUpdate}};
+  % \node[ops,text=mcdr] at (15.5,-1.75) {\texttt{PPLayer}};
+  % \node[ops,text=mcdr] at (19.5,-1.75) {\texttt{OutLayer}};
+  \node[ops] at (-1.5,-1.75) {\textbf{Preprocess}};
+  \node[ops] at (\xpip+5,-1.75) {\textbf{PI operation}};
+  \node[ops] at (\xipi+5,-1.75) {\textbf{IP operation}};
+  \node[ops] at (\xt1+2.3,-1.75) {\textbf{Output}};
+
+  % Graph representation
+  \node[var] at (-3, 0) (zi) {$Z_i$};
+  \node[var] at (-3, 7) (r3) {${}^3 r_{ix}$};
+  \node[var] at (-3, 8) (r5) {${}^5 r_{ix}$};
+  
+  \node[var] at (0, 0)  (p1) {${}^{1}\mathbb{P}_{i\alpha}$};
+  \node[var] at (0, 1)  (e) {$e_{ijb}$};
+  \node[var] at (0, 2)  (03) {${}^{3}0$};
+  \node[var] at (0, 4)  (05) {${}^{5}0$};
+  \node[var] at (0, 7)  (r3ij) {${}^3 r_{ijx}$};
+  \node[var] at (0, 8)  (r5ij) {${}^5 r_{ijx}$};
+
+  \draw[link] (zi)--(p1);
+  \draw[link] (r3)--(r3ij);
+  \draw[link] (r5)--(r5ij);
+
+
+
+  \node[var] at (\xpip,0) (p1t) {${}^{1}\mathbb{P}^{t}_{i\alpha}$};
+  \node[var] at (\xpip,2) (p3t) {${}^{3}\mathbb{P}^{t}_{ix\gamma}$};
+  \node[var] at (\xpip,4) (p5t) {${}^{5}\mathbb{P}^{t}_{ixy\gamma}$};
+
+  \draw[link] (p1)--(p1t);
+  \draw[link] (03)--(p3t);
+  \draw[link] (05)--(p5t);
+
+  \draw (\xpip+1.5,1) node[layer] (pi_p1) {} pic {pi};
+  \draw (\xpip+1.5,3) node[layer, fill=mclb] (pi_p3) {} pic {pi};
+  \draw (\xpip+1.5,5) node[layer, fill=mclg] (pi_p5) {} pic {pi};
+  
+  \draw[link] (p1t)--(pi_p1);
+  \draw[link] (p3t)--(pi_p3);
+  \draw[link] (p5t)--(pi_p5);
+
+
+  
+  \node[var] at (\xpii,2)  (i1) {${}^{1}\mathbb{I}^{'}_{ij\beta}$};
+  \node[var] at (\xpii,4)  (i3) {${}^{3}\mathbb{I}^{'}_{ijx\gamma}$};
+  \node[var] at (\xpii,6)  (i5) {${}^{5}\mathbb{I}^{'}_{ijxy\gamma}$};
+
+  \draw[link] (pi_p1)--(i1);
+  \draw[link] (pi_p3)--(i3);
+  \draw[link] (pi_p5)--(i5);
+
+  \draw (\xpii+2,2) node[layer] (mlp_i1) {} pic {mlp};
+  \draw (\xpii+3,4) node[layer, fill=mclb] (scale_i3) {$\bigodot$};
+  \draw (\xpii+4,6) node[layer, fill=mclg] (scale_i5) {$\bigodot$};
+  \draw (\xpii+5,7) node[layer, fill=mclb] (scale_r3) {$\bigodot$};
+  \draw (\xpii+6,8) node[layer, fill=mclg] (scale_r5) {$\bigodot$};
+  \draw (\xpii+3,2) node[layer] (split) {$\mathlarger{\mathlarger{\equiv}}$};
+  \draw (\xpii+7,4) node[layer, fill=mclb] (add_i3) {$\mathlarger{\mathlarger{+}}$};
+  \draw (\xpii+7,6) node[layer, fill=mclg] (add_i5) {$\mathlarger{\mathlarger{+}}$};
+
+  \draw[link] (e)--(pi_p1);
+
+  \draw[link] (i1)--(mlp_i1);
+  % \draw[link] (mlp_i1)--(split);
+  \draw[link] (i3)--(scale_i3);
+  \draw[link] (i5)--(scale_i5);
+  \draw[link] (scale_i3)--(add_i3);
+  \draw[line] (split)--(\xpii+4,3) -- (\xpii+4, 3.8);
+  \draw[line] (split)--(\xpii+5,3) -- (\xpii+5, 3.8);
+  \draw[line] (split)--(\xpii+6,3) -- (\xpii+6, 3.8);
+  \draw[line] (\xpii+4,4.2) arc (90:270:0.2);
+  \draw[line] (\xpii+5,4.2) arc (90:270:0.2);
+  \draw[line] (\xpii+6,4.2) arc (90:270:0.2);
+  
+  \draw[link] (\xpii+4, 4.2) -- (scale_i5);
+  \draw[line] (\xpii+5, 4.2) -- (\xpii+5, 5.8);
+  \draw[line] (\xpii+5, 6.2) arc (90:270:0.2);
+  \draw[line] (\xpii+6, 6.2) arc (90:270:0.2);
+  
+  \draw[link] (\xpii+5, 6.2) -- (scale_r3);
+  \draw[line] (\xpii+6, 4.2) -- (\xpii+6, 5.8);
+  \draw[link] (\xpii+6, 6.2) -- (scale_r5);
+  \draw[link] (split)--(scale_i3);
+  \draw[link] (scale_i5)--(add_i5);
+  \draw[link] (r3ij)--(scale_r3);
+  \draw[link] (r5ij)--(scale_r5);
+
+  
+  \node[var] at (\xipi,2)  (i1') {${}^{1}\mathbb{I}^{t}_{ij\gamma}$};
+  \node[var] at (\xipi,4)  (i3') {${}^{3}\mathbb{I}^{t}_{ijx\gamma}$};
+  \node[var] at (\xipi,6)  (i5') {${}^{5}\mathbb{I}^{t}_{ijxy\gamma}$};
+
+  \draw[link] (scale_i5)--(add_i5);
+  \draw[link] (split)--(i1');
+  \draw[link] (add_i5)--(i5');  
+  \draw[link] (add_i3)--(i3');  
+  \draw[link] (scale_r3)--(add_i3);
+  \draw[link] (scale_r5)--(add_i5);
+  
+  \draw (\xip, 1) node[layer] (ip_i1) {} pic {ip};
+  \draw (\xip, 3) node[layer, fill=mclb] (ip_i3) {} pic {ip};
+  \draw (\xip, 5) node[layer, fill=mclg] (ip_i5) {} pic {ip};
+
+  \draw[link] (i1')--(ip_i1);
+  \draw[link] (i3')--(ip_i3);  
+  \draw[link] (i5')--(ip_i5);  
+  
+  \node[var] at (\xipp,1)  (p1') {${}^{1}\mathbb{P}^{'}_{i\gamma}$};
+  \node[var] at (\xipp,3)  (p3') {${}^{3}\mathbb{P}^{'}_{ix\gamma}$};
+  \node[var] at (\xipp,5)  (p5') {${}^{5}\mathbb{P}^{'}_{ixy\gamma}$};
+  
+  \draw[link] (ip_i1)--(p1');
+  \draw[link] (ip_i3)--(p3');
+  \draw[link] (ip_i5)--(p5');
+
+  \draw (\xipp + 2,0) node[layer] (add_p1) {$+$};
+  \draw (\xipp + 2,1.6) node[layer, fill=mclb] (dot_p3) {$\mathlarger{\mathlarger{\left<,\right>}}$};
+  \draw (\xipp + 2,3.8) node[layer, fill=mclg] (dot_p5) {$\mathlarger{\mathlarger{\left<,\right>}}$};
+
+  \draw[link] (p1')--(add_p1);
+  \draw[link] (p1t)--(add_p1);
+  \draw[link] (p3')--(dot_p3);
+  \draw[link] (p5')--(dot_p5);
+
+
+  \node[var] at (\xpir,0)  (p1'') {${}^{1}\mathbb{P}^{''}_{i(3\gamma)}$};
+  \draw[link] (dot_p3)--(p1'');
+  \draw[link] (dot_p5)--(p1'');
+  \draw[link] (add_p1)--(p1'');
+  
+  \draw (\xpir+2,0) node[layer] (mlp_p1) {} pic {mlp};
+  \draw (\xpir+3,0) node[layer] (split_1) {$\mathlarger{\mathlarger{\equiv}}$};
+  \draw (\xpir+2,2) node[layer, fill=mclb] (scale_p3') {$\bigodot$};
+  \draw (\xpir+3,4) node[layer, fill=mclg] (scale_p5') {$\bigodot$};
+
+  \draw[link] (p3')--(\xpir+2,3)--(scale_p3'); 
+  \draw[link] (p5')--(\xpir+3,5)--(scale_p5');
+  \draw[link] (p1'')--(mlp_p1);
+  % \draw[link] (mlp_p1)--(split_1);
+
+
+  \node[var] at (\xt1,0)  (p1t1) {${}^{1}\mathbb{P}^{t+1}_{i\gamma}$};
+  \node[var] at (\xt1,2)  (p3t1) {${}^{3}\mathbb{P}^{t+1}_{ix\gamma}$};
+  \node[var] at (\xt1,4)  (p5t1) {${}^{5}\mathbb{P}^{t+1}_{ixy\gamma}$};
+
+  \draw[link] (split_1)--(p1t1);
+  \draw[link] (split_1)--(scale_p3');
+  \draw[line] (\xpir+3,2.2) arc (90:270:0.2);
+  \draw[line] (split_1)--(\xpir+3,1.8);
+  \draw[link] (\xpir+3,2.2)--(scale_p5');
+  
+  \draw (\xt1+1.5,0) node[layer] (mlp_p1_out) {} pic {mlp};
+  \draw (\xt1+2.5,0) node[layer] (add_p1_out) {$\mathlarger{\mathlarger{+}}$};
+
+  \draw[link] (p1t1)--(mlp_p1_out);
+
+
+  \node[var] at (\xout,0)  (p1_out) {${}^{1}\mathbb{P}^{\text{out}}_{i\epsilon}$};
+  \node[var] at (\xout,2)  (p3_out) {${}^{3}\mathbb{P}^{\text{out}}_{ix\gamma}$};
+  \node[var] at (\xout,4)  (p5_out) {${}^{5}\mathbb{P}^{\text{out}}_{ixy\gamma}$};
+
+  \draw[link] (add_p1_out)--(p1_out);
+  \draw[dotted]  (p3t1)--(p3_out);
+  \draw[dotted]  (p5t1)--(p5_out);
+  \draw[link] (scale_p3')--(p3t1);
+  \draw[link] (scale_p5')--(p5t1);
+  \draw[link] (\xt1,-0.8)--++(0,-0.4)-|(3, -0.8);
+
+  % legend
+
+  % \draw (-1, \ylegend) node[layer, fill=white] (legend8) {$\bigotimes$};
+  \draw (-1, \ylegend) node[layer, fill=white] (legend0) {$\mathlarger{\mathlarger{+}}$};
+  \draw (-1, \ylegend-1.5) node[layer, fill=white] (legend1) {$\bigodot$};
+  \draw (3, \ylegend) node[layer, fill=white] (legend2) {} pic {pi};
+  \draw (3, \ylegend-1.5) node[layer, fill=white] (lenged3) {} pic {ip};
+  \draw (11, \ylegend) node[layer, fill=white] (legend4) {} pic {mlp};
+  \draw (11, \ylegend-1.5) node[layer, fill=white] (legend5) {$\mathlarger{\mathlarger{\equiv}}$};
+  \draw (17, \ylegend) node[layer, fill=white] (legend6) {$\mathlarger{\mathlarger{\left<,\right>}}$};
+  \draw (17, \ylegend-1.5) node[layer, draw=none] (legend7) {};
+  \draw (24, \ylegend) node[layer, fill=mclb, draw=none] (legend8) {};
+  \draw (24, \ylegend-1.5) node[layer, fill=mclg, draw=none] (legend9) {};
+
+  \node[ops,text=mcdr,anchor=west] at (0, \ylegend) {\texttt{sum}};
+  % \node[ops,text=mcdr,anchor=west] at (0, \ylegend) {\texttt{tensor product}};
+  \node[ops,text=mcdr,anchor=west] at (0, \ylegend-1.5) {\texttt{scale}};
+  \node[ops,text=mcdr,anchor=west] at (4, \ylegend) {\texttt{pairwise interaction}};
+  \node[ops,text=mcdr,anchor=west] at (4, \ylegend-1.5) {\texttt{interaction pooling}};
+  \node[ops,text=mcdr,anchor=west] at (12, \ylegend) {\texttt{feedforward NN}};
+  \node[ops,text=mcdr,anchor=west] at (12, \ylegend-1.5) {\texttt{split}};
+  \node[ops,text=mcdr,anchor=west] at (18, \ylegend) {\texttt{dot}};
+  \node[ops,text=mcdr,anchor=west] at (18, \ylegend-1.5) {\texttt{invariant - scalar}};
+  \node[ops,text=mcdr,anchor=west] at (25, \ylegend) {\texttt{equivariant - vectorial}};
+  \node[ops,text=mcdr,anchor=west] at (25, \ylegend-1.5) {\texttt{equivariant - tensorial}};
+
+
+\end{tikzpicture}
