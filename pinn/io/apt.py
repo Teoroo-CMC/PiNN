@@ -15,7 +15,8 @@ ds_spec = {
     'cell': {'dtype':tf.float32, 'shape': [3,3]},
     'oxidation': {'dtype':  tf.float32, 'shape': [None]} }
 
-ox_dict = {'Na': 1, 'Cl':-1, 'O':-2, 'H':1}
+# The AD-OS dipole model requires oxidation states for each species
+ox_dict = {'Na': 1, 'Cl':-1, 'O':-2, 'H':1, 'Au': 0}
 
 def get_frame_list(fname):
     import mmap, re
