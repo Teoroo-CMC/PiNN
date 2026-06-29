@@ -49,7 +49,10 @@ default_params = {
     # Loss function multipliers
     'd_loss_multiplier': 1.0,
     'q_loss_multiplier': 1.0,
-    'apt_loss_multiplier': 1.0
+    'apt_loss_multiplier': 1.0,
+    # Masks (values set to False are not included in the loss function)
+    'd_mask': [True,True,True], # Mask for the dipole vector
+    'apt_mask': [[True,True,True],[True,True,True],[True,True,True]] # Mask for the APT
 }
 
 @export_model
@@ -119,12 +122,13 @@ def AD_OS_dipole_model(features, labels, mode, params):
             apt_pred_0 = _get_dense_grad(dipole[:,0], features['coord'])
             apt_pred_1 = _get_dense_grad(dipole[:,1], features['coord'])
             apt_pred_2 = _get_dense_grad(dipole[:,2], features['coord'])
-            if model_params['transpose']:
-                apt_pred = tf.stack([apt_pred_0,apt_pred_1,apt_pred_2],axis=0)
-            else:
-                apt_pred = tf.stack([apt_pred_0,apt_pred_1,apt_pred_2],axis=1)
+            apt_pred = tf.stack([apt_pred_0,apt_pred_1,apt_pred_2],axis=1)
             apt_pred = tf.expand_dims(apt_pred,axis=0)
-            predictions.update({'apt': apt_pred})
+            apt_mask = tf.expand_dims(model_params['apt_mask'], axis=0)
+            apt_mask = tf.tile(apt_mask,[natoms,1,1])
+            apt_mask = tf.expand_dims(apt_mask, axis=0)
+            masked= tf.expand_dims(tf.boolean_mask(apt_pred,apt_mask),axis=0)
+            predictions.update({'apt': apt_pred, 'apt_masked': masked})
 
         return tf.estimator.EstimatorSpec(
             mode, predictions=predictions)
@@ -136,7 +140,8 @@ def make_metrics(features, d_pred, q_pred, params, mode):
 
     d_data = features['d_data']
     d_data *= params['d_scale']
-    d_mask = tf.abs(d_data) > params['max_dipole'] if params['max_dipole'] else None
+    #d_mask = tf.abs(d_data) > params['max_dipole'] if params['max_dipole'] else None
+    d_mask = params['d_mask']
     d_weight = params['d_loss_multiplier']
     d_weight *= features['d_weight'] if params['use_d_weight'] else 1
 
@@ -169,8 +174,12 @@ def make_metrics(features, d_pred, q_pred, params, mode):
         apt_pred = tf.stack([apt_pred_0,apt_pred_1,apt_pred_2],axis=1)
         apt_pred = tf.expand_dims(apt_pred,axis=0)
         apt_data = features['apt']
-
+        ind1 = features['ind_1']  # ind_1 => id of molecule for each atom
+        natoms = tf.reduce_max(tf.shape(ind1))
+        apt_mask = tf.expand_dims(params['apt_mask'], axis=0)
+        apt_mask = tf.tile(apt_mask,[natoms,1,1])
+        apt_mask = tf.expand_dims(apt_mask, axis=0)
         apt_weight = params['apt_loss_multiplier']
-        metrics.add_error('apt', apt_data, apt_pred, weight=apt_weight)
+        metrics.add_error('apt', apt_data, apt_pred, mask=apt_mask, weight=apt_weight)
 
     return metrics

@@ -10,12 +10,19 @@ def make_metrics(features, predictions, params, mode):
     metrics = MetricsCollector(mode)
     pred = predictions
     data = features['apt']
-    error = pred - data
-    metrics.add_error('apt_error', pred, data, log_error=True)
+    ind1 = features['ind_1']  # ind_1 => id of molecule for each atom
+    natoms = tf.reduce_max(tf.shape(ind1))
+    apt_mask = tf.expand_dims(params['apt_mask'], axis=0)
+    apt_mask = tf.tile(apt_mask,[natoms,1,1])
+    apt_mask = tf.expand_dims(apt_mask, axis=0)
+    metrics.add_error('apt_error', data, pred, mask=apt_mask,log_error=True)
     return metrics
 
 default_params = {
     ### Scaling and units
+    # Masks (values set to False are not included in the loss function)
+    'd_mask': [True,True,True], # Mask for the dipole vector
+    'apt_mask': [[True,True,True],[True,True,True],[True,True,True]] # Mask for the APT
 }
 
 @export_model
