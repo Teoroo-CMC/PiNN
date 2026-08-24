@@ -437,11 +437,12 @@ will need to have <a href="https://www.nextflow.io/">Nextflow</a> and <a href="h
 <p>Install PiNN in editable mode and run the benchmark
 from the <code>PiNN</code> folder.  You will probably need to set up the
 development environments on an HPC cluster (e.g. ALVIS):</p>
-<div class="highlight"><pre><span></span><code>ml<span class="w"> </span>TensorFlow/2.6.0-foss-2021a-CUDA-11.3.1
-python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="nv">$HOME</span>/pinn-tf26
-<span class="nb">source</span><span class="w"> </span><span class="nv">$HOME</span>/pinn-tf26/bin/activate
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>PiNN
+<div class="highlight"><pre><span></span><code>ml<span class="w"> </span>TensorFlow/2.15<span class="w">   </span><span class="c1"># replace with the site module that provides TF 2.15</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="nv">$HOME</span>/pinn-tf215
+<span class="nb">source</span><span class="w"> </span><span class="nv">$HOME</span>/pinn-tf215/bin/activate
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git
 <span class="nb">cd</span><span class="w"> </span>PiNN
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[gpu]&#39;</span><span class="w">   </span><span class="c1"># or &#39;.[cpu]&#39;; ASE ≥3.25 comes from setup.py</span>
 </code></pre></div>
 <p>And run the benchmark using a corresponding profile:</p>
 <div class="highlight"><pre><span></span><code>export SLURM_ACCOUNT=NAISS2023-5-282

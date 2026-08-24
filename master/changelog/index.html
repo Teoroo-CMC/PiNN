@@ -243,6 +243,50 @@ models trained on old <code>micro</code> version can be used newer ones.  <code>
 updates can break backward-compatibility, if this happens it should be
 documented in this change log.</p>
 <h2 id="v2xy">v2.x.y</h2>
+<h3 id="v210">v2.1.0</h3>
+<ul>
+<li>Backend:<ul>
+<li>TensorFlow window moved from 2.6–2.9 to <strong>2.15</strong> (Python 3.9–3.11, NumPy 1.x).
+  This is the last TF release that still ships <code>tf.estimator</code> and the legacy
+  Keras optimizers (both removed in 2.16), and the first in-window release
+  that can use NVIDIA Hopper / GH200 (<code>sm_90</code>). See <a href="../migration/">migration</a>.</li>
+<li>Existing 2.x parameter files and trained models remain usable; YAML
+  optimizer names (<code>Adam</code>, <code>SGD</code>, <code>EKF</code>, …) are unchanged.</li>
+</ul>
+</li>
+<li>Compatibility (TF 2.15):<ul>
+<li>Optimizers now request the <em>legacy</em> Keras optimizer automatically so the
+  estimator graph-mode <code>tf.gradients</code> + <code>apply_gradients</code> loop still works.</li>
+<li>ASE calculator disables <code>tf.data</code> prefetch/autotune; otherwise
+  <code>calculate()</code> could return the previous step's energy/forces.</li>
+<li>Default ASE raised to <strong>≥3.25.0</strong> in <code>setup.py</code> / <code>environment.yml</code>
+  (Bussi NVT thermostat; 3.22.0 does not provide it). Containers install
+  PiNN from those files and do not re-pin ASE.</li>
+<li>I/O: TFRecord spec from public <code>dataset.element_spec</code>; ANI-1 loader uses
+  h5py 3 (<code>dataset[()]</code>); removed <code>np.int</code> / <code>np.float</code> aliases.</li>
+</ul>
+</li>
+<li>Containers:<ul>
+<li>CPU image: <code>tensorflow/tensorflow:2.15.0</code> (runtime CLI; no Jupyter).</li>
+<li>GPU image: NGC <code>nvcr.io/nvidia/tensorflow:24.03-tf2-py3</code> (TF 2.15 + CUDA
+  12.4, multi-arch amd64/arm64 — the only aarch64 GPU TF 2.15).</li>
+<li>In-repo <code>Singularity</code> / <code>Singularity.gpu</code> defs for clusters without Docker.</li>
+</ul>
+</li>
+<li>CI / packaging:<ul>
+<li>Test matrix is Python 3.9–3.11 × TensorFlow 2.15.</li>
+<li>Docker CPU image push and docs deploy run only from <code>Teoroo-CMC/PiNN</code> on
+  <code>master</code> / version tags; forks still <em>build</em> the CPU image. GPU images
+  are built from <code>Dockerfile.gpu</code> / <code>Singularity.gpu</code> outside GitHub Actions.</li>
+<li><code>setup.py</code> extras: <code>.[cpu]</code> / <code>.[gpu]</code> pin <code>tensorflow&gt;=2.15,&lt;2.16</code>.</li>
+</ul>
+</li>
+<li>Workflow:<ul>
+<li>Nextflow <code>arrhenius</code> profile (GPU train / CPU data-prep via Apptainer).</li>
+<li>figshare dataset downloads go through the API (article-zip returned HTTP 202).</li>
+</ul>
+</li>
+</ul>
 <h3 id="v200">v2.0.0</h3>
 <ul>
 <li>New Network:<ul>

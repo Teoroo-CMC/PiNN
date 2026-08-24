@@ -373,9 +373,13 @@
     <div id="content">
       <h1 id="quick-start">Quick start</h1>
 <h2 id="installation">Installation</h2>
+<p>Requires Python 3.9–3.11, TensorFlow 2.15, ASE ≥ 3.25, and NumPy 1.x.
+ASE, PyYAML, Click, and NumPy are declared in <code>setup.py</code> / <code>environment.yml</code>
+(not in the container files).</p>
 <p><strong>using pip</strong></p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git<span class="w"> </span>-b<span class="w"> </span>TF2
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>PiNN<span class="o">[</span>gpu<span class="o">]</span>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teoroo-CMC/PiNN.git
+<span class="nb">cd</span><span class="w"> </span>PiNN
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[gpu]&#39;</span><span class="w">   </span><span class="c1"># or &#39;.[cpu]&#39;</span>
 pinn<span class="w"> </span>-h
 </code></pre></div>
 <p>Extra dependencies can be specified:</p>
@@ -383,21 +387,31 @@ pinn<span class="w"> </span>-h
 <li><code>[gpu]</code> or <code>[cpu]</code>: cpu or gpu version of TensorFlow</li>
 <li><code>[dev]</code>: development requirements for testing</li>
 <li><code>[doc]</code>: documentation requirements</li>
-<li><code>[extra]</code>: extra requirements (Jupyter, pymatgen, etc) </li>
+<li><code>[extra]</code>: extra requirements (Jupyter, pymatgen, etc)</li>
 </ul>
-<p><strong>using container</strong> </p>
-<p>PiNN provides two built docker images, which can be converted to singularity
-images without much effort:</p>
+<p><strong>using conda</strong></p>
+<div class="highlight"><pre><span></span><code>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+conda<span class="w"> </span>activate<span class="w"> </span>pinn
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre></div>
+<p><strong>using container</strong></p>
+<p>PiNN provides two published docker images, which can be converted to
+Singularity/Apptainer images without much effort:</p>
 <div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>build<span class="w"> </span>pinn.sif<span class="w"> </span>docker://tecatuu/pinn:master-gpu
 ./pinn.sif<span class="w"> </span>-h
 </code></pre></div>
 <ul>
-<li><code>:master-cpu</code> is much smaller, it comes without GPU support</li>
-<li><code>:master-gpu</code> is the version with GPU support</li>
+<li><code>:master-cpu</code> — <code>tensorflow/tensorflow:2.15.0</code>, no GPU</li>
+<li><code>:master-gpu</code> — NGC <code>nvcr.io/nvidia/tensorflow:24.03-tf2-py3</code> (TF 2.15 + CUDA 12.4; x86_64 and aarch64/GH200)</li>
 </ul>
-<p>Extra dependencies like <code>Jupyter</code> are included in the image, for a quick 
-development environment:</p>
-<div class="highlight"><pre><span></span><code>singularity<span class="w"> </span>run<span class="w"> </span>pinn.sif<span class="w"> </span>jupyter<span class="w"> </span>notebook
+<p>Both images run the <code>pinn</code> CLI. Jupyter is not bundled; install it locally if
+you want a notebook environment. Runtime dependencies come from <code>setup.py</code>.
+To build the images yourself:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>pinn:cpu<span class="w"> </span>.
+docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>Dockerfile.gpu<span class="w"> </span>-t<span class="w"> </span>pinn:gpu<span class="w"> </span>.
+<span class="c1"># clusters without Docker:</span>
+apptainer<span class="w"> </span>build<span class="w"> </span>/path/on/allowed/fs/pinn-cpu.sif<span class="w"> </span>Singularity
+apptainer<span class="w"> </span>build<span class="w"> </span>/path/on/allowed/fs/pinn-gpu.sif<span class="w"> </span>Singularity.gpu
 </code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <p>In PiNN, a model consists of two essential parts, the network and the model. The

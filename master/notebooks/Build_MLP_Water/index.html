@@ -308,7 +308,7 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <div class="input">
 
 <div class="highlight"><pre><span></span><code><span class="c1"># Install PiNN</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">tensorflow</span><span class="o">==</span><span class="mf">2.9</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;tensorflow&amp;gt;=2.15,&amp;lt;2.16&#39;</span> <span class="s1">&#39;numpy&amp;lt;2&#39;</span>
 <span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
 </code></pre></div>
 
@@ -671,8 +671,7 @@ done
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="err">!</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">ase</span>
-<span class="kn">import</span> <span class="nn">requests</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
 <span class="k">with</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/Teoroo-CMC/PiNN/refs/heads/master/docs/notebooks/MLP_Water/water.xyz&quot;</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
     <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;water.xyz&quot;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>

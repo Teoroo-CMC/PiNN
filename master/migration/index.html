@@ -237,6 +237,57 @@
       <h1 id="migrating-to-pinn-2x">Migrating to PiNN 2.x</h1>
 <p>Since version 2.x, a modularized design, <strong>PiNet2</strong>, has been implemented for equivariant atomistic potential training. <strong>PiNet2</strong> is compatible with <strong>PiNet1</strong>, and you can use the <code>rank</code> parameter to specify the desired feature order. To use PiNet, you can either call <code>pinet</code> or use <code>pinet2(rank=3)</code>—both are functionally equivalent. However, trained models are not interchangeable between the two, meaning you will need to retrain your model if switching versions.</p>
 <p>A workflow using <a href="https://www.nextflow.io/docs/latest/index.html">Nextflow</a> is also integrated, enabling model training on clusters via SLURM or other resource management systems. Examples can be found in the <code>nextflow.config</code> file and the <a href="../notebooks/More_on_training/">notebook</a>.</p>
+<h2 id="upgrading-the-tensorflow-backend-to-215">Upgrading the TensorFlow backend to 2.15</h2>
+<p>PiNN's supported TensorFlow window has moved up to <strong>TensorFlow 2.15</strong>
+(Python 3.9–3.11, <code>numpy&lt;2</code>). This is the last release that still ships
+<code>tf.estimator</code> and the legacy Keras optimizers — both removed in TF 2.16 — while
+also supporting recent GPUs (NVIDIA Hopper / <code>sm_90</code>, e.g. GH200). PiNN's
+training loop is built on <code>tf.estimator</code>, so 2.15 is the ceiling until the
+estimator path is rewritten.</p>
+<h3 id="installing">Installing</h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[cpu]&#39;</span><span class="w">   </span><span class="c1"># tensorflow-cpu &gt;=2.15,&lt;2.16; ASE &gt;=3.25 from setup.py</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[gpu]&#39;</span><span class="w">   </span><span class="c1"># tensorflow     &gt;=2.15,&lt;2.16  (x86_64 CUDA wheel)</span>
+<span class="c1"># or: conda env create -f environment.yml &amp;&amp; pip install -e .</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">aarch64 GPUs (e.g. GH200)</p>
+<p>There is <strong>no GPU TensorFlow wheel for aarch64</strong> on PyPI or conda-forge
+(both are CPU-only). The only aarch64 GPU build of TF 2.15 is the NVIDIA NGC
+container <code>nvcr.io/nvidia/tensorflow:24.03-tf2-py3</code>; <code>Dockerfile.gpu</code> /
+<code>Singularity.gpu</code> are based on it. On x86_64 the normal <code>tensorflow</code> CUDA
+wheel works.</p>
+</div>
+<h3 id="what-changed-under-the-hood">What changed under the hood</h3>
+<p>Most changes are internal; existing parameter files and trained 2.x models keep
+working. The notable points:</p>
+<ul>
+<li><strong>Optimizers.</strong> TF ≥2.11 returns the new-style Keras optimizer from
+  <code>tf.keras.optimizers.get</code>, which does not support the
+  <code>tf.gradients</code> + <code>apply_gradients</code> graph-mode pattern PiNN uses inside the
+  estimator. <code>pinn.optimizers.get</code> now requests the <em>legacy</em> optimizer
+  (<code>deserialize(..., use_legacy_optimizer=True)</code>) automatically. No change is
+  needed in your input files; <code>Adam</code>, <code>SGD</code>, etc. behave as before.</li>
+<li><strong>ASE ≥3.25.</strong> The supported ASE window is now <code>&gt;=3.25.0</code> so NVT runs can
+  use the Bussi thermostat (<code>ase.md.bussi.Bussi</code>), which is not in 3.22.
+  The floor lives in <code>setup.py</code> and <code>environment.yml</code> only; containers
+  install PiNN from those files.</li>
+<li><strong>ASE calculator.</strong> TF ≥2.15 prefetches <code>tf.data</code> pipelines more
+  aggressively. The predict <code>input_fn</code> now disables autotune/prefetch so the
+  cached predictor always reads the freshly-updated atoms (otherwise a
+  <code>calculate()</code> could return the <em>previous</em> step's energy/forces).</li>
+<li><strong>h5py 3.</strong> TF 2.15 ships h5py ≥3, which removed <code>Dataset.value</code>. The ANI-1
+  loader now uses <code>dataset[()]</code>.</li>
+<li><strong>numpy ≥1.24.</strong> The removed aliases <code>np.int</code> / <code>np.float</code> are gone from the
+  code (use the Python built-ins or sized dtypes like <code>np.int32</code>).</li>
+<li><strong>tfrecord spec.</strong> <code>write_tfrecord</code> now reads <code>dataset.element_spec</code> (public)
+  instead of the private <code>DatasetSpec._serialize()</code>.</li>
+</ul>
+<h3 id="behavioural-note-rng-determinism">Behavioural note: RNG determinism</h3>
+<p><code>tf.random.set_seed(...)</code> no longer makes two independently-constructed Keras
+models share weights the way it did on older TF. If you relied on that for
+reproducibility, set the seed and then <strong>copy weights explicitly</strong>
+(<code>model_b.set_weights(model_a.get_weights())</code>), or seed the layer initializers
+directly.</p>
 <h1 id="migrating-to-pinn-1x-tf2">Migrating to PiNN 1.x (TF2)</h1>
 <p>Since version 1.x, PiNN switched to TensorFlow 2 as a backend, this introduces
 changes to the API. This document provides information for the changes and
