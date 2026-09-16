@@ -138,3 +138,56 @@ def test_float64_trains():
         saved = yaml.load(f, Loader=yaml.Loader)
     assert saved['settings']['dtype'] == 'float64'
     apply_dtype('float32')
+
+
+@pytest.mark.forked
+def test_calc_predicts_across_dtypes():
+    """A float32 checkpoint served at float64 (and vice versa).
+
+    The Estimator finalizes the graph before the scaffold saver restores, so
+    the cross-dtype restore must not create new ops.
+    """
+    import numpy as np
+    import pinn
+    from ase import Atoms
+    from pinn.io import load_numpy, sparse_batch
+
+    testpath = tempfile.mkdtemp()
+    n = 8
+    data = {
+        'coord': np.random.randn(n, 3, 3).astype(np.float32),
+        'elems': np.ones((n, 3), dtype=np.int32),
+        'e_data': np.random.randn(n).astype(np.float32),
+    }
+    params = {
+        'model_dir': testpath,
+        'network': {
+            'name': 'PiNet',
+            'params': {
+                'ii_nodes': [4, 4],
+                'pi_nodes': [4, 4],
+                'pp_nodes': [4, 4],
+                'out_nodes': [4],
+                'depth': 2,
+                'rc': 4.0,
+                'n_basis': 4,
+                'atom_types': [1]}},
+        'model': {
+            'name': 'potential_model',
+            'params': {'use_force': False}}}
+
+    model = pinn.get_model(params)
+    model.train(input_fn=lambda: load_numpy(data).repeat().shuffle(n).apply(
+        sparse_batch(4)), max_steps=1)
+
+    atoms = Atoms('H3', positions=[[0., 0., 0.], [0., 0., 0.9], [0., 0.9, 0.]])
+    energies = {}
+    for name in ('float32', 'float64'):
+        calc = PiNN_calc(pinn.get_model(params), properties=['energy'],
+                         default_dtype=name)
+        atoms.calc = calc
+        energies[name] = float(atoms.get_potential_energy())
+        assert np.isfinite(energies[name])
+    # same weights, only the arithmetic dtype differs
+    assert energies['float32'] == pytest.approx(energies['float64'], abs=1e-3)
+    apply_dtype('float32')

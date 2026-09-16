@@ -60,16 +60,17 @@ class _CastSaver(tf.compat.v1.train.Saver):
         import numpy as np
         reader = tf.compat.v1.train.load_checkpoint(save_path)
         keys = reader.get_variable_to_shape_map()
-        assigns = []
         for var in tf.compat.v1.global_variables():
             key = var.op.name
             if key not in keys:
                 continue
             raw = np.asarray(reader.get_tensor(key))
             dst = var.dtype.base_dtype.as_numpy_dtype
-            assigns.append(var.assign(raw.astype(dst, copy=False)))
-        if assigns:
-            sess.run(assigns)
+            # The Estimator finalizes the graph before the scaffold saver
+            # restores, so no new ops may be created here: var.assign(ndarray)
+            # would add a const + assign pair and raise "Graph is finalized".
+            # load() feeds the value into the variable's existing initializer.
+            var.load(raw.astype(dst, copy=False), sess)
 
 
 def export_model(model_fn):
