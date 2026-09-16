@@ -4,12 +4,15 @@
 import numpy as np
 import tensorflow as tf
 from ase.calculators.calculator import Calculator
+from pinn.models.base import (
+    dtype_from_params, set_infer_dtype, tf_dtype_from_name,
+)
 
 
 class PiNN_calc(Calculator):
     def __init__(self, model=None, atoms=None, to_eV=1.0,
                  properties=['energy', 'forces', 'stress'],
-                 checkpoint_path=None):
+                 checkpoint_path=None, default_dtype=None):
         """PiNN interface with ASE as a calculator
 
         Args:
@@ -19,6 +22,11 @@ class PiNN_calc(Calculator):
             properties: properties to calculate.
                 the properties to calculate is fixed for each calculator,
                 to avoid resetting the predictor during get_* calls.
+            default_dtype: MACE-style calculator arg (not a YAML key).
+                ``None`` follows ``settings.dtype``. If it differs from
+                training, checkpoint weights are cast once at load
+                (like ``model.float()`` / ``model.double()``) and the
+                whole network runs in that dtype. ASE MD stays float64.
         """
         Calculator.__init__(self)
         self.implemented_properties = properties
@@ -28,6 +36,16 @@ class PiNN_calc(Calculator):
         self.predictor = None
         self.to_eV = to_eV
         self.ckpt_path = checkpoint_path
+        self.default_dtype = default_dtype
+
+    def _dtype_name(self):
+        if self.default_dtype is not None:
+            return self.default_dtype
+        params = getattr(self.model, 'params', None)
+        return dtype_from_params(params)
+
+    def _tf_dtype(self):
+        return tf_dtype_from_name(self._dtype_name())
 
     def _generator(self):
         while True:
@@ -45,11 +63,14 @@ class PiNN_calc(Calculator):
                     'elems': atoms.numbers}
             yield data
 
-    def get_predictor(self, dtype=tf.float32):
+    def get_predictor(self, dtype=None):
         if self.predictor is not None:
             return self.predictor
 
         self.size = len(self._atoms_to_calc)
+        if dtype is None:
+            dtype = self._tf_dtype()
+        set_infer_dtype(self._dtype_name())
 
         dtypes = {'coord': dtype, 'elems': tf.int32, 'ind_1': tf.int32}
         shapes = {'coord': [None, 3], 'elems': [None], 'ind_1': [None, 1]}

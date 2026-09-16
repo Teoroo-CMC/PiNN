@@ -29,12 +29,25 @@ optimizer:
   class_name: EKF
   config:
     learning_rate: 0.03
+settings:
+  dtype: float32
 ```
 
 Among those, the `optimizer` section follows the format of a Keras optimizer.
 The `model` and `network` sections specify the name and parameters of initialize
 a PiNN model and network, respectively. A model can be initialized by a
 parameter file or a corresponding nested python dictionary.
+
+## Settings: `dtype`
+
+`settings.dtype` is `float32` or `float64` (default `float32`). It sets
+Keras `floatx` / dtype policy so new float weights and ops use that width.
+Integer indices stay `int32`. Numpy/ANI loaders follow `floatx()`;
+existing TFRecords keep the dtype they were converted with. EKF / gEKF
+still invert in `inv_dtype` (default float64).
+
+The ASE calculator's `default_dtype` is a constructor argument only (not
+YAML); see [Potential](potential.md#ase-calculator).
 
 ## Training
 

@@ -1,19 +1,107 @@
 # -*- coding: utf-8 -*-
 """Basic functions for PiNN models"""
+import threading
 import tensorflow as tf
 from pinn.utils import pi_named
+
+_infer_dtype = threading.local()
+
+
+def tf_dtype_from_name(name='float32'):
+    """Map TF dtype name ``float32`` / ``float64`` to a ``tf.DType``.
+
+    ``None`` defaults to ``tf.float32``.
+    """
+    if name is None:
+        name = 'float32'
+    try:
+        dtype = tf.as_dtype(name)
+    except TypeError as exc:
+        raise ValueError(
+            f'Unknown dtype {name!r}. Expected float32 or float64.') from exc
+    if dtype not in (tf.float32, tf.float64):
+        raise ValueError(
+            f'Unknown dtype {name!r}. Expected float32 or float64.')
+    return dtype
+
+
+def dtype_from_params(params):
+    """Read ``settings.dtype``; missing means ``float32``."""
+    settings = (params or {}).get('settings') or {}
+    return settings.get('dtype', 'float32')
+
+
+def apply_dtype(name='float32'):
+    """Set Keras floatx and dtype policy (all new float weights/ops)."""
+    dtype = tf_dtype_from_name(name)
+    tf.keras.backend.set_floatx(dtype.name)
+    tf.keras.mixed_precision.set_global_policy(dtype.name)
+    return dtype.name
+
+
+def set_infer_dtype(name):
+    """Calculator sets this before ``predict()`` (MACE ``default_dtype``)."""
+    _infer_dtype.name = name
+
+
+class _CastSaver(tf.compat.v1.train.Saver):
+    """Restore a checkpoint into variables of a (possibly different) dtype.
+
+    TensorFlow variables cannot change dtype in place, so this is the
+    equivalent of PyTorch ``model.float()`` / ``model.double()``: build
+    the graph at the target dtype, then ``tf.cast`` each weight once at
+    load. After that every op runs in the target dtype.
+    """
+
+    def __init__(self):
+        super().__init__(var_list=[], allow_empty=True)
+
+    def restore(self, sess, save_path):
+        import numpy as np
+        reader = tf.compat.v1.train.load_checkpoint(save_path)
+        keys = reader.get_variable_to_shape_map()
+        for var in tf.compat.v1.global_variables():
+            key = var.op.name
+            if key not in keys:
+                continue
+            raw = np.asarray(reader.get_tensor(key))
+            dst = var.dtype.base_dtype.as_numpy_dtype
+            # The Estimator finalizes the graph before the scaffold saver
+            # restores, so no new ops may be created here: var.assign(ndarray)
+            # would add a const + assign pair and raise "Graph is finalized".
+            # load() feeds the value into the variable's existing initializer.
+            var.load(raw.astype(dst, copy=False), sess)
+
 
 def export_model(model_fn):
     # default parameters for all models
     from pinn.optimizers import default_adam
-    default_params = {'optimizer': default_adam}
+    default_settings = {'dtype': 'float32'}
+    default_params = {'optimizer': default_adam, 'settings': default_settings}
     def pinn_model(params, **kwargs):
         model_dir = params['model_dir']
         params_tmp = default_params.copy()
         params_tmp.update(params)
+        settings = dict(default_settings)
+        settings.update(params.get('settings') or {})
+        params_tmp['settings'] = settings
         params = params_tmp
+        apply_dtype(dtype_from_params(params))
+        def model_fn_with_dtype(features, labels, mode, params):
+            dt = dtype_from_params(params)
+            if mode == tf.estimator.ModeKeys.PREDICT:
+                infer_dt = getattr(_infer_dtype, 'name', None) or dt
+                apply_dtype(infer_dt)
+                spec = model_fn(features, labels, mode, params)
+                if tf_dtype_from_name(infer_dt) != tf_dtype_from_name(dt):
+                    spec = spec._replace(
+                        scaffold=tf.compat.v1.train.Scaffold(saver=_CastSaver()))
+                return spec
+            apply_dtype(dt)
+            return model_fn(features, labels, mode, params)
         model = tf.estimator.Estimator(
-            model_fn=model_fn, params=params, model_dir=model_dir, **kwargs)
+            model_fn=model_fn_with_dtype, params=params,
+            model_dir=model_dir, **kwargs)
         return model
     return pinn_model
 

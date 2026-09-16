@@ -2,6 +2,10 @@
 
 Train a PiNN model given a parameter file.
 
+The parameter YAML may include `settings.dtype` (`float32` or
+`float64`; default `float32`). See [Models](../models.md#settings-dtype).
+The ASE calculator's `default_dtype` is **not** in the YAML.
+
 ## Usage
 
 ```bash

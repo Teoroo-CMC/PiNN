@@ -82,6 +82,8 @@ optimizer:
   class_name: EKF
   config:
     learning_rate: 0.03
+settings:
+  dtype: float32   # float32 | float64; default float32
 ```
 
 ## Using the CLI

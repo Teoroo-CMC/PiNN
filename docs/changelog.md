@@ -13,6 +13,14 @@ documented in this change log.
 
 ## v2.x.y
 
+### v2.1.1
+
+- Training:
+    * YAML `settings.dtype` (`float32` / `float64`, default
+      **float32**) sets the training float type. The ASE calculator takes
+      MACE-style `default_dtype` as a constructor argument only; ``None``
+      follows `settings.dtype`.
+
 ### v2.1.0
 
 - Backend:

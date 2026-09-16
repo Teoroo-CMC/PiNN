@@ -56,11 +56,20 @@ descriptions.
 A calculator can be created from a model as simple as:
 
 ```Python
-from pinn.get_calc
+from pinn import get_calc
 calc = get_calc('/path/to/model/')
+calc = get_calc('/path/to/model/', default_dtype='float64')
 calc.calculate(atoms)
 calc.get_forces()
 ```
+
+**ASE MD is always float64** (positions, cell, momenta, the integrator).
+
+`default_dtype` is a constructor argument only (not YAML), same idea as
+MACE `model.float()` / `model.double()`. ``None`` follows
+`settings.dtype`. If it differs, checkpoint weights are cast once at
+load and the TF graph runs in that dtype. See
+[Models](models.md#settings-dtype).
 
 ### Units
 
