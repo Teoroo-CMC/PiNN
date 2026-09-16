@@ -142,7 +142,7 @@ class MetricsCollector():
                 tf.compat.v1.summary.scalar(f'{tag}_MAE', mae)
                 tf.compat.v1.summary.scalar(f'{tag}_RMSE', rmse)
             if mask is not None:
-                error = tf.boolean_mask(error, mask)
+                error, weight = _apply_mask(error, weight, mask)
             if use_error:
                 loss = tf.reduce_mean(error**2 * weight)
                 tf.compat.v1.summary.scalar(f'{tag}_LOSS', loss)
@@ -153,11 +153,29 @@ class MetricsCollector():
                 self.METRICS[f'METRICS/{tag}_MAE'] = tf.compat.v1.metrics.mean_absolute_error(data, pred)
                 self.METRICS[f'METRICS/{tag}_RMSE'] = tf.compat.v1.metrics.root_mean_squared_error(data, pred)
             if mask is not None:
-                error = tf.boolean_mask(error, mask)
+                error, weight = _apply_mask(error, weight, mask)
             if use_error:
                 loss = tf.reduce_mean(error**2 * weight)
                 self.METRICS[f'METRICS/{tag}_LOSS'] = tf.compat.v1.metrics.mean(loss)
                 self.LOSS.append(loss)
+
+
+def _apply_mask(error, weight, mask):
+    """Select the kept entries of an error and of a per-entry weight.
+
+    ``tf.boolean_mask`` flattens what it selects, so a force error of shape
+    ``[n_atoms, 3]`` comes back as ``[n_kept]``. A weight of the same rank --
+    ``f_weights`` under ``use_f_weights`` -- has to travel through the same
+    selection, or the ``error**2 * weight`` that follows tries to broadcast
+    ``[n_kept]`` against ``[n_atoms, 3]`` and the graph fails to build. Scalar
+    weights (a plain loss multiplier) broadcast fine and are passed through.
+
+    Returns:
+        tuple: the masked error and the weight to multiply it by.
+    """
+    if tf.is_tensor(weight) and weight.shape.rank == error.shape.rank:
+        weight = tf.boolean_mask(weight, mask)
+    return tf.boolean_mask(error, mask), weight
 
 
 @pi_named('TRAIN_OP')
