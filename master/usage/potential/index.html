@@ -493,11 +493,18 @@ descriptions.</p>
 </table>
 <h2 id="ase-calculator">ASE calculator</h2>
 <p>A calculator can be created from a model as simple as:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.get_calc</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn</span> <span class="kn">import</span> <span class="n">get_calc</span>
 <span class="n">calc</span> <span class="o">=</span> <span class="n">get_calc</span><span class="p">(</span><span class="s1">&#39;/path/to/model/&#39;</span><span class="p">)</span>
+<span class="n">calc</span> <span class="o">=</span> <span class="n">get_calc</span><span class="p">(</span><span class="s1">&#39;/path/to/model/&#39;</span><span class="p">,</span> <span class="n">default_dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
 <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
 <span class="n">calc</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
 </code></pre></div>
+<p><strong>ASE MD is always float64</strong> (positions, cell, momenta, the integrator).</p>
+<p><code>default_dtype</code> is a constructor argument only (not YAML), same idea as
+MACE <code>model.float()</code> / <code>model.double()</code>. <code>None</code> follows
+<code>settings.dtype</code>. If it differs, checkpoint weights are cast once at
+load and the TF graph runs in that dtype. See
+<a href="../models/#settings-dtype">Models</a>.</p>
 <h3 id="units">Units</h3>
 <p>Following the convention of ASE, the output unit is eV for energy, eV/Å for
 forces and eV/Å³ for stress tensor. Since PiNN does not know about the unit in

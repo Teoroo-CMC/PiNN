@@ -373,6 +373,9 @@
     <div id="content">
       <h1 id="train">train</h1>
 <p>Train a PiNN model given a parameter file.</p>
+<p>The parameter YAML may include <code>settings.dtype</code> (<code>float32</code> or
+<code>float64</code>; default <code>float32</code>). See <a href="../../models/#settings-dtype">Models</a>.
+The ASE calculator's <code>default_dtype</code> is <strong>not</strong> in the YAML.</p>
 <h2 id="usage">Usage</h2>
 <div class="highlight"><pre><span></span><code>pinn<span class="w"> </span>train<span class="w"> </span>params<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
 </code></pre></div>

@@ -243,6 +243,16 @@ models trained on old <code>micro</code> version can be used newer ones.  <code>
 updates can break backward-compatibility, if this happens it should be
 documented in this change log.</p>
 <h2 id="v2xy">v2.x.y</h2>
+<h3 id="v211">v2.1.1</h3>
+<ul>
+<li>Training:<ul>
+<li>YAML <code>settings.dtype</code> (<code>float32</code> / <code>float64</code>, default
+  <strong>float32</strong>) sets the training float type. The ASE calculator takes
+  MACE-style <code>default_dtype</code> as a constructor argument only; <code>None</code>
+  follows <code>settings.dtype</code>.</li>
+</ul>
+</li>
+</ul>
 <h3 id="v210">v2.1.0</h3>
 <ul>
 <li>Backend:<ul>

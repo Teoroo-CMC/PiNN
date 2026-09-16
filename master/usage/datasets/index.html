@@ -394,6 +394,9 @@ a <code>.tfr</code> file holds the data. For example:</p>
 <p>We advise you to convert your dataset into the TFRecord format for training. The
 advantage of using this format is that it allows for the storage of preprocessed
 data and batched dataset.</p>
+<p>The <code>.yml</code> sidecar records each tensor's dtype at convert time. <code>settings.dtype</code>
+does not rewrite existing TFRecords; see
+<a href="../models/#settings-dtype">dtype</a>.</p>
 <h2 id="splitting-the-dataset">Splitting the dataset</h2>
 <p>It is a common practice to split the dataset into subsets for validation in
 machine learning tasks. PiNN dataset loaders support a <code>split</code> option to do

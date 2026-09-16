@@ -396,11 +396,21 @@ algorithm. A typical parameter file include the following sections:</p>
 <span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EKF</span>
 <span class="w">  </span><span class="nt">config</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span>
+<span class="nt">settings</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float32</span>
 </code></pre></div>
 <p>Among those, the <code>optimizer</code> section follows the format of a Keras optimizer.
 The <code>model</code> and <code>network</code> sections specify the name and parameters of initialize
 a PiNN model and network, respectively. A model can be initialized by a
 parameter file or a corresponding nested python dictionary.</p>
+<h2 id="settings-dtype">Settings: <code>dtype</code></h2>
+<p><code>settings.dtype</code> is <code>float32</code> or <code>float64</code> (default <code>float32</code>). It sets
+Keras <code>floatx</code> / dtype policy so new float weights and ops use that width.
+Integer indices stay <code>int32</code>. Numpy/ANI loaders follow <code>floatx()</code>;
+existing TFRecords keep the dtype they were converted with. EKF / gEKF
+still invert in <code>inv_dtype</code> (default float64).</p>
+<p>The ASE calculator's <code>default_dtype</code> is a constructor argument only (not
+YAML); see <a href="../potential/#ase-calculator">Potential</a>.</p>
 <h2 id="training">Training</h2>
 <p>The model maybe created by calling the corresponding model function, and a
 parameter dictionary mirroring the parameter file:</p>
