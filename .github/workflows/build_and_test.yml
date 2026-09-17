@@ -98,7 +98,12 @@ jobs:
           tags: ${{ vars.NEW_DOCKERHUB_REPO }}:${{ env.TAG }}-cpu
   deploy-docs:
     name: Deploy docs
-    if: github.repository == 'Teoroo-CMC/PiNN' && github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+    # workflow_dispatch is allowed here so a deploy can be replayed by hand:
+    # gh-pages is a single shared ref, and two master merges landing seconds
+    # apart deploy in parallel, with the slower job's `mike deploy -p` rejected
+    # as non-fast-forward. Waiting for a PR's docs deploy before merging the
+    # next one avoids that; this is the repair path for when it happens anyway.
+    if: github.repository == 'Teoroo-CMC/PiNN' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
     needs: pytest
     runs-on: ubuntu-latest
     steps:
