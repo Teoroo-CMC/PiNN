@@ -305,9 +305,26 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="c1"># Install PiNN</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;tensorflow&amp;gt;=2.15,&amp;lt;2.16&#39;</span> <span class="s1">&#39;numpy&amp;lt;2&#39;</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install konda</span>
+<span class="err">!</span><span class="n">pip</span> <span class="o">-</span><span class="n">q</span> <span class="n">install</span> <span class="n">konda</span>
+
+<span class="kn">import</span> <span class="nn">konda</span>
+<span class="n">konda</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+<span class="c1"># Accept Anaconda Terms of Service</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">main</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">r</span>
+
+<span class="c1"># Create the environment</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">create</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">n</span> <span class="n">pinn_env</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.10</span> <span class="o">-</span><span class="n">y</span>
+
+<span class="err">!</span><span class="n">konda</span> <span class="n">activate</span> <span class="n">pinn_env</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install &#39;tensorflow[and-cuda]==2.15.1&#39; &#39;ase&amp;gt;=3.25&#39; &#39;PyYAML~=6.0.1&#39; &#39;numpy&amp;lt;2&#39;&quot;</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install git+https://github.com/Teoroo-CMC/PiNN&quot;</span>
+
+<span class="c1">#Install ase to runtime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="err">!</span><span class="p">{</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">}</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="o">-</span><span class="n">q</span> <span class="n">install</span> <span class="n">ase</span>
 </code></pre></div>
 
 </div>
@@ -316,16 +333,16 @@
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="data-list-dataset">Data list dataset</h2>
-<p>Suppose your dataset can be represented as a list and each data point can 
+<p>Suppose your dataset can be represented as a list and each data point can
 be accessed separately with some function.</p>
-<p>The list dataset descriptor helps you to transform your reader function to 
+<p>The list dataset descriptor helps you to transform your reader function to
 a dataset loader, with handy options to split your dataset.
-The list can be your list of filenames of structures, or identifiers to 
+The list can be your list of filenames of structures, or identifiers to
 retrieve your data points, e.g. ID from some online database.</p>
-<p>The advantage of this approach is that you only need to write the reader for 
-one data point, 
+<p>The advantage of this approach is that you only need to write the reader for
+one data point,
 and you can get the tensorflow dataset objects with reasonably optimized IO.
-Later, it's also easy to convert your dataset into the TFRecord format 
+Later, it's also easy to convert your dataset into the TFRecord format
 if you need to train on the cloud or further improve the performance.</p>
 <p>We'll demonstrate with a list of ASE atoms.</p>
 </div>
@@ -334,18 +351,33 @@ if you need to train on the cloud or further improve the performance.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#The code is written into a python file and run with conda using !konda run</span>
+<span class="o">%%</span><span class="n">writefile</span> <span class="n">datalist</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
 <span class="n">datalist</span> <span class="o">=</span> <span class="p">[</span><span class="n">Atoms</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">]]</span>
 </code></pre></div>
 
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Overwriting datalist.py
+</code>
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For the purpose of training ANN potentials, you typically need to provide the 
-elements, coordinates and potential energy of a struture. </p>
-<p>Your reader function should take one list element as input, 
+<p>For the purpose of training ANN potentials, you typically need to provide the
+elements, coordinates and potential energy of a struture.</p>
+<p>Your reader function should take one list element as input,
 and return a dictionary consisting of:</p>
 <ul>
 <li><code>'atoms'</code>: the elements of shape [n_atoms]</li>
@@ -360,7 +392,9 @@ decorator to transform it into a dataset loader.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">datalist</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
 
 <span class="nd">@list_loader</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_ase_list</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
@@ -371,6 +405,18 @@ decorator to transform it into a dataset loader.</p>
     <span class="k">return</span> <span class="n">datum</span>
 </code></pre></div>
 
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Appending to datalist.py
+</code>
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
@@ -383,7 +429,9 @@ decorator to transform it into a dataset loader.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">datalist</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ase_list</span><span class="p">(</span><span class="n">datalist</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">tensors</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">():</span>
@@ -396,8 +444,28 @@ decorator to transform it into a dataset loader.</p>
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0}
-{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0}
+<code>Appending to datalist.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python datalist.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0} 
+{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0} 
 {'elems': array([79], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0}
 </code>
 </pre>
@@ -410,7 +478,7 @@ decorator to transform it into a dataset loader.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="force-and-cell">Force and cell</h2>
-<p>By default, the list loader expects the loader to return the elements, coordinates and 
+<p>By default, the list loader expects the loader to return the elements, coordinates and
 total energy of each structure. It is also usual to have nuclei forces and pbc in the training data.</p>
 <p>The default behavior of list_loader can be changed with the <code>pbc</code> and <code>force</code> options.</p>
 </div>
@@ -419,7 +487,9 @@ total energy of each structure. It is also usual to have nuclei forces and pbc i
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="nd">@list_loader</span><span class="p">(</span><span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">datalist</span><span class="o">.</span><span class="n">py</span>
+
+<span class="nd">@list_loader</span><span class="p">(</span><span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">load_ase_list</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
@@ -440,15 +510,29 @@ total energy of each structure. It is also usual to have nuclei forces and pbc i
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.],
-       [0., 0., 0.],
-       [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)}
-{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.],
-       [0., 0., 0.],
-       [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)}
-{'elems': array([79], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.],
-       [0., 0., 0.],
-       [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)}
+<code>Appending to datalist.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python datalist.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.], [0., 0., 0.], [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)} 
+{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.], [0., 0., 0.], [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)} 
+{'elems': array([79], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'cell': array([[0., 0., 0.], [0., 0., 0.], [0., 0., 0.]], dtype=float32), 'f_data': array([[0., 0., 0.]], dtype=float32)}
 </code>
 </pre>
 </div>
@@ -462,11 +546,11 @@ total energy of each structure. It is also usual to have nuclei forces and pbc i
 <h2 id="dataset-spec">Dataset Spec</h2>
 <p>For even more complex dataset structures, you can instead supply a dataset specification
 to build your list loader.
-Note that the dataset is always expected to be 
+Note that the dataset is always expected to be
 a dictionary of tensors.</p>
 <p>For example, we add a molecular weight entry to the dataset here.
-The format dict should provide the shape and datatype of each 
-entry. 
+The format dict should provide the shape and datatype of each
+entry.
 In the case that a certain dimension is unknow, e.g. the number of atoms,
 use <code>None</code> as the dimension.</p>
 </div>
@@ -475,7 +559,15 @@ use <code>None</code> as the dimension.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">dataset_spec</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">list_loader</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="n">datalist</span> <span class="o">=</span> <span class="p">[</span><span class="n">Atoms</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">]]</span>
+
+<span class="n">ds_spec</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;elems&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>   <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]},</span>
     <span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span>  <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
     <span class="s1">&#39;e_data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">[]},</span>
@@ -491,11 +583,25 @@ use <code>None</code> as the dimension.</p>
 </code></pre></div>
 
 </div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Overwriting dataset_spec.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ase_list</span><span class="p">(</span><span class="n">datalist</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">dataset_spec</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_ase_list</span><span class="p">(</span><span class="n">datalist</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">tensors</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
 </code></pre></div>
@@ -506,8 +612,28 @@ use <code>None</code> as the dimension.</p>
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 63.546}
-{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 107.8682}
+<code>Appending to dataset_spec.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python dataset_spec.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>{'elems': array([29], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 63.546} 
+{'elems': array([47], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 107.8682} 
 {'elems': array([79], dtype=int32), 'coord': array([[0., 0., 0.]], dtype=float32), 'e_data': 0.0, 'mw_data': 196.96657}
 </code>
 </pre>
@@ -520,11 +646,11 @@ use <code>None</code> as the dimension.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="loading-trajectories">Loading trajectories</h2>
-<p>It's rather common to have trajectories as training data. 
-However, trajectories are harder to handle compared to lists as 
+<p>It's rather common to have trajectories as training data.
+However, trajectories are harder to handle compared to lists as
 it's not trivial how many data points there are and how they should be split.</p>
 <p>One solution is to load all the data into the memory once.
-A more sophisticated solution is to quickly scan through the dataset and 
+A more sophisticated solution is to quickly scan through the dataset and
 get a list of "positions" which can be used to read a particular frame.</p>
 <p>You might want to look into <code>pinn.io.runner</code> or <code>pinn.io.cp2k</code>
 if you would like to implement something like that.</p>

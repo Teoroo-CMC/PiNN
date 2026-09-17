@@ -307,9 +307,26 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="c1"># Install PiNN</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;tensorflow&amp;gt;=2.15,&amp;lt;2.16&#39;</span> <span class="s1">&#39;numpy&amp;lt;2&#39;</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install konda</span>
+<span class="err">!</span><span class="n">pip</span> <span class="o">-</span><span class="n">q</span> <span class="n">install</span> <span class="n">konda</span>
+
+<span class="kn">import</span> <span class="nn">konda</span>
+<span class="n">konda</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+<span class="c1"># Accept Anaconda Terms of Service</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">main</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">r</span>
+
+<span class="c1"># Create the environment</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">create</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">n</span> <span class="n">pinn_env</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.10</span> <span class="o">-</span><span class="n">y</span>
+
+<span class="err">!</span><span class="n">konda</span> <span class="n">activate</span> <span class="n">pinn_env</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install &#39;tensorflow[and-cuda]==2.15.1&#39; &#39;ase&amp;gt;=3.25&#39; &#39;PyYAML~=6.0.1&#39; &#39;numpy&amp;lt;2&#39;&quot;</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install git+https://github.com/Teoroo-CMC/PiNN&quot;</span>
+
+<span class="c1">#Install ase to runtime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="err">!</span><span class="p">{</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">}</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="o">-</span><span class="n">q</span> <span class="n">install</span> <span class="n">ase</span>
 </code></pre></div>
 
 </div>
@@ -353,8 +370,18 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pinn</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">get_networks</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">pinn</span>
 <span class="n">pinn</span><span class="o">.</span><span class="n">get_available_networks</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python get_networks.py&quot;</span>
 </code></pre></div>
 
 </div>
@@ -385,7 +412,9 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">yaml</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">parameters</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
 
@@ -432,6 +461,14 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python parameters.py&quot;</span>
+</code></pre></div>
+
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -442,7 +479,9 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">train_MLP_models</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
@@ -469,9 +508,10 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
 
 <span class="c1"># turn off the specific warning of tensorflow</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
 <span class="n">index_warning</span> <span class="o">=</span> <span class="s1">&#39;Converting sparse IndexedSlices&#39;</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">index_warning</span><span class="p">)</span>
-<span class="n">tf</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span><span class="p">)</span> <span class="c1">#turns off tensorflow info and warnings. usually not recommended</span>
 
 <span class="n">project_dir</span> <span class="o">=</span> <span class="s2">&quot;MLP_Water/&quot;</span>
 
@@ -486,8 +526,8 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 <span class="k">with</span> <span class="n">FileIO</span><span class="p">(</span><span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;pinet2-pot.yml&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">Loader</span><span class="p">)</span>
 
-<span class="n">molde_dir</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;PiNet2_rPBE0_seed</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
-<span class="n">params</span><span class="p">[</span><span class="s1">&#39;model_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">molde_dir</span>
+<span class="n">model_dir</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;PiNet2_rPBE0_seed</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+<span class="n">params</span><span class="p">[</span><span class="s1">&#39;model_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_dir</span>
 
 <span class="c1"># initial some parameters (e.g., e_dress)</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">load_tfrecord</span><span class="p">(</span><span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;train.yml&quot;</span><span class="p">)</span>
@@ -540,6 +580,14 @@ It serves as a basic test and demonstration of the workflow with PiNN.</p>
 </code></pre></div>
 
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python train_MLP_models.py&quot;</span>
+</code></pre></div>
+
+</div>
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
@@ -569,6 +617,8 @@ done
 <div class="input">
 
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
@@ -594,10 +644,15 @@ done
 
     <span class="k">return</span> <span class="p">(</span><span class="n">steps</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">keys</span><span class="p">)</span>
 
-<span class="n">log_dir_train</span> <span class="o">=</span> <span class="n">molde_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+<span class="c1"># use the directory with trained models</span>
+<span class="n">project_dir</span> <span class="o">=</span> <span class="s2">&quot;MLP_Water/&quot;</span>
+<span class="n">random_seed</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">model_dir</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;PiNet2_rPBE0_seed</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+
+<span class="n">log_dir_train</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
 <span class="n">train_loss</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">log_dir_train</span><span class="p">,</span><span class="s1">&#39;RMSE&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%14.6e</span><span class="s1"> &#39;</span><span class="p">)</span>
 
-<span class="n">log_dir_eval</span> <span class="o">=</span> <span class="n">molde_dir</span> <span class="o">+</span> <span class="s2">&quot;/eval&quot;</span>
+<span class="n">log_dir_eval</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">+</span> <span class="s2">&quot;/eval&quot;</span>
 <span class="n">eval_loss</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">log_dir_eval</span><span class="p">,</span><span class="s1">&#39;RMSE&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%14.6e</span><span class="s1"> &#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;done&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -623,6 +678,7 @@ done
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
+<span class="n">num_train_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">5e6</span><span class="p">)</span>
 <span class="n">train_steps</span> <span class="o">=</span> <span class="n">train_loss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">eval_steps</span> <span class="o">=</span> <span class="n">eval_loss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">train_metrics</span> <span class="o">=</span> <span class="n">train_loss</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -685,12 +741,15 @@ done
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pinn</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">run_MD</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">pinn</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">units</span>
 <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span><span class="p">,</span><span class="n">write</span>
 <span class="kn">from</span> <span class="nn">ase.io.trajectory</span> <span class="kn">import</span> <span class="n">Trajectory</span>
 <span class="kn">from</span> <span class="nn">ase.md</span> <span class="kn">import</span> <span class="n">MDLogger</span>
-<span class="kn">from</span> <span class="nn">ase.md.velocitydistribution</span> <span class="kn">import</span> <span class="n">MaxwellBoltzmannDistribution</span>
+<span class="kn">from</span> <span class="nn">ase.md.velocitydistribution</span> <span class="kn">import</span> <span class="n">thermalize_momenta</span>
 <span class="kn">from</span> <span class="nn">ase.md.nptberendsen</span> <span class="kn">import</span> <span class="n">NPTBerendsen</span>
 <span class="kn">from</span> <span class="nn">ase.md.nvtberendsen</span> <span class="kn">import</span> <span class="n">NVTBerendsen</span>
 
@@ -716,16 +775,22 @@ done
 <span class="n">pressure</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">setup</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">])</span>
 <span class="n">compressibility</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">setup</span><span class="p">[</span><span class="s1">&#39;compressibility&#39;</span><span class="p">])</span>
 
+<span class="c1"># use the directory with trained models</span>
+<span class="n">project_dir</span> <span class="o">=</span> <span class="s2">&quot;MLP_Water/&quot;</span>
+<span class="n">random_seed</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">model_dir</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;PiNet2_rPBE0_seed</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+
 <span class="c1"># get calculator</span>
-<span class="n">calc</span> <span class="o">=</span> <span class="n">pinn</span><span class="o">.</span><span class="n">get_calc</span><span class="p">(</span><span class="n">molde_dir</span> <span class="o">+</span> <span class="s2">&quot;/params.yml&quot;</span><span class="p">)</span>
+<span class="n">calc</span> <span class="o">=</span> <span class="n">pinn</span><span class="o">.</span><span class="n">get_calc</span><span class="p">(</span><span class="n">model_dir</span> <span class="o">+</span> <span class="s2">&quot;/params.yml&quot;</span><span class="p">)</span>
 
 <span class="c1"># read initial structure</span>
 <span class="n">init_structure_file</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;water.xyz&quot;</span>
 <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">init_structure_file</span><span class="p">)</span>
-<span class="n">atoms</span><span class="o">.</span><span class="n">set_calculator</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
+<span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calc</span>
 
 <span class="c1"># assign initial velocities (i.e., momenta)</span>
-<span class="n">MaxwellBoltzmannDistribution</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">T</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">kB</span><span class="p">)</span>
+<span class="n">thermalize_momenta</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">temperature_K</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+
 
 <span class="k">if</span> <span class="n">ensemble</span> <span class="o">==</span> <span class="s1">&#39;npt&#39;</span><span class="p">:</span>
     <span class="n">dyn</span> <span class="o">=</span> <span class="n">NPTBerendsen</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="n">pressure</span><span class="p">,</span>
@@ -753,23 +818,22 @@ done
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>/usr/local/lib/python3.10/dist-packages/ase/md/md.py:48: FutureWarning: Specify the temperature in K using the 'temperature_K' argument
-  warnings.warn(FutureWarning(w))
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>done
+<code>Writing run_MD.py
 </code>
 </pre>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python run_MD.py&quot;</span>
+</code></pre></div>
+
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
@@ -783,8 +847,11 @@ done
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">itertools</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">ase</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">iread</span>
+<span class="kn">from</span> <span class="nn">ase.io.trajectory</span> <span class="kn">import</span> <span class="n">Trajectory</span>
 
 <span class="n">r_min</span> <span class="o">=</span> <span class="mf">0.0</span>
 <span class="n">r_max</span> <span class="o">=</span> <span class="mf">6.0</span>
@@ -795,7 +862,7 @@ done
 <span class="n">r_mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
 <span class="n">bin_vol</span> <span class="o">=</span> <span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span>
 
-<span class="kn">from</span> <span class="nn">ase.io.trajectory</span> <span class="kn">import</span> <span class="n">Trajectory</span>
+<span class="n">traj_file</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">+</span> <span class="s2">&quot;asemd.traj&quot;</span>
 <span class="n">trajObj</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">traj_file</span><span class="p">)</span>
 <span class="n">start_fram_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trajObj</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 

@@ -306,9 +306,21 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="c1"># Install PiNN &amp;amp; download QM9 dataset</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;tensorflow&amp;gt;=2.15,&amp;lt;2.16&#39;</span> <span class="s1">&#39;numpy&amp;lt;2&#39;</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Install conda</span>
+<span class="err">!</span><span class="n">pip</span> <span class="o">-</span><span class="n">q</span> <span class="n">install</span> <span class="n">konda</span>
+<span class="kn">import</span> <span class="nn">konda</span>
+<span class="n">konda</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">main</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">r</span>
+
+<span class="c1">#Create the conda environment</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">create</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">n</span> <span class="n">pinn_env</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.10</span> <span class="o">-</span><span class="n">y</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">activate</span> <span class="n">pinn_env</span>
+
+<span class="c1"># Install PiNN &amp;amp; download QM9 dataset</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install &#39;tensorflow[and-cuda]==2.15.1&#39; &#39;ase&amp;gt;=3.25&#39; &#39;numpy&amp;lt;2&#39;&quot;</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install git+https://github.com/Teoroo-CMC/PiNN&quot;</span>
 <span class="err">!</span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">dsgdb9nsd</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">ndownloader</span><span class="o">.</span><span class="n">figshare</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="mi">3195389</span> <span class="o">|</span> <span class="n">tar</span> <span class="n">xj</span> <span class="o">-</span><span class="n">C</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">dsgdb9nsd</span>
 </code></pre></div>
 
@@ -317,16 +329,21 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">warnings</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#The code is written into a python file and run with conda using !konda run</span>
+<span class="o">%%</span><span class="n">writefile</span> <span class="n">quick_tour</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">warnings</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">ase.collections</span> <span class="kn">import</span> <span class="n">g2</span>
 <span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_qm9</span><span class="p">,</span> <span class="n">sparse_batch</span>
 <span class="kn">from</span> <span class="nn">pinn</span> <span class="kn">import</span> <span class="n">get_model</span><span class="p">,</span> <span class="n">get_calc</span>
 <span class="c1"># CPU is used for documentation generation, feel free to use your GPU!</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> 
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 <span class="c1"># We heavily use indexed slices to do sparse summations,</span>
-<span class="c1"># which causes tensorflow to complain, </span>
+<span class="c1"># which causes tensorflow to complain,</span>
 <span class="c1"># we believe it&#39;s safe to ignore this warning.</span>
 <span class="n">index_warning</span> <span class="o">=</span> <span class="s1">&#39;Converting sparse IndexedSlices&#39;</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">index_warning</span><span class="p">)</span>
@@ -349,7 +366,9 @@ Note that to use the dataset with the estimator, the datasets should be a functi
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/tmp/dsgdb9nsd/*.xyz&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">quick_tour</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/tmp/dsgdb9nsd/*.xyz&#39;</span><span class="p">)</span>
 <span class="n">dataset</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">load_qm9</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
 <span class="n">train</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
 <span class="n">test</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
@@ -361,7 +380,7 @@ Note that to use the dataset with the estimator, the datasets should be a functi
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="defining-the-model">Defining the model</h2>
-<p>In PiNN, models are defined at two levels: models and networks. </p>
+<p>In PiNN, models are defined at two levels: models and networks.</p>
 <ul>
 <li>A model (model_fn) defines the target, loss and training detail.</li>
 <li>A network defines the structure of the neural network.</li>
@@ -375,7 +394,11 @@ Available options of the network and model can be found in the documentation.</p
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">PiNet_QM9</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">quick_tour</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s2">&quot;/tmp/PiNet_QM9&quot;</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/PiNet_QM9&#39;</span><span class="p">,</span>
           <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span>
               <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PiNet&#39;</span><span class="p">,</span>
@@ -408,7 +431,9 @@ Available options of the network and model can be found in the documentation.</p
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">train_spec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">TrainSpec</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">quick_tour</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">train_spec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">TrainSpec</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">eval_spec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EvalSpec</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 </code></pre></div>
 
@@ -424,7 +449,17 @@ Available options of the network and model can be found in the documentation.</p
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_spec</span><span class="p">,</span> <span class="n">eval_spec</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">quick_tour</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_spec</span><span class="p">,</span> <span class="n">eval_spec</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python quick_tour.py&quot;</span>
 </code></pre></div>
 
 </div>
@@ -440,8 +475,15 @@ Available options of the network and model can be found in the documentation.</p
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ase.collections</span> <span class="kn">import</span> <span class="n">g2</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">using_model</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">ase.collections</span> <span class="kn">import</span> <span class="n">g2</span>
 <span class="kn">from</span> <span class="nn">pinn</span> <span class="kn">import</span> <span class="n">get_calc</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
 <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/PiNet_QM92&#39;</span><span class="p">,</span>
           <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span>
               <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PiNet&#39;</span><span class="p">,</span>
@@ -468,12 +510,20 @@ Available options of the network and model can be found in the documentation.</p
 
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python using_model.py&quot;</span>
+</code></pre></div>
+
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="conclusion">Conclusion</h2>
 <p>You have trained your first PiNN model, though the accuracy is not so satisfying
-(RMSE=21 Hartree!). Also, the training speed is slow as it's limited by the IO and 
+(RMSE=21 Hartree!). Also, the training speed is slow as it's limited by the IO and
 pre-processing of data.  </p>
 <p>We will show in following notebooks that:</p>
 <ul>

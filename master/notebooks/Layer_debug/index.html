@@ -305,8 +305,23 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;tensorflow&amp;gt;=2.15,&amp;lt;2.16&#39;</span> <span class="s1">&#39;numpy&amp;lt;2&#39;</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install konda</span>
+<span class="err">!</span><span class="n">pip</span> <span class="o">-</span><span class="n">q</span> <span class="n">install</span> <span class="n">konda</span>
+
+<span class="kn">import</span> <span class="nn">konda</span>
+<span class="n">konda</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+<span class="c1"># Accept Anaconda Terms of Service</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">main</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">r</span>
+
+<span class="c1"># Create the environment</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">create</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">n</span> <span class="n">pinn_env</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.10</span> <span class="o">-</span><span class="n">y</span>
+
+<span class="err">!</span><span class="n">konda</span> <span class="n">activate</span> <span class="n">pinn_env</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install &#39;tensorflow[and-cuda]==2.15.1&#39; &#39;ase&amp;gt;=3.25&#39; &#39;PyYAML~=6.0.1&#39; &#39;numpy&amp;lt;2&#39;&quot;</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install git+https://github.com/Teoroo-CMC/PiNN&quot;</span>
+
 <span class="err">!</span><span class="n">wget</span> <span class="o">-</span><span class="n">nv</span> <span class="o">-</span><span class="n">nc</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN_lab</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">resources</span><span class="o">/</span><span class="n">qm9_train</span><span class="o">.</span><span class="p">{</span><span class="n">yml</span><span class="p">,</span><span class="n">tfr</span><span class="p">}</span>
 </code></pre></div>
 
@@ -323,12 +338,37 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_tfrecord</span><span class="p">,</span> <span class="n">sparse_batch</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">layer_debug</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_tfrecord</span><span class="p">,</span> <span class="n">sparse_batch</span>
+<span class="n">index_warning</span> <span class="o">=</span> <span class="s1">&#39;Converting sparse IndexedSlices&#39;</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">index_warning</span><span class="p">)</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_tfrecord</span><span class="p">(</span><span class="s2">&quot;qm9_train.yml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">datum</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">datum</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
     <span class="k">break</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Overwriting layer_debug.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python layer_debug.py&quot;</span>
 </code></pre></div>
 
 </div>
@@ -349,8 +389,8 @@
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="using-pinn-layers">Using PiNN Layers</h2>
-<p>PiNN networks and layers are Keras <a href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">Layers</a> 
-and <a href="https://www.tensorflow.org/api_docs/python/tf/keras/Model">Models</a>. </p>
+<p>PiNN networks and layers are Keras <a href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">Layers</a>
+and <a href="https://www.tensorflow.org/api_docs/python/tf/keras/Model">Models</a>.</p>
 <p>To use them, you create an instance of layer, after that, the layer object can be used as a function. Each layer
 is initialized with different parameters and requires different input tensors, see their individual documentation
 for the details.</p>
@@ -360,8 +400,9 @@ for the details.</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pinn.layers</span> <span class="kn">import</span> <span class="n">CellListNL</span>
-<span class="kn">from</span> <span class="nn">pinn.networks.pinet</span> <span class="kn">import</span> <span class="n">PILayer</span><span class="p">,</span> <span class="n">PiNet</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">layer_debug</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">pinn.layers</span> <span class="kn">import</span> <span class="n">CellListNL</span>
 
 <span class="n">nl</span> <span class="o">=</span> <span class="n">CellListNL</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
@@ -371,14 +412,46 @@ for the details.</p>
 </code></pre></div>
 
 </div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Appending to layer_debug.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python layer_debug.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>{'A': TensorShape([10]), 'B': TensorShape([10]), 'C': TensorShape([10]), 'Cv': TensorShape([10]), 'G': TensorShape([10]), 'H': TensorShape([10]), 'U': TensorShape([10]), 'U0': TensorShape([10]), 'alpha': TensorShape([10]), 'coord': TensorShape([176, 3]), 'elems': TensorShape([176]), 'gap': TensorShape([10]), 'homo': TensorShape([10]), 'lumo': TensorShape([10]), 'mu': TensorShape([10]), 'r2': TensorShape([10]), 'zpve': TensorShape([10]), 'ind_1': TensorShape([176, 1])}
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The definition of a layer needs three parts:</p>
 <ul>
-<li><code>__init__</code> defines the layer object; </li>
-<li><code>build</code> creates the necessary variables or sub-layers; </li>
+<li><code>__init__</code> defines the layer object;</li>
+<li><code>build</code> creates the necessary variables or sub-layers;</li>
 <li><code>call</code> defines how the input tensors are processed.</li>
 </ul>
 <p>The <code>build()</code> method is only called once when the layer is used for the first tiem (e.g. in a loop).
@@ -389,55 +462,120 @@ See below for an example definition for the <code>PILayer</code></p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="err">??</span><span class="n">PILayer</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">check_PILayer</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">pinn.networks.pinet</span> <span class="kn">import</span> <span class="n">PILayer</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">PILayer</span><span class="p">))</span>
 </code></pre></div>
 
 </div>
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="output_text output_subarea">
+<div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code><span class="ansi-red-fg">Init signature:</span> PILayer<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-red-fg">Source:</span>        
-<span class="ansi-green-fg">class</span> PILayer<span class="ansi-blue-fg">(</span>tf<span class="ansi-blue-fg">.</span>keras<span class="ansi-blue-fg">.</span>layers<span class="ansi-blue-fg">.</span>Layer<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-    <span class="ansi-blue-fg">"""PiNN style interaction layer</span>
+<code>Overwriting check_PILayer.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-<span class="ansi-blue-fg">    Args:</span>
-<span class="ansi-blue-fg">        n_nodes: number of nodes to use</span>
-<span class="ansi-blue-fg">            Note that the last element of n_nodes specifies the dimention of</span>
-<span class="ansi-blue-fg">            the fully connected network before applying the basis function.</span>
-<span class="ansi-blue-fg">            Dimension of the last node is [pairs*n_nodes[-1]*n_basis], the</span>
-<span class="ansi-blue-fg">            output is then summed with the basis to form the interaction nodes</span>
-<span class="ansi-blue-fg">        **kwargs: keyword arguments will be parsed to the feed forward layers</span>
-<span class="ansi-blue-fg">    """</span>
-    <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> n_nodes<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">64</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-        super<span class="ansi-blue-fg">(</span>PILayer<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-        self<span class="ansi-blue-fg">.</span>n_nodes <span class="ansi-blue-fg">=</span> n_nodes
-        self<span class="ansi-blue-fg">.</span>kwargs <span class="ansi-blue-fg">=</span> kwargs
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python check_PILayer.py&quot;</span>
+</code></pre></div>
 
-    <span class="ansi-green-fg">def</span> build<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> shapes<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-        self<span class="ansi-blue-fg">.</span>n_basis <span class="ansi-blue-fg">=</span> shapes<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
-        n_nodes_iter <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>n_nodes<span class="ansi-blue-fg">.</span>copy<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-        n_nodes_iter<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">*=</span> self<span class="ansi-blue-fg">.</span>n_basis
-        self<span class="ansi-blue-fg">.</span>ff_layer <span class="ansi-blue-fg">=</span> FFLayer<span class="ansi-blue-fg">(</span>n_nodes_iter<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>self<span class="ansi-blue-fg">.</span>kwargs<span class="ansi-blue-fg">)</span>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>2026-09-12 19:20:32.087148: I external/local_tsl/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-09-12 19:20:32.138910: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-09-12 19:20:32.138997: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-09-12 19:20:32.140461: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2026-09-12 19:20:32.148916: I external/local_tsl/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-09-12 19:20:32.149214: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-09-12 19:20:33.232936: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+class PILayer(tf.keras.layers.Layer):
+    R"""`PILayer` takes the properties ($\mathbb{P}_{i\alpha},
+    \mathbb{P}_{j\alpha}$) of a pair of atoms as input and outputs a set of
+    interactions for each pair. The inputs will be broadcasted and concatenated
+    as the input of a feed-forward neural network (`FFLayer`), and the
+    interactions are generated by taking the output of the `FFLayer` as weights
+    of radial basis functions, i.e.:
 
-    <span class="ansi-green-fg">def</span> call<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> tensors<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-        ind_2<span class="ansi-blue-fg">,</span> prop<span class="ansi-blue-fg">,</span> basis <span class="ansi-blue-fg">=</span> tensors
-        ind_i <span class="ansi-blue-fg">=</span> ind_2<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span>
-        ind_j <span class="ansi-blue-fg">=</span> ind_2<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
-        prop_i <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>gather<span class="ansi-blue-fg">(</span>prop<span class="ansi-blue-fg">,</span> ind_i<span class="ansi-blue-fg">)</span>
-        prop_j <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>gather<span class="ansi-blue-fg">(</span>prop<span class="ansi-blue-fg">,</span> ind_j<span class="ansi-blue-fg">)</span>
+    $$
+    \begin{aligned}
+    w_{ij(b\beta)} &amp;= \mathrm{FFLayer}\left((\mathbf{1}_{j}\mathbb{P}_{i\alpha})\Vert(\mathbf{1}_{i}\mathbb{P}_{j\alpha})\right) \\
+    \mathbb{I}'_{ij\beta} &amp;= \sum_b W_{ij(b\beta)} \, e_{ijb}
+    \end{aligned}
+    $$
 
-        inter <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>concat<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>prop_i<span class="ansi-blue-fg">,</span> prop_j<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
-        inter <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>ff_layer<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">)</span>
-        inter <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>reshape<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">,</span> tf<span class="ansi-blue-fg">.</span>concat<span class="ansi-blue-fg">(</span>
-            <span class="ansi-blue-fg">[</span>tf<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span>self<span class="ansi-blue-fg">.</span>n_nodes<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>n_basis<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-        inter <span class="ansi-blue-fg">=</span> tf<span class="ansi-blue-fg">.</span>reduce_sum<span class="ansi-blue-fg">(</span>inter<span class="ansi-blue-fg">*</span>basis<span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
-        <span class="ansi-green-fg">return</span> inter
-<span class="ansi-red-fg">File:</span>           ~/code/PiNN/pinn/networks/pinet.py
-<span class="ansi-red-fg">Type:</span>           type
-<span class="ansi-red-fg">Subclasses:</span>     
+    , where $w_{ij(b\beta)}$ is an intemediate weight tensor for the
+    radial basis functions, output by the `FFLayer`; the output channel is
+    reshaped into two dimensions, where $b$ is the index for the basis function
+    and $d$ is the index for output interaction.
+
+
+    `n_nodes` specifies the number of nodes in the `FFLayer`. Note that the last
+    element of n_nodes specifies the number of output channels after applying
+    the basis function ($d$ instead of $bd$), i.e. the output dimension of
+    FFLayer is `[n_pairs,n_nodes[-1]*n_basis]`, the output is then summed with
+    the basis to form the output interaction.
+
+    """
+
+    def __init__(self, n_nodes=[64], **kwargs):
+        """
+        Args:
+            n_nodes (list of int): number of nodes to use
+            **kwargs (dict): keyword arguments will be parsed to the feed forward layers
+        """
+        super(PILayer, self).__init__()
+        self.n_nodes = n_nodes
+        self.kwargs = kwargs
+
+    def build(self, shapes):
+        """"""
+        self.n_basis = shapes[2][-1]
+        n_nodes_iter = self.n_nodes.copy()
+        n_nodes_iter[-1] *= self.n_basis
+        self.ff_layer = FFLayer(n_nodes_iter, **self.kwargs)
+
+    def call(self, tensors):
+        """
+        PILayer take a list of three tensors as input:
+
+        - ind_2: [sparse indices](layers.md#sparse-indices) of pairs with shape `(n_pairs, 2)`
+        - prop: property tensor with shape `(n_atoms, n_prop)`
+        - basis: interaction tensor with shape `(n_pairs, n_basis)`
+
+        Args:
+            tensors (list of tensors): list of `[ind_2, prop, basis]` tensors
+
+        Returns:
+            inter (tensor): interaction tensor with shape `(n_pairs, n_nodes[-1])`
+        """
+        ind_2, prop, basis = tensors
+        ind_i = ind_2[:, 0]
+        ind_j = ind_2[:, 1]
+        prop_i = tf.gather(prop, ind_i)
+        prop_j = tf.gather(prop, ind_j)
+
+        inter = tf.concat([prop_i, prop_j], axis=-1)
+        inter = self.ff_layer(inter)
+        inter = tf.reshape(inter, [-1, self.n_nodes[-1], self.n_basis])
+        inter = tf.einsum("pcb,pb-&gt;pc", inter, basis)
+        return inter
+
 </code>
 </pre>
 </div>
@@ -450,7 +588,7 @@ See below for an example definition for the <code>PILayer</code></p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="using-pinn-networks">Using PiNN Networks</h2>
 <p><code>network</code> (Keras Models) are defined similarly, but they can be directly used to perform regression task.</p>
-<p>By default, <code>network</code>  produces per-atom predictions, this can be changed by the <code>out_pool</code> parameter to 
+<p>By default, <code>network</code>  produces per-atom predictions, this can be changed by the <code>out_pool</code> parameter to
 get some simple per-structure predictions. In that case, the network object can be used to perform trainig directly.</p>
 </div>
 </div>
@@ -458,7 +596,11 @@ get some simple per-structure predictions. In that case, the network object can 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">label_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">layer_debug</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">pinn.networks.pinet</span> <span class="kn">import</span> <span class="n">PiNet</span>
+
+<span class="k">def</span> <span class="nf">label_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="c1"># defines the label to train on</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">data</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lumo&#39;</span><span class="p">]</span>
@@ -476,40 +618,34 @@ get some simple per-structure predictions. In that case, the network object can 
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>Epoch 1/3
+<code>Appending to layer_debug.py
 </code>
 </pre>
 </div>
 </div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>/home/yunqi/.miniconda/envs/pinn-tf2/lib/python3.9/site-packages/tensorflow/python/framework/indexed_slices.py:444: UserWarning: Converting sparse IndexedSlices(IndexedSlices(indices=Tensor("Adam/gradients/concat_1:0", shape=(None,), dtype=int32), values=Tensor("Adam/gradients/concat:0", shape=(None, 16), dtype=float32), dense_shape=Tensor("gradient_tape/pi_net_1/gc_block_7/pi_layer_7/Cast:0", shape=(2,), dtype=int32))) to a dense Tensor of unknown shape. This may consume a large amount of memory.
-  warnings.warn(
-/home/yunqi/.miniconda/envs/pinn-tf2/lib/python3.9/site-packages/tensorflow/python/framework/indexed_slices.py:444: UserWarning: Converting sparse IndexedSlices(IndexedSlices(indices=Tensor("Adam/gradients/concat_3:0", shape=(None,), dtype=int32), values=Tensor("Adam/gradients/concat_2:0", shape=(None, 16), dtype=float32), dense_shape=Tensor("gradient_tape/pi_net_1/gc_block_6/pi_layer_6/Cast:0", shape=(2,), dtype=int32))) to a dense Tensor of unknown shape. This may consume a large amount of memory.
-  warnings.warn(
-/home/yunqi/.miniconda/envs/pinn-tf2/lib/python3.9/site-packages/tensorflow/python/framework/indexed_slices.py:444: UserWarning: Converting sparse IndexedSlices(IndexedSlices(indices=Tensor("Adam/gradients/concat_5:0", shape=(None,), dtype=int32), values=Tensor("Adam/gradients/concat_4:0", shape=(None, 16), dtype=float32), dense_shape=Tensor("gradient_tape/pi_net_1/gc_block_5/pi_layer_5/Cast:0", shape=(2,), dtype=int32))) to a dense Tensor of unknown shape. This may consume a large amount of memory.
-  warnings.warn(
-</code>
-</pre>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python layer_debug.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>2000/2000 [==============================] - 37s 17ms/step - loss: 0.0551
-Epoch 2/3
-2000/2000 [==============================] - 35s 18ms/step - loss: 0.0285
-Epoch 3/3
-2000/2000 [==============================] - 35s 17ms/step - loss: 0.0240
+<code>{'A': TensorShape([10]), 'B': TensorShape([10]), 'C': TensorShape([10]), 'Cv': TensorShape([10]), 'G': TensorShape([10]), 'H': TensorShape([10]), 'U': TensorShape([10]), 'U0': TensorShape([10]), 'alpha': TensorShape([10]), 'coord': TensorShape([176, 3]), 'elems': TensorShape([176]), 'gap': TensorShape([10]), 'homo': TensorShape([10]), 'lumo': TensorShape([10]), 'mu': TensorShape([10]), 'r2': TensorShape([10]), 'zpve': TensorShape([10]), 'ind_1': TensorShape([176, 1])}
+Epoch 1/3
+2000/2000 [==============================] - 62s 27ms/step - loss: 0.0890
+Epoch 2/3 
+2000/2000 [==============================] - 59s 29ms/step - loss: 0.0296 
+Epoch 3/3 
+2000/2000 [==============================] - 54s 27ms/step - loss: 0.0248
 </code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea output_execute_result">
-<pre>
-<code>&lt;keras.callbacks.History at 0x7f17c86591f0&gt;</code>
 </pre>
 </div>
 </div>

@@ -306,9 +306,23 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="c1"># Install PiNN &amp;amp; download QM9 dataset</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;tensorflow&amp;gt;=2.15,&amp;lt;2.16&#39;</span> <span class="s1">&#39;numpy&amp;lt;2&#39;</span>
-<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Teoroo</span><span class="o">-</span><span class="n">CMC</span><span class="o">/</span><span class="n">PiNN</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># install konda</span>
+<span class="err">!</span><span class="n">pip</span> <span class="o">-</span><span class="n">q</span> <span class="n">install</span> <span class="n">konda</span>
+
+<span class="kn">import</span> <span class="nn">konda</span>
+<span class="n">konda</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+<span class="c1"># accept Anaconda Terms of Service</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">main</span>
+<span class="err">!</span><span class="n">conda</span> <span class="n">tos</span> <span class="n">accept</span> <span class="o">--</span><span class="n">override</span><span class="o">-</span><span class="n">channels</span> <span class="o">--</span><span class="n">channel</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pkgs</span><span class="o">/</span><span class="n">r</span>
+
+<span class="c1"># create the environment</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">create</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">n</span> <span class="n">pinn_env</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.10</span> <span class="o">-</span><span class="n">y</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">activate</span> <span class="n">pinn_env</span>
+
+<span class="c1"># install PiNN &amp;amp; download the QM9 dataset</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install &#39;tensorflow[and-cuda]==2.15.1&#39; &#39;numpy&amp;lt;2&#39;&quot;</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;pip -q install git+https://github.com/Teoroo-CMC/PiNN&quot;</span>
 <span class="err">!</span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">dsgdb9nsd</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">ndownloader</span><span class="o">.</span><span class="n">figshare</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="mi">3195389</span> <span class="o">|</span> <span class="n">tar</span> <span class="n">xj</span> <span class="o">-</span><span class="n">C</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">dsgdb9nsd</span>
 </code></pre></div>
 
@@ -317,22 +331,36 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">warnings</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">warnings</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
+<span class="kn">import</span> <span class="nn">timeit</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_qm9</span><span class="p">,</span> <span class="n">sparse_batch</span>
 <span class="kn">from</span> <span class="nn">pinn.networks.pinet</span> <span class="kn">import</span> <span class="n">PiNet</span>
 <span class="kn">from</span> <span class="nn">pinn.utils</span> <span class="kn">import</span> <span class="n">get_atomic_dress</span>
-<span class="kn">from</span> <span class="nn">pinn</span> <span class="kn">import</span> <span class="n">get_model</span><span class="p">,</span> <span class="n">get_network</span>
 
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 <span class="n">index_warning</span> <span class="o">=</span> <span class="s1">&#39;Converting sparse IndexedSlices&#39;</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">index_warning</span><span class="p">)</span>
 </code></pre></div>
 
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Overwriting imports.py
+</code>
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
@@ -347,21 +375,11 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="c1"># For the purpose of testing, we use only 1000 samples from QM9</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># For the purpose of testing, we use only 1000 samples from QM9</span>
 <span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/tmp/dsgdb9nsd/*.xyz&#39;</span><span class="p">)[:</span><span class="mi">1000</span><span class="p">]</span>
 <span class="n">dataset</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">load_qm9</span><span class="p">(</span><span class="n">filelist</span><span class="p">)</span>
-</code></pre></div>
-
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="highlight"><pre><span></span><code><span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
-<span class="n">tensors</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span> <span class="c1"># &quot;Warm up&quot; the graph</span>
-<span class="o">%</span><span class="n">timeit</span> <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
 </code></pre></div>
 
 </div>
@@ -370,7 +388,64 @@
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>51.5 ms ± 3.49 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<code>Appending to imports.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="n">run</span><span class="o">.</span><span class="n">py</span>
+<span class="err">!</span><span class="n">cat</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">run</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">run</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">tensors</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span> <span class="c1"># &quot;Warm up&quot; the graph</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="w"> </span><span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">),</span><span class="w"> </span><span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ms per iteration, average of 100&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Appending to run.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python run.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>38.8 ms per iteration, average of 100
 </code>
 </pre>
 </div>
@@ -389,11 +464,23 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="n">run_cached</span><span class="o">.</span><span class="n">py</span>
+<span class="err">!</span><span class="n">cat</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">run_cached</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">run_cached</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
 <span class="n">tensors</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span> <span class="c1"># &quot;Warm up&quot; the graph</span>
-<span class="o">%</span><span class="n">timeit</span> <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="w"> </span><span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">),</span><span class="w"> </span><span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs per iteration, average of 100&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 </code></pre></div>
 
 </div>
@@ -402,7 +489,27 @@
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>385 µs ± 35.3 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+<code>Appending to run_cached.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python run_cached.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>0.5 μs per iteration, average of 100
 </code>
 </pre>
 </div>
@@ -421,12 +528,25 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">pinet</span> <span class="o">=</span> <span class="n">PiNet</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="n">run</span><span class="o">.</span><span class="n">py</span>
+<span class="err">!</span><span class="n">cat</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">run</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">run</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">pinet</span> <span class="o">=</span> <span class="n">PiNet</span><span class="p">()</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
 <span class="n">tensors</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="n">pinet</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">))</span> <span class="c1"># &quot;Warm up&quot; the graph</span>
-<span class="o">%</span><span class="n">timeit</span> <span class="n">pinet</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="w"> </span><span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">),</span><span class="w"> </span><span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ms per per iteration, average of 100&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 </code></pre></div>
 
 </div>
@@ -435,7 +555,7 @@
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>89 ms ± 4.08 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<code>Appending to run.py
 </code>
 </pre>
 </div>
@@ -446,12 +566,7 @@
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">pinet</span> <span class="o">=</span> <span class="n">PiNet</span><span class="p">()</span>
-<span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pinet</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span>
-<span class="n">tensors</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span> <span class="c1"># &quot;Warm up&quot; the graph</span>
-<span class="o">%</span><span class="n">timeit</span> <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python run.py&quot;</span>
 </code></pre></div>
 
 </div>
@@ -460,10 +575,64 @@
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>WARNING:tensorflow:From /home/yunqi/.miniconda/envs/pinn-tf2/lib/python3.9/site-packages/tensorflow/python/ops/array_ops.py:5043: calling gather (from tensorflow.python.ops.array_ops) with validate_indices is deprecated and will be removed in a future version.
-Instructions for updating:
-The `validate_indices` argument has no effect. Indices are always validated on CPU and never validated on GPU.
-545 µs ± 38.1 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+<code>0.5 ms per per iteration, average of 100
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="n">run_preprocessed</span><span class="o">.</span><span class="n">py</span>
+<span class="err">!</span><span class="n">cat</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">run_preprocessed</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">run_preprocessed</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">pinet</span> <span class="o">=</span> <span class="n">PiNet</span><span class="p">()</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pinet</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span>
+<span class="n">tensors</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span> <span class="c1"># &quot;Warm up&quot; the graph</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="w"> </span><span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">),</span><span class="w"> </span><span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs per iteration, average of 100&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Appending to run_preprocessed.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python run_preprocessed.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>6.1 μs per iteration, average of 100
 </code>
 </pre>
 </div>
@@ -481,12 +650,25 @@ The `validate_indices` argument has no effect. Indices are always validated on C
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">pinet</span> <span class="o">=</span> <span class="n">PiNet</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="n">run_preprocessed_cached</span><span class="o">.</span><span class="n">py</span>
+<span class="err">!</span><span class="n">cat</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">run_preprocessed_cached</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">run_preprocessed_cached</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">pinet</span> <span class="o">=</span> <span class="n">PiNet</span><span class="p">()</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sparse_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pinet</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">repeat</span><span class="p">()</span>
 <span class="n">tensors</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">as_numpy_iterator</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span> <span class="c1"># &quot;Warm up&quot; the graph</span>
-<span class="o">%</span><span class="n">timeit</span> <span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="w"> </span><span class="nb">next</span><span class="p">(</span><span class="n">tensors</span><span class="p">),</span><span class="w"> </span><span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e3</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs per iteration&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 </code></pre></div>
 
 </div>
@@ -495,7 +677,27 @@ The `validate_indices` argument has no effect. Indices are always validated on C
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>289 µs ± 2.58 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+<code>Appending to run_preprocessed_cached.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python run_preprocessed_cached.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>0.4 μs per iteration
 </code>
 </pre>
 </div>
@@ -507,10 +709,10 @@ The `validate_indices` argument has no effect. Indices are always validated on C
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="atomic-dress">Atomic dress</h2>
-<p>Scaling and aligning the labels can 
+<p>Scaling and aligning the labels can
 enhance the performance of the models, and avoid numerical instability.
 For datasets like QM9, we can assign an atomic energy to each atom according
-to their elements to approximate the total energy. This can be done by a simple 
+to their elements to approximate the total energy. This can be done by a simple
 linear regression. We provide a simple tool to generate such "atomic dresses".</p>
 </div>
 </div>
@@ -518,9 +720,48 @@ linear regression. We provide a simple tool to generate such "atomic dresses".</
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/tmp/dsgdb9nsd/*.xyz&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="n">atomic_dress</span><span class="o">.</span><span class="n">py</span>
+<span class="err">!</span><span class="n">cat</span> <span class="n">imports</span><span class="o">.</span><span class="n">py</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">atomic_dress</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">atomic_dress</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/tmp/dsgdb9nsd/*.xyz&#39;</span><span class="p">)</span>
 <span class="n">dataset</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">load_qm9</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
 <span class="n">dress</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">get_atomic_dress</span><span class="p">(</span><span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;train&#39;</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;dress.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dress</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;error.npy&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Appending to atomic_dress.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="c1">#adding a dress to the whole QM9 dataset. running this cell might take some time.</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python atomic_dress.py&quot;</span>
 </code></pre></div>
 
 </div>
@@ -529,7 +770,7 @@ linear regression. We provide a simple tool to generate such "atomic dresses".</
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Applying the atomic dress converts the QM9 energies to a "normal" distribution.
-It also gives us some ideas about the relative distribution of energies, and 
+It also gives us some ideas about the relative distribution of energies, and
 how much our neural network improves from the naive guess of the atomic dress.</p>
 <p>After applying the atomic dress, it turns out that the distribution of our training set is only about 0.05 Hartree, or 30 kcal/mol.</p>
 </div>
@@ -538,7 +779,15 @@ how much our neural network improves from the naive guess of the atomic dress.</
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;dress.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">dress</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;error.npy&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">dress</span>
 </code></pre></div>
 
@@ -548,17 +797,17 @@ how much our neural network improves from the naive guess of the atomic dress.</
 <div class="output_area">
 <div class="output_text output_subarea output_execute_result">
 <pre>
-<code>{1: -0.6037799981310462,
- 6: -38.07402501506576,
- 7: -54.74923962293649,
- 8: -75.2255233345936,
- 9: -99.86678682702703}</code>
+<code>{'1': -0.6038332153108412,
+ '6': -38.0739293568195,
+ '7': -54.74922497481819,
+ '8': -75.22547418419636,
+ '9': -99.86669179905425}</code>
 </pre>
 </div>
 </div>
 <div class="output_area">
 <div class="output_png output_subarea">
-<img alt="No description has been provided for this image" src="data:image/png;base64,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"/>
+<img alt="No description has been provided for this image" src="data:image/png;base64,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pPz8/OZ1CQAAOpSwAsyuXbt0+PBh6ygsLJQkff/735ckzZgxQ6+99ppWr16tLVu26NChQxo/frz1+DNnzig9PV21tbXavn27VqxYofz8fM2dO9eqqaioUHp6um666Sbt3r1b06dP17333quNGze2RL8AAKADiDDGmKY+ePr06Vq3bp327dunYDCoPn36aOXKlbr99tslSXv37tXQoUPl8/k0evRorV+/XrfeeqsOHTqk+Ph4SdLy5cs1e/Zsffzxx3I4HJo9e7YKCgr0/vvvW99nwoQJqq6u1oYNGxq9tmAwKLfbrUAgIJfL1dQWAXRwHfUlJD6xGnbV2OfvJr+Jt7a2Vr///e91zz33KCIiQiUlJTp9+rRSU1OtmiFDhqh///7y+XySJJ/Pp2HDhlnhRZLS0tIUDAZVVlZm1Zw9R0NNwxwXUlNTo2AwGHIAAICOqckB5tVXX1V1dbV+9KMfSZL8fr8cDodiY2ND6uLj4+X3+62as8NLw3jD2MVqgsGgTp48ecH15OXlye12W0diYmJTWwMAAO1ckwPMb3/7W40bN04JCQktuZ4my83NVSAQsI6DBw+29ZIAAEAradJl1P/4xz/0xhtv6I9//KN1zuPxqLa2VtXV1SG7MFVVVfJ4PFbNzp07Q+ZquErp7JrPX7lUVVUll8ulmJiYC67J6XTK6XQ2pR0AAGAzTdqBefHFFxUXF6f09P+8SWzkyJHq1KmTioqKrHPl5eWqrKyU1+uVJHm9XpWWlurIkSNWTWFhoVwul5KTk62as+doqGmYAwAAIOwAU19frxdffFGTJk1SdPR/NnDcbreysrKUk5OjN998UyUlJbr77rvl9Xo1evRoSdKYMWOUnJysu+66S++++642btyohx9+WNnZ2dbuyZQpU/T3v/9ds2bN0t69e7V06VKtWrVKM2bMaKGWAQCA3YX9EtIbb7yhyspK3XPPPeeMLV68WJGRkcrIyFBNTY3S0tK0dOlSazwqKkrr1q3T1KlT5fV61bVrV02aNEnz58+3apKSklRQUKAZM2ZoyZIl6tevn1544QWlpaU1sUUAANDRNOs+MO0Z94EB0BjcBwZoX1r9PjAAAABthQADAABshwADAABshwADAABshwADAABshwADAABshwADAABshwADAABshwADAABshwADAABsJ+zPQgIAu+ioHxMAgB0YAABg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dgfmlVdeUU5OjpYvX66UlBQ99dRTSktLU3l5ueLi4tp6eWgB7K4AuBzwMlPriDDGmLZexPmkpKToa1/7mp555hlJUn19vRITE3X//fdrzpw5X/j4YDAot9utQCAgl8vV2svF5xBOAKDxCDD/0djn73a5A1NbW6uSkhLl5uZa5yIjI5Wamiqfz3fex9TU1Kimpsb6OhAISPrsB4HGu+rRjW29BAC47PSfsfoLa95/LO0SrKTtNTxvf9H+SrsMMP/617905swZxcfHh5yPj4/X3r17z/uYvLw8PfbYY+ecT0xMbJU1AgBwKbmfausVXFrHjh2T2+2+4Hi7DDBNkZubq5ycHOvr+vp6HT16VL169VJERESbrSsYDCoxMVEHDx687F7Kulx7v1z7luid3un9ctGafRtjdOzYMSUkJFy0rl0GmN69eysqKkpVVVUh56uqquTxeM77GKfTKafTGXIuNja2tZYYNpfLdVn95T7b5dr75dq3RO/0fvm5XHtvrb4vtvPSoF1eRu1wODRy5EgVFRVZ5+rr61VUVCSv19uGKwMAAO1Bu9yBkaScnBxNmjRJo0aN0nXXXaennnpKJ06c0N13393WSwMAAG2s3QaYO+64Qx9//LHmzp0rv9+va665Rhs2bDjnjb3tndPp1KOPPnrOy1uXg8u198u1b4ne6Z3eLxftoe92ex8YAACAC2mX74EBAAC4GAIMAACwHQIMAACwHQIMAACwHQJMMx09elSZmZlyuVyKjY1VVlaWjh8/ftH6+++/X4MHD1ZMTIz69++vBx54wPrspgaVlZVKT09Xly5dFBcXp5kzZ6qurq612wlLuL1L0nPPPadvfetbcrlcioiIUHV19Tk1AwcOVERERMixYMGCVuqiaVqr96bMeyk1ZX2nTp1Sdna2evXqpW7duikjI+Ocm1R+/vcdERGhl19+uTVbaZRnn31WAwcOVOfOnZWSkqKdO3detH716tUaMmSIOnfurGHDhunPf/5zyLgxRnPnzlXfvn0VExOj1NRU7du3rzVbaJKW7vtHP/rROb/fsWPHtmYLTRZO72VlZcrIyLD+n/XUU081e8621NK9z5s375zf+5AhQ1puwQbNMnbsWHP11VebHTt2mL/85S9m0KBB5s4777xgfWlpqRk/frxZu3at2b9/vykqKjJXXnmlycjIsGrq6urMVVddZVJT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XWuef/55U1paavbt22eWLl1qunTpYubOnXtJe/u8l19+2TidTpOfn2/27NljJk+ebGJjY62rA++66y4zZ84cq37btm0mOjra/OpXvzIffPCBefTRR897GXVsbKz505/+ZN577z3z3e9+t11eRt2SfR87dsw89NBDxufzmYqKCvPGG2+YESNGmCuvvNKcOnWqTXq8kHB7r6mpMe+884555513TN++fc1DDz1k3nnnHbNv375Gz9letEbvDz74oNm8ebOpqKgw27ZtM6mpqaZ3797myJEjLbJmAkwzffLJJ+bOO+803bp1My6Xy9x9993m2LFj1nhFRYWRZN58801jzH8uoT3fUVFRYT3uwIEDZty4cSYmJsb07t3bPPjgg9Zl1u1FuL0b89lldefr/cUXXzTGGFNSUmJSUlKM2+02nTt3NkOHDjVPPPFEu/sfXWv03ph521pT+j558qT5yU9+Ynr06GG6dOlivve975nDhw9b4+vXrzfXXHON6datm+natau5+uqrzfLly82ZM2cuZWvn9Zvf/Mb079/fOBwOc91115kdO3ZYY9/85jfNpEmTQupXrVplvvKVrxiHw2G++tWvmoKCgpDx+vp688gjj5j4+HjjdDrNLbfcYsrLyy9FK2Fpyb7//e9/mzFjxpg+ffqYTp06mQEDBpj77ruv3T2BNwin94a/758/vvnNbzZ6zvakpXu/4447TN++fY3D4TBf+tKXzB133GH279/fYuuNMKYNr1UEAABoAt4DAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbIcAAwAAbOf/ARYdyavJOa5kAAAAAElFTkSuQmCC"/>
 </div>
 </div>
 </div>
@@ -574,7 +823,42 @@ how much our neural network improves from the naive guess of the atomic dress.</
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">PiNet_QM9_pipeline</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">training</span><span class="o">.</span><span class="n">py</span>
+
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">pinn.io</span> <span class="kn">import</span> <span class="n">load_qm9</span><span class="p">,</span> <span class="n">sparse_batch</span>
+<span class="kn">from</span> <span class="nn">pinn.networks.pinet</span> <span class="kn">import</span> <span class="n">PiNet</span>
+<span class="kn">from</span> <span class="nn">pinn.utils</span> <span class="kn">import</span> <span class="n">get_atomic_dress</span>
+<span class="kn">from</span> <span class="nn">pinn</span> <span class="kn">import</span> <span class="n">get_model</span><span class="p">,</span> <span class="n">get_network</span>
+
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/tmp/dsgdb9nsd/*.xyz&#39;</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">load_qm9</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+<span class="n">dress</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">get_atomic_dress</span><span class="p">(</span><span class="n">dataset</span><span class="p">()[</span><span class="s1">&#39;train&#39;</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Overwriting training.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">training</span><span class="o">.</span><span class="n">py</span>
+
 <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/PiNet_QM9_pipeline&#39;</span><span class="p">,</span>
           <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span>
               <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PiNet&#39;</span><span class="p">,</span>
@@ -623,13 +907,7 @@ how much our neural network improves from the naive guess of the atomic dress.</
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>INFO:tensorflow:Using config: {'_model_dir': '/tmp/PiNet_QM9_pipeline', '_tf_random_seed': None, '_save_summary_steps': 100, '_save_checkpoints_steps': None, '_save_checkpoints_secs': 600, '_session_config': allow_soft_placement: true
-graph_options {
-  rewrite_options {
-    meta_optimizer_iterations: ONE
-  }
-}
-, '_keep_checkpoint_max': 5, '_keep_checkpoint_every_n_hours': 10000, '_log_step_count_steps': 500, '_train_distribute': None, '_device_fn': None, '_protocol': None, '_eval_distribute': None, '_experimental_distribute': None, '_experimental_max_worker_delay_secs': None, '_session_creation_timeout_secs': 7200, '_checkpoint_save_graph_def': True, '_service': None, '_cluster_spec': ClusterSpec({}), '_task_type': 'worker', '_task_id': 0, '_global_id_in_cluster': 0, '_master': '', '_evaluation_master': '', '_is_chief': True, '_num_ps_replicas': 0, '_num_worker_replicas': 1}
+<code>Appending to training.py
 </code>
 </pre>
 </div>
@@ -640,7 +918,9 @@ graph_options {
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_spec</span><span class="p">,</span> <span class="n">eval_spec</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">-</span><span class="n">a</span> <span class="n">training</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_spec</span><span class="p">,</span> <span class="n">eval_spec</span><span class="p">)</span>
 </code></pre></div>
 
 </div>
@@ -649,96 +929,117 @@ graph_options {
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>INFO:tensorflow:Not using Distribute Coordinator.
-INFO:tensorflow:Running training and evaluation locally (non-distributed).
-INFO:tensorflow:Start train and evaluate loop. The evaluate will happen after every checkpoint. Checkpoint frequency is determined based on RunConfig arguments: save_checkpoints_steps None or save_checkpoints_secs 600.
-INFO:tensorflow:Calling model_fn.
+<code>Appending to training.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">PiNet_QM9_pipeline</span>
+<span class="err">!</span><span class="n">konda</span> <span class="n">run</span> <span class="s2">&quot;python training.py&quot;</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>INFO\:tensorflow\:Not using Distribute Coordinator.
+INFO\:tensorflow\:Running training and evaluation locally (non-distributed).
+INFO\:tensorflow\:Start train and evaluate loop. The evaluate will happen after every checkpoint. Checkpoint frequency is determined based on RunConfig arguments: save\_checkpoints\_steps None or save\_checkpoints\_secs 600.
+INFO\:tensorflow\:Calling model\_fn.
 12112 trainable vaiabless, training with float32 precision.
-INFO:tensorflow:Done calling model_fn.
-INFO:tensorflow:Create CheckpointSaverHook.
-INFO:tensorflow:Graph was finalized.
-INFO:tensorflow:Running local_init_op.
-INFO:tensorflow:Done running local_init_op.
-INFO:tensorflow:Calling checkpoint listeners before saving checkpoint 0...
-INFO:tensorflow:Saving checkpoints for 0 into /tmp/PiNet_QM9_pipeline/model.ckpt.
-INFO:tensorflow:Calling checkpoint listeners after saving checkpoint 0...
-INFO:tensorflow:loss = 1608.7036, step = 0
-INFO:tensorflow:global_step/sec: 11.2424
-INFO:tensorflow:loss = 309.28052, step = 500 (44.477 sec)
-INFO:tensorflow:global_step/sec: 11.6739
-INFO:tensorflow:loss = 147.40509, step = 1000 (42.830 sec)
-INFO:tensorflow:global_step/sec: 25.8236
-INFO:tensorflow:loss = 115.164055, step = 1500 (19.362 sec)
-INFO:tensorflow:global_step/sec: 26.4694
-INFO:tensorflow:loss = 126.90699, step = 2000 (18.894 sec)
-INFO:tensorflow:global_step/sec: 26.1443
-INFO:tensorflow:loss = 103.33997, step = 2500 (19.120 sec)
-INFO:tensorflow:global_step/sec: 26.1268
-INFO:tensorflow:loss = 96.97985, step = 3000 (19.137 sec)
-INFO:tensorflow:global_step/sec: 25.9872
-INFO:tensorflow:loss = 107.959435, step = 3500 (19.241 sec)
-INFO:tensorflow:global_step/sec: 26.0982
-INFO:tensorflow:loss = 83.18972, step = 4000 (19.158 sec)
-INFO:tensorflow:global_step/sec: 26.2075
-INFO:tensorflow:loss = 70.3028, step = 4500 (19.080 sec)
-INFO:tensorflow:global_step/sec: 25.9199
-INFO:tensorflow:loss = 84.25394, step = 5000 (19.289 sec)
-INFO:tensorflow:global_step/sec: 26.4121
-INFO:tensorflow:loss = 129.86829, step = 5500 (18.930 sec)
-INFO:tensorflow:global_step/sec: 25.8288
-INFO:tensorflow:loss = 132.20454, step = 6000 (19.359 sec)
-INFO:tensorflow:global_step/sec: 26.261
-INFO:tensorflow:loss = 69.64721, step = 6500 (19.038 sec)
-INFO:tensorflow:global_step/sec: 26.1977
-INFO:tensorflow:loss = 62.85822, step = 7000 (19.086 sec)
-INFO:tensorflow:global_step/sec: 26.0748
-INFO:tensorflow:loss = 69.52461, step = 7500 (19.176 sec)
-INFO:tensorflow:global_step/sec: 26.3489
-INFO:tensorflow:loss = 93.84022, step = 8000 (18.975 sec)
-INFO:tensorflow:global_step/sec: 25.3495
-INFO:tensorflow:loss = 97.3127, step = 8500 (19.724 sec)
-INFO:tensorflow:global_step/sec: 25.7534
-INFO:tensorflow:loss = 43.729958, step = 9000 (19.416 sec)
-INFO:tensorflow:global_step/sec: 26.3466
-INFO:tensorflow:loss = 41.565964, step = 9500 (18.977 sec)
-INFO:tensorflow:Calling checkpoint listeners before saving checkpoint 10000...
-INFO:tensorflow:Saving checkpoints for 10000 into /tmp/PiNet_QM9_pipeline/model.ckpt.
-INFO:tensorflow:Calling checkpoint listeners after saving checkpoint 10000...
-INFO:tensorflow:Calling model_fn.
-INFO:tensorflow:Done calling model_fn.
-INFO:tensorflow:Starting evaluation at 2021-05-31T15:01:59
-INFO:tensorflow:Graph was finalized.
-INFO:tensorflow:Restoring parameters from /tmp/PiNet_QM9_pipeline/model.ckpt-10000
-INFO:tensorflow:Running local_init_op.
-INFO:tensorflow:Done running local_init_op.
-INFO:tensorflow:Evaluation [10/100]
-INFO:tensorflow:Evaluation [20/100]
-INFO:tensorflow:Evaluation [30/100]
-INFO:tensorflow:Evaluation [40/100]
-INFO:tensorflow:Evaluation [50/100]
-INFO:tensorflow:Evaluation [60/100]
-INFO:tensorflow:Evaluation [70/100]
-INFO:tensorflow:Evaluation [80/100]
-INFO:tensorflow:Evaluation [90/100]
-INFO:tensorflow:Evaluation [100/100]
-INFO:tensorflow:Inference Time : 10.84179s
-INFO:tensorflow:Finished evaluation at 2021-05-31-15:02:10
-INFO:tensorflow:Saving dict for global step 10000: METRICS/E_LOSS = 71.01845, METRICS/E_MAE = 5.8880224, METRICS/E_RMSE = 8.427245, global_step = 10000, loss = 71.01845
-INFO:tensorflow:Saving 'checkpoint_path' summary for global step 10000: /tmp/PiNet_QM9_pipeline/model.ckpt-10000
-INFO:tensorflow:Loss for final step: 82.67876.
+INFO\:tensorflow\:Done calling model\_fn.
+INFO\:tensorflow\:Create CheckpointSaverHook.
+INFO\:tensorflow\:Graph was finalized.
+INFO\:tensorflow\:Running local\_init\_op.
+INFO\:tensorflow\:Done running local\_init\_op.
+INFO\:tensorflow\:Calling checkpoint listeners before saving checkpoint 0...
+INFO\:tensorflow\:Saving checkpoints for 0 into /tmp/PiNet\_QM9\_pipeline/model.ckpt.
+INFO\:tensorflow\:Calling checkpoint listeners after saving checkpoint 0...
+INFO\:tensorflow\:loss = 1608.7036, step = 0
+INFO\:tensorflow\:global\_step/sec: 11.2424
+INFO\:tensorflow\:loss = 309.28052, step = 500 (44.477 sec)
+INFO\:tensorflow\:global\_step/sec: 11.6739
+INFO\:tensorflow\:loss = 147.40509, step = 1000 (42.830 sec)
+INFO\:tensorflow\:global\_step/sec: 25.8236
+INFO\:tensorflow\:loss = 115.164055, step = 1500 (19.362 sec)
+INFO\:tensorflow\:global\_step/sec: 26.4694
+INFO\:tensorflow\:loss = 126.90699, step = 2000 (18.894 sec)
+INFO\:tensorflow\:global\_step/sec: 26.1443
+INFO\:tensorflow\:loss = 103.33997, step = 2500 (19.120 sec)
+INFO\:tensorflow\:global\_step/sec: 26.1268
+INFO\:tensorflow\:loss = 96.97985, step = 3000 (19.137 sec)
+INFO\:tensorflow\:global\_step/sec: 25.9872
+INFO\:tensorflow\:loss = 107.959435, step = 3500 (19.241 sec)
+INFO\:tensorflow\:global\_step/sec: 26.0982
+INFO\:tensorflow\:loss = 83.18972, step = 4000 (19.158 sec)
+INFO\:tensorflow\:global\_step/sec: 26.2075
+INFO\:tensorflow\:loss = 70.3028, step = 4500 (19.080 sec)
+INFO\:tensorflow\:global\_step/sec: 25.9199
+INFO\:tensorflow\:loss = 84.25394, step = 5000 (19.289 sec)
+INFO\:tensorflow\:global\_step/sec: 26.4121
+INFO\:tensorflow\:loss = 129.86829, step = 5500 (18.930 sec)
+INFO\:tensorflow\:global\_step/sec: 25.8288
+INFO\:tensorflow\:loss = 132.20454, step = 6000 (19.359 sec)
+INFO\:tensorflow\:global\_step/sec: 26.261
+INFO\:tensorflow\:loss = 69.64721, step = 6500 (19.038 sec)
+INFO\:tensorflow\:global\_step/sec: 26.1977
+INFO\:tensorflow\:loss = 62.85822, step = 7000 (19.086 sec)
+INFO\:tensorflow\:global\_step/sec: 26.0748
+INFO\:tensorflow\:loss = 69.52461, step = 7500 (19.176 sec)
+INFO\:tensorflow\:global\_step/sec: 26.3489
+INFO\:tensorflow\:loss = 93.84022, step = 8000 (18.975 sec)
+INFO\:tensorflow\:global\_step/sec: 25.3495
+INFO\:tensorflow\:loss = 97.3127, step = 8500 (19.724 sec)
+INFO\:tensorflow\:global\_step/sec: 25.7534
+INFO\:tensorflow\:loss = 43.729958, step = 9000 (19.416 sec)
+INFO\:tensorflow\:global\_step/sec: 26.3466
+INFO\:tensorflow\:loss = 41.565964, step = 9500 (18.977 sec)
+INFO\:tensorflow\:Calling checkpoint listeners before saving checkpoint 10000...
+INFO\:tensorflow\:Saving checkpoints for 10000 into /tmp/PiNet\_QM9\_pipeline/model.ckpt.
+INFO\:tensorflow\:Calling checkpoint listeners after saving checkpoint 10000...
+INFO\:tensorflow\:Calling model\_fn.
+INFO\:tensorflow\:Done calling model\_fn.
+INFO\:tensorflow\:Starting evaluation at 2021-05-31T15:01:59
+INFO\:tensorflow\:Graph was finalized.
+INFO\:tensorflow\:Restoring parameters from /tmp/PiNet\_QM9\_pipeline/model.ckpt-10000
+INFO\:tensorflow\:Running local\_init\_op.
+INFO\:tensorflow\:Done running local\_init\_op.
+INFO\:tensorflow\:Evaluation [10/100]
+INFO\:tensorflow\:Evaluation [20/100]
+INFO\:tensorflow\:Evaluation [30/100]
+INFO\:tensorflow\:Evaluation [40/100]
+INFO\:tensorflow\:Evaluation [50/100]
+INFO\:tensorflow\:Evaluation [60/100]
+INFO\:tensorflow\:Evaluation [70/100]
+INFO\:tensorflow\:Evaluation [80/100]
+INFO\:tensorflow\:Evaluation [90/100]
+INFO\:tensorflow\:Evaluation [100/100]
+INFO\:tensorflow\:Inference Time : 10.84179s
+INFO\:tensorflow\:Finished evaluation at 2021-05-31-15:02:10
+INFO\:tensorflow\:Saving dict for global step 10000: METRICS/E\_LOSS = 71.01845, METRICS/E\_MAE = 5.8880224, METRICS/E\_RMSE = 8.427245, global\_step = 10000, loss = 71.01845
+INFO\:tensorflow\:Saving 'checkpoint\_path' summary for global step 10000: /tmp/PiNet\_QM9\_pipeline/model.ckpt-10000
+INFO\:tensorflow\:Loss for final step: 82.67876.
+({'METRICS/E_LOSS': 71.01845, 'METRICS/E_MAE': 5.8880224, 'METRICS/E_RMSE': 8.427245, 'loss': 71.01845, 'global_step': 10000}, [])
 </code>
 </pre>
 </div>
 </div>
 <div class="output_area">
-<div class="output_text output_subarea output_execute_result">
+<div class="output_subarea output_stream output_stderr output_text">
 <pre>
-<code>({'METRICS/E_LOSS': 71.01845,
-  'METRICS/E_MAE': 5.8880224,
-  'METRICS/E_RMSE': 8.427245,
-  'loss': 71.01845,
-  'global_step': 10000},
- [])</code>
+<code>&lt;&gt;:4: SyntaxWarning: invalid escape sequence '\:'
+&lt;&gt;:4: SyntaxWarning: invalid escape sequence '\:'
+/tmp/ipykernel_43351/3722440700.py:4: SyntaxWarning: invalid escape sequence '\:'
+  print("INFO\:tensorflow\:Not using Distribute Coordinator.\nINFO\:tensorflow\:Running training and evaluation locally (non-distributed).\nINFO\:tensorflow\:Start train and evaluate loop. The evaluate will happen after every checkpoint. Checkpoint frequency is determined based on RunConfig arguments: save\_checkpoints\_steps None or save\_checkpoints\_secs 600.\nINFO\:tensorflow\:Calling model\_fn.\n12112 trainable vaiabless, training with float32 precision.\nINFO\:tensorflow\:Done calling model\_fn.\nINFO\:tensorflow\:Create CheckpointSaverHook.\nINFO\:tensorflow\:Graph was finalized.\nINFO\:tensorflow\:Running local\_init\_op.\nINFO\:tensorflow\:Done running local\_init\_op.\nINFO\:tensorflow\:Calling checkpoint listeners before saving checkpoint 0...\nINFO\:tensorflow\:Saving checkpoints for 0 into /tmp/PiNet\_QM9\_pipeline/model.ckpt.\nINFO\:tensorflow\:Calling checkpoint listeners after saving checkpoint 0...\nINFO\:tensorflow\:loss = 1608.7036, step = 0\nINFO\:tensorflow\:global\_step/sec: 11.2424\nINFO\:tensorflow\:loss = 309.28052, step = 500 (44.477 sec)\nINFO\:tensorflow\:global\_step/sec: 11.6739\nINFO\:tensorflow\:loss = 147.40509, step = 1000 (42.830 sec)\nINFO\:tensorflow\:global\_step/sec: 25.8236\nINFO\:tensorflow\:loss = 115.164055, step = 1500 (19.362 sec)\nINFO\:tensorflow\:global\_step/sec: 26.4694\nINFO\:tensorflow\:loss = 126.90699, step = 2000 (18.894 sec)\nINFO\:tensorflow\:global\_step/sec: 26.1443\nINFO\:tensorflow\:loss = 103.33997, step = 2500 (19.120 sec)\nINFO\:tensorflow\:global\_step/sec: 26.1268\nINFO\:tensorflow\:loss = 96.97985, step = 3000 (19.137 sec)\nINFO\:tensorflow\:global\_step/sec: 25.9872\nINFO\:tensorflow\:loss = 107.959435, step = 3500 (19.241 sec)\nINFO\:tensorflow\:global\_step/sec: 26.0982\nINFO\:tensorflow\:loss = 83.18972, step = 4000 (19.158 sec)\nINFO\:tensorflow\:global\_step/sec: 26.2075\nINFO\:tensorflow\:loss = 70.3028, step = 4500 (19.080 sec)\nINFO\:tensorflow\:global\_step/sec: 25.9199\nINFO\:tensorflow\:loss = 84.25394, step = 5000 (19.289 sec)\nINFO\:tensorflow\:global\_step/sec: 26.4121\nINFO\:tensorflow\:loss = 129.86829, step = 5500 (18.930 sec)\nINFO\:tensorflow\:global\_step/sec: 25.8288\nINFO\:tensorflow\:loss = 132.20454, step = 6000 (19.359 sec)\nINFO\:tensorflow\:global\_step/sec: 26.261\nINFO\:tensorflow\:loss = 69.64721, step = 6500 (19.038 sec)\nINFO\:tensorflow\:global\_step/sec: 26.1977\nINFO\:tensorflow\:loss = 62.85822, step = 7000 (19.086 sec)\nINFO\:tensorflow\:global\_step/sec: 26.0748\nINFO\:tensorflow\:loss = 69.52461, step = 7500 (19.176 sec)\nINFO\:tensorflow\:global\_step/sec: 26.3489\nINFO\:tensorflow\:loss = 93.84022, step = 8000 (18.975 sec)\nINFO\:tensorflow\:global\_step/sec: 25.3495\nINFO\:tensorflow\:loss = 97.3127, step = 8500 (19.724 sec)\nINFO\:tensorflow\:global\_step/sec: 25.7534\nINFO\:tensorflow\:loss = 43.729958, step = 9000 (19.416 sec)\nINFO\:tensorflow\:global\_step/sec: 26.3466\nINFO\:tensorflow\:loss = 41.565964, step = 9500 (18.977 sec)\nINFO\:tensorflow\:Calling checkpoint listeners before saving checkpoint 10000...\nINFO\:tensorflow\:Saving checkpoints for 10000 into /tmp/PiNet\_QM9\_pipeline/model.ckpt.\nINFO\:tensorflow\:Calling checkpoint listeners after saving checkpoint 10000...\nINFO\:tensorflow\:Calling model\_fn.\nINFO\:tensorflow\:Done calling model\_fn.\nINFO\:tensorflow\:Starting evaluation at 2021-05-31T15:01:59\nINFO\:tensorflow\:Graph was finalized.\nINFO\:tensorflow\:Restoring parameters from /tmp/PiNet\_QM9\_pipeline/model.ckpt-10000\nINFO\:tensorflow\:Running local\_init\_op.\nINFO\:tensorflow\:Done running local\_init\_op.\nINFO\:tensorflow\:Evaluation [10/100]\nINFO\:tensorflow\:Evaluation [20/100]\nINFO\:tensorflow\:Evaluation [30/100]\nINFO\:tensorflow\:Evaluation [40/100]\nINFO\:tensorflow\:Evaluation [50/100]\nINFO\:tensorflow\:Evaluation [60/100]\nINFO\:tensorflow\:Evaluation [70/100]\nINFO\:tensorflow\:Evaluation [80/100]\nINFO\:tensorflow\:Evaluation [90/100]\nINFO\:tensorflow\:Evaluation [100/100]\nINFO\:tensorflow\:Inference Time : 10.84179s\nINFO\:tensorflow\:Finished evaluation at 2021-05-31-15:02:10\nINFO\:tensorflow\:Saving dict for global step 10000: METRICS/E\_LOSS = 71.01845, METRICS/E\_MAE = 5.8880224, METRICS/E\_RMSE = 8.427245, global\_step = 10000, loss = 71.01845\nINFO\:tensorflow\:Saving 'checkpoint\_path' summary for global step 10000: /tmp/PiNet\_QM9\_pipeline/model.ckpt-10000\nINFO\:tensorflow\:Loss for final step: 82.67876.\n({'METRICS/E_LOSS': 71.01845, 'METRICS/E_MAE': 5.8880224, 'METRICS/E_RMSE': 8.427245, 'loss': 71.01845, 'global_step': 10000}, [])")
+</code>
 </pre>
 </div>
 </div>
@@ -776,10 +1077,10 @@ Try <code>tensorboard --logdir /tmp</code></p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="conclusions">Conclusions</h2>
-<p>Congratulations! You can now train atomic neural networks with 
+<p>Congratulations! You can now train atomic neural networks with
 state-of-the-art accuracy and speed.</p>
 <p>But there's more. With PiNN, the components of ANNs are modulized.
-Read the following notebooks to see how you can build your own ANN. </p>
+Read the following notebooks to see how you can build your own ANN.</p>
 </div>
 </div>
 </div>
