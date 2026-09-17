@@ -262,3 +262,44 @@ def _potential_tests(params):
     de = e_pred[-1] - e_pred[0]
     int_p = np.trapz(p_pred, x=l_range**3)
     assert np.allclose(de, int_p, rtol=1e-2)
+
+
+@pytest.mark.forked
+def test_use_f_weights_trains():
+    """Per-component force weights survive the loss mask.
+
+    The force error is always masked (`f_mask` is an all-true fill), and
+    `tf.boolean_mask` flattens it; a `[n_atoms, 3]` weight that did not travel
+    through the same selection used to make the graph fail to build with
+    `Incompatible shapes: [n_atoms*3] vs [n_atoms, 3]`.
+    """
+    testpath = tempfile.mkdtemp()
+    n, na = 8, 4
+    rng = np.random.default_rng(0)
+    data = {
+        'coord': rng.normal(0, 2.0, (n, na, 3)).astype(np.float32),
+        'elems': np.ones((n, na), dtype=np.int32),
+        'e_data': rng.normal(-20, 1, n).astype(np.float32),
+        'f_data': rng.normal(0, 0.5, (n, na, 3)).astype(np.float32),
+        'f_weights': rng.uniform(0.5, 1.5, (n, na, 3)).astype(np.float32),
+    }
+    params = {
+        'model_dir': testpath,
+        'network': {
+            'name': 'PiNet',
+            'params': {'ii_nodes': [4, 4], 'pi_nodes': [4, 4], 'pp_nodes': [4, 4],
+                       'out_nodes': [4], 'depth': 2, 'rc': 4., 'n_basis': 4,
+                       'atom_types': [1]}},
+        'model': {
+            'name': 'potential_model',
+            'params': {'use_force': True, 'use_f_weights': True,
+                       'f_loss_multiplier': 100.0}}}
+
+    import pinn
+    model = pinn.get_model(params)
+    model.train(
+        input_fn=lambda: load_numpy(data, splits=None).apply(sparse_batch(2)).repeat(),
+        max_steps=2)
+    model.evaluate(
+        input_fn=lambda: load_numpy(data, splits=None).apply(sparse_batch(2)))
+    rmtree(testpath)
