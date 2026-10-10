@@ -37,12 +37,14 @@ $$
 The quadrupole tensor is defined as
 
 $$
+
 Q'{\alpha\beta}(\mathbf{r}) =
 \sum_i q_i \left(
 3r{\alpha i}r_{\beta i}
 
 \delta_{\alpha\beta}|\mathbf{r}_i|^2
 \right)
+
 $$
 
 where:
@@ -60,17 +62,21 @@ $\delta_{\alpha\beta}$ is the Kronecker delta.
 The traceless quadrupole tensor is defined in terms of the quadrupole tensor $Q_{\alpha\beta}$ as
 
 $$
+
 Q'{\alpha\beta}
 = 3Q{\alpha\beta}
 
 \mathrm{tr}(Q)\delta_{\alpha\beta}
+
 $$
 
 where $\mathrm{tr}(Q)$ denotes the trace of the quadrupole tensor:
 
 $$
+
 \mathrm{tr}(Q)
 = \sum_{\gamma \in {x,y,z}} Q_{\gamma\gamma}
+
 $$
 ## Usage
 
