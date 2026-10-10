@@ -1,6 +1,6 @@
 # Quadrupole Model
 
-The quadrupole model[@Muuga_2026] works similarly to the dipole model. The traceless quadrupole moments of the format [$Q_{xx}$, $Q_{yy}$, $Q_{zz}$, $Q_{xy}$, $Q_{xz}$, $Q_{yz}$] are predicted using atomic charges as latent variables.
+The quadrupole model[@Muuga_2026] works similarly to the dipole model. The traceless quadrupole moments of the format [ $Q_{xx}$, $Q_{yy}$, $Q_{zz}$, $Q_{xy}$, $Q_{xz}$, $Q_{yz}$ ] are predicted using atomic charges as latent variables.
 
 
 The ``model_params`` can be set, and are listed below along with their default values.
@@ -23,34 +23,49 @@ There are different variants of quadrupole and quadrupole-quadrupole models avai
 - atomic charge dipole-quadrupole (AC-DQ) model (`AC_dipole-quadrupole_model`)
 - AC+AD dipole-quadrupole model (`AC_AD_dipole_quadrupole_model`)
 
-## Dipole-quadrupole moments
+## Dipole-quadrupole models
 
 The dipole-quadrupole model fits the dipole and quadrupole of the inputs to the atomic charges
 and predicts dipoles and quadrupoles. The AC+AD dipole-quadrupole model uses a contribution from atomic dipoles for dipole prediction.
 
 The dipole moment is expressed as
 
-\\[ \boldsymbol{\mu}(\mathbf{r}) = \sum_i q_i \mathbf{r}\_i \\]
+$$
+\boldsymbol{\mu}(\mathbf{r}) = \sum_i q_i \mathbf{r}_i
+$$
 
 The quadrupole tensor is defined as
 
-\\[ Q'\_{\alpha\beta}(\mathbf{r}) = \sum_i q_i \left( 3r\_{\alpha i}r\_{\beta i} - \delta\_{\alpha\beta}|\mathbf{r}\_i|^2 \right) \\]
+$$
+Q'_{\alpha\beta}(\mathbf{r}) =
+\sum_i q_i \left(
+3r_{\alpha i}r_{\beta i}
+- \delta_{\alpha\beta}|\mathbf{r}_i|^2
+\right)
+$$
 
 where:
 
-- \\(q_i\\) is the atomic charge of atom \\(i\\).
-- \\(\mathbf{r}\_i\\) is the position vector of atom \\(i\\).
-- \\(r\_{\alpha i}\\) and \\(r\_{\beta i}\\) are the Cartesian components of \\(\mathbf{r}\_i\\).
-- \\(\alpha,\beta \in \\{x,y,z\\}\\).
-- \\(\delta\_{\alpha\beta}\\) is the Kronecker delta.
+- \(q_i\) is the atomic charge of atom \(i\).
+- \(\mathbf{r}_i\) is the position vector of atom \(i\).
+- \(r_{\alpha i}\) and \(r_{\beta i}\) are the Cartesian components of \(\mathbf{r}_i\).
+- \(\alpha,\beta \in \{x,y,z\}\).
+- \(\delta_{\alpha\beta}\) is the Kronecker delta.
 
-The traceless quadrupole tensor is defined in terms of the quadrupole tensor \\(Q\_{\alpha\beta}\\) as
+The traceless quadrupole tensor is defined in terms of the quadrupole tensor \(Q_{\alpha\beta}\) as
 
-\\[ \boxed{ Q'\_{\alpha\beta} = 3Q\_{\alpha\beta} - \operatorname{tr}(Q)\delta\_{\alpha\beta} } \\]
+$$
+Q'_{\alpha\beta}
+= 3Q_{\alpha\beta}
+- \operatorname{tr}(Q)\delta_{\alpha\beta}
+$$
 
-where \\(\operatorname{tr}(Q)\\) denotes the trace of the quadrupole tensor:
+where \(\operatorname{tr}(Q)\) denotes the trace of the quadrupole tensor:
 
-\\[ \operatorname{tr}(Q) = \sum\_{\gamma \in \\{x,y,z\\}} Q\_{\gamma\gamma} \\]
+$$
+\operatorname{tr}(Q)
+= \sum_{\gamma \in \{x,y,z\}} Q_{\gamma\gamma}
+$$
 
 ## Usage
 
@@ -71,7 +86,7 @@ The models trained on the QM9 dataset can be found in the [PiNet2-DQ repository]
 | `vector_quadrupole`    | `True` | Toggle whether to use scalar or vector quadrupole predictions, should be the same as quadrupole moment of the dataset |
 | `charge_neutrality`    | `True`  | Enable charge neutrality                                                                                      |
 | `neutral_unit`         |`'system'`| If charge neutrality is applied, set the charge neutral unit. Choose `'system'` for system neutrality, or  `'water_molecule'` for neutrality per water molecule |               |
-| `regularization`       |  `True`   Enable regularization of the interaction prediction, only available for models containing the 'R' term        |
+| `regularization`       |  `True` | Enable regularization of the interaction prediction, only available for models containing the 'R' term        |
 | `use_quad_per_atom`    | `False` | Use the per-atom quadrupole in place of total quadrupole in loss function                                             |
 | `log_quad_per_atom`    | `True`  | Log the per-atom quadrupole error, automatically enabled with `use_quad_per_atoms=True`                              |
 | `use_quad_weight`      | `False` | Scale the energy loss according to the `'d_weight'` Tensor in the dataset                                     |
