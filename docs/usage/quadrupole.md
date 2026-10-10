@@ -37,36 +37,41 @@ $$
 The quadrupole tensor is defined as
 
 $$
-Q'_{\alpha\beta}(\mathbf{r}) =
+Q'{\alpha\beta}(\mathbf{r}) =
 \sum_i q_i \left(
-3r_{\alpha i}r_{\beta i}
-- \delta_{\alpha\beta}|\mathbf{r}_i|^2
+3r{\alpha i}r_{\beta i}
+
+\delta_{\alpha\beta}|\mathbf{r}_i|^2
 \right)
 $$
 
 where:
 
-- \(q_i\) is the atomic charge of atom \(i\).
-- \(\mathbf{r}_i\) is the position vector of atom \(i\).
-- \(r_{\alpha i}\) and \(r_{\beta i}\) are the Cartesian components of \(\mathbf{r}_i\).
-- \(\alpha,\beta \in \{x,y,z\}\).
-- \(\delta_{\alpha\beta}\) is the Kronecker delta.
+$q_i$ is the atomic charge of atom $i$.
 
-The traceless quadrupole tensor is defined in terms of the quadrupole tensor \(Q_{\alpha\beta}\) as
+$\mathbf{r}_i$ is the position vector of atom $i$.
 
-$$
-Q'_{\alpha\beta}
-= 3Q_{\alpha\beta}
-- \operatorname{tr}(Q)\delta_{\alpha\beta}
-$$
+$r_{\alpha i}$ and $r_{\beta i}$ are the Cartesian components of $\mathbf{r}_i$.
 
-where \(\operatorname{tr}(Q)\) denotes the trace of the quadrupole tensor:
+$\alpha,\beta \in {x,y,z}$.
+
+$\delta_{\alpha\beta}$ is the Kronecker delta.
+
+The traceless quadrupole tensor is defined in terms of the quadrupole tensor $Q_{\alpha\beta}$ as
 
 $$
-\operatorname{tr}(Q)
-= \sum_{\gamma \in \{x,y,z\}} Q_{\gamma\gamma}
+Q'{\alpha\beta}
+= 3Q{\alpha\beta}
+
+\mathrm{tr}(Q)\delta_{\alpha\beta}
 $$
 
+where $\mathrm{tr}(Q)$ denotes the trace of the quadrupole tensor:
+
+$$
+\mathrm{tr}(Q)
+= \sum_{\gamma \in {x,y,z}} Q_{\gamma\gamma}
+$$
 ## Usage
 
 Apart from the models containing the atomic dipole (AD), all models are compatible with both PiNet and PiNet2. 
