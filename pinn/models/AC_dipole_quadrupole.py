@@ -12,6 +12,8 @@ Q'αβ (r) = ∑ qi · (3rαi · rβi − δαβ · |ri|^2),
 where q is the atomic charge, r are atomic coordinates and α, β ∈ {x, y, z}.
 
 The definition of traceless quadrupole is Q'αβ = 3Qαβ - tr(Q)δαβ.
+The training data are dipoles and traceless quadrupoles in the formats [$\mu_x$, $\mu_y$, $\mu_z$] and [$Q_{xx}$, $Q_{yy}$, $Q_{zz}$, $Q_{xy}$, $Q_{xz}$, $Q_{yz}$].
+
 
 For model details see ref. 
 Li, J., Knijff, L., Zhang, Z., Andersson, L., & Zhang, C. (2024)
