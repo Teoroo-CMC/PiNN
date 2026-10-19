@@ -31,7 +31,7 @@ and predicts dipoles and quadrupoles. The AC+AD dipole-quadrupole model uses a c
 The dipole moment is expressed as
 
 $$
-**{\mu}**(**r**) = \sum_i **q**_i **r**_i
+\boldsymbol{\mu}(\mathbf{r}) = \sum_i q_i \mathbf{r}_i
 $$
 
 The quadrupole tensor is defined as
@@ -39,10 +39,7 @@ The quadrupole tensor is defined as
 $$
 Q_{\alpha\beta}(\mathbf{r}) =
 \sum_i q_i \left(
-3 r_{\alpha i} r_{\beta i}
-
-\delta_{\alpha\beta} |\mathbf{r}_i|^2
-\right)
+3 r_{\alpha i} r_{\beta i} - \delta_{\alpha\beta} |\mathbf{r}_i|^2 \right)
 $$
 
 where:
@@ -59,15 +56,16 @@ $\delta_{\alpha\beta}$ is the Kronecker delta.
 
 The traceless quadrupole tensor is defined in terms of the quadrupole tensor $Q_{\alpha\beta}$ as
 
-Q_{\alpha\beta}
-
-\frac{1}{3}\operatorname{tr}(Q)\delta_{\alpha\beta}
+$$
+Q_{\alpha\beta} = \frac{1}{3}\operatorname{tr}(Q)\delta_{\alpha\beta}
 $$
 
 where $\operatorname{tr}(Q)$ denotes the trace of the quadrupole tensor:
 
+$$
 \sum_{\gamma \in {x,y,z}} Q_{\gamma\gamma}
 $$
+
 ## Usage
 
 Apart from the models containing the atomic dipole (AD), all models are compatible with both PiNet and PiNet2. 
