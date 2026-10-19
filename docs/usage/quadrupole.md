@@ -10,7 +10,7 @@ The ``model_params`` can be set, and are listed below along with their default v
 | `max_quadrupole`        | `False` | When set to a number, exclude quadrupoles above this value in loss function          |
 | `quad_scale`            |   `1`   | Quadrupole unit during training                                                      |
 | `use_quad_per_atom`     | `False` | Use the per-atom quadrupole in place of total quadrupole in loss function                |
-| `log_quad_per_atom`     | `True`  | Log the per-atom quadrupole error, automatically enabled with `use_d_per_atoms=True` |
+| `log_quad_per_atom`     | `True`  | Log the per-atom quadrupole error, automatically enabled with `use_quad_per_atoms=True` |
 | `use_quad_weight`       | `False` | Scale the energy loss according to the `'d_weight'` Tensor in the dataset        |
 | `use_l2`                | `False` | Include L2 regularization in loss                                                |
 | `quad_loss_multiplier`  |   `1`   | Weight of quadrupole loss                                                            |
@@ -37,12 +37,10 @@ $$
 The traceless quadrupole tensor is defined as
 
 $$
-Q'_{\alpha\beta}(\boldsymbol{r}) =
-\sum_i q_i \left(
-3 r_{\alpha i} r_{\beta i} - \delta_{\alpha\beta} |\boldsymbol{r}_i|^2 \right)
+Q'_{\alpha\beta}(\boldsymbol{r}) = \sum_i q_i \left(3 r_{\alpha i} r_{\beta i} - \delta_{\alpha\beta} |\boldsymbol{r}_i|^2 \right)
 $$
 
-where $q_i$ is the atomic charge and $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta$ run over $ \{x,y,z\} $. This is one of the three conventions of traceless quadrupoles found in the literature.
+where $q_i$ is the atomic charge and $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta$ run over $\{x,y,z\}$. This is one of the three conventions of traceless quadrupoles found in the literature.
 
 ## Usage
 
