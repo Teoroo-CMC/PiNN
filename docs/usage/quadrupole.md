@@ -31,7 +31,7 @@ and predicts dipoles and quadrupoles. The AC+AD dipole-quadrupole model uses a c
 The dipole moment is expressed as
 
 $$
-\boldsymbol{\mu}(\mathbf{r}) = \sum_i q_i \mathbf{r}_i
+**{\mu}**(**r**) = \sum_i **q**_i **r**_i
 $$
 
 The quadrupole tensor is defined as
