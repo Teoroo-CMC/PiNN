@@ -42,9 +42,7 @@ Q'_{\alpha\beta}(\boldsymbol{r}) =
 3 r_{\alpha i} r_{\beta i} - \delta_{\alpha\beta} |\boldsymbol{r}_i|^2 \right)
 $$
 
-where:
-
-$q_i$ is the atomic charge of atom $i$, $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta$ run over $ /{x,y,z/} $. One needs to be careful with different conventions for traceless quadrupoles in the literature.
+where $q_i$ is the atomic charge and $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta$ run over $ \{x,y,z\} $. This is one of the three conventions of traceless quadrupoles found in the literature.
 
 ## Usage
 
