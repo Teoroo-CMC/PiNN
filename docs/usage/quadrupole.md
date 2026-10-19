@@ -31,33 +31,25 @@ and predicts dipoles and quadrupoles. The AC+AD dipole-quadrupole model uses a c
 The dipole moment is expressed as
 
 $$
-\boldsymbol{\mu}(\mathbf{r}) = \sum_i q_i \mathbf{r}_i
+\boldsymbol{\mu}(\boldsymbol{r}) = \sum_i q_i \boldsymbol{r}_i
 $$
 
 The quadrupole tensor is defined as
 
 $$
-Q_{\alpha\beta}(\mathbf{r}) =
+Q'_{\alpha\beta}(\boldsymbol{r}) =
 \sum_i q_i \left(
-3 r_{\alpha i} r_{\beta i} - \delta_{\alpha\beta} |\mathbf{r}_i|^2 \right)
+3 r_{\alpha i} r_{\beta i} - \delta_{\alpha\beta} |\boldsymbol{r}_i|^2 \right)
 $$
 
 where:
 
-$q_i$ is the atomic charge of atom $i$.
+$q_i$ is the atomic charge of atom $i$, $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta run over /{x,y,z/}$.
 
-$\mathbf{r}_i$ is the position vector of atom $i$.
-
-$r_{\alpha i}$ and $r_{\beta i}$ are the Cartesian components of $\mathbf{r}_i$.
-
-$\alpha,\beta \in {x,y,z}$.
-
-$\delta_{\alpha\beta}$ is the Kronecker delta.
-
-The traceless quadrupole tensor is defined in terms of the quadrupole tensor $Q_{\alpha\beta}$ as
+There are different conventions of traceless quadrupoles in the literature. We define the traceless quadrupole tensor as
 
 $$
-Q_{\alpha\beta} = \frac{1}{3}\operatorname{tr}(Q)\delta_{\alpha\beta}
+Q'_{\alpha\beta} = \frac{1}{3}\operatorname{tr}(Q)\delta_{\alpha\beta}
 $$
 
 where $\operatorname{tr}(Q)$ denotes the trace of the quadrupole tensor:
@@ -68,11 +60,10 @@ $$
 
 ## Usage
 
-Apart from the models containing the atomic dipole (AD), all models are compatible with both PiNet and PiNet2. 
+The dipole-quadrupole models are compatible with PiNet2. 
 
 These models can be selected by changing `name` of the model in `model_params` (See overview for further instructions.).
 
-The models are trained on traceless quadrupoles of the format []
 The models trained on the QM9 dataset can be found in the [PiNet2-DQ repository](https://github.com/Teoroo-CMC/PiNet2-DQ)
 
 
