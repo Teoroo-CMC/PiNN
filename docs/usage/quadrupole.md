@@ -34,7 +34,7 @@ $$
 \boldsymbol{\mu}(\boldsymbol{r}) = \sum_i q_i \boldsymbol{r}_i
 $$
 
-The quadrupole tensor is defined as
+The traceless quadrupole tensor is defined as
 
 $$
 Q'_{\alpha\beta}(\boldsymbol{r}) =
@@ -44,11 +44,7 @@ $$
 
 where:
 
-$q_i$ is the atomic charge of atom $i$, $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta run over /{x,y,z/} $.
-
-$$
-\sum_{\gamma \in {x,y,z}} Q_{\gamma\gamma}
-$$
+$q_i$ is the atomic charge of atom $i$, $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta$ run over $ /{x,y,z/} $. One needs to be careful with different conventions for traceless quadrupoles in the literature.
 
 ## Usage
 
