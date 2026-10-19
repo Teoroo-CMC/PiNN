@@ -61,7 +61,7 @@ The models trained on the QM9 dataset can be found in the [PiNet2-DQ repository]
 | `quad_unit`            |   `1`   | Output unit of quadrupole during prediction                                                                       |
 | `vector_quadrupole`    | `True` | Toggle whether to use scalar or vector quadrupole predictions, should be the same as quadrupole moment of the dataset |
 | `charge_neutrality`    | `True`  | Enable charge neutrality                                                                                      |
-| `neutral_unit`         |`'system'`| If charge neutrality is applied, set the charge neutral unit. Choose `'system'` for system neutrality, or  `'water_molecule'` for neutrality per water molecule |               |
+| `neutral_unit`         |`'system'`| If charge neutrality is applied, set the charge neutral unit. Choose `'system'` for system neutrality, or  `'water_molecule'` for neutrality per water molecule |               
 | `regularization`       |  `True` | Enable regularization of the interaction prediction, only available for models containing the 'R' term        |
 | `use_quad_per_atom`    | `False` | Use the per-atom quadrupole in place of total quadrupole in loss function                                             |
 | `log_quad_per_atom`    | `True`  | Log the per-atom quadrupole error, automatically enabled with `use_quad_per_atoms=True`                              |
@@ -76,9 +76,9 @@ The models trained on the QM9 dataset can be found in the [PiNet2-DQ repository]
 ::: pinn.models.AC_quadrupole_model
 
 ### pinn.models.AC_dipole_quadrupole.py
-::: pinn.models.AC_dipole_quadrupole.py
+::: pinn.models.AC_dipole_quadrupole
 
 ### pinn.models.AC_AD_dipole_quadrupole.py
-::: pinn.models.AC_AD_dipole_quadrupole.py
+::: pinn.models.AC_AD_dipole_quadrupole
 
 
