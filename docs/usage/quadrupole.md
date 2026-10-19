@@ -44,15 +44,7 @@ $$
 
 where:
 
-$q_i$ is the atomic charge of atom $i$, $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta run over /{x,y,z/}$.
-
-There are different conventions of traceless quadrupoles in the literature. We define the traceless quadrupole tensor as
-
-$$
-Q'_{\alpha\beta} = \frac{1}{3}\operatorname{tr}(Q)\delta_{\alpha\beta}
-$$
-
-where $\operatorname{tr}(Q)$ denotes the trace of the quadrupole tensor:
+$q_i$ is the atomic charge of atom $i$, $\boldsymbol{r}_i$ is the position vector of atom $i$ and $\alpha,\beta run over /{x,y,z/} $.
 
 $$
 \sum_{\gamma \in {x,y,z}} Q_{\gamma\gamma}
