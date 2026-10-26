@@ -14,6 +14,7 @@ Q'αβ (r) = ∑ qi · (3rαi · rβi − δαβ · |ri|^2),
 where q is the atomic charge, r are atomic coordinates and α, β ∈ {x, y, z}.
 
 The definition of traceless quadrupole is Q'αβ = 3Qαβ - tr(Q)δαβ.
+The training data are traceless quadrupoles in the format [Q_xx, Q_yy, Q_zz, Q_xy, Q_xz, Q_yz].
 
 For model details see ref. 
 Li, J., Knijff, L., Zhang, Z., Andersson, L., & Zhang, C. (2024)
@@ -123,7 +124,7 @@ def AC_quadrupole_model(features, labels, mode, params):
         quadrupole *= model_params['quad_unit']
 
         predictions = {
-            'quadrupole': quadrupole, 
+            'quadrupole': quadrupole, #[Q_xx, Q_yy, Q_zz, Q_xy, Q_xz, Q_yz]
             'charge': q_tot,
             'charges': tf.expand_dims(p1, 0)
         }

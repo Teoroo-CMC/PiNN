@@ -19,6 +19,8 @@ Muuga, K., Knijff, L., Zhang, C. (2026) Molecular electrostatic potentials
 from machine learning models for dipole and quadrupole predictions.
 
 The definition of traceless quadrupole is Q'αβ = 3Qαβ - tr(Q)δαβ.
+The training data are dipoles and traceless quadrupoles in the formats [$\mu_x$, $\mu_y$, $\mu_z$] and [$Q_{xx}$, $Q_{yy}$, $Q_{zz}$, $Q_{xy}$, $Q_{xz}$, $Q_{yz}$].
+
 
 The dipole weight is set to 100 to adjust for naturally larger quadrupole losses. 
 This can be changed by changing d_loss_multiplier.
